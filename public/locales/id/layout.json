@@ -1,0 +1,48 @@
+{
+  "helpCenter": "Pusat Bantuan",
+  "profileCard": {
+    "todaySchedule": "Jadwal Hari ini",
+    "close": "Tutup",
+    "visitShop": "Kunjungi Toko",
+    "visitMarketplace": "Kunjungi Marketplace"
+  },
+  "drawer": {
+    "toolbar": {
+      "seller": "Seller Portal"
+    },
+    "myShop": {
+      "head": "Toko Saya",
+      "dashboard": "Dashboard",
+      "orders": "Daftar Penjualan",
+      "balance": "Saldo Toko"
+    },
+    "myProduct": {
+      "head": "Produk Saya",
+      "manage": "Kelola Produk",
+      "add": "Tambah Produk",
+      "bulkEdit": "Edit Produk Massal"
+    },
+    "config": {
+      "head": "Pengaturan",
+      "profile": "Profil Toko",
+      "schedule": "Jadwal Toko"
+    },
+    "chat": {
+      "head": "Obrolan",
+      "complain": "Komplain",
+      "chat": "Percakapan"
+    },
+    "feature": {
+      "head": "Fitur",
+      "instant": "Instant",
+      "kilat": "Proses Kilat",
+      "vip": "VIP Seller",
+      "host": "Host to Host"
+    },
+    "other": {
+      "head": "Lainnya",
+      "helpCenter": "Pusat Bantuan",
+      "language": "Bahasa"
+    }
+  }
+}
