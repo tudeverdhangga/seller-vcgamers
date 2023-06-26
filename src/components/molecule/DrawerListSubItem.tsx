@@ -32,6 +32,7 @@ export default function DrawerListSubItem({
   const listSubItem = (
     <ListItemButton
       onClick={onClick}
+      selected={isActive}
       component="a"
       sx={{
         pl: 6,

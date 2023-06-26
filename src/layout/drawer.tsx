@@ -7,7 +7,7 @@ import { drawerOpenAtom } from "~/atom";
 
 import { useResponsive } from "~/utils/mediaQuery";
 
-import DrawerContent from "~/components/organism/DrawerContent";
+import DrawerContent from "~/components/organism/DrawerContent/index";
 
 export const DRAWER_WIDTH = 270;
 
