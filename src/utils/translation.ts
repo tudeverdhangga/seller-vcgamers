@@ -26,13 +26,13 @@ export function mergeStaticPropsWithTrans(
   };
 }
 
-export function getStaticPropsWithTransNamespace(namespaces?: string[]) {
+export function getStaticPropsWithTransNamespace(namespaces: string[]) {
   return async function getStaticProps(props: { locale: string }) {
     return {
       props: {
         ...(await serverSideTranslations(
           props.locale,
-          namespaces,
+          ["common", "layout", ...namespaces],
           nextI18nConfig
         )),
       },

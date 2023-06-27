@@ -1,5 +1,10 @@
 {
   "helpCenter": "Pusat Bantuan",
+  "helpCenterMenu": {
+    "faq": "FAQ",
+    "email": "Email",
+    "whatsapp": "WhatsApp"
+  },
   "profileCard": {
     "todaySchedule": "Jadwal Hari ini",
     "close": "Tutup",

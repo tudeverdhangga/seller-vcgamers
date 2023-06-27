@@ -1,22 +1,21 @@
 import { Box, styled } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
 import Badge, { type BadgeProps } from "@mui/material/Badge";
-import { useTranslation } from "next-i18next";
+import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
 import { useAtom } from "jotai";
 
-import MenuIcon from "../components/icons/MenuIcon";
-import IdFlagIcon from "../components/icons/IdFlagIcon";
-import ChevronDownIcon from "../components/icons/ChevronDownIcon";
 import BellIcon from "../components/icons/BellIcon";
+import MenuIcon from "../components/icons/MenuIcon";
 
 import { drawerOpenAtom } from "~/atom";
 
-import { DRAWER_WIDTH } from "./drawer";
+import HelpCenterMenu from "~/components/molecule/HelpCenterMenu/desktop";
+import LanguageSelect from "~/components/molecule/LanguageSelect/desktop";
 import { useResponsive } from "~/utils/mediaQuery";
+import { DRAWER_WIDTH } from "./drawer";
 
 export function AppBar() {
   const [drawerOpen, setDrawerOpen] = useAtom(drawerOpenAtom);
@@ -67,21 +66,10 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
 }));
 
 function DesktopAppBar() {
-  const { t } = useTranslation("layout");
-
   return (
     <>
-      <Typography variant="h6" component="div" sx={{ mr: 2 }}>
-        {t("helpCenter")}
-      </Typography>
-      {/* TODO: make new component for languange select */}
-      <Box component="div" sx={{ display: "flex", alignContent: "flex-end" }}>
-        <IdFlagIcon />
-        <Typography variant="h6" component="div">
-          ID
-        </Typography>
-        <ChevronDownIcon />
-      </Box>
+      <HelpCenterMenu />
+      <LanguageSelect />
       <Box component="div" sx={{ flexGrow: 1 }} />
       <IconButton>
         <StyledBadge badgeContent={1} color="secondary">

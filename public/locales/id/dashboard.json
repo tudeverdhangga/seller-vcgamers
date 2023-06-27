@@ -1,0 +1,59 @@
+{
+  "title": "Ringkasan",
+  "subtitle": "Laporan",
+  "card": {
+    "sales": {
+      "title": "Total Penjualan",
+      "subtitle": "{{count}} Produk"
+    },
+    "earning": {
+      "title": "Pendapatan Bulan Ini"
+    },
+    "revenue": {
+      "title": "Total Pendapatan"
+    },
+    "performance": {
+      "title": "Performa Toko",
+      "body": {
+        "shopRating": "Rating Toko",
+        "transactionSuccess": "Transaksi Sukses",
+        "deliveryTime": "Waktu Pengiriman",
+        "visitorCount": "Total Pengunjung"
+      }
+    },
+    "helpContact": {
+      "title": "Official Kontak Tim Support",
+      "body": {
+        "phoneNum": "0815-1111-1659",
+        "email": "support@vcgamers.com"
+      }
+    },
+    "feedback": {
+      "title": "Kotak Saran"
+    },
+    "myProduct": {
+      "title": "Produk Saya",
+      "body": {
+        "active": "Produk Aktif",
+        "nonactive": "Nonaktif",
+        "nearEmpty": "Akan Habis",
+        "review": "Total Ulasan"
+      }
+    }
+  },
+  "tooltip": {
+    "helpContact": "Tim support kami tidak memiliki channel chat lain seperti line, telegram, atau whatsapp selain dari 2 kontak whatsapp yang tertera. Hati-hati terhadap indikasi penipuan yang mengatasnamakan VCGamers. Mohon konfirmasi jika ada chat diluar nomor tersebut"
+  },
+  "suggestionBox": {
+    "title":"Kotak Saran",
+    "subtitle": "Bantu kami agar melayani lebih baik",
+    "placeholder": "Tulis disini...",
+    "back": "Kembali",
+    "sent": "Kirim",
+    "success": {
+      "title": "Pesan Terkirim",
+      "subtitle": "Terima kasih sudah berkontribusi dalam peningkatan layanan di VCGamers",
+      "close": "Tutup"
+    }
+  }
+}
