@@ -1,0 +1,10 @@
+apiVersion: v2
+name: seller-apps-chart
+icon: https://vcgamers.com/_ipx/f_webp/img/logo_vcgamers.png
+description: VCGamers Seller Rewrite Helm Chart
+type: application
+version: 0.1.0
+maintainers:
+- email: gilang@vcgamers.com
+  name: DevOps Engineer
+

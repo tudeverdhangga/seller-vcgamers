@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seller
+  namespace: staging
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  labels:
+    app: seller
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: seller
+  template:
+    metadata:
+      labels:
+        app: seller
+    spec:
+      serviceAccountName: seller-rewrite
+      containers:
+        - name: {{ .Chart.Name }}-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: seller-config
+          resources:
+            requests:
+              cpu: 200m
+              memory: 180Mi
+            limits:
+              cpu: 300m
+              memory: 300Mi
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15
