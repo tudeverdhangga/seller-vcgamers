@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import {
+  Tabs,
+  Tab,
+  Typography,
+  Box
+} from '@mui/material';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 import { getStaticPropsWithTrans } from "~/utils/translation";
 import VGCard from "~/components/atomic/VGCard";
-
-import {
-  Box,
-  Tabs,
-  Tab
-} from '@mui/material';
+import PageTitle from '~/components/atomic/PageTitle';
+import OperationalSetting from '~/components/organism/OperationalSetting';
+import VGAlert from '~/components/atomic/VGAlert';
 
 export default function JadwalTokoPage() {
   const router = useRouter()
@@ -20,7 +24,12 @@ export default function JadwalTokoPage() {
 
   return (
     <>
-      <VGCard>
+      {/* Page Title */}
+      <PageTitle
+        subTitle="Personalisasi"
+        title="Pengaturan Toko"
+      />
+      <VGCard sx={{ pl: 3 }}>
         <Tabs value={value}>
           <Tab
             label="Profil Toko"
@@ -33,10 +42,26 @@ export default function JadwalTokoPage() {
           />
         </Tabs>
       </VGCard>
-      <VGCard>
-        <Box sx={{ p: 3 }}>
-          Jam Operational
+      <VGAlert color="info">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row"
+          }}
+        >
+          <AccessTimeFilledIcon sx={{ color: "primary.main" }}/>
+          {' '}
+          <Typography
+            component="span"
+            color="primary.main"
+            sx={{ pl: 1 }}
+          >
+            Zona waktu yang digunakan adalah WIB
+          </Typography>
         </Box>
+      </VGAlert>
+      <VGCard sx={{ p: 3 }}>
+        <OperationalSetting />
       </VGCard>
     </>
   )

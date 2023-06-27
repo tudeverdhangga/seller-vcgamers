@@ -1,5 +1,5 @@
-import { type ChangeEventHandler } from "react";
 import { TextField } from "@mui/material"
+import { type ChangeEventHandler } from "react";
 import { type Control, Controller, type FieldValues } from "react-hook-form"
 
 export default function VGInputText(props: {
@@ -21,20 +21,18 @@ export default function VGInputText(props: {
       }) => (
         <>
           <TextField
-            helperText={error ? error.message : null}
-            size="small"
-            variant="outlined"
-            error={!!error}
-            onChange={props.onChange}
-            value={value as string}
-            label={props.label}
-            disabled={props.disabled}
-            fullWidth
+          helperText={error ? error.message : null}
+          size="small"
+          variant="outlined"
+          error={!!error}
+          onChange={props.onChange}
+          value={value as string}
+          label={props.label}
+          disabled={props.disabled}
+          fullWidth
           />
           {error && (
-            <p style={{ color: 'red' }}>
-              {error.message}
-            </p>
+            <p style={{ color: 'red' }}>{error.message}</p>
           )}
         </>
       )}
