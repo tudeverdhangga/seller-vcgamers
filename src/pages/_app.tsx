@@ -23,11 +23,14 @@ const theme = createTheme({
       main: "#7750F8",
       light: "#EFEBFF",
     },
-    secondary: {
+    error: {
       main: "#FF3333",
     },
     background: {
       default: "#f5f5f5",
+    },
+    secondary: {
+      main: "#9AA4BF"
     },
     divider: "#F5F5F5",
     common: commonColors,

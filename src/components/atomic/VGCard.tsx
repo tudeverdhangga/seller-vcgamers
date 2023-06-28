@@ -17,6 +17,7 @@ export default function VGCard(props: {
       sx={{
         boxShadow: 0,
         borderRadius: "10px",
+        p: 3,
         my: 2,
         ...sx
       }}

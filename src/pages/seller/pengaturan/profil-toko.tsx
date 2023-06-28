@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 
 import { getStaticPropsWithTrans } from "~/utils/translation"
 import VGCard from "~/components/atomic/VGCard"
-import PageTitle from "~/components/atomic/PageTitle"
+import VGPageTitle from "~/components/atomic/VGPageTitle"
 import ProfileSettingForm from "~/components/organism/ProfileSettingForm"
 
 import { Tabs, Tab } from "@mui/material"
@@ -19,13 +19,13 @@ export default function ProfilTokoPage() {
   return (
     <>
       {/* Page Title */}
-      <PageTitle
+      <VGPageTitle
         subTitle="Personalisasi"
         title="Pengaturan Toko"
       />
 
       {/* Tabs */}
-      <VGCard sx={{ pl: 3 }}>
+      <VGCard sx={{ p: 0, pl: 3 }}>
         <Tabs value={value}>
           <Tab
             label="Profil Toko"
@@ -40,7 +40,7 @@ export default function ProfilTokoPage() {
       </VGCard>
 
       {/* Form */}
-      <VGCard sx={{ p: 5 }}>
+      <VGCard>
         <ProfileSettingForm />
       </VGCard>
     </>

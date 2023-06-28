@@ -10,7 +10,7 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 import { getStaticPropsWithTrans } from "~/utils/translation";
 import VGCard from "~/components/atomic/VGCard";
-import PageTitle from '~/components/atomic/PageTitle';
+import VGPageTitle from '~/components/atomic/VGPageTitle';
 import OperationalSetting from '~/components/organism/OperationalSetting';
 import VGAlert from '~/components/atomic/VGAlert';
 
@@ -25,11 +25,11 @@ export default function JadwalTokoPage() {
   return (
     <>
       {/* Page Title */}
-      <PageTitle
+      <VGPageTitle
         subTitle="Personalisasi"
         title="Pengaturan Toko"
       />
-      <VGCard sx={{ pl: 3 }}>
+      <VGCard sx={{ p: 0, pl: 3 }}>
         <Tabs value={value}>
           <Tab
             label="Profil Toko"
@@ -60,7 +60,7 @@ export default function JadwalTokoPage() {
           </Typography>
         </Box>
       </VGAlert>
-      <VGCard sx={{ p: 3 }}>
+      <VGCard>
         <OperationalSetting />
       </VGCard>
     </>

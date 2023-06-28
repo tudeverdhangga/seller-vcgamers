@@ -6,7 +6,6 @@ export default function VGChip(props: {
   label: string;
   size?: "small" | "medium";
 }) {
-
   const getTextColor = () => {
     switch (props.color) {
       case 'info':

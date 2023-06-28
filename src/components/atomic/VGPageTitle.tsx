@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material"
 
-export default function PageTitle(props: {
+export default function VGPageTitle(props: {
   subTitle: string;
   title: string;
 }) {
@@ -22,7 +22,7 @@ export default function PageTitle(props: {
         }}
         color="primary.main"
       >
-        {props.subTitle}
+        {props.title}
       </Typography>
     </Box>
   )
