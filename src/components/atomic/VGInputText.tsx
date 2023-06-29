@@ -1,10 +1,20 @@
 import { TextField } from "@mui/material"
 import { type ChangeEventHandler } from "react";
-import { type Control, Controller, type FieldValues } from "react-hook-form"
+import { type Control, Controller } from "react-hook-form"
+
+interface IFormInput {
+  shopName: string;
+  shopUrl: string;
+  shopDesc: string;
+  shopPhone: string;
+  bankName: string;
+  bankNumber: string;
+  bankCustomerName: string;
+}
 
 export default function VGInputText(props: {
-  name: string;
-  control: Control<FieldValues>;
+  name: keyof IFormInput;
+  control: Control<IFormInput>;
   label: string;
   disabled?: boolean;
   rules?: Record<string, unknown>;
@@ -26,7 +36,7 @@ export default function VGInputText(props: {
           variant="outlined"
           error={!!error}
           onChange={props.onChange}
-          value={value as string}
+          value={value}
           label={props.label}
           disabled={props.disabled}
           fullWidth

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form"
 import Link from "next/link";
 import { BorderColorOutlined, CloudUploadOutlined } from '@mui/icons-material';
@@ -29,12 +29,10 @@ const defaultValues = {
 
 export default function ProfileSettingForm() {
   const [shopUrl, setShopUrl] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
-  const [bannerImage, setBannerImage] = useState(null);
+  const [profileImage, setProfileImage] = useState<undefined | Blob>();
+  const [bannerImage, setBannerImage] = useState<undefined | Blob>();
   const defaultBanner = "/assets/default-user-banner.png"
   const {
-    handleSubmit,
-    reset,
     control,
     setValue
   } = useForm<IFormInput>({
@@ -57,13 +55,16 @@ export default function ProfileSettingForm() {
     color: "common.shade.100",
   }
 
-  const handleChangeProfilImage = (e) => {
-    const file = e.target.files[0];
-    setProfileImage(file)
+  const handleChangeProfilImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setProfileImage(e.target.files[0] as Blob)
+    }
+    console.log(profileImage);
   }
-  const handleChangeBannerImage = (e) => {
-    const file = e.target.files[0];
-    setBannerImage(file)
+  const handleChangeBannerImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setBannerImage(e.target.files[0] as Blob)
+    }
   }
 
   const shopNameContainer = (
@@ -304,7 +305,7 @@ export default function ProfileSettingForm() {
               id="upload-profile"
               accept="image/*"
               style={{display: "none"}}
-              onChange={handleChangeProfilImage}
+              onChange={(e) => handleChangeProfilImage(e)}
             />
             <label htmlFor="upload-profile">
               <Box
