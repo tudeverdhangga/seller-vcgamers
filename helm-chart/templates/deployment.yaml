@@ -30,11 +30,11 @@ spec:
                 name: seller-config
           resources:
             requests:
-              cpu: 200m
-              memory: 180Mi
+              cpu: 500m
+              memory: 500Mi
             limits:
-              cpu: 300m
-              memory: 300Mi
+              cpu: 500m
+              memory: 500Mi
           readinessProbe:
             tcpSocket:
               port: 3000
