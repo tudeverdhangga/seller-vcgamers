@@ -9,9 +9,9 @@ import ListItemText from "@mui/material/ListItemText";
 
 import { useTranslation } from "next-i18next";
 
-import DrawerListSubItem from "~/components/atomic/DrawerListSubItem";
 import { setLangCookie } from "~/utils/cookies";
 import { languages } from "./common";
+import DrawerListSubItem from "../DrawerListSubItem";
 
 export default function LanguageSelect() {
   const { t } = useTranslation("layout");

@@ -9,10 +9,10 @@ import ListItemText from "@mui/material/ListItemText";
 
 import { useTranslation } from "next-i18next";
 
-import DrawerListSubItem from "~/components/atomic/DrawerListSubItem";
 import EmailIcon from "../../icons/svg/helpCenter/emailIcon.svg";
 import FAQIcon from "../../icons/svg/helpCenter/helpCircleIcon.svg";
 import WhatsAppIcon from "../../icons/svg/helpCenter/whatsAppIcon.svg";
+import DrawerListSubItem from "../DrawerListSubItem";
 
 export default function HelpCenterMenu() {
   const { t } = useTranslation("layout");

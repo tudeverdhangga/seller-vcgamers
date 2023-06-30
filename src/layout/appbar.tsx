@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Box, styled } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Badge, { type BadgeProps } from "@mui/material/Badge";
@@ -71,11 +73,18 @@ function DesktopAppBar() {
       <HelpCenterMenu />
       <LanguageSelect />
       <Box component="div" sx={{ flexGrow: 1 }} />
-      <IconButton>
-        <StyledBadge badgeContent={1} color="secondary">
-          <BellIcon color="action" />
-        </StyledBadge>
-      </IconButton>
+      <Link
+        href={"/seller/notifikasi"}
+        passHref
+        legacyBehavior
+        style={{ textDecoration: "none" }}
+      >
+        <IconButton>
+          <StyledBadge badgeContent={1} color="secondary">
+            <BellIcon color="action" />
+          </StyledBadge>
+        </IconButton>
+      </Link>
     </>
   );
 }
