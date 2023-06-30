@@ -9,7 +9,7 @@ import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
 import FAQIcon from "../../icons/svg/helpCenter/helpCircleIcon.svg";
-import WhatsAppIcon from "../../icons/svg/helpCenter/whatsAppIcon.svg";
+import WhatsAppIcon from "../../icons/svg/helpCenter/whatsappIcon.svg";
 import EmailIcon from "../../icons/svg/helpCenter/emailIcon.svg";
 
 export default function HelpCenterMenu() {
