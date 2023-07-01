@@ -1,0 +1,53 @@
+{
+  "title": "Pengaturan Toko",
+  "subTitle": "Personalisasi",
+  "tab": {
+    "profile": {
+      "label": "Profil Toko",
+      "form": {
+        "name": "Nama Toko",
+        "url": "URL Toko",
+        "desc": "Descriksi Toko",
+        "phone": "Nomor Handphone",
+        "bankName": "Nama Bank",
+        "bankNumber": "Nomor Rekening",
+        "bankCustomerName": "Nama Nasabah",
+        "profileImg": {
+          "label": "Foto Profil Toko",
+          "subLabel": "(Max 1MB .PNG / .JPG) (Profil gambar tidak boleh kosong)"
+        },
+        "bannerImg": {
+          "label": "Gambar Cover Toko (Opsional) (Max 2MB .PNG / .JPG)",
+          "changeBannerLabel": "Ganti Banner",
+          "changeBannerSubLabel": "1184 x 300px size minimum"
+        },
+        "info": {
+          "title": "Info Rekening",
+          "alert": "Untuk merubah Info rekening, silakan hubungi"
+        }
+      }
+    },
+    "operational": {
+      "label": "Jam Operational",
+      "info": "Zona waktu yang digunakan adalah WIB",
+      "form": {
+        "days": {
+          "mon": "Senin",
+          "tues": "Selasa",
+          "wed": "Rabu",
+          "thurs": "Kamis",
+          "fri": "Jumat",
+          "sat": "Sabtu",
+          "sun": "Minggu"
+        },
+        "today": "Hari ini",
+        "open": "Buka",
+        "close": "Tutup",
+        "fullHour": "Buka 24 jam",
+        "customHour": "Atur Jam Operational",
+        "openHour": "Jam Buka",
+        "closeHour": "Jam Tutup"
+      }
+    }
+  }
+}

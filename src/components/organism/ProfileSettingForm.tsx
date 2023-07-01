@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import Link from "next/link";
 import { BorderColorOutlined, CloudUploadOutlined } from '@mui/icons-material';
 import { Box, Grid, Typography } from "@mui/material"
+import { useTranslation } from "next-i18next";
 
 import VGInputText from "~/components/atomic/VGInputText"
 import VGAlert from "~/components/atomic/VGAlert";
@@ -38,6 +39,7 @@ export default function ProfileSettingForm() {
   } = useForm<IFormInput>({
     defaultValues: defaultValues
   })
+  const { t } = useTranslation("setting");
 
   // Style
   const fieldStyle = {
@@ -59,7 +61,6 @@ export default function ProfileSettingForm() {
     if (e.target.files) {
       setProfileImage(e.target.files[0] as Blob)
     }
-    console.log(profileImage);
   }
   const handleChangeBannerImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -71,7 +72,7 @@ export default function ProfileSettingForm() {
     <VGInputText
       name="shopName"
       control={control}
-      label="Nama Toko"
+      label={t("tab.profile.form.name")}
       rules={{
         required: true
       }}
@@ -82,7 +83,7 @@ export default function ProfileSettingForm() {
       <VGInputText
         name="shopUrl"
         control={control}
-        label="URL Toko"
+        label={t("tab.profile.form.url")}
         rules={{
           required: true
         }}
@@ -99,7 +100,7 @@ export default function ProfileSettingForm() {
           color="common.shade.100"
           sx={{ fontSize: "12px", fontWeight: 600 }}
         >
-          URL Toko
+          {t("tab.profile.form.name")}
         </Typography>
         {' '}
         <Typography
@@ -116,7 +117,7 @@ export default function ProfileSettingForm() {
     <VGInputText
       name="shopDesc"
       control={control}
-      label="Deskripsi Toko"
+      label={t("tab.profile.form.desc")}
       rules={{
         required: true
       }}
@@ -126,7 +127,7 @@ export default function ProfileSettingForm() {
     <VGInputText
       name="shopPhone"
       control={control}
-      label="Nomor Handphone"
+      label={t("tab.profile.form.phone")}
       rules={{
         required: true
       }}
@@ -136,7 +137,7 @@ export default function ProfileSettingForm() {
     <VGInputText
       name="bankName"
       control={control}
-      label="Nama Bank"
+      label={t("tab.profile.form.bankName")}
       disabled={true}
       rules={{
         required: true
@@ -147,7 +148,7 @@ export default function ProfileSettingForm() {
     <VGInputText
       name="bankNumber"
       control={control}
-      label="Nomor Rekening"
+      label={t("tab.profile.form.bankNumber")}
       disabled={true}
       rules={{
         required: true
@@ -158,7 +159,7 @@ export default function ProfileSettingForm() {
     <VGInputText
       name="bankCustomerName"
       control={control}
-      label="Nama Nasabah"
+      label={t("tab.profile.form.bankCustomerName")}
       disabled={true}
       rules={{
         required: true
@@ -235,10 +236,10 @@ export default function ProfileSettingForm() {
           sx={fieldStyle}
         >
           <Typography sx={fieldTitleStyle}>
-            Info Rekening
+            {t("tab.profile.form.info.title")}
           </Typography>
           <VGAlert color="info">
-            Untuk merubah Info rekening, silakan hubungi
+            {t("tab.profile.form.info.alert")}
             {' '}
             <Link href="mailto:support@vcgamers.com">
               support@vcgamers.com
@@ -294,10 +295,10 @@ export default function ProfileSettingForm() {
           sx={fieldStyle}
         >
           <Typography sx={fieldTitleStyle}>
-            Foto Profil Toko
+            {t("tab.profile.form.profileImg.label")}
           </Typography>
           <Typography sx={fieldSubTitleStyle}>
-            (Max 1MB .PNG / .JPG) (Profil gambar tidak boleh kosong)  
+            {t("tab.profile.form.profileImg.subLabel")}
           </Typography>
           <Box>
             <input
@@ -356,7 +357,7 @@ export default function ProfileSettingForm() {
           sx={fieldStyle}
         >
           <Typography sx={fieldSubTitleStyle}>
-            Gambar Cover Toko (Opsional) (Max 2MB .PNG / .JPG)
+            {t("tab.profile.form.bannerImg.label")}
           </Typography>
           <Box>
             <Box
@@ -414,7 +415,7 @@ export default function ProfileSettingForm() {
                         color: "common.shade.0"
                       }}
                     >
-                      Ganti Banner
+                      {t("tab.profile.form.bannerImg.changeBannerLabel")}
                     </Typography>
                     <Typography
                       sx={{
@@ -423,7 +424,7 @@ export default function ProfileSettingForm() {
                         color: "common.shade.0"
                       }}
                     >
-                      1184 x 300px size minimum
+                      {t("tab.profile.form.bannerImg.changeBannerSubLabel")}
                     </Typography>
                   </Box>
                 </Box>

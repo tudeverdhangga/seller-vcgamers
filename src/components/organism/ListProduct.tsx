@@ -1,10 +1,18 @@
+import Image from "next/image";
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import AddIcon from '@mui/icons-material/Add';
+import { useTranslation } from "next-i18next";
 
 import { products } from "~/utils/dummy/product"
-import ListProductItem from "~/components/molecule/ListProcutItem";
+import { useResponsive } from "~/utils/mediaQuery";
+import ListProductItem from "~/components/molecule/ListProductItem";
+import VGButton from "~/components/atomic/VGButton";
 
 export default function ListProduct() {
+  const { t } = useTranslation("listProduct");
+  const { isDesktop } = useResponsive();
+
   const tableHeadContainer = (
     <Grid
       container
@@ -21,7 +29,7 @@ export default function ListProduct() {
           fontSize="14px"
           fontWeight="700"
         >
-          SKU PRODUK
+          {t("table.th.sku")}
         </Typography>
       </Grid>
       <Grid
@@ -35,7 +43,7 @@ export default function ListProduct() {
           fontWeight="700"
           textAlign="center"
         >
-          HARGA
+          {t("table.th.price")}
         </Typography>
       </Grid>
       <Grid
@@ -49,13 +57,13 @@ export default function ListProduct() {
           fontWeight="700"
           textAlign="center"
         >
-          FITUR
+          {t("table.th.feature")}
         </Typography>
       </Grid>
       <Grid
         item
         xs={12}
-        md={2}
+        md={1}
       >
         <Typography
           color="secondary"
@@ -63,13 +71,13 @@ export default function ListProduct() {
           fontWeight="700"
           textAlign="center"
         >
-          STOK
+          {t("table.th.stock")}
         </Typography>
       </Grid>
       <Grid
         item
         xs={12}
-        md={3}
+        md={4}
       >
         <Typography
           color="secondary"
@@ -77,30 +85,64 @@ export default function ListProduct() {
           fontWeight="700"
           textAlign="center"
         >
-          ACTION
+          {t("table.th.actions")}
         </Typography>
       </Grid>
     </Grid> 
   )
   const tableRowContainer = (
     <>
-      {products.map((product, index) => (
-        <ListProductItem
-          key={index}
-          image={product.image}
-          name={product.name}
-          status={product.status}
-          price={product.price}
-          stock={product.stock}        
-          feature={product.feature}        
-        />
-      ))}
+      {
+        products.length !== 0
+          ? (
+            products.map((product, index) => (
+              <ListProductItem
+                key={index}
+                image={product.image}
+                name={product.name}
+                status={product.status}
+                price={product.price}
+                stock={product.stock}        
+                feature={product.feature}        
+              />
+            ))
+          )
+          : (
+            <Grid
+              item
+              xs={12}
+              alignItems="center"
+              justifyContent="space-between"
+              display="flex"
+              flexDirection="column"
+              my={5}
+              height={197}
+            >
+              <Image
+                src="/assets/empty-img.png"
+                width={300}
+                height={197}
+                alt="Empty Product"
+              />
+              <Typography sx={{ pt: 1, pb: 3 }}>
+                {t("table.empty.label")}
+              </Typography>
+              <VGButton
+                variant="contained"
+                color="success"
+                sx={{ width: "fit-content" }}
+              >
+                <AddIcon /> {t("table.empty.button")}
+              </VGButton>
+            </Grid>
+          )
+      }
     </>
   )
   
   return (
     <>
-      {tableHeadContainer}
+      { isDesktop && tableHeadContainer}
       {tableRowContainer}
     </>
   )

@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { useRouter } from "next/router"
+import { useTranslation } from "next-i18next";
 
-import { getStaticPropsWithTrans } from "~/utils/translation"
+import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import VGCard from "~/components/atomic/VGCard"
 import VGPageTitle from "~/components/atomic/VGPageTitle"
 import ProfileSettingForm from "~/components/organism/ProfileSettingForm"
@@ -11,6 +12,7 @@ import { Tabs, Tab } from "@mui/material"
 export default function ProfilTokoPage() {
   const router = useRouter()
   const [value] = useState(0)
+  const { t } = useTranslation("setting");
 
   const handleChangePage = () => {
     void router.push("/seller/pengaturan/jadwal-toko")
@@ -20,19 +22,19 @@ export default function ProfilTokoPage() {
     <>
       {/* Page Title */}
       <VGPageTitle
-        subTitle="Personalisasi"
-        title="Pengaturan Toko"
+        subTitle={t("subTitle")}
+        title={t("title")}
       />
 
       {/* Tabs */}
       <VGCard sx={{ p: 0, pl: 3 }}>
         <Tabs value={value}>
           <Tab
-            label="Profil Toko"
+            label={t("tab.profile.label")}
             sx={{ fontWeight: 700 }}
           />
           <Tab
-            label="Jam Operational"
+            label={t("tab.operational.label")}
             sx={{ fontWeight: 700 }}
             onClick={handleChangePage}
           />
@@ -47,4 +49,4 @@ export default function ProfilTokoPage() {
   )
 }
 
-export { getStaticPropsWithTrans as getStaticProps }
+export const getStaticProps = getStaticPropsWithTransNamespace(["setting"]);

@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { Box } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 
 import VGCard from "~/components/atomic/VGCard";
+import VGButton from "~/components/atomic/VGButton";
 
 export default function ListProductFilter() {
+  const { t } = useTranslation("listProduct");
   const [selectedStatus, setSelectedStatus] = useState("all")
   const category = [
     { label: "Category A", value: "a" },
@@ -41,7 +43,7 @@ export default function ListProductFilter() {
           >
             <TextField
               id="filter-by-search"
-              label="TextField"
+              label={t("filter.search")}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">
@@ -66,7 +68,7 @@ export default function ListProductFilter() {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Kategori"
+                  label={t("filter.category")}
                   size="small"
                 />
               )}
@@ -84,7 +86,7 @@ export default function ListProductFilter() {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Brand"
+                  label={t("filter.brand")}
                   size="small"
                 />
               )}
@@ -97,7 +99,7 @@ export default function ListProductFilter() {
           >
             <TextField
               id="filter-by-feature"
-              label="Fitur"
+              label={t("filter.feature")}
               size="small"
               select
               fullWidth
@@ -110,42 +112,42 @@ export default function ListProductFilter() {
         </Grid>
       </VGCard>
       <Box>
-        <Button
+        <VGButton
           sx={{m: 1}}
           color={ selectedStatus === "all" ? "primary" : "secondary" }
           variant="outlined"
           size="small"
           onClick={() => handleFilterStatus("all")}
         >
-          Semua
-        </Button>
-        <Button
+          {t("filter.status.all")}
+        </VGButton>
+        <VGButton
           sx={{m: 1}}
           color={ selectedStatus === "active" ? "primary" : "secondary" }
           variant="outlined"
           size="small"
           onClick={() => handleFilterStatus("active")}
         >
-          Aktif
-        </Button>
-        <Button
+          {t("filter.status.active")}
+        </VGButton>
+        <VGButton
           sx={{m: 1}}
           color={ selectedStatus === "nonActive" ? "primary" : "secondary" }
           variant="outlined"
           size="small"
           onClick={() => handleFilterStatus("nonActive")}
         >
-          Nonaktif
-        </Button>
-        <Button
+          {t("filter.status.nonAktive")}
+        </VGButton>
+        <VGButton
           sx={{m: 1}}
           color={ selectedStatus === "runningLow" ? "primary" : "secondary" }
           variant="outlined"
           size="small"
           onClick={() => handleFilterStatus("runningLow")}
         >
-          Akan Habis
-        </Button>
+          {t("filter.status.runningLow")}
+        </VGButton>
       </Box>
     </>
   )

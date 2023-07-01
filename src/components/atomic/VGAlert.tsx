@@ -17,6 +17,8 @@ export default function VGAlert(props: {
         return "#FF3333";
       case 'success':
         return "#00870E";
+      case 'warning':
+        return "#D17E00";
       default:
         return "#9AA4BF";
     }
@@ -30,6 +32,8 @@ export default function VGAlert(props: {
         return "#FFDCDA";
       case 'success':
         return "#CEECD1";
+      case 'warning':
+        return "#FFEAAA";
       default:
         return "#F5F5F5";
     }

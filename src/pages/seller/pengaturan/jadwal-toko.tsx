@@ -7,8 +7,9 @@ import {
   Box
 } from '@mui/material';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import { useTranslation } from "next-i18next";
 
-import { getStaticPropsWithTrans } from "~/utils/translation";
+import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import VGCard from "~/components/atomic/VGCard";
 import VGPageTitle from '~/components/atomic/VGPageTitle';
 import OperationalSetting from '~/components/organism/OperationalSetting';
@@ -17,6 +18,7 @@ import VGAlert from '~/components/atomic/VGAlert';
 export default function JadwalTokoPage() {
   const router = useRouter()
   const [value] = useState(1)
+  const { t } = useTranslation("setting");
 
   const handleChangePage = () => {
     void router.push('/seller/pengaturan/profil-toko')
@@ -26,18 +28,18 @@ export default function JadwalTokoPage() {
     <>
       {/* Page Title */}
       <VGPageTitle
-        subTitle="Personalisasi"
-        title="Pengaturan Toko"
+        subTitle={t("subTitle")}
+        title={t("title")}
       />
       <VGCard sx={{ p: 0, pl: 3 }}>
         <Tabs value={value}>
           <Tab
-            label="Profil Toko"
+            label={t("tab.profile.label")}
             sx={{ fontWeight: 700 }}
             onClick={handleChangePage}
           />
           <Tab
-            label="Jam Operational"
+            label={t("tab.operational.label")}
             sx={{ fontWeight: 700 }}
           />
         </Tabs>
@@ -56,7 +58,7 @@ export default function JadwalTokoPage() {
             color="primary.main"
             sx={{ pl: 1 }}
           >
-            Zona waktu yang digunakan adalah WIB
+            {t("tab.operational.info")}
           </Typography>
         </Box>
       </VGAlert>
@@ -67,4 +69,4 @@ export default function JadwalTokoPage() {
   )
 }
 
-export { getStaticPropsWithTrans as getStaticProps };
+export const getStaticProps = getStaticPropsWithTransNamespace(["setting"]);

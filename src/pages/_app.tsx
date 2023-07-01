@@ -32,6 +32,10 @@ const theme = createTheme({
     secondary: {
       main: "#9AA4BF"
     },
+    success: {
+      main: "#40D04F",
+      contrastText: "#FFFFFF"
+    },
     divider: "#F5F5F5",
     common: commonColors,
   },

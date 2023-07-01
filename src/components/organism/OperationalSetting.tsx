@@ -1,15 +1,17 @@
 import { Grid } from "@mui/material";
 import OperationalSettingCard from "~/components/molecule/OperationalSettingCard";
+import { useTranslation } from "next-i18next";
 
 export default function OperationalSetting() {
+  const { t } = useTranslation("setting");
   const days = [
-    "Senin",
-    "Selasa",
-    "Rabu",
-    "Kamis",
-    "Jumat",
-    "Sabtu",
-    "Minggu"
+    t("tab.operational.form.days.mon"),
+    t("tab.operational.form.days.tues"),
+    t("tab.operational.form.days.wed"),
+    t("tab.operational.form.days.thurs"),
+    t("tab.operational.form.days.fri"),
+    t("tab.operational.form.days.sat"),
+    t("tab.operational.form.days.sun")
   ]
 
   return (

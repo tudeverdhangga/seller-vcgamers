@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, TimeField } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useTranslation } from "next-i18next";
 
 import VGChip from "~/components/atomic/VGChip";
 
@@ -22,6 +23,7 @@ export default function OperationalSettingCard(props: {
   openHours?: string;
   closedHours?: string;
 }) {
+  const { t } = useTranslation("setting");
   const [isOpen, setIsOpen] = useState(props.isOpen);
   const [schedule, setSchedule] = useState(props.schedule || "fullDay");
 
@@ -48,31 +50,36 @@ export default function OperationalSettingCard(props: {
   // Container
   const headingContainer = (
     <Box sx={fieldStyle}>
-      <Typography
-        sx={{
-          fontSize: "16px",
-          fontWeight: 700,
-          color: "common.shade.200"
-        }}
-      >
-        { props.day }
+      <Box display="flex">
+        <Typography
+          sx={{
+            fontSize: "16px",
+            fontWeight: 700,
+            color: "common.shade.200"
+          }}
+        >
+          { props.day }
+        </Typography>
         {
           props.isToday &&
           <VGChip
             color="success"
-            label="Hari ini"
+            label={t("tab.operational.form.today")}
             size="small"
             sx={{ ml: 1 }}
           />
         }
-      </Typography>
+      </Box>
       <FormControlLabel
         control={
           <Switch
             onChange={(event) => handleIsOpen(event)}
           />
         }
-        label={isOpen ? "Buka" : "Tutup"}
+        label={isOpen
+          ? t("tab.operational.form.open")
+          : t("tab.operational.form.close")
+        }
         labelPlacement="start"
       />
     </Box>
@@ -85,7 +92,7 @@ export default function OperationalSettingCard(props: {
       >
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
-            Buka 24 jam
+            {t("tab.operational.form.fullHour")}
           </Typography>
           <Radio
             value="fullDay"
@@ -93,7 +100,7 @@ export default function OperationalSettingCard(props: {
         </Box>
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
-            Atur Jam Operational
+            {t("tab.operational.form.customHour")}
           </Typography>
           <Radio
             value="custom"
@@ -102,7 +109,7 @@ export default function OperationalSettingCard(props: {
       </RadioGroup>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimeField
-          label="Jam Buka"
+          label={t("tab.operational.form.openHour")}
           format="HH:mm"
           disabled={schedule !== "" && schedule === "fullDay"}
           sx={{
@@ -111,7 +118,7 @@ export default function OperationalSettingCard(props: {
           }}
         />
         <TimeField
-          label="Jam Tutup"
+          label={t("tab.operational.form.closeHour")}
           format="HH:mm"
           disabled={schedule !== "" && schedule === "fullDay"}
           sx={{

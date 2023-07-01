@@ -1,0 +1,108 @@
+{
+  "title": "Produk",
+  "subTitle": "Kelola Katalog",
+  "bulkUpdate": "Atur Masal",
+  "addProduct": "Tambah Produk",
+  "filter": {
+    "search": "Pencarian",
+    "category": "Kategori",
+    "brand": "Brand",
+    "feature": "Fitur",
+    "status": {
+      "all": "Semua",
+      "active": "Aktif",
+      "nonAktive": "Nonaktif",
+      "runningLow": "Akan Habis"
+    }
+  },
+  "table": {
+    "th": {
+      "sku": "SKU PRODUK",
+      "price": "HARGA",
+      "feature": "FITUR",
+      "stock": "STOK",
+      "actions": "ACTION"
+    },
+    "empty": {
+      "label": "Kamu belum memiliki produk",
+      "button": "Tambah Produk"
+    },
+    "tBody": {
+      "changePrice": "Ubah Harga",
+      "setVoucher": "Atur Voucher",
+      "changeStock": "Ubah Stock",
+      "detailProduct": "Lihat Harga",
+      "editProduct": "Edit Harga",
+      "deactiveProduct": "Nonaktifkan",
+      "deleteProduct": "Hapus Produk"
+    },
+    "dialog": {
+      "active": {
+        "title": "Pengaktifan Proses Kilat",
+        "bulkTitle": "Pengaktifan Masal Proses Kilat",
+        "subTitle": "Kamu akan mengaktifkan Fitur proses kilat di produk",
+        "bulkSubTitle": "Kamu akan mengaktifkan Fitur proses kilat untuk",
+        "alert": {
+          "active": "Fitur ini bisa diaktifkan kembali pada {{time}} WIB",
+          "nonActive": {
+            "title": "Perhatian: ",
+            "subTitle": "Bagi produk yang sebelum penonaktifan massal sudah lebih dulu dalam keadaan nonaktif, tidak akan terpengaruh oleh pengaktifan massal ini."
+          }
+        },
+        "actions": {
+          "cancel": "Kembali",
+          "ok": "Aktifkan"
+        }
+      },
+      "nonActive": {
+        "title": "Nonaktifkan Proses Kilat",
+        "bulkTitle": "Nonaktifkan Masal Proses Kilat",
+        "subTitle": "Kamu akan menonaktifkan Fitur proses kilat di produk",
+        "bulkSubTitle": "Kamu akan menonaktifkan Fitur proses kilat untuk",
+        "alert": "Fitur bisa diaktifkan kembali 1 jam setelah penonaktifan. Ingin Lanjutkan?",
+        "actions": {
+          "cancel": "Kembali",
+          "ok": "Nonaktifkan"
+        }
+      },
+      "changePrice": {
+        "title": "Ubah Harga Produk",
+        "note": "Catatan: Harap isi nominal dengan kelipatan 100",
+        "alert": "Setiap transaksi VCGamers menerapkan potongan {{percent}} sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar {{price}}",
+        "field": "Harga (Rp)",
+        "actions": {
+          "cancel": "Batal",
+          "ok": "Simpan"
+        }
+      },
+      "changeStock": {
+        "title": "Ubah Stock Produk",
+        "field": "Harga (Rp)",
+        "alert": {
+          "title": "Stok Kosong",
+          "subTitle": "menyebabkan produk tidak bisa dibeli"
+        },
+        "actions": {
+          "cancel": "Batal",
+          "ok": "Simpan"
+        }
+      },
+      "confirmationDeactive": {
+        "title": "Konfirmasi Penonaktifan",
+        "subTitle": "Kamu yakin ingin menonaktifkan varian produk ini? Varian tidak akan hilang dari data penjual namun tidak akan terlihat lagi oleh pembeli.",
+        "actions": {
+          "cancel": "Batal",
+          "ok": "Nonaktifkan"
+        }
+      },
+      "confirmationDelete": {
+        "title": "Konfirmasi Penghapusan",
+        "subTitle": "Kamu yakin ingin menghapus varian produk ini? Varian akan hilang dari data penjual dan tidak akan terlihat oleh pembeli.",
+        "actions": {
+          "cancel": "Batal",
+          "ok": "Nonaktifkan"
+        }
+      }
+    }
+  }
+}
