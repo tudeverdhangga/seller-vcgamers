@@ -1,0 +1,141 @@
+{
+  "title": "Fitur Seller",
+  "subtitleInstant": "Instant",
+  "subtitleProskil": "Proses Kilat",
+  "subtitleVIP": "VIP",
+  "banner": {
+    "title": "Fitur",
+    "descInstant": "Label layanan Instant adalah tanda yang disematkan pada variasi produk seller. Tanda ini memberi jaminan kepada buyer bahwa pesanan akan diproses dengan sangat cepat. Ketika buyer menyelesaikan proses pembayaran maka secara otomatis buyer akan menerima kode voucher sesuai dengan produk yang dipesan.",
+    "descProskil": "Layanan ‘Proses Kilat’ adalah label yang bisa disematkan pada variasi produk seller. Tanda ini menjadi bukti jaminan kepada buyer kalau seller berkomitmen akan memproses pesanan buyer hingga selesai hanya dalam maksimal waktu 10 Menit."
+  },
+  "featureRequests": {
+    "0": {
+      "imageSrc": "fitur1",
+      "title": "Menjadi Daya Tarik",
+      "subtitle": "Produk akan tampil dengan tanda yang berbeda dibanding produk pada umumnya"
+    },
+    "1": {
+      "imageSrc": "fitur2",
+      "title": "Menarik Minat Buyer",
+      "subtitle": "Jaminan pelayanan yang cepat menjadi pemikat luar biasa bagi buyer untuk berbelanja"
+    },
+    "2": {
+      "imageSrc": "fitur3",
+      "title": "Praktis Bagi Seller",
+      "subtitle": "Setiap pesanan yang masuk akan otomatis diproses oleh sistem VCGamers"
+    },
+    "3": {
+      "imageSrc": "fitur4",
+      "title": "Hemat Waktu",
+      "subtitle": "Seller bisa banyak menghemat waktu dengan input banyak stok kode voucher ke sistem"
+    }
+  },
+  "tableComparison": {
+    "header1": "Bandingkan Keuntungannya",
+    "header2": "Regular",
+    "rowsInstant": {
+      "0": {
+          "profit": "Merchant fee 1%",
+          "regular": "true"
+        },
+      "1": {
+          "profit": "Section khusus pada halaman homepage",
+          "regular": "-"
+        },
+      "2": {
+          "profit": "Tidak perlu repot proses, kode voucher otomatis terkirim",
+          "regular": "-"
+        },
+      "3": {
+          "profit": "Mendapatkan filter Instan di pencarian produk",
+          "regular": "-"
+        },
+      "4": {
+          "profit": "Label Instant setiap halaman produk",
+          "regular": "-"
+        },
+      "5": {
+          "profit": "Produk kamu akan tampil di halaman teratas",
+          "regular": "-"
+        },
+      "6": {
+          "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
+          "regular": "-"
+        }
+    },
+    "rowsProskil": {
+      "0": {
+          "profit": "Merchant fee 1%",
+          "regular": "true"
+        },
+      "1": {
+          "profit": "Section khusus pada halaman homepage",
+          "regular": "-"
+        },
+      "2": {
+          "profit": "Label Instant setiap halaman produk",
+          "regular": "-"
+        },
+      "3": {
+          "profit": "Produk kamu akan tampil di halaman teratas",
+          "regular": "-"
+        },
+      "4": {
+          "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
+          "regular": "-"
+        }
+    }
+  },
+  "snk": {
+    "title": "Syarat dan Ketentuan",
+    "bodyProskil": {
+      "0": "Seller yang dapat menggunakan fitur ini adalah seller yang memiliki minimal 50 Transaksi dengan total persentase keberhasilan minimal 90%.",
+      "1": "Jika seller yang memiliki fitur 10 menit menonaktifkan label 10 menit dari varian produknya, maka membutuhkan jeda ± 1 jam terhitung saat seller menonaktifkan fitur label tersebut.",
+      "2": "Apabila terjadi kecurangan dalam bertransaksi atau seller tidak dapat memproses pesanan dalam waktu maksimal 10 menit selama 3 kali, maka admin akan menonaktifkan fitur 10 menit dari akun seller.",
+      "3": "Informasi selengkapnya dapat dengan menghubungi admin"
+    },
+    "bodyInstant": {
+      "0": "Varian produk yang menggunakan fitur ini tidak mempengaruhi rata-rata kecepatan pengiriman produk.",
+      "1": "Jika seller yang memiliki fitur Instant menonaktifkan label Instant dari varian produknya, maka membutuhkan jeda ± 1 menit terhitung saat seller menonaktifkan fitur label tersebut.",
+      "2": "Apabila terjadi kecurangan atau kekeliruan dalam bertransaksi seperti akibat dari seller tidak mengupdate stok voucher yang sudah tidak dapat digunakan sehingga merugikan pembeli Instant selama 3 kali, maka admin akan menonaktifkan fitur Instant dari akun seller.",
+      "3": "Seller yang dapat menggunakan fitur ini adalah seller yang telah memiliki minimal 50 Transaksi",
+      "4": "Seller harus memiliki tingkat keberhasilan transaksi diatas 90%. (Jika tetap ingin mengaktifkan fitur ini silahkan hubungi admin VCGamers)."
+    }
+  },
+  "request": {
+    "title": "Request Fitur",
+    "transaction": {
+      "title": "Jumlah Transaksi Tokomu",
+      "data": "{{count}} Transaksi",
+      "minimum": "Syarat minimum {{count}} transaksi"
+    },
+    "percentage": {
+      "title": "Transaksi Berhasil",
+      "data": "{{count}} %",
+      "minimum": "Syarat minimum 90%"
+    }
+  },
+  "alert": {
+    "confirmation": {
+      "msg": "Saya sudah membaca dan memahami seluruh syarat dan ketentuan yang berlaku tentang fitur ini",
+      "btn": "Request Fitur"
+    },
+    "notPermitted": {
+      "danger": "Kamu belum bisa memenuhi syarat dan ketentuan",
+      "sub": "Yuk perbanyak transaksi kamu dan jaga performa penjualan supaya bisa request fitur {{featurename}}"
+    },
+    "permitted": {
+      "msg": "Tokomu memenuhi syarat untuk bisa mengajukan fitur ini"
+    },
+    "inactive": {
+      "title": "Fitur {{featurename}} di toko kamu saat ini dinonaktifkan oleh admin. Mohon hubungi admin VCGamers untuk detail penonaktifan fitur dan pengajuan pengaktifan kembali.",
+      "subtitle": "Alasan: Berdasarkan data yang dikumpulkan tim admin VCGamers. Toko kamu melebihi limitasi penyelesaian transaksi lebih dari 10 menit sebanyak 3x. Kami mohon maaf atas ketidaknyamanan Seller. Untuk pengajuan pengaktifan kembali silahkan hubungi admin."
+    },
+    "already": {
+      "msg": "Toko kamu saat ini sudah dapat menggunakan fitur {{featurename}}. Penggunaan fitur ini bisa diaktifkan pada pengaturan variasi produk di halaman tambah/ubah produk."
+    },
+    "requested": {
+      "msg": "Kamu sudah melakukan request fitur {{featurename}}. Admin VC Gamers akan melakukan respon request fitur kamu maksimal dalam 7 x 24 jam sejak request dikirimkan"
+    }
+  }
+}

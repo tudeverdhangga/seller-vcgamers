@@ -13,6 +13,7 @@ export const commonColors = {
   },
   red: {
     0: "#FFDBDB",
+    400: "#FA5A5A",
     500: "#FF3333",
     900: "#D41A1A",
   },
