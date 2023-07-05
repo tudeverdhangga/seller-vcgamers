@@ -5,7 +5,7 @@ import { type SxProps } from "@mui/material/styles";
 import { useResponsive } from "~/utils/mediaQuery";
 
 export default function VGPageTitle(props: {
-  subTitle: string;
+  subTitle: string | JSX.Element;
   title: string;
   sx?: SxProps;
   children?: React.ReactNode;

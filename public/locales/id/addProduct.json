@@ -1,0 +1,51 @@
+{
+  "title": "Tambah Produk",
+  "subTitle": "Kembali",
+  "detail": {
+    "title": "Masukkan Detail Produk",
+    "category": "Kategori",
+    "brand": "Brand",
+    "group": "Group",
+    "description": "Deskripsi Produk",
+    "images": {
+      "label": "Gambar Utama Produk (Minimum: 1)",
+      "subLabel": "Digunakan sebagai default foto varian jika foto khusus varian tidak diaktifkan. (Max 1MB .PNG / .JPG) (Profil gambar tidak boleh kosong)",
+      "add": "Tambah Gambar"
+    }
+  },
+  "variant": {
+    "title": "Kelola Varian (Minimum: 1)",
+    "buttonLabel": "Tambah Variant",
+    "table": {
+      "th": {
+        "var": "Var",
+        "image": "Gambar Varian",
+        "name": "Nama",
+        "stock": "Stok",
+        "price": "Harga (Rp)",
+        "statistic": "Statistik",
+        "action": "Action"
+      },
+      "td": {
+        "image": {
+          "enabled": "Gunakan gambar khusus varian (Min.1)",
+          "label": "Gambar",
+          "disabled": "Tidak menggunakan gambar khusus varian. Varian akan menggunakan gambar utama  produk"
+        },
+        "statistic": {
+          "visit": "Dikunjungi",
+          "favorite": "Difavoritkan",
+          "sold": "Terjual"
+        },
+        "action": {
+          "edit": "Edit",
+          "active": "Aktifkan",
+          "nonactive": "Nonaktifkan",
+          "delete": "Hapus"
+        }
+      }
+    }
+  },
+  "cancel": "Batal",
+  "save": "Simpan"
+}

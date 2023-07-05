@@ -9,6 +9,8 @@ import nextI18NextConfig from "../../next-i18next.config.mjs";
 import { Layout } from "~/layout";
 import { commonColors } from "~/utils/colors";
 
+import '~/components/atomic/VGRichEditor/index.css'
+
 //TODO: Fix issue loading using next/font
 // const rajdhani = Rajdhani({
 //   subsets: ["latin"],

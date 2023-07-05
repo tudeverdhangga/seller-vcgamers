@@ -5,6 +5,7 @@ import requestFitur from "../../public/locales/id/requestFitur.json";
 import notification from "../../public/locales/id/notification.json";
 import setting from "../../public/locales/id/setting.json";
 import listProduct from "../../public/locales/id/listProduct.json";
+import addProduct from "../../public/locales/id/addProduct.json";
 
 const resources = {
   common,
@@ -13,7 +14,8 @@ const resources = {
   requestFitur,
   notification,
   setting,
-  listProduct
+  listProduct,
+  addProduct
 } as const;
 
 export default resources;
