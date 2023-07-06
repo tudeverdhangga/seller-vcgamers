@@ -18,23 +18,25 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 
+import { variant } from "~/utils/dummy/variant"
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
-import { variant } from "~/utils/dummy/variant"
+import AddVariantDialog from "~/components/molecule/AddVariantDialog";
 
 export default function AddProductVariant() {
   const { t } = useTranslation("addProduct");
   const [isImage, setIsImage] = useState<boolean | undefined>(undefined)
   const [fileObjects, setFileObjects] = useState<File[]>();
+  const [isShowAddVariantDialog, setIsShowAddVariantDialog] = useState(false);
   
-  const handleFileChange = (newFileObjects: File[], index: number) => {
+  const onChangeImageFile = (newFileObjects: File[], index: number) => {
     setFileObjects(newFileObjects);
     // Handle the uploaded files
     console.log(fileObjects);
     console.log(newFileObjects);
     console.log(index);
   };
-  const handleIsImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsImage(e.target.checked)
   }
   const getIsImage = (data: boolean) => {
@@ -42,6 +44,9 @@ export default function AddProductVariant() {
       return isImage;
     }
     return data;
+  }
+  const onClickAddVariant = (value: boolean) => {
+    setIsShowAddVariantDialog(value)
   }
 
   const muiDropzoneStyle = {
@@ -145,7 +150,7 @@ export default function AddProductVariant() {
                     <TableCell sx={{ borderRight: "1px solid #DEDEDE" }}>
                       <Switch
                         defaultChecked={row.isActiveImage}
-                        onChange={(event) => handleIsImage(event)}
+                        onChange={(event) => onChangeImage(event)}
                       />
                       <Typography fontSize={12}>
                         {getIsImage(row.isActiveImage)
@@ -164,7 +169,7 @@ export default function AddProductVariant() {
                             dropzoneParagraphClass="mui-dropzone__label"
                             showPreviewsInDropzone={false}
                             Icon={UploadIcon}
-                            onChange={(files) => handleFileChange(files, 0)}
+                            onChange={(files) => onChangeImageFile(files, 0)}
                           />
                         </Box>
                         <Box sx={muiDropzoneStyle}
@@ -177,7 +182,7 @@ export default function AddProductVariant() {
                             dropzoneParagraphClass="mui-dropzone__label"
                             showPreviewsInDropzone={false}
                             Icon={UploadIcon}
-                            onChange={(files) => handleFileChange(files, 1)}
+                            onChange={(files) => onChangeImageFile(files, 1)}
                           />
                         </Box>
                         <Box sx={muiDropzoneStyle}
@@ -190,7 +195,7 @@ export default function AddProductVariant() {
                             dropzoneParagraphClass="mui-dropzone__label"
                             showPreviewsInDropzone={false}
                             Icon={UploadIcon}
-                            onChange={(files) => handleFileChange(files, 2)}
+                            onChange={(files) => onChangeImageFile(files, 2)}
                           />
                         </Box>
                       </Box>
@@ -316,9 +321,14 @@ export default function AddProductVariant() {
       <VGButton
         variant="contained"
         color="primary"
+        onClick={() => onClickAddVariant(true)}
       >
         <AddIcon/>{t("variant.buttonLabel")}
       </VGButton>
+      <AddVariantDialog
+        isOpen={isShowAddVariantDialog}
+        handleClose={() => setIsShowAddVariantDialog(false)}
+      />
     </VGCard>
   )
 }

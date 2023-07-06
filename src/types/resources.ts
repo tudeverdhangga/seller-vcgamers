@@ -6,6 +6,7 @@ import notification from "../../public/locales/id/notification.json";
 import setting from "../../public/locales/id/setting.json";
 import listProduct from "../../public/locales/id/listProduct.json";
 import addProduct from "../../public/locales/id/addProduct.json";
+import bulkUpdate from "../../public/locales/id/bulkUpdate.json";
 
 const resources = {
   common,
@@ -15,7 +16,8 @@ const resources = {
   notification,
   setting,
   listProduct,
-  addProduct
+  addProduct,
+  bulkUpdate
 } as const;
 
 export default resources;

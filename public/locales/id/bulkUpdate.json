@@ -1,0 +1,28 @@
+{
+  "title": "Edit Massal",
+  "subTitle": "Kelola Produk",
+  "bulkUpdate": "Atur Massal",
+  "addProduct": "Tambah Produk",
+  "download": {
+    "title": "Download Excel",
+    "subTitle": "Kamu dapat mengubah semua produk-mu secara sekaligus, atau dengan memilih brand tertentu",
+    "label": "Pilih Brand",
+    "button": "Download",
+    "note": {
+      "title": "Panduan ubah produk massal:",
+      "1": "Harap untuk hanya mengganti stock & harga sesuai ketentuan yang berlaku dan tidak mengganti hal lain selain kedua hal tersebut",
+      "2": "Kami merekomendasikan untuk mengubah dengan menggunakan Microsoft Excel setidaknya edisi 2007",
+      "3": "Produk yang bisa diubah hanya produk reguler & proses kilat (produk instant tidak bisa)"
+    }
+  },
+  "upload": {
+    "title": "Upload Excel",
+    "note": {
+      "title": "Panduan upload:",
+      "1": "Harap tidak mengupload hal lain selain file yang telah disediakan",
+      "2": "Format yang dapat diterima adalah .xlsx",
+      "3": "Kamu dapat menghapus baris yang tidak kamu rubah dalam excel agar proses upload bisa lebih cepat."
+    },
+    "label": "Upload File Excel (.xlsx)"
+  }
+}

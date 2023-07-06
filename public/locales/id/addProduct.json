@@ -44,6 +44,45 @@
           "delete": "Hapus"
         }
       }
+    },
+    "dialog": {
+      "title": "Tambah Varian",
+      "header": {
+        "variant": "Pilih Variant",
+        "customName": "Buat Nama Sendiri"
+      },
+      "delivery": {
+        "label": "Proses Pengiriman",
+        "subLabel": "Kamu dapat memilih proses pengiriman produk yang sesuai dengan item yang akan dijual",
+        "regular": {
+          "label": "Reguler",
+          "subLabel": "Pengiriman standar. Penjual dapat menerima dan memproses pesanan"
+        },
+        "kilat": "Jaminan bagi buyer bahwa tokomu berkomitmen memproses pengiriman pesanan dalam 10 menit",
+        "instant": {
+          "label": "Jaminan bagi buyer bahwa pesanannya akan diterima langsung tanpa menunggu (jika pembayaran sudah dilunasi)",
+          "subLabel": "Fitur ini hanya untuk kategori produk voucher"
+        },
+        "permissionFeature": {
+          "label": "Tokomu belum memiliki fitur ini.",
+          "subLabel": "Request Fitur Sekarang"
+        }
+      },
+      "setting": {
+        "title": "Pengaturan Varian",
+        "alert": "Setiap transaksi VCGamers menerapkan potongan {{discount}} sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar {{income}}",
+        "stock": "Stok",
+        "price": {
+          "label": "Harga",
+          "subLabel": "Catatan: Harap isi nominal dengan kelipatan 100"
+        }
+      },
+      "image": {
+        "label": "Gunakan foto khusus varian (Optional)",
+        "subLabel": "Simpan Varian terlebih dahulu untuk mengunggah gambar varian di tabel"
+      },
+      "cancel": "Batal",
+      "save": "Simpan Varian"
     }
   },
   "cancel": "Batal",
