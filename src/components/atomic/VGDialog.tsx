@@ -12,15 +12,14 @@ export default function VGDialog(props: {
 }) {
   return (
     <Dialog
-      className="adsasdasd"
       open={props.isOpen}
       onClose={props.onClose}
       sx={{
-        borderRadius: "10px",
         minWidth: 100,
         minHeight: 100,
         "& .MuiDialog-container": {
           "& .MuiDialog-paper": {
+            borderRadius: "10px",
             width: "100%",
             maxWidth: props.width,
           },

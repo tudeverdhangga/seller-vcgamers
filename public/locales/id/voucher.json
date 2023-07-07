@@ -1,0 +1,38 @@
+{
+  "title": "Daftar Voucher",
+  "subTitle": "Kelola",
+  "input": {
+    "productName": "Produk:",
+    "total": "total voucher tersedia",
+    "note": {
+      "label": "Tambah Kode Voucher",
+      "1": "Minimum 1 Kode Voucher, Maksimum 100 Kode Voucher",
+      "2": "Satu baris tulisan kode akan terhitung sebagai 1 buah kode. Batas karaker kode dalam satu baris: 77 karakter.",
+      "3": "Kode yang sama atau karakter melebihi batas akan terdeteksi dan otomatis dihapus oleh sistem "
+    },
+    "alert": "Terdapat kode yang sama. Kode yang sama sudah dihapus",
+    "placeholder": "Contoh memasukkan 4 voucher:\nkode1\nkode2",
+    "check": "Perika Jumlah Kode",
+    "save": "Masukkan {{total}} data",
+    "edit": "Edit Data"
+  },
+  "list": {
+    "label": "List Kode Voucher",
+    "placeholder": "Cari Kode",
+    "available": "Tersedia",
+    "sold": "Terjual",
+    "withdrawn": "Ditarik",
+    "withdrawnButton": "Tarik Code",
+    "reason": {
+      "label": "Alasan: ",
+      "title": "Alasan Penarikan Kode",
+      "alert": "Kode: ",
+      "soldOutside": "Kode terjual diluar VCGamers",
+      "wrong": "Salah input kode",
+      "expired": "Kode expired",
+      "another": "Lainnya",
+      "back": "Kembali",
+      "ok": "Tarik Kode"
+    }
+  }
+}

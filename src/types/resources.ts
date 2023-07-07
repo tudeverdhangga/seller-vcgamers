@@ -7,6 +7,7 @@ import setting from "../../public/locales/id/setting.json";
 import listProduct from "../../public/locales/id/listProduct.json";
 import addProduct from "../../public/locales/id/addProduct.json";
 import bulkUpdate from "../../public/locales/id/bulkUpdate.json";
+import voucher from "../../public/locales/id/voucher.json";
 
 const resources = {
   common,
@@ -17,7 +18,8 @@ const resources = {
   setting,
   listProduct,
   addProduct,
-  bulkUpdate
+  bulkUpdate,
+  voucher
 } as const;
 
 export default resources;

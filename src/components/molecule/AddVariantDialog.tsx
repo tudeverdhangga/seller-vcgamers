@@ -28,14 +28,25 @@ export default function AddVariantDialog(props: {
     { label: "Category B", value: "b" },
     { label: "Category C", value: "c" }
   ]
+  const [stock, setStock] = useState('')
   const [price, setPrice] = useState('')
+  const [feature, setFeature] = useState('regular')
   
+  const onInputStock = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStock(event.target.value)
+  }
   const onInputPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(event.target.value)
   }
   const income = () => {
     if (price === '') return 0
     return 98 * parseInt(price) / 100
+  }
+  const onChangeSendFeature = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === 'instant') {
+      setStock('0')
+    }
+    setFeature(event.target.value)
   }
   
   const titleLargeStyle = {
@@ -89,7 +100,8 @@ export default function AddVariantDialog(props: {
         {t("variant.dialog.delivery.subLabel")}
       </Typography>
       <RadioGroup
-        defaultValue="regular"
+        defaultValue={feature}
+        onChange={onChangeSendFeature}
       >
         <Box>
           <FormControlLabel
@@ -167,7 +179,7 @@ export default function AddVariantDialog(props: {
             display="flex"
           >
             <ErrorOutlineOutlinedIcon />
-            <Typography>
+            <Typography ml={2}>
               {t("variant.dialog.setting.alert", { discount: "2%", income: priceFormat(income()) })}
             </Typography>
           </Typography>
@@ -187,6 +199,10 @@ export default function AddVariantDialog(props: {
             inputMode: "numeric",
             pattern: "[0-9]*",
           }}
+          value={stock}
+          disabled={feature === 'instant'}
+          size="small"
+          onChange={onInputStock}
         />
       </Grid>
       <Grid
@@ -204,6 +220,7 @@ export default function AddVariantDialog(props: {
             inputMode: "numeric",
             pattern: "[0-9]*",
           }}
+          size="small"
           onChange={onInputPrice}
         />
       </Grid>

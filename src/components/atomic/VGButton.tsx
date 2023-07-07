@@ -11,6 +11,8 @@ export default function VGButton(props: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   sx?: SxProps<Theme>;
 }) {
+  const buttonSize = props.size || 'medium'
+
   return (
     <Button
       variant={props.variant}
@@ -24,11 +26,11 @@ export default function VGButton(props: {
         textTransform: "none",
         borderRadius: "10px",
         boxShadow: "none",
-        p: props.size === "small"
-          ? "5px"
-          : props.size === "medium"
-            ? "8px"
-            : "10px",
+        p: buttonSize === "small"
+          ? "5px 8px"
+          : buttonSize === "medium"
+            ? "8px 14px"
+            : "0 15px",
         ...props.sx
       }}
     >

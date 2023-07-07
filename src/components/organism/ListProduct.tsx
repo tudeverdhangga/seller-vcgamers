@@ -98,6 +98,7 @@ export default function ListProduct() {
             products.map((product, index) => (
               <ListProductItem
                 key={index}
+                id={index}
                 image={product.image}
                 name={product.name}
                 status={product.status}

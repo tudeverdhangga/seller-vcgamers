@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { Box, TextField, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 
 import VGAlert from "~/components/atomic/VGAlert";

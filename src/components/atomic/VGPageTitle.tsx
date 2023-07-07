@@ -6,7 +6,7 @@ import { useResponsive } from "~/utils/mediaQuery";
 
 export default function VGPageTitle(props: {
   subTitle: string | JSX.Element;
-  title: string;
+  title: string | JSX.Element;
   sx?: SxProps;
   children?: React.ReactNode;
 }) {
@@ -29,7 +29,7 @@ export default function VGPageTitle(props: {
           >
             {props.subTitle}
           </Typography>
-          <Typography
+          <Box
             sx={{
               fontSize: "24px",
               fontWeight: 700,
@@ -37,7 +37,7 @@ export default function VGPageTitle(props: {
             color="primary.main"
           >
             {props.title}
-          </Typography>
+          </Box>
         </Box>
       )}
       {props.children}

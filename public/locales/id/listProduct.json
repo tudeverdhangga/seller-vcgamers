@@ -102,6 +102,11 @@
           "cancel": "Batal",
           "ok": "Nonaktifkan"
         }
+      },
+      "changeVoucher": {
+        "title": "Kelola Voucher",
+        "subTitle": "Masukan Pin",
+        "forget": "Lupa PIN?"
       }
     }
   }

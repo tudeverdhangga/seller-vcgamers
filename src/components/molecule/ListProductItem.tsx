@@ -24,6 +24,7 @@ import ConfirmationDeactiveDialog from "~/components/molecule/ConfirmationDeacti
 import ConfirmationDeleteDialog from "~/components/molecule/ConfirmationDeleteDialog";
 import { capitalizeFirstLetter, priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
+import PinVoucherDialog from "~/components/molecule/PinVoucherDialog";
 
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
@@ -32,6 +33,7 @@ export default function ListProductItem(props: {
   price: number;
   feature?: string;
   stock: number;
+  id: number; // can change to id or uuid
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isOpenDeactiveKilatDialog, setIsOpenDeactiveKilatDialog] = useState(false)
@@ -40,6 +42,7 @@ export default function ListProductItem(props: {
   const [isOpenChangeStockDialog, setIsOpenChangeStockDialog] = useState(false)
   const [isOpenDeactiveProductDialog, setIsOpenDeactiveProductDialog] = useState(false)
   const [isOpenDeleteProductDialog, setIsOpenDeleteProductDialog] = useState(false)
+  const [isOpenPinVoucherDialog, setIsOpenPinVoucherDialog] = useState(false)
   const isOpenMenu = Boolean(anchorEl);
   const { isMobile } = useResponsive();
   const { t } = useTranslation("listProduct");
@@ -220,6 +223,7 @@ export default function ListProductItem(props: {
               variant="contained"
               color="primary"
               sx={{ m: 1 }}
+              onClick={() => setIsOpenPinVoucherDialog(true)}
             >
               {t("table.tBody.setVoucher")}
             </VGButton>
@@ -355,6 +359,11 @@ export default function ListProductItem(props: {
         image={props.image}
         isOpen={isOpenDeleteProductDialog}
         handleClose={() => setIsOpenDeleteProductDialog(false)}
+      />
+      <PinVoucherDialog
+        id={props.id}
+        isOpen={isOpenPinVoucherDialog}
+        handleClose={() => setIsOpenPinVoucherDialog(false)}
       />
     </>
   )

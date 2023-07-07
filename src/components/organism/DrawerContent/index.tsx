@@ -17,6 +17,19 @@ export default function DrawerContent() {
   const { t } = useTranslation("layout");
 
   useEffect(() => {
+    // Check if user want to access voucher from direct url
+    const url = router.asPath
+    const matches = url.match(/\/([^\/?]+)/g)
+    const mainUrl = matches && matches[2]
+
+    if (mainUrl === "/kelola-voucher") {
+      if (!localStorage.getItem("voucherPermission")) {
+        void router.push("/seller/produk/kelola-produk")
+      }
+    } else {
+      localStorage.removeItem("voucherPermission")
+    }
+    
     // Handle the route change here
     const handleRouteChange = (activeMenu: string) => {
       setActiveMenu(activeMenu);
