@@ -63,6 +63,24 @@
           "regular": "-"
         }
     },
+    "rowsVip": {
+      "0": {
+          "profit": "Ikuti Berbagai Program Menarik",
+          "regular": "-"
+        },
+      "1": {
+          "profit": "Kelola Kode Promo Khusus Tokomu",
+          "regular": "-"
+        },
+      "2": {
+          "profit": "Fitur Integrasi API",
+          "regular": "-"
+        },
+      "3": {
+          "profit": "Mendapat Badge 'VIP Seller' ",
+          "regular": "-"
+        }
+      },
     "rowsProskil": {
       "0": {
           "profit": "Merchant fee 1%",
@@ -83,7 +101,40 @@
       "4": {
           "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
           "regular": "-"
-        }
+      }
+    }
+  },
+  "syaratVip": {
+    "title": "Kelengkapan Persyaratan VIP Seller untuk Tokomu",
+    "body": {
+      "0": {
+        "caption": "Verifikasi No. Ponsel",
+        "check": true
+      },
+      "1": {
+        "caption": "Minimum Penjualan Rp.10.000.000",
+        "check": false
+      },
+      "2": {
+        "caption": "Verifikasi Email Sambungkan Sekarang",
+        "check": false
+      },
+      "3": {
+        "caption": "Rating Toko di atas 4,5",
+        "check": false
+      },
+      "4": {
+        "caption": "Akun VCGamers aktif minimum 60 Hari",
+        "check": false
+      },
+      "5": {
+        "caption": "Rata-rata kecepatan kirim < 10 menit",
+        "check": false
+      },
+      "6": {
+        "caption": "Wajib menggunakan rekening bank untuk penarikan saldo toko",
+        "check": false
+      }
     }
   },
   "snk": {

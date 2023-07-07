@@ -43,8 +43,8 @@ export default function CustomizedTables(props: {
   feature: string,
   badgeSrc: string,
   rowsFeatures: Array<{
-    profit: String;
-    regular: String;
+    profit: string;
+    regular: string;
   }>
   children?: React.ReactNode;
 }) {
@@ -82,7 +82,7 @@ export default function CustomizedTables(props: {
                           <Image
                           src={props.badgeSrc}
                           width={80}
-                          height={16}
+                          height={20}
                           alt={`Badge ${props.feature}`}
                           />
                       </StyledTableCell>
@@ -138,7 +138,7 @@ export default function CustomizedTables(props: {
                             <Image
                             src={props.badgeSrc}
                             width={80}
-                            height={16}
+                            height={20}
                             alt={`Badge ${props.feature}`}
                             />
                         </StyledTableCell>

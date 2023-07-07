@@ -117,7 +117,7 @@ export default function InstantPage() {
       <TableRequestFeatures 
         rowsFeatures={rows} 
         feature="Instant" 
-        badgeSrc="/assets/badge-instant.png" 
+        badgeSrc="/assets/badge-instant.svg" 
       />
       
       {/* SnK */}
