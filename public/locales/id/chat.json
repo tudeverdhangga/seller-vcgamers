@@ -1,0 +1,23 @@
+{
+  "title": "Percakapan Toko",
+  "subtitle": "Daftar",
+  "message": "Pesan",
+  "infoBanner": {
+    "body": "Peringatan! Dilarang bertransaksi diluar VCGamers",
+    "click": "Simak Modus-Modus Penipuan Disini"
+  },
+  "suggestion": {
+    "welcome": "Hai, Selamat Datang",
+    "stockReady": "Stok Tersedia",
+    "thankYou": "Terima kasih",
+    "waitOrder": "Ditunggu Pesanannya",
+    "ready": "Siap"
+  },
+  "emptyState": {
+    "chatConversation": "Tidak ada pesan",
+    "chatRoom": {
+      "title": "Mari memulai obrolan!",
+      "subtitle": "Pilih pesan di samping untuk mulai chat"
+    }
+  }
+}

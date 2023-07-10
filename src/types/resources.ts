@@ -8,9 +8,11 @@ import listProduct from "../../public/locales/id/listProduct.json";
 import addProduct from "../../public/locales/id/addProduct.json";
 import bulkUpdate from "../../public/locales/id/bulkUpdate.json";
 import voucher from "../../public/locales/id/voucher.json";
+import chat from "../../public/locales/id/chat.json";
 
 const resources = {
   common,
+  chat,
   layout,
   dashboard,
   requestFitur,
@@ -19,7 +21,7 @@ const resources = {
   listProduct,
   addProduct,
   bulkUpdate,
-  voucher
+  voucher,
 } as const;
 
 export default resources;

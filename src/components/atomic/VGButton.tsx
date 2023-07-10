@@ -4,14 +4,21 @@ import { type ReactNode, type MouseEventHandler } from "react";
 
 export default function VGButton(props: {
   variant: "text" | "outlined" | "contained";
-  color: "inherit" | "secondary" | "success" | "error" | "info" | "warning" | "primary";
+  color:
+    | "inherit"
+    | "secondary"
+    | "success"
+    | "error"
+    | "info"
+    | "warning"
+    | "primary";
   children: ReactNode;
   disabled?: boolean;
   size?: "small" | "large" | "medium";
   onClick?: MouseEventHandler<HTMLButtonElement>;
   sx?: SxProps<Theme>;
 }) {
-  const buttonSize = props.size || 'medium'
+  const buttonSize = props.size || "medium";
 
   return (
     <Button
@@ -26,15 +33,16 @@ export default function VGButton(props: {
         textTransform: "none",
         borderRadius: "10px",
         boxShadow: "none",
-        p: buttonSize === "small"
-          ? "5px 8px"
-          : buttonSize === "medium"
+        p:
+          buttonSize === "small"
+            ? "5px 8px"
+            : buttonSize === "medium"
             ? "8px 14px"
             : "0 15px",
-        ...props.sx
+        ...props.sx,
       }}
     >
       {props.children}
     </Button>
-  )
+  );
 }

@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-import { Box, styled } from "@mui/material";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import Badge, { type BadgeProps } from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
@@ -9,23 +11,19 @@ import Typography from "@mui/material/Typography";
 
 import { useAtom } from "jotai";
 
+import ChevronLeftIcon from "~/components/icons/ChevronLeftIcon";
 import BellIcon from "../components/icons/BellIcon";
 import MenuIcon from "../components/icons/MenuIcon";
 
 import { drawerOpenAtom } from "~/atom";
 
+import { mobileAppBarAtom } from "~/atom/layout";
 import HelpCenterMenu from "~/components/molecule/HelpCenterMenu/desktop";
 import LanguageSelect from "~/components/molecule/LanguageSelect/desktop";
 import { useResponsive } from "~/utils/mediaQuery";
 import { DRAWER_WIDTH } from "./drawer";
 
 export function AppBar() {
-  const [drawerOpen, setDrawerOpen] = useAtom(drawerOpenAtom);
-
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   const { isDesktop } = useResponsive();
 
   return (
@@ -38,22 +36,7 @@ export function AppBar() {
     >
       <Toolbar>
         {isDesktop && <DesktopAppBar />}
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, display: { sm: "none" } }}
-        >
-          Dashboard Toko
-        </Typography>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ display: { sm: "none" } }}
-        >
-          <MenuIcon />
-        </IconButton>
+        <MobileAppBar />
       </Toolbar>
     </MuiAppBar>
   );
@@ -85,6 +68,54 @@ function DesktopAppBar() {
           </StyledBadge>
         </IconButton>
       </Link>
+    </>
+  );
+}
+
+function MobileAppBar() {
+  const [drawerOpen, setDrawerOpen] = useAtom(drawerOpenAtom);
+  const [appBar] = useAtom(mobileAppBarAtom);
+  const router = useRouter();
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const handlerPrevButton = () => {
+    router.back();
+  };
+
+  return (
+    <>
+      <IconButton
+        color="inherit"
+        aria-label="previous history"
+        edge="start"
+        onClick={handlerPrevButton}
+        sx={{
+          display: { xs: appBar.showPrev ? "inline-flex" : "none", sm: "none" },
+        }}
+      >
+        <ChevronLeftIcon />
+      </IconButton>
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{ flexGrow: 1, display: { sm: "none" } }}
+      >
+        {appBar.content}
+      </Typography>
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        edge="start"
+        onClick={handleDrawerToggle}
+        sx={{
+          display: { xs: appBar.showMenu ? "inline-flex" : "none", sm: "none" },
+        }}
+      >
+        <MenuIcon />
+      </IconButton>
     </>
   );
 }

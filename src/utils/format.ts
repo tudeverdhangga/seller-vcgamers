@@ -9,3 +9,9 @@ export function priceFormat(value: number, currency = "IDR", lng = "id-ID") {
 export function capitalizeFirstLetter(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+export function parenthesesNumber(value = 0) {
+  if (value === 0) return "";
+
+  return `(${value})`;
+}

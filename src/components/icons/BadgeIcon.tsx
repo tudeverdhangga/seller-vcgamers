@@ -5,7 +5,7 @@ const BadgeIcon = styled(
     <div className={props.className}>{props.content}</div>
   )
 )(({ theme }) => ({
-  backgroundColor: theme.palette.secondary.main,
+  backgroundColor: theme.palette.common.red[500],
   borderRadius: "50%",
   width: 18,
   height: 18,
