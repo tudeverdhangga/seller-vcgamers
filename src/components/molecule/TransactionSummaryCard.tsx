@@ -5,7 +5,7 @@ import DashboardCard from "../atomic/DashboardCard";
 
 export default function TransactionSummaryCard() {
   return (
-    <DashboardCard title="Ringkasan Transaksi">
+    <DashboardCard title="Ringkasan Transaksi" sx={{ height: "100%" }}>
       <Box
         sx={{
           display: "flex",
@@ -18,17 +18,12 @@ export default function TransactionSummaryCard() {
           color="#FBC122"
           subtitle="Perlu Diproses"
         />
-        <TransactionSummaryItem
-          title="20"
-          color="common.hub.1"
-          subtitle="Diproses"
-        />
         <TransactionSummaryItem title="20" color="#54A6E8" subtitle="Dikirim" />
         <TransactionSummaryItem title="20" color="#399A4A" subtitle="Selesai" />
         <TransactionSummaryItem
           title="20"
           color="#FB3336"
-          subtitle="Komplain"
+          subtitle="Moderasi"
         />
       </Box>
     </DashboardCard>
@@ -54,7 +49,12 @@ function TransactionSummaryItem(props: {
         {props.title}
       </Typography>
       <Typography
-        sx={{ fontSize: 14, fontWeight: 600, color: "common.shade.700" }}
+        sx={{
+          fontSize: 14,
+          fontWeight: 600,
+          color: "common.shade.700",
+          textAlign: "center",
+        }}
       >
         {props.subtitle}
       </Typography>

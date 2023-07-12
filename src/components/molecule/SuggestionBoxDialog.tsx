@@ -25,78 +25,84 @@ export default function SuggestionBoxDialog() {
   const onClose = () => setOpen(false);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle
-        sx={{
-          fontSize: 16,
-          fontWeight: 700,
-          color: "primary.main",
-          textAlign: "center",
-        }}
-      >
-        {t("suggestionBox.title")}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText
+    <>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+        <DialogTitle
           sx={{
-            fontSize: 14,
-            fontWeight: 600,
-            color: "common.shade.200",
+            fontSize: 16,
+            fontWeight: 700,
+            color: "primary.main",
+            textAlign: "center",
           }}
         >
-          {t("suggestionBox.subtitle")}
-        </DialogContentText>
-        <TextField
-          placeholder={t("suggestionBox.placeholder")}
-          multiline
-          rows={4}
-          fullWidth
-          autoFocus
-        />
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
-        <Button
-          variant="outlined"
-          size="large"
-          fullWidth
-          onClick={onClose}
-          sx={{
-            borderColor: "common.shade.200",
-            "&:hover": {
-              backgroundColor: "common.shade.10",
+          {t("suggestionBox.title")}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            sx={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "common.shade.200",
+              textAlign: "center",
+              mb: "20px",
+            }}
+          >
+            {t("suggestionBox.subtitle")}
+          </DialogContentText>
+          <TextField
+            placeholder={t("suggestionBox.placeholder")}
+            multiline
+            rows={4}
+            fullWidth
+            autoFocus
+          />
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
+          <Button
+            variant="outlined"
+            size="large"
+            fullWidth
+            onClick={onClose}
+            sx={{
               borderColor: "common.shade.200",
-            },
-            color: "common.shade.200",
-            textTransform: "none",
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-        >
-          {t("suggestionBox.back")}
-        </Button>
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
-          onClick={() => {
-            setConfirmationOpen(true);
-            onClose();
-          }}
-          sx={{
-            backgroundColor: "common.green.500",
-            "&:hover": {
+              "&:hover": {
+                backgroundColor: "common.shade.10",
+                borderColor: "common.shade.200",
+              },
+              color: "common.shade.200",
+              textTransform: "none",
+              fontSize: 14,
+              fontWeight: 600,
+              borderRadius: "10px",
+            }}
+          >
+            {t("suggestionBox.back")}
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            fullWidth
+            onClick={() => {
+              setConfirmationOpen(true);
+              onClose();
+            }}
+            sx={{
               backgroundColor: "common.green.500",
-            },
-            textTransform: "none",
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-        >
-          {t("suggestionBox.sent")}
-        </Button>
-        <SuccessDialog />
-      </DialogActions>
-    </Dialog>
+              "&:hover": {
+                backgroundColor: "common.green.500",
+              },
+              textTransform: "none",
+              fontSize: 14,
+              fontWeight: 600,
+              borderRadius: "10px",
+            }}
+          >
+            {t("suggestionBox.sent")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <SuccessDialog />
+    </>
   );
 }
 
@@ -122,6 +128,7 @@ function SuccessDialog() {
             fontSize: 14,
             fontWeight: 600,
             color: "common.shade.200",
+            textAlign: "center",
           }}
         >
           {t("suggestionBox.success.subtitle")}
@@ -138,6 +145,7 @@ function SuccessDialog() {
             textTransform: "none",
             fontSize: 14,
             fontWeight: 600,
+            borderRadius: "10px",
           }}
         >
           {t("suggestionBox.success.close")}

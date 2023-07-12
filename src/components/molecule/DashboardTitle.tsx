@@ -47,7 +47,11 @@ export default function DashboardTitle() {
       <Select
         id="month-select"
         value="DEC-2021"
-        sx={{ width: { sm: "183px", xs: "150px" } }}
+        sx={{
+          width: { sm: "183px", xs: "150px" },
+          borderRadius: "11px",
+          backgroundColor: "common.shade.0",
+        }}
       >
         <MenuItem value="DEC-2021">DEC-2021</MenuItem>
       </Select>

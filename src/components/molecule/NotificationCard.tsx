@@ -95,7 +95,7 @@ export default function NotificationCard(props: {
       {props.unread && (
         <Box
           sx={{
-            backgroundColor: "secondary.main",
+            backgroundColor: "common.red.500",
             borderRadius: "50%",
             width: 10,
             height: 10,

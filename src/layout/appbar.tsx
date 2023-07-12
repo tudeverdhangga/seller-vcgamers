@@ -42,11 +42,13 @@ export function AppBar() {
   );
 }
 
-const StyledBadge = styled(Badge)<BadgeProps>(() => ({
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   "& .MuiBadge-badge": {
     right: -10,
     top: 13,
     padding: "0 4px",
+    backgroundColor: theme.palette.common.red[500],
+    color: theme.palette.common.white,
   },
 }));
 
@@ -63,7 +65,7 @@ function DesktopAppBar() {
         style={{ textDecoration: "none" }}
       >
         <IconButton>
-          <StyledBadge badgeContent={1} color="secondary">
+          <StyledBadge badgeContent={1}>
             <BellIcon color="action" />
           </StyledBadge>
         </IconButton>

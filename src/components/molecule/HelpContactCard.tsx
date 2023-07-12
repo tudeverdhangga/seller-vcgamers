@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useAtom } from "jotai";
 
 import Button from "@mui/material/Button";
@@ -11,26 +12,40 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { useTranslation } from "next-i18next";
 
 import DashboardCard from "../atomic/DashboardCard";
-import HelpToolTip from "../atomic/HelpToolTip";
 import ChatIcon from "../icons/svg/chatIcon.svg";
 import CopyIcon from "../icons/svg/copyIcon.svg";
 import MailIcon from "../icons/svg/mailIcon.svg";
 import WhatsappIcon from "../icons/svg/whatsappIcon.svg";
 import SuggestionBoxDialog from "./SuggestionBoxDialog";
+import DashboardHelpContactHelpToolTip from "./DashboardHelpCenterHelpToolTip";
 
 import { suggestionBoxOpenAtom } from "~/atom/suggestionBox";
+import { env } from "~/env.mjs";
 
 export default function HelpContactCard() {
   const { t } = useTranslation("dashboard");
 
   const [, setOpen] = useAtom(suggestionBoxOpenAtom);
 
+  const whatsappLink = env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK;
+  const emailLink = env.NEXT_PUBLIC_SUPPORT_EMAIL_LINK;
+
+  const clickCopyWhatsapp = async () => {
+    await navigator.clipboard.writeText(env.NEXT_PUBLIC_SUPPORT_WHATSAPP);
+    return;
+  };
+
+  const clickCopyEmail = async () => {
+    await navigator.clipboard.writeText(env.NEXT_PUBLIC_SUPPORT_EMAIL);
+    return;
+  };
+
   return (
     <Grid container spacing="20px">
       <Grid xs={12} sm={8}>
         <DashboardCard
           title={t("card.helpContact.title")}
-          titleTrailing={<HelpToolTip title={t("tooltip.helpContact")} />}
+          titleTrailing={<DashboardHelpContactHelpToolTip />}
         >
           <List
             disablePadding
@@ -53,12 +68,18 @@ export default function HelpContactCard() {
                 <div
                   style={{ display: "flex", gap: "5px", alignItems: "center" }}
                 >
-                  <IconButton edge="end" aria-label="delete">
+                  <IconButton
+                    edge="end"
+                    aria-label="copy"
+                    onClick={() => void clickCopyWhatsapp()}
+                  >
                     <CopyIcon />
                   </IconButton>
-                  <IconButton aria-label="copy">
-                    <WhatsappIcon />
-                  </IconButton>
+                  <Link href={whatsappLink} passHref>
+                    <IconButton aria-label="whatsapp">
+                      <WhatsappIcon />
+                    </IconButton>
+                  </Link>
                 </div>
               }
             >
@@ -71,12 +92,18 @@ export default function HelpContactCard() {
                 <div
                   style={{ display: "flex", gap: "5px", alignItems: "center" }}
                 >
-                  <IconButton edge="end" aria-label="copy">
+                  <IconButton
+                    edge="end"
+                    aria-label="copy"
+                    onClick={() => void clickCopyEmail()}
+                  >
                     <CopyIcon />
                   </IconButton>
-                  <IconButton aria-label="copy">
-                    <MailIcon />
-                  </IconButton>
+                  <Link href={emailLink} passHref>
+                    <IconButton aria-label="mail">
+                      <MailIcon />
+                    </IconButton>
+                  </Link>
                 </div>
               }
             >

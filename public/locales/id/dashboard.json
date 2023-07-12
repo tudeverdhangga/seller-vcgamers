@@ -1,16 +1,19 @@
 {
   "title": "Ringkasan",
   "subtitle": "Laporan",
+  "mobileTitle": "Dashboard Toko",
+  "support": "<strong>VCGamers tidak memiliki channel chat lain</strong> seperti line, telegram, atau whatsapp selain dari 2 kontak di atas. Official Whatsapp VCGamers:",
   "card": {
     "sales": {
-      "title": "Total Penjualan",
+      "title": "Produk Terjual Pada Bulan Ini",
       "subtitle": "{{count}} Produk"
     },
     "earning": {
-      "title": "Pendapatan Bulan Ini"
+      "title": "Pendapatan Pada Bulan Ini"
     },
-    "revenue": {
-      "title": "Total Pendapatan"
+    "description": {
+      "description": "dibanding bulan lalu",
+      "equal": "Sama"
     },
     "performance": {
       "title": "Performa Toko",
@@ -42,7 +45,12 @@
     }
   },
   "tooltip": {
-    "helpContact": "Tim support kami tidak memiliki channel chat lain seperti line, telegram, atau whatsapp selain dari 2 kontak whatsapp yang tertera. Hati-hati terhadap indikasi penipuan yang mengatasnamakan VCGamers. Mohon konfirmasi jika ada chat diluar nomor tersebut"
+    "helpContact": "Tim support kami tidak memiliki channel chat lain seperti line, telegram, atau whatsapp selain dari 2 kontak whatsapp yang tertera. Hati-hati terhadap indikasi penipuan yang mengatasnamakan VCGamers. Mohon konfirmasi jika ada chat diluar nomor tersebut",
+    "performance": "Penilaian terhadap tokomu yang merupakan akumulasi sejak pertama kali kamu membuka toko di VCGamers",
+    "shopRating": "Nilai rata-rata yang diberikan pelanggan kepada tokomu",
+    "transactionSuccess": "Persentase keberhasilan transaksi hingga berstatus selesai",
+    "deliveryTime": "Nilai yang dihitung dari rata-rata waktu penerimaan pesanan dengan waktu pengiriman pesanan",
+    "visitorCount": "Jumlah pengunjung halaman tokomu"
   },
   "suggestionBox": {
     "title":"Kotak Saran",

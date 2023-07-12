@@ -68,13 +68,13 @@ export default function DashboardChart() {
     };
 
     setChartData(chartData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Box
       sx={{
         backgroundColor: "background.paper",
-        mt: "20px",
       }}
     >
       <Line
