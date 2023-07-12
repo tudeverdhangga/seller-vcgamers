@@ -141,7 +141,7 @@ export default function ProsesKilatPage() {
                   variant="contained"
                   fullWidth
                   color={checkedSnK ? "success" : "secondary"}
-                  sx={{ display: { sm: 'block' }, color: 'white' }}
+                  sx={{ textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
                   disabled={!checkedSnK}
                   onClick={() => {
                   console.log('clicked');

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "next-i18next";
-import { Button, Checkbox, Grid, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Grid, Typography } from "@mui/material";
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import ContentCard from "~/components/molecule/ContentCard";
 import BannerRequestFeatures from "~/components/organism/BannerRequestFeatures";
@@ -11,10 +11,18 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PageviewIcon from '@mui/icons-material/Pageview';
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import CustomizedMidContent from "~/components/organism/MidContentRequestFeatures";
+import VGDialog from "~/components/atomic/VGDialog";
+import ModalRegistrationVIP from "~/components/molecule/ModalRegistrationVIP";
 
 export default function VIPSellerPage() {
   const { t } = useTranslation("requestFitur");
   const [checkedSnK, setCheckedSnK] = React.useState(false);
+  const [isOpenRegisterVip, setIsOpenRegisterVip] = React.useState(false)
+
+  const handleModalRegisterVip = () => {
+    console.log(isOpenRegisterVip)
+    setIsOpenRegisterVip(!isOpenRegisterVip);
+  };
 
   const handleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedSnK(event.target.checked);
@@ -125,7 +133,7 @@ export default function VIPSellerPage() {
                   component="span"
                   sx={confirmationAlertMessageStyle}
                 >
-                  {t("alert.confirmation.msg")}
+                  {t("alert.upgradeVip.msg")}
                 </Typography> 
               </Grid>
               <Grid item xs={2}>
@@ -133,12 +141,10 @@ export default function VIPSellerPage() {
                   variant="contained"
                   fullWidth
                   color={checkedSnK ? "success" : "secondary"}
-                  sx={{ display: { sm: 'block' }, color: 'white' }}
+                  sx={{ textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
                   disabled={!checkedSnK}
-                  onClick={() => {
-                  console.log('clicked');
-                }} >
-                  {t("alert.confirmation.btn")}
+                  onClick={() => handleModalRegisterVip()} >
+                  {t("alert.upgradeVip.btn")}
                 </Button>
               </Grid>
             </Grid>
@@ -164,6 +170,13 @@ export default function VIPSellerPage() {
             alertIcon={<PageviewIcon fontSize="inherit" />} 
             alertMessage={t("alert.requested.msg", { featurename: "Instant" })} 
           />
+
+          {/* Modal Ragister VIP */}
+          <ModalRegistrationVIP
+            name={t("modalRegisterVIP.title")}
+            isOpen={isOpenRegisterVip}
+            handleClose={handleModalRegisterVip}
+           />
         </Grid>
       </Grid>
         

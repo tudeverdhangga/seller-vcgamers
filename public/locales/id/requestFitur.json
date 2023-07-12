@@ -167,6 +167,10 @@
     }
   },
   "alert": {
+    "upgradeVip": {
+      "msg": "Saya sudah membaca dan memahami seluruh syarat dan ketentuan yang berlaku tentang VIP Seller ini",
+      "btn": "Request Upgrade"
+    },
     "confirmation": {
       "msg": "Saya sudah membaca dan memahami seluruh syarat dan ketentuan yang berlaku tentang fitur ini",
       "btn": "Request Fitur"
@@ -178,6 +182,9 @@
     "permitted": {
       "msg": "Tokomu memenuhi syarat untuk bisa mengajukan fitur ini"
     },
+    "permittedVip": {
+      "msg": "Tokomu memenuhi syarat untuk bisa menggunakan status VIP Seller ini"
+    },
     "inactive": {
       "title": "Fitur {{featurename}} di toko kamu saat ini dinonaktifkan oleh admin. Mohon hubungi admin VCGamers untuk detail penonaktifan fitur dan pengajuan pengaktifan kembali.",
       "subtitle": "Alasan: Berdasarkan data yang dikumpulkan tim admin VCGamers. Toko kamu melebihi limitasi penyelesaian transaksi lebih dari 10 menit sebanyak 3x. Kami mohon maaf atas ketidaknyamanan Seller. Untuk pengajuan pengaktifan kembali silahkan hubungi admin."
@@ -187,6 +194,34 @@
     },
     "requested": {
       "msg": "Kamu sudah melakukan request fitur {{featurename}}. Admin VC Gamers akan melakukan respon request fitur kamu maksimal dalam 7 x 24 jam sejak request dikirimkan"
+    }
+  },
+  "modalRegisterVIP": {
+    "title": "Request Upgrade ke VIP Seller",
+    "subtitle": "Verifikasi Dokumen",
+    "submitBtn": "Request",
+    "backBtn": "Kembali",
+    "form": {
+      "0": {
+        "title": "Upload KTP",
+        "subtitle": "Max. 2MB (.PNG / .JPG) (Gambar tidak boleh kosong)",
+        "label": "ktp_image_url"
+      },
+      "1": {
+        "title": "Upload Selfie dengan KTP",
+        "subtitle": "Max. 2MB (.PNG / .JPG) (Gambar tidak boleh kosong)",
+        "label": "ktp_selfie_image_url"
+      },
+      "2": {
+        "title": "Melampirkan data transaksi 1 bulan terakhir",
+        "subtitle": "Max. 2MB (.PNG / .JPG / .PDF / .XLS)",
+        "label": "transaction_data_file_url"
+      },
+      "3": {
+        "title": "Link toko pada platform lain (jika ada)",
+        "subtitle": "Lampirkan Link toko lebih dari satu pisahkan dengan koma (,)",
+        "label": "other_platform_url"
+      }
     }
   }
 }
