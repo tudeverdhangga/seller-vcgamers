@@ -6,6 +6,14 @@
     "body": "Peringatan! Dilarang bertransaksi diluar VCGamers",
     "click": "Simak Modus-Modus Penipuan Disini"
   },
+  "dialog": {
+    "uploadFailed": {
+      "title": "Gagal mengunggah media",
+      "subtitle": "Harap unggah gambar dengan format .png / .jpg. Maksimal berukuran 2MB",
+      "back": "Kembali",
+      "retry": "Ulangi Lagi"
+    }
+  },
   "suggestion": {
     "welcome": "Hai, Selamat Datang",
     "stockReady": "Stok Tersedia",

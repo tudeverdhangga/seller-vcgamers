@@ -1,0 +1,35 @@
+{
+  "title": "Komplain",
+  "subtitle": "Daftar",
+  "message": "Pesan",
+  "adminJoinMessage": "Toko mengundang Admin VCG. Mohon menunggu, Admin VCG akan merespon dalam1x24 jam setelah melakukan peninjauan.",
+  "completeMessage": "Komplain sudah diselesaikan. Ruang obrolan ini tidak bisa digunakan",
+  "complainInfo": {
+    "title": "Informasi Komplain",
+    "reasoning": "Alasan",
+    "parties": "Pihak",
+    "inviteAdmin": "Undang Admin"
+  },
+  "tab": {
+    "inProcess": "Dalam Proses",
+    "complete": "Komplain Selesai"
+  },
+  "emptyState": {
+    "complainConversation": {
+      "title": "Tidak ada Komplain",
+      "subtitle": "Semoga transaksimu lancar selalu ya"
+    },
+    "complainRoom": {
+      "title": "Mari memulai obrolan!",
+      "subtitle": "Pilih pesan di samping untuk mulai chat"
+    }
+  },
+  "dialog": {
+    "uploadFailed": {
+      "title": "Gagal mengunggah media",
+      "subtitle": "Harap unggah gambar dengan format .png / .jpg. Maksimal berukuran 2MB",
+      "back": "Kembali",
+      "retry": "Ulangi Lagi"
+    }
+  } 
+}

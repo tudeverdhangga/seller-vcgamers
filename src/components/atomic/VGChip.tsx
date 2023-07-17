@@ -1,39 +1,39 @@
 import { Chip, type SxProps, type Theme } from "@mui/material";
 
 export default function VGChip(props: {
-  color?: string;
+  color?: "info" | "error" | "success" | "warning";
   sx?: SxProps<Theme>;
   label: string;
   size?: "small" | "medium";
 }) {
   const getTextColor = () => {
     switch (props.color) {
-      case 'info':
+      case "info":
         return "#616A82";
-      case 'error':
+      case "error":
         return "#FF3333";
-      case 'success':
+      case "success":
         return "#00870E";
-      case 'warning':
+      case "warning":
         return "#D17E00";
       default:
         return "#9AA4BF";
     }
-  }
+  };
   const getBgColor = () => {
     switch (props.color) {
-      case 'info':
+      case "info":
         return "#EFEBFF";
-      case 'error':
+      case "error":
         return "#FFDCDA";
-      case 'success':
+      case "success":
         return "#CEECD1";
-      case 'warning':
+      case "warning":
         return "#FFEAAA";
       default:
         return "#F5F5F5";
     }
-  }
+  };
 
   return (
     <Chip
@@ -43,10 +43,10 @@ export default function VGChip(props: {
         backgroundColor: getBgColor(),
         fontSize: "12px",
         fontWeight: 700,
-        ...props.sx
+        ...props.sx,
       }}
-      label={ props.label }
-      size={ props.size }
+      label={props.label}
+      size={props.size}
     />
-  )
+  );
 }

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 import { messageAttachmentShowAtom } from "~/atom/chat";
 
-import ChatMessageInput from "~/components/atomic/ChatMessageInput";
+import ChatMessageInput from "~/components/molecule/ChatMessageInput";
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
 import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubheader";
 import ChatMessageAttachment from "~/components/molecule/ChatMessageAttachment";

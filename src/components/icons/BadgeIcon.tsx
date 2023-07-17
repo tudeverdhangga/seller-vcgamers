@@ -1,9 +1,16 @@
 import { styled } from "@mui/material/styles";
 
 const BadgeIcon = styled(
-  (props: { className?: string; content: string | number | JSX.Element }) => (
-    <div className={props.className}>{props.content}</div>
-  )
+  (props: {
+    className?: string;
+    content?: string | number | boolean | JSX.Element;
+  }) => {
+    if (typeof props.content === "undefined" || props.content === 0) {
+      return <></>;
+    }
+
+    return <div className={props.className}>{props.content}</div>;
+  }
 )(({ theme }) => ({
   backgroundColor: theme.palette.common.red[500],
   borderRadius: "50%",

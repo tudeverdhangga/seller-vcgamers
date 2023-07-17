@@ -14,6 +14,7 @@ import { useAtom } from "jotai";
 import ChevronLeftIcon from "~/components/icons/ChevronLeftIcon";
 import BellIcon from "../components/icons/BellIcon";
 import MenuIcon from "../components/icons/MenuIcon";
+import MenuDotsIcon from "../components/icons/MenuDotsIcon";
 
 import { drawerOpenAtom } from "~/atom";
 
@@ -111,12 +112,13 @@ function MobileAppBar() {
         color="inherit"
         aria-label="open drawer"
         edge="start"
-        onClick={handleDrawerToggle}
+        onClick={appBar.onClick ? appBar.onClick : handleDrawerToggle}
         sx={{
           display: { xs: appBar.showMenu ? "inline-flex" : "none", sm: "none" },
         }}
       >
-        <MenuIcon />
+        {appBar.menuIcon === "default" && <MenuIcon />}
+        {appBar.menuIcon === "dots" && <MenuDotsIcon />}
       </IconButton>
     </>
   );

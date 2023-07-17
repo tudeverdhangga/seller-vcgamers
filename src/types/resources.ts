@@ -9,10 +9,12 @@ import addProduct from "../../public/locales/id/addProduct.json";
 import bulkUpdate from "../../public/locales/id/bulkUpdate.json";
 import voucher from "../../public/locales/id/voucher.json";
 import chat from "../../public/locales/id/chat.json";
+import complain from "../../public/locales/id/complain.json";
 
 const resources = {
   common,
   chat,
+  complain,
   layout,
   dashboard,
   requestFitur,
