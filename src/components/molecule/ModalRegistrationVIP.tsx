@@ -31,10 +31,15 @@ export default function RegistrationVIPModal (props: {
   const handleChangeOtherPlatformUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOtherPlatformUrl(event.target.value);
   };
-  const handleUploadTransaksi = (event: any) => {
-    setTransactionDataFile(event.target.files[0].name);
+  const handleUploadTransaksi = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const fileName = event.target.files[0]?.name;
+      if (fileName){
+        setTransactionDataFile(fileName);
+      }
+    }
   };
-  const handleSubmitForm = (event: any) => {
+  const handleSubmitForm = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log(otherPlatformUrl);
   };

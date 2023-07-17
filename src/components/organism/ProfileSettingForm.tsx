@@ -1,108 +1,234 @@
-import { type ChangeEvent, useState } from "react";
-import { useForm } from "react-hook-form"
+import { type ChangeEvent, useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { BorderColorOutlined, CloudUploadOutlined } from '@mui/icons-material';
-import { Box, Grid, Typography } from "@mui/material"
+import { BorderColorOutlined, CloudUploadOutlined } from "@mui/icons-material";
+import { Box, Grid, Typography, TextField, Skeleton, Snackbar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
-import VGInputText from "~/components/atomic/VGInputText"
 import VGAlert from "~/components/atomic/VGAlert";
+import VGButton from "~/components/atomic/VGButton";
+import { useMediaUpload } from "~/services/api/media";
+import {
+  useGetProfile,
+  useUpdateProfile,
+  useCheckUrlAvailability
+} from "~/services/api/auth";
 
-interface IFormInput {
-  shopName: string;
-  shopUrl: string;
-  shopDesc: string;
-  shopPhone: string;
-  bankName: string;
-  bankNumber: string;
-  bankCustomerName: string;
+interface ProfileForm {
+  seller_name: string;
+  seller_url: string;
+  seller_description: string;
+  phone: string;
+  seller_bank: {
+    bank_name: string;
+    bank_account_number: string;
+    bank_account_name: string;
+  },
+  seller_photo: SellerPhoto,
+  seller_cover_photo: SellerPhoto
 }
-
-const defaultValues = {
-  shopName: "",
-  shopUrl: "",
-  shopDesc: "",
-  shopPhone: "",
-  bankName: "BCA",
-  bankNumber: "1123124355",
-  bankCustomerName: "VCGamers"
+interface SellerPhoto {
+  object_url: string
+  object_key: string
 }
 
 export default function ProfileSettingForm() {
-  const [shopUrl, setShopUrl] = useState("");
-  const [profileImage, setProfileImage] = useState<undefined | Blob>();
-  const [bannerImage, setBannerImage] = useState<undefined | Blob>();
-  const defaultBanner = "/assets/default-user-banner.png"
+  const defaultBanner = "/assets/default-user-banner.png";
   const {
-    control,
-    setValue
-  } = useForm<IFormInput>({
-    defaultValues: defaultValues
-  })
+    register,
+    handleSubmit,
+    formState: { errors, isDirty }
+  } = useForm<ProfileForm>({
+    criteriaMode: "all"
+  });
   const { t } = useTranslation("setting");
+  const mediaUpload = useMediaUpload();
+  const getProfile = useGetProfile();
+  const updateProfile = useUpdateProfile();
+  const checkUrl = useCheckUrlAvailability();
+  const [profileImage, setProfileImage] = useState<SellerPhoto | undefined>();
+  const [bannerImage, setBannerImage] = useState<SellerPhoto | undefined>();
+  const [shopUrl, setShopUrl] = useState<string | undefined>("");
+  const [urlMessage, setUrlMessage] = useState<string | undefined>("");
+  const [isSaveLoading, setIsSaveLoading] = useState(false);
+  const [toast, setToast] = useState({
+    color: 'info',
+    message: '',
+    isOpen: false,
+  })
+
+  useEffect(() => {
+    setProfileImage(getProfile?.data?.data?.seller_photo)
+    setBannerImage(getProfile?.data?.data?.seller_cover_photo)
+    setShopUrl(getProfile?.data?.data?.seller_url)
+  }, [
+    getProfile?.data?.data?.seller_cover_photo,
+    getProfile?.data?.data?.seller_photo,
+    getProfile?.data?.data?.seller_url
+  ])
 
   // Style
   const fieldStyle = {
-    py: 2
-  }
+    py: 2,
+  };
   const fieldTitleStyle = {
     fontSize: "14px",
     fontWeight: 700,
     color: "primary.main",
-    pt: 2
-  }
+    pt: 2,
+  };
   const fieldSubTitleStyle = {
     fontSize: "14px",
     fontWeight: 500,
     color: "common.shade.100",
-  }
+  };
 
-  const handleChangeProfilImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setProfileImage(e.target.files[0] as Blob)
+  // Methods
+  const handleChangeProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files
+    
+    if (file && typeof file[0] !== "undefined") {
+      console.log(file[0].size);
+      if (file[0].size > 1024 * 1024) {
+        setToast({
+          color: 'error',
+          message: 'Gambar melebihi 1MB',
+          isOpen: true
+        })
+      } else {
+        const formData = new FormData();
+        formData.append("file", file[0]);
+        mediaUpload.mutate(formData, {
+          onSuccess: (res) => setProfileImage(res.data)
+        });
+      }
     }
-  }
+  };
   const handleChangeBannerImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setBannerImage(e.target.files[0] as Blob)
-    }
-  }
+    const file = e.target.files
 
+    if (file && typeof file[0] !== "undefined") {
+      if (file[0].size > 2 * 1024 * 1024) {
+        setToast({
+          color: 'error',
+          message: 'Gambar melebihi 2MB',
+          isOpen: true
+        })
+      } else {
+        const formData = new FormData();
+        formData.append("file", file[0]);
+        mediaUpload.mutate(formData, {
+          onSuccess: (res) => setBannerImage(res.data)
+        });
+      }
+    }
+  };
+  const onSubmit = (data: ProfileForm) => {
+    setIsSaveLoading(true)
+    const formData = new FormData();
+    formData.append("seller_name", data.seller_name);
+    formData.append("seller_url", data.seller_url);
+    formData.append("seller_description", data.seller_description);
+    formData.append("phone", data.phone);
+
+    if (typeof profileImage !== 'undefined') {
+      formData.append("seller_photo", profileImage?.object_key);
+    }
+    if (typeof bannerImage !== 'undefined') {
+      formData.append("seller_cover_photo", bannerImage?.object_key);
+    }
+
+    updateProfile.mutate(formData, {
+      onSuccess: () => {
+        void getProfile.refetch()
+        setIsSaveLoading(false)
+        setToast({
+          color: 'success',
+          message: 'Update profil toko berhasil',
+          isOpen: true
+        })
+      },
+      onError: () => {
+        setToast({
+          color: 'error',
+          message: 'Update profil toko gagal',
+          isOpen: true
+        })
+      }
+    })
+  };
+  const onChangeUrl = (url: string) => {
+    setTimeout(() => {
+      checkUrl.mutate(url, {
+        onSuccess: (res) => {
+          const isAvailable = res?.data?.available
+          
+          if (!isAvailable) {
+            setUrlMessage("URL sudah terpakai")
+          } else {
+            setUrlMessage(undefined)
+          }
+        }
+      })
+    }, 1000)
+    setShopUrl(url)
+  };
+
+  // Container
   const shopNameContainer = (
-    <VGInputText
-      name="shopName"
-      control={control}
-      label={t("tab.profile.form.name")}
-      rules={{
-        required: true
-      }}
-    />
-  )
+    <>
+      <TextField 
+        label={t("tab.profile.form.name")}
+        variant="outlined" 
+        size="small"
+        fullWidth
+        {...register("seller_name", { required: "Nama Toko is required." })}
+        error={Boolean(errors.seller_name)}
+        helperText={errors.seller_name?.message}
+        defaultValue={getProfile?.data?.data?.seller_name}
+      />
+      <Typography
+        component="span"
+        color="common.orange.500"
+        fontSize={12}
+        fontWeight={600}
+      >
+        {t("tab.profile.form.alert.label")}
+      </Typography>
+      <Typography
+        component="span"
+        color="primary.main"
+        fontSize={12}
+        fontWeight={600}
+      >
+        {t("tab.profile.form.alert.subLabel")}
+      </Typography>
+    </>
+  );
   const shopUrlContainer = (
     <>
-      <VGInputText
-        name="shopUrl"
-        control={control}
+      <TextField 
         label={t("tab.profile.form.url")}
-        rules={{
-          required: true
-        }}
-        onChange={(e) => {
-          setValue("shopUrl", e.target.value);
-          setShopUrl(e.target.value);
-        }}
+        variant="outlined" 
+        size="small"
+        fullWidth
+        {...register("seller_url", {
+          required: "URL Toko is required.",
+          validate: () => !urlMessage
+        })}
+        error={Boolean(errors.seller_url) || Boolean(urlMessage)}
+        helperText={errors.seller_url?.message || urlMessage}
+        defaultValue={getProfile?.data?.data?.seller_url}
+        onChange={(e) => onChangeUrl(e.target.value)}
       />
-      <VGAlert
-        sx={{ py: 0 }}
-      >
+      <VGAlert sx={{ py: 0 }}>
         <Typography
           component="span"
           color="common.shade.100"
           sx={{ fontSize: "12px", fontWeight: 600 }}
         >
-          {t("tab.profile.form.name")}
-        </Typography>
-        {' '}
+          {t("tab.profile.form.url")}
+        </Typography>{" "}
         <Typography
           component="span"
           color="primary.main"
@@ -112,327 +238,333 @@ export default function ProfileSettingForm() {
         </Typography>
       </VGAlert>
     </>
-  )
+  );
   const shopDescContainer = (
-    <VGInputText
-      name="shopDesc"
-      control={control}
+    <TextField 
       label={t("tab.profile.form.desc")}
-      rules={{
-        required: true
-      }}
+      variant="outlined" 
+      size="small"
+      fullWidth
+      {...register("seller_description", { required: "Deskripsi Toko is required." })}
+      error={Boolean(errors.seller_description)}
+      defaultValue={getProfile?.data?.data?.seller_description}
+      helperText={errors.seller_description?.message}
     />
-  )
+  );
   const shopPhoneContainer = (
-    <VGInputText
-      name="shopPhone"
-      control={control}
+    <TextField 
       label={t("tab.profile.form.phone")}
-      rules={{
-        required: true
+      variant="outlined" 
+      size="small"
+      fullWidth
+      {...register("phone", { required: "Nomor Handphone is required." })}
+      error={Boolean(errors.phone)}
+      defaultValue={getProfile?.data?.data?.phone}
+      helperText={errors.phone?.message}
+      type="number"
+      inputProps={{
+        inputMode: "numeric",
+        pattern: "[0-9]*",
       }}
     />
-  )
+  );
   const bankNameContainer = (
-    <VGInputText
-      name="bankName"
-      control={control}
+    <TextField 
       label={t("tab.profile.form.bankName")}
-      disabled={true}
-      rules={{
-        required: true
-      }}
+      variant="outlined" 
+      size="small"
+      fullWidth 
+      disabled
+      defaultValue={getProfile?.data?.data?.seller_bank?.bank_name}
     />
-  )
+  );
   const bankNumberContainer = (
-    <VGInputText
-      name="bankNumber"
-      control={control}
+    <TextField 
       label={t("tab.profile.form.bankNumber")}
-      disabled={true}
-      rules={{
-        required: true
-      }}
+      variant="outlined" 
+      size="small"
+      fullWidth 
+      disabled
+      defaultValue={getProfile?.data?.data?.seller_bank?.bank_account_number}
     />
-  )
+  );
   const bankCustomerNameContainer = (
-    <VGInputText
-      name="bankCustomerName"
-      control={control}
+    <TextField 
       label={t("tab.profile.form.bankCustomerName")}
-      disabled={true}
-      rules={{
-        required: true
-      }}
+      variant="outlined" 
+      size="small"
+      fullWidth 
+      disabled
+      defaultValue={getProfile?.data?.data?.seller_bank?.bank_account_name}
     />
-  )
-
-  return (
-    <form>
-      <Grid
-        container
-        spacing={2}
+  );
+  const uploadProfileContainer = (
+    <Box>
+      <input
+        type="file"
+        id="upload-profile"
+        accept="image/png, image/jpg"
+        style={{ display: "none" }}
+        onChange={(e) => handleChangeProfileImage(e)}
+      />
+      <label htmlFor="upload-profile" style={{width: "124px", display: "block"}}>
+        <Box
+          component="div"
+          sx={{
+            width: "124px",
+            height: "124px",
+            borderRadius: "10px",
+            backgroundColor: "common.shade.50",
+            backgroundImage: profileImage
+              ? `url(${profileImage.object_url})`
+              : "none",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            position: "relative",
+            cursor: "pointer",
+          }}
+        >
+          <Box
+            component="div"
+            sx={{
+              width: "124px",
+              height: "51px",
+              borderRadius: "0 0 10px 10px",
+              backgroundColor: "#2A324999",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+            }}
+          >
+            <BorderColorOutlined sx={{ color: "common.shade.0" }} />
+          </Box>
+        </Box>
+      </label>
+    </Box>
+  );
+  const uploadBannerContainer = (
+    <Box>
+      <Box
+        component="div"
+        sx={{
+          width: "100%",
+          height: "299px",
+          borderRadius: "10px",
+          borderStyle: "dotted",
+          backgroundColor: "common.shade.50",
+          backgroundImage: bannerImage
+            ? `url(${bannerImage.object_url})`
+            : defaultBanner,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <Grid
-          item
-          xs={12}
-          md={12}
-        >
-          <Box sx={{...fieldStyle, pt: 0}}>
-            {shopNameContainer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid
-          item
-          xs={12}
-          md={12}
-        >
-          <Box sx={fieldStyle}>
-            {shopUrlContainer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid
-          item
-          xs={12}
-          md={12}
-        >
-          <Box sx={fieldStyle}>
-            {shopDescContainer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid
-          item
-          xs={12}
-          md={12}
-        >
-          <Box sx={fieldStyle}>
-            {shopPhoneContainer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sx={fieldStyle}
-        >
-          <Typography sx={fieldTitleStyle}>
-            {t("tab.profile.form.info.title")}
-          </Typography>
-          <VGAlert color="info">
-            {t("tab.profile.form.info.alert")}
-            {' '}
-            <Link href="mailto:support@vcgamers.com">
-              support@vcgamers.com
-            </Link>
-          </VGAlert>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid
-          item
-          xs={12}
-          md={6}
-        >
-          <Box sx={fieldStyle}>
-            {bankNameContainer}
-          </Box>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}
-        >
-          <Box sx={fieldStyle}>
-            {bankNumberContainer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid
-          item
-          xs={12}
-          md={12}
-        >
-          <Box sx={fieldStyle}>
-            {bankCustomerNameContainer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        >
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sx={fieldStyle}
-        >
-          <Typography sx={fieldTitleStyle}>
-            {t("tab.profile.form.profileImg.label")}
-          </Typography>
-          <Typography sx={fieldSubTitleStyle}>
-            {t("tab.profile.form.profileImg.subLabel")}
-          </Typography>
-          <Box>
-            <input
-              type="file"
-              id="upload-profile"
-              accept="image/*"
-              style={{display: "none"}}
-              onChange={(e) => handleChangeProfilImage(e)}
-            />
-            <label htmlFor="upload-profile">
-              <Box
-                component="div"
-                sx={{
-                  width: "124px",
-                  height: "124px",
-                  borderRadius: "10px",
-                  backgroundColor: "common.shade.50",
-                  backgroundImage: profileImage ? `url(${URL.createObjectURL(profileImage)})` : "none",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center",
-                  position: "relative",
-                  cursor: "pointer"
-                }}
-              >
-                <Box
-                  component="div"
-                  sx={{
-                    width: "124px",
-                    height: "51px",
-                    borderRadius: "0 0 10px 10px",
-                    backgroundColor: "#2A324999",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0
-                  }}
-                >
-                  <BorderColorOutlined sx={{ color: "common.shade.0" }} />
-                </Box>
-              </Box>
-            </label>
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        >
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sx={fieldStyle}
-        >
-          <Typography sx={fieldSubTitleStyle}>
-            {t("tab.profile.form.bannerImg.label")}
-          </Typography>
-          <Box>
+        <input
+          type="file"
+          id="upload-banner"
+          accept="image/png, image/jpg"
+          style={{ display: "none" }}
+          onChange={handleChangeBannerImage}
+        />
+        <label htmlFor="upload-banner">
+          <Box
+            component="div"
+            sx={{
+              width: "215px",
+              padding: "20px",
+              borderRadius: "10px",
+              backgroundColor: "#000000B2",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+          >
             <Box
-              component="div"
               sx={{
-                width: "100%",
-                height: "299px",
-                borderRadius: "10px",
-                borderStyle: "dotted",
-                backgroundColor: "common.shade.50",
-                backgroundImage: `url(${bannerImage ? URL.createObjectURL(bannerImage) : defaultBanner})`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                position: "relative",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
             >
-              <input
-                type="file"
-                id="upload-banner"
-                accept="image/*"
-                style={{display: "none"}}
-                onChange={handleChangeBannerImage}
+              <CloudUploadOutlined
+                sx={{ color: "common.shade.0", width: "50px" }}
               />
-              <label htmlFor="upload-banner">
-                <Box
-                  component="div"
-                  sx={{
-                    width: "215px",
-                    padding: "20px",
-                    borderRadius: "10px",
-                    backgroundColor: "#000000B2",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center"
-                    }}
-                  >
-                    <CloudUploadOutlined sx={{ color: "common.shade.0", width: "50px" }} />
-                    <Typography
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: 600,
-                        color: "common.shade.0"
-                      }}
-                    >
-                      {t("tab.profile.form.bannerImg.changeBannerLabel")}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "12px",
-                        fontWeight: 500,
-                        color: "common.shade.0"
-                      }}
-                    >
-                      {t("tab.profile.form.bannerImg.changeBannerSubLabel")}
-                    </Typography>
-                  </Box>
-                </Box>
-              </label>
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: 600,
+                  color: "common.shade.0",
+                }}
+              >
+                {t("tab.profile.form.bannerImg.changeBannerLabel")}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  color: "common.shade.0",
+                }}
+              >
+                {t("tab.profile.form.bannerImg.changeBannerSubLabel")}
+              </Typography>
             </Box>
           </Box>
+        </label>
+      </Box>
+    </Box>
+  );
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <Box sx={{ ...fieldStyle, pt: 0 }}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : shopNameContainer
+              }
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
-  )
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <Box sx={fieldStyle}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : shopUrlContainer
+              }
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <Box sx={fieldStyle}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : shopDescContainer
+              }
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <Box sx={fieldStyle}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : shopPhoneContainer
+              }
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} sx={fieldStyle}>
+            <Typography sx={fieldTitleStyle}>
+              {t("tab.profile.form.info.title")}
+            </Typography>
+            <VGAlert color="info">
+              {t("tab.profile.form.info.alert")}{" "}
+              <Link href="mailto:support@vcgamers.com">support@vcgamers.com</Link>
+            </VGAlert>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <Box sx={fieldStyle}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : bankNameContainer
+              }
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box sx={fieldStyle}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : bankNumberContainer
+              }
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <Box sx={fieldStyle}>
+              {
+                getProfile?.isLoading
+                  ? (<Skeleton variant="rectangular" width="100%" height={60} />)
+                  : bankCustomerNameContainer
+              }
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} sx={fieldStyle}>
+            <Typography sx={fieldTitleStyle}>
+              {t("tab.profile.form.profileImg.label")}
+            </Typography>
+            <Typography sx={fieldSubTitleStyle}>
+              {t("tab.profile.form.profileImg.subLabel")}
+            </Typography>
+            {
+              getProfile?.isLoading
+                ? (<Skeleton variant="rectangular" width={124} height={124} />)
+                : uploadProfileContainer
+            }
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} sx={fieldStyle}>
+            <Typography sx={fieldSubTitleStyle}>
+              {t("tab.profile.form.bannerImg.label")}
+            </Typography>
+            {
+              getProfile?.isLoading
+                ? (<Skeleton variant="rectangular" width="100%" height={299} />)
+                : uploadBannerContainer
+            }
+          </Grid>
+        </Grid>
+        <Grid item xs={12} display="flex" justifyContent="flex-end">
+          <VGButton
+            variant="contained"
+            color="primary"
+            type="submit"
+            size="large"
+            disabled={!isDirty || getProfile?.isLoading}
+            loading={isSaveLoading}
+          >
+            {t("tab.profile.form.submit")}
+          </VGButton>
+
+        </Grid>
+      </form>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={toast.isOpen}
+        autoHideDuration={2000}
+        onClose={() => setToast((props) => ({
+          ...props,
+          isOpen: false
+        }))}
+        message={toast.message}
+      />
+    </>
+  );
 }

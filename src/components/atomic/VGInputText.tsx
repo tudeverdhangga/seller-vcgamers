@@ -31,15 +31,16 @@ export default function VGInputText(props: {
       }) => (
         <>
           <TextField
-          helperText={error ? error.message : null}
-          size="small"
-          variant="outlined"
-          error={!!error}
-          onChange={props.onChange}
-          value={value}
-          label={props.label}
-          disabled={props.disabled}
-          fullWidth
+            helperText={error ? error.message : null}
+            size="small"
+            variant="outlined"
+            error={!!error}
+            onChange={props.onChange}
+            value={value}
+            label={props.label}
+            disabled={props.disabled}
+            fullWidth
+            required
           />
           {error && (
             <p style={{ color: 'red' }}>{error.message}</p>

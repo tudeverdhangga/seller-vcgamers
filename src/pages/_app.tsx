@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { appWithTranslation } from "next-i18next";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 import nextI18NextConfig from "../../next-i18next.config.mjs";
 
@@ -57,10 +58,13 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
+  const queryClient = new QueryClient();
 
   return (
     <ThemeProvider theme={theme}>
-      <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+      <QueryClientProvider client={queryClient}>
+        <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 };

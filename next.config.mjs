@@ -8,6 +8,9 @@ import i18nConfig from "./next-i18next.config.mjs";
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  images: {
+    domains: ['cdn.vcgamers.io'],
+  },
 
   webpack(config) {
     // Grab the existing rule that handles SVG imports

@@ -6,8 +6,12 @@
       "label": "Profil Toko",
       "form": {
         "name": "Nama Toko",
+        "alert": {
+          "label": "Maksimal ubah nama toko adalah satu kali. ",
+          "subLabel": "Info selengkapnya hubungi admin"
+        },
         "url": "URL Toko",
-        "desc": "Descriksi Toko",
+        "desc": "Deskripsi Toko",
         "phone": "Nomor Handphone",
         "bankName": "Nama Bank",
         "bankNumber": "Nomor Rekening",
@@ -24,7 +28,8 @@
         "info": {
           "title": "Info Rekening",
           "alert": "Untuk merubah Info rekening, silakan hubungi"
-        }
+        },
+        "submit": "Simpan"
       }
     },
     "operational": {
