@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import Tabs from "@mui/material/Tabs";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
@@ -10,6 +9,7 @@ import { complainListAtom } from "~/atom/complain";
 import ComplainConversationListItem from "~/components/atomic/ComplainConversationListItem";
 import VGTabChip from "~/components/atomic/VGTabChip";
 import VGTabPanel from "~/components/atomic/VGTabPanel";
+import VGTabsChip from "~/components/atomic/VGTabsChip";
 import BadgeIcon from "~/components/icons/BadgeIcon";
 import EmptyState from "~/components/molecule/EmptyState/complainConversation";
 
@@ -29,16 +29,7 @@ export default function ComplainConversationContent() {
   return (
     <Box>
       <Box sx={{ backgroundColor: "common.shade.50", px: "16px", pt: "10px" }}>
-        <Tabs
-          sx={{
-            "& .MuiTabs-flexContainer": {
-              gap: "10px",
-            },
-            "& .MuiTabs-indicator": {
-              display: "none",
-            },
-            flex: "1 0 0",
-          }}
+        <VGTabsChip
           value={tabPosition}
           onChange={(_, value) => setTabPosition(value as number)}
         >
@@ -66,7 +57,7 @@ export default function ComplainConversationContent() {
             }
             iconPosition="end"
           />
-        </Tabs>
+        </VGTabsChip>
       </Box>
       <VGTabPanel value={tabPosition} index={0} style={{ marginTop: "10px" }}>
         {complainInProcessList && complainInProcessList.length ? (

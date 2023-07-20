@@ -12,6 +12,7 @@ import chat from "../../public/locales/id/chat.json";
 import complain from "../../public/locales/id/complain.json";
 import vip from "../../public/locales/id/vip.json";
 import transaction from "../../public/locales/id/transaction.json";
+import managePromo from "../../public/locales/id/managePromo.json";
 
 const resources = {
   common,
@@ -28,6 +29,7 @@ const resources = {
   vip,
   voucher,
   transaction,
+  managePromo,
 } as const;
 
 export default resources;

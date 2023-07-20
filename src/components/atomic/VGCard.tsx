@@ -1,29 +1,10 @@
-import {
-  Card,
-  type SxProps,
-  type CardProps,
-  type Theme
-} from "@mui/material"
+import Card from "@mui/material/Card";
+import { styled } from "@mui/material/styles";
 
-export default function VGCard(props: {
-  children?: React.ReactNode;
-  rest?: CardProps[];
-  sx?: SxProps<Theme>;
-}) {
-  const { children, rest, sx } = props
-
-  return (
-    <Card
-      sx={{
-        boxShadow: 0,
-        borderRadius: "10px",
-        p: 3,
-        my: 2,
-        ...sx
-      }}
-      {...rest}
-    >
-      {children}
-    </Card>
-  )
-}
+export default styled(Card)(() => ({
+  boxShadow: "0 0 0",
+  borderRadius: "10px",
+  padding: "24px",
+  marginTop: "16px",
+  marginBottom: "16px",
+}));

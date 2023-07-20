@@ -1,0 +1,177 @@
+{
+  "title": "VIP Seller",
+  "subtitle": "Fitur Seller",
+  "promoHistory": {
+    "title": "Riwayat Promo",
+    "textInput": "Cari nama promo"
+  },
+  "tab": {
+    "sellerProgram": "Program Seller",
+    "managePromo": "Manage Promo",
+    "apiIntegration": "Integrasi API",
+    "request": "Request",
+    "inProgress": "Sedang Berlangsung",
+    "completed": "Berakhir"
+  },
+  "btn": {
+    "addPromo": "Buat Promo",
+    "cancel": "Batalkan",
+    "seeDetail": "Lihat Keterangan",
+    "promoPerformance": "Performa Promo",
+    "disablePromo": "Nonaktifkan Promo",
+    "reuse": "Gunakan Lagi",
+    "close": "Tutup",
+    "back": "Kembali",
+    "delete": "Hapus",
+    "disable": "Nonaktifkan",
+    "createPromo": "Buat Promo",
+    "editPromo": "Perbarui Promo"
+  },
+  "chip": {
+    "waitingApproval": "Menunggu Approval",
+    "rejected": "Ditolak",
+    "completed": "Selesai Ditayangkan",
+    "disabled": "Dinonaktifkan"
+  },
+  "card": {
+    "code": "Kode:",
+    "qty": "Stok:",
+    "period": "Periode:",
+    "transaction": "Transaksi",
+    "discount": "Potongan",
+    "min": "Min. {{value}}",
+    "max": "Max. {{value}}"
+  },
+  "dialog": {
+    "performance": {
+      "title": "Performa Promo",
+      "name": "Nama Promo",
+      "content": "{{value}} kali",
+      "totalUsage": {
+        "title": "Total Penggunaan Promo",
+        "subtitle": "Total promo digunakan saat pembeli melakukan proses transaksi hingga selesai"
+      },
+      "gross": {
+        "title": "Penjualan Kotor",
+        "subtitle": "Total nominal penjualan produk dengan harga sebelum dipotong kode promo."
+      },
+      "net": {
+        "title": "Penjualan bersih",
+        "subtitle": "Penjualan Kotor - Potongan diskon - Fee Penjualan yang berlaku"
+      },
+      "fee": {
+        "title": "Total Fee Penjualan",
+        "subtitle": "Total Biaya merchant fee + biaya layanan produk proses kilat fee dan instant fee"
+      },
+      "discount": {
+        "title": "Total Potongan Diskon",
+        "subtitle": "Total nominal potongan diskon yang diberikan dari seluruh penggunaan promo"
+      },
+      "checkoutWithPromo": {
+        "title": "Persentase checkout dengan promo",
+        "subtitle": "Data total transaksi selama masa promo berbanding dengan promo yang digunakan"
+      }
+    },
+    "rejected": {
+      "title": "Keterangan Ditolak",
+      "subtitle": "Alasan: {{value}}",
+      "info": "Info selengkapnya dan pengajuan ulang silahkan hubungi Admin di Whatsapp <strong>0815-1111-1659</strong>"
+    },
+    "delete": {
+      "title": "Hapus Pengajuan",
+      "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?"
+    },
+    "disabled": {
+      "title": "Konfirmasi Penonaktifan",
+      "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?",
+      "error": "Minimum penonaktifan: 3x24 jam setelah approval admin.",
+      "errorHint": "Promo ini bisa bisa dinonaktifkan mulai pada {{date}}"
+    }
+  },
+  "form": {
+    "addPromo": {
+      "title": "Buat Promo",
+      "fields": {
+        "name": {
+          "label": "Nama Promo",
+          "placeholder": "Masukkan nama promo"
+        },
+        "period": {
+          "start": {
+            "label": "Durasi Mulai",
+            "placeholder": "Atur tanggal mulai"
+          },
+          "end": {
+            "label": "Durasi Selesai",
+            "placeholder": "Atur tanggal selesai"
+          }
+        },
+        "code": {
+          "label": "Buat Kode Promo",
+          "placeholder": "Tulis kode",
+          "helperText": "Kode promomu:",
+          "errorText": "Wajib isi kode promo"
+        },
+        "qty": {
+          "label": "Stok Kode Promo",
+          "helperText": "Minimum: 10"
+        },
+        "userLimit": {
+          "label": "Limit Penggunaan per User",
+          "helperText": "Minimum: 1"
+        },
+        "info": {
+          "title": "Ketentuan",
+          "subtitle": "Potongan promo sepenuhnya akan ditanggung oleh seller"
+        },
+        "discountType": {
+          "price": {
+            "label": "Promo Potongan Harga (Rp)"
+          },
+          "percentage": {
+            "label": "Promo Potongan Persentase (%)"
+          }
+        },
+        "discountNominal": {
+          "label": "Nominal Promo (Rp)",
+          "placeholder": "Contoh: 20.000"
+        },
+        "discountMinimumTransaction": {
+          "label": "Minimum Transaksi (Rp)",
+          "placeholder": "Contoh: 20.000",
+          "helperText": "Nominal ini harus lebih besar dari nominal promo"
+        },
+        "discountMaximumTransaction": {
+          "label": "Maksimum Potongan (Rp)",
+          "placeholder": "Contoh: 20.000"
+        },
+        "discountPercentage": {
+          "label": "Persentase Promo (%)",
+          "placeholder": "Contoh: 20.000"
+        },
+        "product": {
+          "title": "Produk"
+        },
+        "category": {
+          "label": "Kategori {{value}}"
+        },
+        "brand": {
+          "label": "Brand",
+          "placeholder": "Cari nama brand"
+        },
+        "addCategory": {
+          "title": "+ Kategori"
+        }
+      }
+    },
+    "detailPromo": {
+      "title": "Detail Promo"
+    }
+  },
+  "toast": {
+    "requestSuccess": "Pengajuan kode promo terkirim. Admin akan meninjau promo",
+    "cancelSuccess": "Pengajuan kode promo dibatalkan",
+    "deleteSuccess": "Pengajuan kode promo dihapus",
+    "disableSuccess": "Kode promo dinonaktifkan"
+  }
+}
