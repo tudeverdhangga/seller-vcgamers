@@ -79,7 +79,7 @@ export default function ListProductItem(props: {
         src={ props.image }
         width={60}
         height={60}
-        alt="Prduct Picture"
+        alt="Product Picture"
       />
       <Box ml={2}>
         <Typography

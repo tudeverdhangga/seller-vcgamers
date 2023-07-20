@@ -41,8 +41,8 @@ export default function VGButton(props: {
           buttonSize === "small"
             ? "5px 8px"
             : buttonSize === "medium"
-            ? "8px 14px"
-            : "10px 15px",
+            ? "8px 12px"
+            : "12px 16px",
         ...props.sx,
       }}
     >

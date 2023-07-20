@@ -23,6 +23,7 @@ export default function KelolaProdukPage() {
         <Box sx={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           width: isMobile ? "100%" : "auto"
         }}>
           <VGButton

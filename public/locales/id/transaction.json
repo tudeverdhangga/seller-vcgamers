@@ -1,0 +1,28 @@
+{
+  "title": "Penjualan",
+  "subTitle": "Daftar",
+  "report": {
+    "label": "Data yang di download mengikuti filter rentang waktu dibawah.<br />Laporan lebih dari 3 bulan silahkan <strong>kontak CS</strong>",
+    "button": "Laporan"
+  },
+  "filter": {
+    "search": "Pencarian",
+    "feature": "Fitur",
+    "startDate": "Filter Tanggal Awal",
+    "endDate": "Filter Tanggal Akhir",
+    "status": {
+      "process": "Perlu Diproses",
+      "onProcess": "Diproses",
+      "sent": "Dikirim",
+      "done": "Selesai",
+      "cancel": "Dibatalkan",
+      "complain": "Dikomplain"
+    }
+  },
+  "label": {
+    "price": "Harga",
+    "qty": "Qty",
+    "emptyBad": "Belum ada data di status transaksi ini",
+    "emptyGood": "Tidak ada data di status transaksi ini"
+  }
+}
