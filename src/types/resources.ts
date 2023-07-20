@@ -10,6 +10,7 @@ import bulkUpdate from "../../public/locales/id/bulkUpdate.json";
 import voucher from "../../public/locales/id/voucher.json";
 import chat from "../../public/locales/id/chat.json";
 import complain from "../../public/locales/id/complain.json";
+import vip from "../../public/locales/id/vip.json";
 import transaction from "../../public/locales/id/transaction.json";
 
 const resources = {
@@ -24,6 +25,7 @@ const resources = {
   listProduct,
   addProduct,
   bulkUpdate,
+  vip,
   voucher,
   transaction,
 } as const;
