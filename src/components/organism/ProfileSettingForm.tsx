@@ -2,8 +2,9 @@ import { type ChangeEvent, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { BorderColorOutlined, CloudUploadOutlined } from "@mui/icons-material";
-import { Box, Grid, Typography, TextField, Skeleton, Snackbar } from "@mui/material";
+import { Box, Grid, Typography, TextField, Skeleton } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { toast } from "react-toastify";
 
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
@@ -13,6 +14,7 @@ import {
   useUpdateProfile,
   useCheckUrlAvailability
 } from "~/services/api/auth";
+import { toastOption } from "~/utils/toast";
 
 interface ProfileForm {
   seller_name: string;
@@ -30,6 +32,13 @@ interface ProfileForm {
 interface SellerPhoto {
   object_url: string
   object_key: string
+}
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
 }
 
 export default function ProfileSettingForm() {
@@ -51,11 +60,6 @@ export default function ProfileSettingForm() {
   const [shopUrl, setShopUrl] = useState<string | undefined>("");
   const [urlMessage, setUrlMessage] = useState<string | undefined>("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
-  const [toast, setToast] = useState({
-    color: 'info',
-    message: '',
-    isOpen: false,
-  })
 
   useEffect(() => {
     setProfileImage(getProfile?.data?.data?.seller_photo)
@@ -88,13 +92,8 @@ export default function ProfileSettingForm() {
     const file = e.target.files
     
     if (file && typeof file[0] !== "undefined") {
-      console.log(file[0].size);
       if (file[0].size > 1024 * 1024) {
-        setToast({
-          color: 'error',
-          message: 'Gambar melebihi 1MB',
-          isOpen: true
-        })
+        toast.error(t("tab.profile.toast.updateImageProfileSizeError"), toastOption)
       } else {
         const formData = new FormData();
         formData.append("file", file[0]);
@@ -109,11 +108,7 @@ export default function ProfileSettingForm() {
 
     if (file && typeof file[0] !== "undefined") {
       if (file[0].size > 2 * 1024 * 1024) {
-        setToast({
-          color: 'error',
-          message: 'Gambar melebihi 2MB',
-          isOpen: true
-        })
+        toast.error(t("tab.profile.toast.updateImageBannerSizeError"), toastOption)
       } else {
         const formData = new FormData();
         formData.append("file", file[0]);
@@ -142,18 +137,13 @@ export default function ProfileSettingForm() {
       onSuccess: () => {
         void getProfile.refetch()
         setIsSaveLoading(false)
-        setToast({
-          color: 'success',
-          message: 'Update profil toko berhasil',
-          isOpen: true
-        })
+        toast.success(t("tab.profile.toast.updateSuccess"), toastOption)
       },
-      onError: () => {
-        setToast({
-          color: 'error',
-          message: 'Update profil toko gagal',
-          isOpen: true
-        })
+      onError: (error) => {
+        const err = error as ErrorResponse
+        const errorMessage = `${t("tab.profile.toast.updateFail")}: ${err?.response?.data?.message}`
+
+        toast.error(errorMessage, toastOption)
       }
     })
   };
@@ -555,16 +545,6 @@ export default function ProfileSettingForm() {
 
         </Grid>
       </form>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={toast.isOpen}
-        autoHideDuration={2000}
-        onClose={() => setToast((props) => ({
-          ...props,
-          isOpen: false
-        }))}
-        message={toast.message}
-      />
     </>
   );
 }

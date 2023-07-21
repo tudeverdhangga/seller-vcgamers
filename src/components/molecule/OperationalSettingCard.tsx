@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState, useEffect } from "react";
 import {
   Box,
   Divider,
@@ -10,28 +10,76 @@ import {
   Typography
 } from "@mui/material";
 import { LocalizationProvider, TimeField } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useTranslation } from "next-i18next";
+import dayjs, { type Dayjs } from "dayjs";
 
+import { useDebounce } from "~/utils/debounce";
 import VGChip from "~/components/atomic/VGChip";
 
-export default function OperationalSettingCard(props: {
-  day: string;
-  isToday?: boolean;
-  isOpen?: boolean;
-  schedule?: string;
-  openHours?: string;
-  closedHours?: string;
-}) {
-  const { t } = useTranslation("setting");
-  const [isOpen, setIsOpen] = useState(props.isOpen);
-  const [schedule, setSchedule] = useState(props.schedule || "fullDay");
+interface OperationalHour {
+  weekday: number
+  is_always_open: boolean
+  hour_start: string
+  hour_finish: string
+  is_active: boolean
+  is_today: boolean
+}
 
-  const handleIsOpen = (event: ChangeEvent<HTMLInputElement>) => {    
-    setIsOpen(event.target.checked)
+export default function OperationalSettingCard(props: {
+  index: number;
+  day?: string;
+  isToday: boolean;
+  isOpen: boolean;
+  isFullDay: boolean;
+  openHours: string;
+  closedHours: string;
+  onChange: (formData: OperationalHour) => void;
+}) {
+  const { onChange } = props
+  const { t } = useTranslation("setting");
+  const [isFullDay, setIsFullDay] = useState(props.isFullDay);
+  const [schedule, setSchedule] = useState(props.isFullDay ? "fullDay" : "custom");
+  const [open, setOpen] = useState<Dayjs>(dayjs(props.openHours, "HH:mm:ss"))
+  const [close, setClose] = useState<Dayjs>(dayjs(props.closedHours, "HH:mm:ss"))
+
+  useEffect(() => {
+    setSchedule(props.isFullDay ? "fullDay" : "custom")
+    setIsFullDay(props.isFullDay)
+    setOpen(dayjs(props.openHours, "HH:mm:ss"))
+    setClose(dayjs(props.closedHours, "HH:mm:ss"))
+  }, [props])
+
+  const handleIsOpen = (event: ChangeEvent<HTMLInputElement>) => {
+    fetchApi('is_active', event.target.checked)
   }
-  const handleChangeSchedule = (event: ChangeEvent<HTMLInputElement>) => {    
+  const handleChangeIsFullDay = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsFullDay(event.target.value === "fullDay")
     setSchedule(event.target.value)
+    fetchApi('is_always_open', event.target.value === "fullDay")
+  }
+  const handleChangeTime = useDebounce((event: Dayjs | null, time: string) => {
+    if (event !== null) {
+      if (time === 'open') {
+        setOpen(event)
+        fetchApi('hour_start', event.format("HH:mm:ss"))
+      } else {
+        setClose(event)
+        fetchApi('hour_finish', event.format("HH:mm:ss"))
+      }
+    }
+  }, 1000)
+  const fetchApi = (key: string, value: string | boolean | number) => {
+    const tempForm = {
+      'weekday': props.index,
+      'is_always_open': props.isFullDay,
+      'hour_start': props.openHours,
+      'hour_finish': props.closedHours,
+      'is_active': props.isOpen,
+      'is_today': props.isToday,
+      [key]: value
+    }
+    onChange(tempForm);
   }
 
   // Style
@@ -73,10 +121,11 @@ export default function OperationalSettingCard(props: {
       <FormControlLabel
         control={
           <Switch
+            checked={props.isOpen}
             onChange={(event) => handleIsOpen(event)}
           />
         }
-        label={isOpen
+        label={props.isOpen
           ? t("tab.operational.form.open")
           : t("tab.operational.form.close")
         }
@@ -87,44 +136,44 @@ export default function OperationalSettingCard(props: {
   const scheduleContainer = (
     <>
       <RadioGroup
-        defaultValue={schedule}
-        onChange={(event) => handleChangeSchedule(event)}
+        value={schedule}
+        onChange={(event) => handleChangeIsFullDay(event)}
       >
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.fullHour")}
           </Typography>
-          <Radio
-            value="fullDay"
-          />
+          <Radio value="fullDay"/>
         </Box>
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.customHour")}
           </Typography>
-          <Radio
-            value="custom"
-          />
+          <Radio value="custom"/>
         </Box>
       </RadioGroup>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimeField
           label={t("tab.operational.form.openHour")}
+          value={open}
           format="HH:mm"
-          disabled={schedule !== "" && schedule === "fullDay"}
+          disabled={isFullDay}
           sx={{
             width: "100%",
             py: 1
           }}
+          onChange={(event) => handleChangeTime(event, 'open')}
         />
         <TimeField
           label={t("tab.operational.form.closeHour")}
+          value={close}
           format="HH:mm"
-          disabled={schedule !== "" && schedule === "fullDay"}
+          disabled={isFullDay}
           sx={{
             width: "100%",
             py: 1
           }}
+          onChange={(event) => handleChangeTime(event, 'close')}
         />
       </LocalizationProvider>
     </>

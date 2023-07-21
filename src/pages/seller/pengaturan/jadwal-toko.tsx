@@ -14,6 +14,7 @@ import VGCard from "~/components/atomic/VGCard";
 import VGPageTitle from '~/components/atomic/VGPageTitle';
 import OperationalSetting from '~/components/organism/OperationalSetting';
 import VGAlert from '~/components/atomic/VGAlert';
+import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 
 export default function JadwalTokoPage() {
   const router = useRouter()
@@ -26,7 +27,8 @@ export default function JadwalTokoPage() {
 
   return (
     <>
-      {/* Page Title */}
+      <StyledToastContainer />
+
       <VGPageTitle
         subTitle={t("subTitle")}
         title={t("title")}
@@ -62,6 +64,7 @@ export default function JadwalTokoPage() {
           </Typography>
         </Box>
       </VGAlert>
+
       <VGCard>
         <OperationalSetting />
       </VGCard>

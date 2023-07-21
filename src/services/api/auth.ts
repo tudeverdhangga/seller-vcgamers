@@ -91,3 +91,13 @@ export const useCheckUrlAvailability = () => {
     }
   })
 }
+
+export const useUpdateOperational = () => {
+  return useMutation({
+    mutationKey: ['update-operational-hour'],
+    mutationFn: async (formData: OperationalHour) => {
+      const res = await HTTP.put("/update-operational-hour", formData)
+      return res
+    }
+  })
+}

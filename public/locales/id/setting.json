@@ -30,6 +30,12 @@
           "alert": "Untuk merubah Info rekening, silakan hubungi"
         },
         "submit": "Simpan"
+      },
+      "toast": {
+        "updateImageProfileSizeError": "Gambar melebihi 1MB",
+        "updateImageBannerSizeError": "Gambar melebihi 2MB",
+        "updateSuccess": "Update profil toko berhasil",
+        "updateFail": "Update profil toko gagal"
       }
     },
     "operational": {
@@ -52,6 +58,10 @@
         "customHour": "Atur Jam Operational",
         "openHour": "Jam Buka",
         "closeHour": "Jam Tutup"
+      },
+      "toast": {
+        "updateSuccess": "Update jam operational toko berhasil",
+        "updateFail": "Update jam operational toko gagal"
       }
     }
   }
