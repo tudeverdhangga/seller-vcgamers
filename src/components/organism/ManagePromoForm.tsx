@@ -343,7 +343,9 @@ export default function ManagePromoForm() {
                   renderValue: (selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {(selected as string[]).map((value) => (
-                        <VGChip key={value} label={value} onDelete={() => {}} />
+                        <VGChip key={value} label={value} onDelete={() => {
+                          console.log("delete")
+                        }} />
                       ))}
                     </Box>
                   ),

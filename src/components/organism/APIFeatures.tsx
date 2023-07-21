@@ -66,7 +66,7 @@ export default function APIFeaturePage() {
 
   
 	useEffect( () => {
-    let callbackTypesResponse = [
+    const callbackTypesResponse = [
       'Riwayat Saldo',
       'Withdraw',
       'List Produk',
