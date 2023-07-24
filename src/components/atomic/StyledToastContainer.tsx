@@ -43,6 +43,7 @@ const StyledToastContainer = styled(ToastContainer)`
     font-style: normal;
     font-weight: 600;
     line-height: 100%;
+    white-space: pre-line;
   }
 `;
 

@@ -13,6 +13,8 @@ import complain from "../../public/locales/id/complain.json";
 import vip from "../../public/locales/id/vip.json";
 import transaction from "../../public/locales/id/transaction.json";
 import managePromo from "../../public/locales/id/managePromo.json";
+import vipSeller from "../../public/locales/id/vipSeller.json";
+import joinCampaign from "../../public/locales/id/joinCampaign.json";
 
 const resources = {
   common,
@@ -30,6 +32,8 @@ const resources = {
   voucher,
   transaction,
   managePromo,
+  vipSeller,
+  joinCampaign,
 } as const;
 
 export default resources;

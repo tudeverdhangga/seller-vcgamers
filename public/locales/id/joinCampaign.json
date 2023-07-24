@@ -1,0 +1,57 @@
+{
+  "menu": {
+    "list": "Daftar Program",
+    "history": "Riwayat Ikut Programku"
+  },
+  "list": {
+    "title": "Rekomendasi Untuk Tokomu",
+    "activeOnly": "Hanya tampilkan program yang aktif"
+  },
+  "btn": {
+    "seeDetail": "Lihat Detail",
+    "seeDescription": "Lihat Keterangan",
+    "performanceSummary": "Ringkasan Performa",
+    "joinCampaign": "Ikuti Program",
+    "back": "Kembali",
+    "close": "Tutup",
+    "requestAbort": "Ajukan Pembatalan",
+    "deactivate": "Nonaktifkan"
+  },
+  "card": {
+    "joinCampaign": "Program diikuti",
+    "campaignEnded": "Program Berakhir",
+    "searchBar": {
+      "title": "Riwayat Ikut Program",
+      "textInput": "Masukkan Kata Kunci"
+    }
+  },
+  "chip": {
+    "waitingApproval": "Menunggu Approval",
+    "rejected": "Ditolak",
+    "completed": "Selesai Diikuti",
+    "canceled": "Dibatalkan"
+  },
+  "dialog": {
+    "campaignDetail": {
+      "title": "Rincian Program"
+    },
+    "confirmation": {
+      "title": "Konfirmasi",
+      "subtitle": "Kamu mengikuti program:"      
+    },
+    "abort": {
+      "title": "Konfirmasi Pembatalan",
+      "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?",
+      "errorText": "Minimum penonaktifan: 3x24 jam setelah approval admin.",
+      "errorText2": "Program ini bisa bisa dinonaktifkan mulai pada {{date}}"
+    },
+    "rejected": {
+      "title": "Keterangan Ditolak",
+      "subtitle": "Alasan: {{value}}",
+      "info": "Info selengkapnya dan pengajuan ulang silahkan hubungi Admin di Whatsapp <strong>0815-1111-1659</strong>"
+    }
+  },
+  "toast": {
+    "joinCampaignSuccess": "Permintaanmu telah terkirim ke admin.\n Admin akan meninjau perintaan"
+  }
+}

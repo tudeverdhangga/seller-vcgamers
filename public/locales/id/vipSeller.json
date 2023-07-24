@@ -1,0 +1,12 @@
+{
+  "title": "VIP Seller",
+  "subtitle": "Fitur Seller",
+  "tab": {
+    "sellerProgram": "Program Seller",
+    "managePromo": "Manage Promo",
+    "apiIntegration": "Integrasi API",
+    "request": "Request",
+    "inProgress": "Sedang Berlangsung",
+    "completed": "Berakhir"
+  }
+}

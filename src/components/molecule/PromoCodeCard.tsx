@@ -1,10 +1,7 @@
-import { useState } from "react";
-
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useAtom } from "jotai";
@@ -19,17 +16,17 @@ import {
   rejectedDialogOpenAtom,
 } from "~/atom/managePromo";
 import { toastOption } from "~/utils/toast";
+import MoreButtonPopover from "../atomic/MoreButtonPopover";
 import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
-import MoreHorizontalIcon from "../icons/MoreHorizontalIcon";
 import CopyIcon from "../icons/svg/copyIcon.svg";
 import PromoDeleteDialog from "./PromoDeleteDialog";
 import PromoDisableDialog from "./PromoDisableDialog";
 import PromoPerformanceDialog from "./PromoPerformanceDialog";
 import PromoRejectedDialog from "./PromoRejectedDialog";
 
-type PromoTypes =
+type PromoType =
   | "waiting-approval"
   | "rejected"
   | "in-progress"
@@ -45,7 +42,7 @@ export default function PromoCodeCard(props: {
     transaction: { min: string; max: string };
     discount: { min: string; max: string };
   };
-  type: PromoTypes;
+  type: PromoType;
 }) {
   const { t } = useTranslation("managePromo");
   const [, setManagePromoForm] = useAtom(managePromoFormAtom);
@@ -53,7 +50,7 @@ export default function PromoCodeCard(props: {
   const clickCopyCode = async (code: string) =>
     await navigator.clipboard.writeText(code);
 
-  const handleCardClick = (type: PromoTypes) => {
+  const handleCardClick = (type: PromoType) => {
     let formType: "create" | "edit" | "reuse" | "disabled" = "create";
 
     switch (type) {
@@ -139,7 +136,7 @@ export default function PromoCodeCard(props: {
   );
 }
 
-function LabelChip(props: { type: PromoTypes }) {
+function LabelChip(props: { type: PromoType }) {
   const { t } = useTranslation("managePromo");
 
   if (props.type === "in-progress") return <></>;
@@ -166,7 +163,7 @@ function LabelChip(props: { type: PromoTypes }) {
       color: "#D17E00",
     },
   } as {
-    [K in PromoTypes]: {
+    [K in PromoType]: {
       label: string;
       backgroundColor: string;
       color: string;
@@ -178,7 +175,7 @@ function LabelChip(props: { type: PromoTypes }) {
   return <VGChip label={label} sx={{ backgroundColor, color }} />;
 }
 
-function ActionButton(props: { type: PromoTypes }) {
+function ActionButton(props: { type: PromoType }) {
   const { t } = useTranslation("managePromo");
   const [, setDeleteOpen] = useAtom(deleteDialogOpenAtom);
   const [, setRejectedOpen] = useAtom(rejectedDialogOpenAtom);
@@ -230,7 +227,7 @@ function ActionButton(props: { type: PromoTypes }) {
           >
             {t("btn.promoPerformance")}
           </VGButton>
-          <MoreButtonPopover />
+          <PromoMoreButtonPopover />
           <PromoPerformanceDialog />
         </>
       );
@@ -262,46 +259,13 @@ function ActionButton(props: { type: PromoTypes }) {
   }
 }
 
-function MoreButtonPopover() {
+function PromoMoreButtonPopover() {
   const { t } = useTranslation("managePromo");
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [, setDisableOpen] = useAtom(disableDialogOpenAtom);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "more-popover" : undefined;
-
   return (
-    <>
-      <VGButton
-        variant="outlined"
-        sx={{ borderColor: "common.shade.100" }}
-        onClick={handleClick}
-      >
-        <MoreHorizontalIcon />
-      </VGButton>
-      <Popover
-        id={id}
-        open={open}
-        elevation={1}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
+    <MoreButtonPopover
+      menu={
         <VGButton
           variant="text"
           color="error"
@@ -309,9 +273,9 @@ function MoreButtonPopover() {
         >
           {t("btn.disablePromo")}
         </VGButton>
-      </Popover>
-      <PromoDisableDialog />
-    </>
+      }
+      dialog={<PromoDisableDialog />}
+    />
   );
 }
 
