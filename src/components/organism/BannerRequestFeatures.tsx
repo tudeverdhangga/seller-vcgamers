@@ -115,7 +115,7 @@ export default function CustomizedBanner(props: {
                         src={props.subtitleImageSrc ? props.subtitleImageSrc : ''}
                         width={80}
                         height={22}
-                        alt="Logo Instant"
+                        alt="Logo Fitur"
                       />
                   </div>
                 </Stack>

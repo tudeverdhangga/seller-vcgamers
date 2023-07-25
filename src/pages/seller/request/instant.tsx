@@ -14,11 +14,13 @@ import CustomizedMidContent from "~/components/organism/MidContentRequestFeature
 import CustomizedPermissionAlert from "~/components/organism/PermissionAlertRequestFeature";
 import React from "react";
 import ContentCard from "~/components/molecule/ContentCard";
+import { useGetProfile } from "~/services/api/auth";
 
 
 export default function InstantPage() {
   const { t } = useTranslation("requestFitur");
   const [checkedSnK, setCheckedSnK] = React.useState(false);
+  const getProfile = useGetProfile();
 
   const handleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedSnK(event.target.checked);

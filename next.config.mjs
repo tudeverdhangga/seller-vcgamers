@@ -49,6 +49,16 @@ const config = {
    * @see https://github.com/vercel/next.js/issues/41980
    */
   i18n: i18nConfig.i18n,
+
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/seller/toko',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 export default config;

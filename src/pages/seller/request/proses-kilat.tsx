@@ -94,7 +94,7 @@ export default function ProsesKilatPage() {
       {/* Banner */}
       <BannerRequestFeatures 
         imageSrc={`url("/assets/request_proskil_banner.png")`}
-        subtitleImageSrc="/assets/badge-kilat.png"
+        subtitleImageSrc="/assets/proskil-logo.png"
         title={t("banner.title")}
         desc={t("banner.descProskil")}
       />
@@ -108,7 +108,7 @@ export default function ProsesKilatPage() {
       <TableRequestFeatures 
         rowsFeatures={rows} 
         feature="Proses Kilat" 
-        badgeSrc="/assets/badge-kilat.png" 
+        badgeSrc="/assets/proskil-logo.png" 
       />
       
       {/* SnK */}

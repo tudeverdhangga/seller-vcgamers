@@ -4,16 +4,17 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-import ProfilePicture from "../atomic/ProfilePicture";
 import RedTypography from "../atomic/RedTypography";
+import GreenTypography from "../atomic/GreenTypography";
+import ChatProfilePicture from "../atomic/ChatProfilePicture";
 
-export default function ProfileCard(props: { name: string }) {
+export default function ProfileCard(props: { name: string, profile_src: string, is_closed: boolean }) {
   const { t } = useTranslation("layout");
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
       <Box sx={{ display: "flex", gap: 0.5, mb: "20px" }}>
-        <ProfilePicture />
+        {props.profile_src !== "" && <ChatProfilePicture src={props.profile_src} />}
         <Box>
           <Typography sx={{ fontWeight: "bold", color: "common.purple.500" }}>
             {props.name}
@@ -22,14 +23,23 @@ export default function ProfileCard(props: { name: string }) {
             <Typography sx={{ color: "common.shade.100" }}>
               {t("profileCard.todaySchedule")}
             </Typography>
-            <RedTypography
+            {props.is_closed ? <RedTypography
               sx={{
                 fontWeight: "600",
                 fontSize: 16,
               }}
             >
               {t("profileCard.close")}
-            </RedTypography>
+            </RedTypography> : 
+            <GreenTypography
+              sx={{
+                fontWeight: "600",
+                fontSize: 16,
+              }}
+            >
+              {t("profileCard.open")}
+            </GreenTypography>
+            }
           </Box>
         </Box>
       </Box>

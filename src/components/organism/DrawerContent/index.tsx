@@ -9,12 +9,27 @@ import DrawerListSubItem from "~/components/molecule/DrawerListSubItem";
 import ProfileCard from "~/components/molecule/ProfileCard";
 import SellerToolbar from "~/components/molecule/SellerToolbar";
 
+import { useGetProfile } from "~/services/api/auth";
 import { menus } from './menus'
 
 export default function DrawerContent() {
-  const router = useRouter()
+  const router = useRouter();
+  const getProfile = useGetProfile();
+  const [sellerName, setSellerName] = useState("");
+  const [sellerProfile, setSellerProfile] = useState("");
+  const [sellerOpen, setSellerOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(router.asPath);
   const { t } = useTranslation("layout");
+
+  useEffect(() => {
+    setSellerName(getProfile?.data?.data?.seller_name ? getProfile?.data?.data?.seller_name : "Nama Toko" )
+    setSellerProfile(getProfile?.data?.data?.seller_photo ? getProfile?.data?.data?.seller_photo.object_url : "" )
+    setSellerOpen(!getProfile?.data?.data?.is_closed)
+  }, [
+    getProfile?.data?.data?.seller_name,
+    getProfile?.data?.data?.seller_photo,
+    getProfile?.data?.data?.is_closed,
+  ])
 
   useEffect(() => {
     // Check if user want to access voucher from direct url
@@ -48,7 +63,7 @@ export default function DrawerContent() {
     <div>
       <SellerToolbar />
       <Divider />
-      <ProfileCard name={"Nama Toko"} />
+      <ProfileCard name={sellerName} profile_src={sellerProfile} is_closed={!sellerOpen} />
       <Divider />
       <List sx={{ bgcolor: "background.paper" }}>
         {menus.map(menu => (
