@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { getCookie, hasCookie } from 'cookies-next';
 
-const API_TOKEN = getCookie('AuthVcgToken') ?? process.env.NEXT_PUBLIC_API_TOKEN;
+const API_TOKEN = hasCookie('AuthVcgToken') ? getCookie('AuthVcgToken') : process.env.NEXT_PUBLIC_API_TOKEN;
 
 export const HTTP = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
