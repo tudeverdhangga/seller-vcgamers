@@ -8,9 +8,11 @@ import VGPageTitle from "~/components/atomic/VGPageTitle";
 import AddProductDetail from "~/components/organism/AddProductDetail";
 import AddProductVariant from "~/components/organism/AddProductVariant";
 import VGButton from "~/components/atomic/VGButton";
+import { useRouter } from "next/router";
 
 export default function TambahProdukPage() {
   const { t } = useTranslation("addProduct");
+  const router = useRouter()
   
   return (
     <>
@@ -26,6 +28,7 @@ export default function TambahProdukPage() {
                 display: "flex",
                 color:"common.shade.200"
               }}
+              onClick={() => void router.push('/seller/produk/kelola-produk')}
             >
               <ArrowBackIcon sx={{ mr: 1 }}/>
               {t("subTitle")}

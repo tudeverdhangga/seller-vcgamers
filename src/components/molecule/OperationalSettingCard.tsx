@@ -68,7 +68,7 @@ export default function OperationalSettingCard(props: {
         fetchApi('hour_finish', event.format("HH:mm:ss"))
       }
     }
-  }, 1000)
+  }, 2000)
   const fetchApi = (key: string, value: string | boolean | number) => {
     const tempForm = {
       'weekday': props.index,

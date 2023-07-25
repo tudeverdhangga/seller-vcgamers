@@ -9,10 +9,12 @@ import VGPageTitle from "~/components/atomic/VGPageTitle";
 import VGButton from "~/components/atomic/VGButton";
 import BulkUpdateDownload from "~/components/organism/BulkUpdateDownload";
 import BulkUpdateUpload from "~/components/organism/BulkUpdateUpload";
+import { useRouter } from "next/router";
 
 export default function EditProdukMassalPage() {
   const { t } = useTranslation("bulkUpdate");
   const { isMobile } = useResponsive();
+  const router = useRouter()
 
   return (
     <>
@@ -24,6 +26,7 @@ export default function EditProdukMassalPage() {
         <Box sx={{
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
           width: isMobile ? "100%" : "auto"
         }}>
           <VGButton
@@ -39,6 +42,7 @@ export default function EditProdukMassalPage() {
             color="success"
             size="large"
             sx={{ width: isMobile ? "100%" : "auto" }}
+            onClick={() => void router.push('/seller/produk/tambah-produk')}
           >
             <AddOutlinedIcon/> {t("addProduct")}
           </VGButton>
