@@ -1,7 +1,24 @@
-import { getStaticPropsWithTrans } from "~/utils/translation";
+import StyledToastContainer from "~/components/atomic/StyledToastContainer";
+import BalanceInformationCard from "~/components/molecule/BalanceInformationCard";
+import BalanceTitle from "~/components/molecule/BalanceTitle";
+import BalanceHistoryList from "~/components/organism/BalanceHistoryList";
+import BalanceSearchBar from "~/components/organism/BalanceSearchBar";
+import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 
-export default function SaldoTokoPage() {
-  return <>Ini saldo toko</>;
+export default function BalancePage() {
+  return (
+    <>
+      <StyledToastContainer />
+
+      <BalanceTitle />
+
+      <BalanceInformationCard />
+
+      <BalanceSearchBar />
+
+      <BalanceHistoryList />
+    </>
+  );
 }
 
-export { getStaticPropsWithTrans as getStaticProps };
+export const getServerSideProps = getStaticPropsWithTransNamespace(["balance"]);

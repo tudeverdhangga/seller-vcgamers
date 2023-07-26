@@ -1,0 +1,88 @@
+{
+  "title": "Saldo Toko",
+  "subtitle": "Jumlah",
+  "card": {
+    "information": {
+      "title": {
+        "desktop": "Informasi",
+        "mobile": "Tarik Saldo"
+      },
+      "currentBalance": "Saldo Saat Ini",
+      "onHoldBalance": "Menunggu Cair",
+      "error": {
+        "progress": "Tidak dapat melakukan penarikan.\nKamu masih memiliki pencairan yang sedang diproses",
+        "hold": "Tidak dapat melakukan penarikan.\nKamu masih memiliki pencairan yang sedang ditahan"
+      }
+    },
+    "history": {
+      "title": "Riwayat Saldo"
+    }
+  },
+  "btn": {
+    "withdrawBalance": "Tarik Semua Saldo",
+    "seeDescription": "Lihat Keterangan",
+    "close": "Tutup",
+    "back": "Kembali",
+    "withdraw": "Tarik",
+    "forgetPin": "Lupa PIN?"
+  },
+  "form": {
+    "history": {
+      "fields": {
+        "range": {
+          "start": {
+            "label": "Pilih Waktu Awal"
+          },
+          "end": {
+            "label": "Pilih Waktu Akhir"
+          }
+        }
+      }
+    }
+  },
+  "tab": {
+    "all": "Semua",
+    "debit": "Dana Masuk",
+    "credit": "Dana Keluar",
+    "progress": "Diproses",
+    "cancel": "Dibatalkan",
+    "hold": "Ditahan"
+  },
+  "chip": {
+    "debit": "Dana Masuk",
+    "credit": "Dana Keluar",
+    "progress": "Diproses",
+    "cancel": "Ditolak",
+    "hold": "Ditahan"
+  },
+  "dialog": {
+    "rejected": {
+      "title": "Keterangan Ditolak",
+      "subtitle": "Saat ini admin sedang menerima laporan dari customer tokomu setelah beberapa transaksi selesai. Kami sedang mempelajari hal tersebut. Atas pengertiannya kami ucapkan terima kasih. Detail lebih lanjut hubungi support@vcgamers.com"
+    },
+    "hold": {
+      "title": "Keterangan Ditahan",
+      "subtitle": "Saat ini admin sedang menerima laporan dari customer tokomu setelah beberapa transaksi selesai. Kami sedang mempelajari hal tersebut. Atas pengertiannya kami ucapkan terima kasih. Detail lebih lanjut hubungi support@vcgamers.com"
+    },
+    "confirmation": {
+      "title": "Konfirmasi",
+      "subheader": "Ringkasan Penarikan",
+      "body": {
+        "owner": "Pemilik Rekening Tujuan",
+        "bank": "Bank",
+        "withdrawAmount": "Nominal Penarikan",
+        "withdrawFee": "Biaya Penarikan",
+        "withdrawTotal": "Total Penarikan"
+      }
+    },
+    "pin": {
+      "title": "Konfirmasi Penarikan",
+      "subtitle": "Masukkan Pin",
+      "errorText": "PIN Salah",
+      "errorDescription": "Kamu mencapai batas percobaan PIN.\nHarap coba kembali setelah 15 menit atau pada pukul {{ time }}"
+    }
+  },
+  "toast": {
+    "withdrawSuccess": "Pengajuan penarikan berhasil terkirim ke admin"
+  }
+}

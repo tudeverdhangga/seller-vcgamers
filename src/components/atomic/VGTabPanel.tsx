@@ -25,4 +25,4 @@ export default styled(
       {value === index && children}
     </Box>
   )
-)();
+)(() => ({}));

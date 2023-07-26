@@ -1,0 +1,82 @@
+import { useEffect, useRef, useState } from "react";
+
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+
+export default function PinNumberInput({
+  onSubmit,
+  onSuccess,
+  onFailed,
+}: {
+  onSubmit: (value: string) => Promise<void>;
+  onSuccess: () => void;
+  onFailed: () => void;
+}) {
+  const inputRefs = useRef<HTMLInputElement[]>([]); // Create a ref to hold references to the input fields
+  const [pin, setPin] = useState<string[]>(Array(6).fill(""));
+  const [error, setError] = useState(false);
+
+  const handleInputChange = (index: number, value: string) => {
+    setPin((oldPin) => {
+      const newPin = [...oldPin];
+      newPin[index] = value;
+
+      return newPin;
+    });
+    if (value !== "" && index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1]?.focus(); // Move focus to the next input field
+    }
+  };
+
+  const handleBackspace = (
+    index: number,
+    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Backspace" && index > 0 && pin[index] === "") {
+      inputRefs.current[index - 1]?.focus(); // Move focus to the previous input field
+    }
+  };
+
+  useEffect(() => {
+    // Check if all inputs are filled whenever pin state changes
+    if (pin.every((digit) => digit !== "")) {
+      onSubmit(pin.join(""))
+        .then(onSuccess)
+        .catch(() => {
+          onFailed();
+          setError(true);
+        });
+    }
+  }, [pin, onSubmit, onSuccess, onFailed, setError]);
+
+  return (
+    <Stack direction="row" spacing={1}>
+      {pin.map((digit, index) => (
+        <TextField
+          key={index}
+          inputRef={(el: HTMLInputElement) => (inputRefs.current[index] = el)} // Assign the ref to the input field
+          value={digit}
+          type="password"
+          variant="standard"
+          size="small"
+          error={error}
+          inputProps={{
+            inputMode: "numeric",
+            pattern: "[0-9]",
+            maxLength: 1,
+            style: { textAlign: "center" },
+          }}
+          InputProps={{
+            onKeyDown: (e) => handleBackspace(index, e),
+          }}
+          autoFocus={index === 0}
+          sx={{
+            fontSize: "20px",
+            width: "30px",
+          }}
+          onChange={(e) => handleInputChange(index, e.target.value)}
+        />
+      ))}
+    </Stack>
+  );
+}

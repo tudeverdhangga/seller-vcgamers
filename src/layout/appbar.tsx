@@ -117,8 +117,7 @@ function MobileAppBar() {
           display: { xs: appBar.showMenu ? "inline-flex" : "none", sm: "none" },
         }}
       >
-        {appBar.menuIcon === "default" && <MenuIcon />}
-        {appBar.menuIcon === "dots" && <MenuDotsIcon />}
+        {appBar.menuIcon === "dots" ? <MenuDotsIcon /> : <MenuIcon />}
       </IconButton>
     </>
   );
