@@ -26,11 +26,15 @@ export default function TambahProdukPage() {
                 fontSize: "16px",
                 fontWeight: 600,
                 display: "flex",
-                color:"common.shade.200"
+                color:"common.shade.200",
+                cursor: "pointer"
               }}
               onClick={() => void router.push('/seller/produk/kelola-produk')}
             >
-              <ArrowBackIcon sx={{ mr: 1 }}/>
+              <ArrowBackIcon
+                fontSize="small"
+                sx={{ mr: 1 }}
+              />
               {t("subTitle")}
             </Link>
           </>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Box, Typography, Stack, Card, CardMedia } from "@mui/material";
 import { useTranslation } from "next-i18next";
 

@@ -67,4 +67,3 @@ export default function DaftarPenjualanPage() {
 }
 
 export const getStaticProps = getStaticPropsWithTransNamespace(["transaction"]);
-

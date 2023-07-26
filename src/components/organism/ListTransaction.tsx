@@ -1,12 +1,13 @@
 import { useTranslation } from "next-i18next";
-import { transactions } from "~/utils/dummy/transactions";
 import Box from "@mui/material/Box"
 import TagIcon from '@mui/icons-material/LocalOffer';
 import CalendarIcon from '@mui/icons-material/CalendarTodayOutlined';
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
+import { transactions } from "~/utils/dummy/transactions";
 import VGCard from "~/components/atomic/VGCard"
 import VGAlert from "~/components/atomic/VGAlert"
 import { priceFormat } from "~/utils/format";
@@ -15,6 +16,11 @@ import { useResponsive } from "~/utils/mediaQuery";
 export default function ListTransaction() {
   const { t } = useTranslation("transaction");
   const { isMobile } = useResponsive();
+  const router = useRouter();
+
+  const moveToDetail = (id: number) => {
+    void router.push(`/seller/toko/daftar-penjualan/detail?id=${id}`)
+  }
 
   const emptyBadContainer = (
     <Box
@@ -53,7 +59,11 @@ export default function ListTransaction() {
     <>
       {
         transactions.map((transaction, index) => (
-          <VGCard key={index}>
+          <VGCard
+            key={index}
+            onClick={() => moveToDetail(index)}
+            sx={{ cursor: "pointer" }}
+          >
             <Box
               display={isMobile ? "block" : "flex"}
               justifyContent="space-between"

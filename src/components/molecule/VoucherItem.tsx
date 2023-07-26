@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 import MessageIcon from '@mui/icons-material/SmsOutlined';

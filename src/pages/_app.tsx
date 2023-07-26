@@ -33,7 +33,7 @@ const theme = createTheme({
       default: "#f5f5f5",
     },
     secondary: {
-      main: "#9AA4BF"
+      main: "#616A82"
     },
     success: {
       main: "#40D04F",

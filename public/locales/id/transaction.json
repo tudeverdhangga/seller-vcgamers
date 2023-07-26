@@ -24,5 +24,59 @@
     "qty": "Qty",
     "emptyBad": "Belum ada data di status transaksi ini",
     "emptyGood": "Tidak ada data di status transaksi ini"
+  },
+  "detail": {
+    "title": "Detail Penjualan",
+    "subTitle": "Kembali ke Daftar Penjualan",
+    "heading": {
+      "title": "Ringkasan Transaksi",
+      "buyer": "Pembeli",
+      "transactionId": "Transaksi ID",
+      "date": "Waktu Transaksi"
+    },
+    "list": {
+      "title": "Daftar Pesanan",
+      "status": {
+        "onProcess": "Perlu diproses",
+        "process": "Diproses",
+        "sent": "Dikirim",
+        "done": "Selesai",
+        "cancel": "Dibatalkan",
+        "complain": "Komplain"
+      },
+      "notes": "Catatan",
+      "seeNotes": "Lihat Catatan",
+      "emptyNotes": "Tidak ada catatan",
+      "copyNotes": "Salin catatan",
+      "cancelTime": "Batal Otomatis",
+      "subTotal": "Subtotal",
+      "processTransaction": "Proses Pesanan",
+      "contactBuyer": "Hubungi Pembeli"
+    },
+    "sale": {
+      "title": "Penjualan",
+      "subTotal": "Sub Total",
+      "appFee": "Biaya Jasa Aplikasi (2%)",
+      "promo": "Promo",
+      "total": "Total Pendapatan"
+    },
+    "status": {
+      "title": "Status Pesanan",
+      "wait": "Menunggu Pembayaran",
+      "process": "Pesanan diterima. Pesanan diteruskan ke Penjual",
+      "sent": "Pesanan Dikirim",
+      "complain": "Pesanan Dikomplain",
+      "done": "Pesanan Selesai",
+      "cancel": "Pesanan Dibatalkan"
+    },
+    "dialog": {
+      "cancel": "Alasan Pembatalan",
+      "back": "Kembali",
+      "confirmation": "Konfirmasi",
+      "process": "Masukkan Kode Voucher",
+      "send": "Kirim Pesanan",
+      "close": "Tutup",
+      "notes": "Catatan"
+    }
   }
 }
