@@ -1,0 +1,3 @@
+export const SellerStatusPending = "PENDING"
+export const SellerStatusRejected = "REJECTED"
+export const SellerStatusApproved = "APPROVED"

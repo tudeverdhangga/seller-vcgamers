@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Alert, Grid, Paper, Stack, Typography } from "@mui/material";
 import LinearProgress, { linearProgressClasses, LinearProgressProps } from '@mui/material/LinearProgress';
@@ -24,11 +25,11 @@ const BorderLinearProgress = styled(({ style, ...props }: LinearProgressProps) =
 }));
 
 export default function CustomizedFeatureContentCondition(props: {
-  featureRequests?: Array<{
-    imageSrc: string;
-    title: string;
-    subtitle: string;
-  }>
+  totalAllTransaction: number;
+  totalSuccessTransaction: number;
+  minimumAllTransaction: number;
+  minimumSuccessPercentageTransaction: number;
+  successPercentageTransaction: number;
 }) {
   const { t } = useTranslation("requestFitur");
 
@@ -82,7 +83,12 @@ export default function CustomizedFeatureContentCondition(props: {
         <Grid item xs={12} sm={6}>
           <Paper sx={{ px: 2, py: 1, backgroundColor: "#FBFAFF" }}>
             {/* Progress Bar */}
-            <BorderLinearProgress style={{backgroundColor: '#ed3e3e'}} variant="determinate" color="primary" value={37*2} />
+            <BorderLinearProgress 
+              style={{backgroundColor: props.totalAllTransaction >= props.minimumAllTransaction ? '#17e339' : '#ed3e3e'}} 
+              variant="determinate" 
+              color="primary" 
+              value={props.totalAllTransaction*2 > 100 ? 100 : props.totalAllTransaction*2} 
+            />
 
             <Typography
               component="div"
@@ -95,15 +101,15 @@ export default function CustomizedFeatureContentCondition(props: {
                 component="span"
                 sx={captionTrackTransactionStyle}
               >
-                {t("request.transaction.data", { count: 37 })}
+                {t("request.transaction.data", { count: props.totalAllTransaction })}
               </Typography>
-              <ClearOutlinedIcon sx={{color: "red", p: 0, m: 0}} />
+              {props.totalAllTransaction >= props.minimumAllTransaction ? <CheckOutlinedIcon sx={{color: "green", p: 0, m: 0}} /> : <ClearOutlinedIcon sx={{color: "red", p: 0, m: 0}} />}
             </Stack>
             <Typography
               component="div"
               sx={subCaptionStyle}
             >
-              {t("request.transaction.minimum", { count: 50 })}
+              {t("request.transaction.minimum", { count: props.minimumAllTransaction })}
             </Typography>
           </Paper>
         </Grid>
@@ -111,7 +117,12 @@ export default function CustomizedFeatureContentCondition(props: {
         <Grid item xs={12} sm={6}>
           <Paper sx={{ px: 2, py: 1, backgroundColor: "#FBFAFF" }}>
             {/* Progress Bar */}
-            <BorderLinearProgress style={{backgroundColor: '#17e339'}} variant="determinate" color="secondary" value={92} />
+            <BorderLinearProgress 
+              style={{backgroundColor: props.successPercentageTransaction >= props.minimumSuccessPercentageTransaction ? '#17e339' : '#ed3e3e'}} 
+              variant="determinate" 
+              color="secondary" 
+              value={props.successPercentageTransaction >= props.minimumSuccessPercentageTransaction ? 100 : props.successPercentageTransaction} 
+            />
 
             <Typography
               component="div"
@@ -124,49 +135,51 @@ export default function CustomizedFeatureContentCondition(props: {
                 component="span"
                 sx={captionTrackTransactionStyle}
               >
-                {t("request.percentage.data", { count: 92 })}
+                {t("request.percentage.data", { count: props.successPercentageTransaction })}
               </Typography>
-              <CheckOutlinedIcon sx={{color: "green", p: 0, m: 0}} />
+              {props.successPercentageTransaction >= props.minimumSuccessPercentageTransaction ? <CheckOutlinedIcon sx={{color: "green", p: 0, m: 0}} /> : <ClearOutlinedIcon sx={{color: "red", p: 0, m: 0}} />}
             </Stack>
             <Typography
               component="div"
               sx={subCaptionStyle}
             >
-              {t("request.percentage.minimum", { count: 90 })}
+              {t("request.percentage.minimum", { count: props.minimumSuccessPercentageTransaction })}
             </Typography>
           </Paper>
         </Grid>
       </Grid>
       
-      {/* Alert if not permitted */}
-      <Alert sx={{backgroundColor: "#fff"}} iconMapping={{
-        error: <SentimentVeryDissatisfiedIcon fontSize="inherit" />
-      }} severity="error">
-        <Typography
-          component="span"
-          sx={errorRequestStyle}
-        >
-          {t("alert.notPermitted.danger")}
-        </Typography>
-        <Typography
-          component="span"
-          sx={errorRequestMessageStyle}
-        >
-          &nbsp; {t("alert.notPermitted.sub", { featurename: "Instant" })}
-        </Typography> 
-      </Alert>
+      {
+        props.totalAllTransaction >= props.minimumAllTransaction && props.successPercentageTransaction >= props.minimumSuccessPercentageTransaction ?      
+        <Alert sx={{backgroundColor: "#fff"}} iconMapping={{
+          error: <SentimentSatisfiedAltIcon fontSize="inherit" />
+        }} severity="success">
+          <Typography
+            component="span"
+            sx={successRequestStyle}
+          >
+            {t("alert.permitted.msg")}
+          </Typography>
+        </Alert>
+         :
+        <Alert sx={{backgroundColor: "#fff"}} iconMapping={{
+          error: <SentimentVeryDissatisfiedIcon fontSize="inherit" />
+        }} severity="error">
+          <Typography
+            component="span"
+            sx={errorRequestStyle}
+          >
+            {t("alert.notPermitted.danger")}
+          </Typography>
+          <Typography
+            component="span"
+            sx={errorRequestMessageStyle}
+          >
+            &nbsp; {t("alert.notPermitted.sub", { featurename: "Instant" })}
+          </Typography> 
+        </Alert>
+      }
       
-      {/* Alert if permitted */}
-      <Alert sx={{backgroundColor: "#fff"}} iconMapping={{
-        error: <SentimentSatisfiedAltIcon fontSize="inherit" />
-      }} severity="success">
-        <Typography
-          component="span"
-          sx={successRequestStyle}
-        >
-          {t("alert.permitted.msg")}
-        </Typography>
-      </Alert>
     </Paper>
   )
 }

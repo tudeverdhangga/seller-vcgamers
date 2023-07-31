@@ -1,7 +1,7 @@
 
 import { useTranslation } from "next-i18next";
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
-import { Button, Checkbox, Grid, Typography } from "@mui/material";
+import { Button, Checkbox, Grid, Snackbar, Typography, Alert } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PageviewIcon from '@mui/icons-material/Pageview';
@@ -14,16 +14,62 @@ import CustomizedMidContent from "~/components/organism/MidContentRequestFeature
 import CustomizedPermissionAlert from "~/components/organism/PermissionAlertRequestFeature";
 import React from "react";
 import ContentCard from "~/components/molecule/ContentCard";
-import { useGetProfile } from "~/services/api/auth";
+import { DataInstant, SeverityType, useGetStatusInstant, useRequestInstant } from "~/services/api/request-fitur";
+import { SellerStatusApproved, SellerStatusPending, SellerStatusRejected } from "~/utils/dummy/seller-status";
 
 
 export default function InstantPage() {
   const { t } = useTranslation("requestFitur");
   const [checkedSnK, setCheckedSnK] = React.useState(false);
-  const getProfile = useGetProfile();
+  const [statusInstantData, setStatusInstantData] = React.useState<DataInstant>();
+  const [totalTransaction, setTotalTransaction] = React.useState(0);
+  const [successTransaction, setSuccessTransaction] = React.useState(0);
+  const [minimumAllTransaction, setMinimumAllTransaction] = React.useState(50);
+  const [minimumSuccessPercentageTransaction, setMinimumSuccessPercentageTransaction] = React.useState(90);
+  const [successPercentageTransaction, setSuccessPercentageTransaction] = React.useState(50);
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [severityAlert, setSeverityAlert] = React.useState<SeverityType>("error");
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const getStatusInstant = useGetStatusInstant();
+
+  React.useEffect(() => {
+    if(getStatusInstant?.data?.data?.total_transaction !== undefined && getStatusInstant?.data?.data?.total_success_transaction !== undefined && getStatusInstant?.data?.data?.total_rate_transaction !== undefined) {
+      setTotalTransaction(getStatusInstant.data?.data.total_transaction)
+      setSuccessTransaction(getStatusInstant.data?.data.total_success_transaction)
+      setSuccessPercentageTransaction(getStatusInstant.data?.data.total_rate_transaction)
+      setStatusInstantData(getStatusInstant.data?.data);
+    }
+  }, [
+    // getStatusInstant?.data?.data,
+  ])
 
   const handleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckedSnK(event.target.checked);
+    const getStatusInstant = useGetStatusInstant();
+    if (getStatusInstant.data) {
+      if (getStatusInstant.data?.data.total_transaction >= minimumAllTransaction && 
+        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
+        (getStatusInstant.data?.data.seller_has_instant === false && getStatusInstant.data?.data.request_status === "")
+        ) {
+          setCheckedSnK(event.target.checked);
+      }
+    }
+  };
+
+  const onClickRequest = () => {
+    const postRequestInstant = useRequestInstant();
+    postRequestInstant.mutate(undefined, {
+      onSuccess: (res) => {
+        const response = res?.data
+        let responseStatusInstant = useGetStatusInstant()
+        console.log(responseStatusInstant?.data?.data)
+      },
+      onError(error: any, variables, context) {
+        setAlertMessage(error?.response?.data?.message)
+        setSeverityAlert("error");
+        setOpenSnackbar(true);
+        // console.log(error, variables, context)
+      },
+    })
   };
 
   const confirmationAlertMessageStyle = {
@@ -126,7 +172,13 @@ export default function InstantPage() {
       <CustomizedMidContent title={t("snk.title")} stringContents={subSnKValues} />
       
       {/* Request Fitur */}
-      <RequestFeatureCondition />
+      <RequestFeatureCondition 
+        totalAllTransaction={totalTransaction} 
+        totalSuccessTransaction={successTransaction} 
+        minimumAllTransaction={minimumAllTransaction}
+        minimumSuccessPercentageTransaction={minimumSuccessPercentageTransaction}
+        successPercentageTransaction={successPercentageTransaction} 
+      />
 
       <Grid container spacing={4} justifyContent={'center'} >
         <Grid item xs={12}>
@@ -154,9 +206,7 @@ export default function InstantPage() {
                   color={checkedSnK ? "success" : "secondary"}
                   sx={{ textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
                   disabled={!checkedSnK}
-                  onClick={() => {
-                  console.log('clicked');
-                }} >
+                  onClick={onClickRequest} >
                   {t("alert.confirmation.btn")}
                 </Button>
               </Grid>
@@ -164,28 +214,48 @@ export default function InstantPage() {
           </ContentCard>
           
           {/* Permission Nonactive */}
-          <CustomizedPermissionAlert
-            alertSeverity="error" 
-            alertIcon={<CancelIcon fontSize="inherit" />} 
-            alertMessage={t("alert.inactive.subtitle")} alertTitle={t("alert.inactive.title", { featurename: "Instant" })} 
-          />
+          {
+            statusInstantData && statusInstantData.request_status === SellerStatusRejected && 
+            <CustomizedPermissionAlert
+              alertSeverity="error" 
+              alertIcon={<CancelIcon fontSize="inherit" />} 
+              alertMessage={t("alert.inactive.subtitle")} alertTitle={t("alert.inactive.title", { featurename: "Proses Instantt" })} 
+            />
+          }
           
           {/* Permission Actived */}
-          <CustomizedPermissionAlert
-            alertSeverity="success" 
-            alertIcon={<CheckCircleIcon fontSize="inherit" />} 
-            alertMessage={t("alert.already.msg", { featurename: "Instant" })} 
-          />
+          {
+            (statusInstantData && (statusInstantData.request_status === SellerStatusApproved || statusInstantData.seller_has_instant)) && 
+            <CustomizedPermissionAlert
+              alertSeverity="success" 
+              alertIcon={<CheckCircleIcon fontSize="inherit" />} 
+              alertMessage={t("alert.already.msg", { featurename: "Proses Instantt" })} 
+            />
+          }
           
           {/* Permission Requested */}
-          <CustomizedPermissionAlert
-            alertSeverity="info" 
-            alertIcon={<PageviewIcon fontSize="inherit" />} 
-            alertMessage={t("alert.requested.msg", { featurename: "Instant" })} 
-          />
+          {
+            statusInstantData && statusInstantData.request_status === SellerStatusPending && 
+            <CustomizedPermissionAlert
+              alertSeverity="info" 
+              alertIcon={<PageviewIcon fontSize="inherit" />} 
+              alertMessage={t("alert.requested.msg", { featurename: "Proses Instantt" })} 
+            />
+          }
         </Grid>
       </Grid>
         
+      {/* for Alerting */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity={severityAlert} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
