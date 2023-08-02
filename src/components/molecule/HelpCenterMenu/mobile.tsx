@@ -22,7 +22,7 @@ export default function HelpCenterMenu() {
   return (
     <>
       <DrawerListSubItem
-        title={t("drawer.other.helpCenter")}
+        label={t("drawer.other.helpCenter")}
         onClick={() => setOpen(true)}
       />
       <SimpleDialog open={open} onClose={() => setOpen(false)} />

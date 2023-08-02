@@ -2,6 +2,7 @@ import { ListItem, Switch, type TypographyProps } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useRouter } from "next/router";
+import { type MouseEventHandler } from "react";
 
 import InstantMenu from "~/components/icons/feature/InstantMenu";
 import KilatMenu from "~/components/icons/feature/KilatMenu";
@@ -24,19 +25,22 @@ export default function DrawerListSubItem({
   label,
   isActive = false,
   trailing,
-  href
+  href,
+  onClick
 }: {
-  name: string;
+  name?: string;
   label: string;
   isActive?: boolean;
   trailing?: React.ReactNode;
   href?: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }) {
   const router = useRouter()
 
   const listSubItem = (
     <ListItemButton
       selected={isActive}
+      onClick={onClick}
       component="a"
       sx={{
         pl: 6,

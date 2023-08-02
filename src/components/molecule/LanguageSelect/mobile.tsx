@@ -26,7 +26,7 @@ export default function LanguageSelect() {
   return (
     <>
       <DrawerListSubItem
-        title={t("drawer.other.language")}
+        label={t("drawer.other.language")}
         onClick={() => setOpen(true)}
       />
       <SimpleDialog open={open} onClose={handleClose} />
