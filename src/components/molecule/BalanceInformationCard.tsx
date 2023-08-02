@@ -154,7 +154,7 @@ export default function BalanceInformationCard() {
           Limit tarik saldo: Rp20.000 - Rp10.000.000. Penarikan akan dikenakan
           biaya sesuai dengan{" "}
           <Link
-            href="/"
+            href="https://www.vcgamers.com/news/help/faq-sell-digital-goods/"
             component={NextLink}
             underline="hover"
             color="primary.main"

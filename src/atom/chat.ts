@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export const messageAttachmentShowAtom = atom(true);
+export const messageAttachmentShowAtom = atom(false);
 
 export const messagesAtom = atom<
   | { id: string; name: string; text: string; unread?: number; time: string }[]

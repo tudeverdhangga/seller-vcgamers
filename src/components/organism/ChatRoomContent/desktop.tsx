@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -6,11 +8,11 @@ import { useRouter } from "next/router";
 
 import { messageAttachmentShowAtom } from "~/atom/chat";
 
-import ChatMessageInput from "~/components/molecule/ChatMessageInput";
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
 import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubheader";
 import ChatMessageAttachment from "~/components/molecule/ChatMessageAttachment";
 import ChatMessageInfoBanner from "~/components/molecule/ChatMessageInfoBanner";
+import ChatMessageInput from "~/components/molecule/ChatMessageInput";
 import ChatMessageSuggestion from "~/components/molecule/ChatMessageSuggestion";
 import ChatMessageToolbar from "~/components/molecule/ChatMessageToolbar";
 import ChatRoomEmptyState from "~/components/molecule/EmptyState/chatRoom";
@@ -18,6 +20,15 @@ import ChatRoomEmptyState from "~/components/molecule/EmptyState/chatRoom";
 export default function ChatRoomContent() {
   const [show] = useAtom(messageAttachmentShowAtom);
   const router = useRouter();
+
+  const scrollRef = useRef<HTMLLIElement | null>(null);
+  const [list] = useState([0, 1, 2, 3, 4]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [list]);
 
   const chatId = router.query.chatId as string[] | undefined;
 
@@ -40,8 +51,11 @@ export default function ChatRoomContent() {
         }}
         subheader={<li />}
       >
-        {[0, 1, 2, 3, 4].map((sectionId) => (
-          <li key={`section-${sectionId}`}>
+        {list.map((sectionId) => (
+          <li
+            key={`section-${sectionId}`}
+            {...(sectionId === 4 && { ref: scrollRef })}
+          >
             <ul>
               <ChatMessageListSubheader
                 content={`${sectionId + 1} December 2021`}
