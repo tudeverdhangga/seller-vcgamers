@@ -7,6 +7,14 @@ interface ResponseInstant {
   data: DataInstant
   message: string
 }
+
+export interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}
 export interface DataInstant {
   total_transaction: number
   total_success_transaction: number

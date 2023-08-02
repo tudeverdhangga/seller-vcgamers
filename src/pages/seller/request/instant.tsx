@@ -14,7 +14,7 @@ import CustomizedMidContent from "~/components/organism/MidContentRequestFeature
 import CustomizedPermissionAlert from "~/components/organism/PermissionAlertRequestFeature";
 import React from "react";
 import ContentCard from "~/components/molecule/ContentCard";
-import { DataInstant, SeverityType, useGetStatusInstant, useRequestInstant } from "~/services/api/request-fitur";
+import { DataInstant, ErrorResponse, SeverityType, useGetStatusInstant, useRequestInstant } from "~/services/api/request-fitur";
 import { SellerStatusApproved, SellerStatusPending, SellerStatusRejected } from "~/utils/dummy/seller-status";
 
 
@@ -31,8 +31,10 @@ export default function InstantPage() {
   const [severityAlert, setSeverityAlert] = React.useState<SeverityType>("error");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const getStatusInstant = useGetStatusInstant();
+  const postRequestInstant = useRequestInstant();
 
   React.useEffect(() => {
+    void getStatusInstant.refetch()
     if(getStatusInstant?.data?.data?.total_transaction !== undefined && getStatusInstant?.data?.data?.total_success_transaction !== undefined && getStatusInstant?.data?.data?.total_rate_transaction !== undefined) {
       setTotalTransaction(getStatusInstant.data?.data.total_transaction)
       setSuccessTransaction(getStatusInstant.data?.data.total_success_transaction)
@@ -40,11 +42,13 @@ export default function InstantPage() {
       setStatusInstantData(getStatusInstant.data?.data);
     }
   }, [
-    // getStatusInstant?.data?.data,
+    getStatusInstant?.data?.data?.total_transaction,
+    getStatusInstant?.data?.data?.total_success_transaction,
+    getStatusInstant?.data?.data?.total_rate_transaction,
   ])
 
-  const handleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const getStatusInstant = useGetStatusInstant();
+  const UseHandleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
+    void getStatusInstant.refetch()
     if (getStatusInstant.data) {
       if (getStatusInstant.data?.data.total_transaction >= minimumAllTransaction && 
         successPercentageTransaction >= minimumSuccessPercentageTransaction &&
@@ -54,20 +58,29 @@ export default function InstantPage() {
       }
     }
   };
+  const UseHandleChangeCheck = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+		void getStatusInstant.refetch()
+    if (getStatusInstant.data) {
+      if (getStatusInstant.data?.data.total_transaction >= minimumAllTransaction && 
+        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
+        (getStatusInstant.data?.data.seller_has_instant === false && getStatusInstant.data?.data.request_status === "")
+        ) {
+          setCheckedSnK(event.target.checked);
+      }
+    }
+	}, [getStatusInstant.data?.data.total_transaction]);
 
-  const onClickRequest = () => {
-    const postRequestInstant = useRequestInstant();
+  const UseClickRequest = () => {
     postRequestInstant.mutate(undefined, {
-      onSuccess: (res) => {
-        const response = res?.data
-        let responseStatusInstant = useGetStatusInstant()
-        console.log(responseStatusInstant?.data?.data)
+      onSuccess: () => {
+        void getStatusInstant.refetch()
+        setStatusInstantData(getStatusInstant?.data?.data);
       },
-      onError(error: any, variables, context) {
-        setAlertMessage(error?.response?.data?.message)
+      onError: (error) => {
+        const err = error as ErrorResponse
+        setAlertMessage(err?.response?.data?.message)
         setSeverityAlert("error");
         setOpenSnackbar(true);
-        // console.log(error, variables, context)
       },
     })
   };
@@ -188,7 +201,7 @@ export default function InstantPage() {
               <Grid item xs={8} sm={10}>
                 <Checkbox
                   checked={checkedSnK}
-                  onChange={handleChangeSnK}
+                  onChange={UseHandleChangeCheck}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
                 <Typography
@@ -206,7 +219,7 @@ export default function InstantPage() {
                   color={checkedSnK ? "success" : "secondary"}
                   sx={{ textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
                   disabled={!checkedSnK}
-                  onClick={onClickRequest} >
+                  onClick={UseClickRequest} >
                   {t("alert.confirmation.btn")}
                 </Button>
               </Grid>

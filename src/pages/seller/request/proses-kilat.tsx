@@ -14,7 +14,7 @@ import CustomizedMidContent from "~/components/organism/MidContentRequestFeature
 import CustomizedPermissionAlert from "~/components/organism/PermissionAlertRequestFeature";
 import React from "react";
 import ContentCard from "~/components/molecule/ContentCard";
-import { DataKilat, SeverityType, useGetStatusKilat, useRequestKilat } from "~/services/api/request-fitur";
+import { DataKilat, ErrorResponse, SeverityType, useGetStatusKilat, useRequestKilat } from "~/services/api/request-fitur";
 import { SellerStatusApproved, SellerStatusPending, SellerStatusRejected } from "~/utils/dummy/seller-status";
 
 
@@ -31,6 +31,7 @@ export default function ProsesKilatPage() {
   const [severityAlert, setSeverityAlert] = React.useState<SeverityType>("error");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const getStatusKilat = useGetStatusKilat();
+  const postRequestKilat = useRequestKilat();
 
   React.useEffect(() => {
     if(getStatusKilat?.data?.data?.total_transaction !== undefined && 
@@ -44,10 +45,12 @@ export default function ProsesKilatPage() {
       // setSuccessPercentageTransaction(numberSuccessTransactionPercentage)
     }
   }, [
-    // getStatusKilat?.data?.data,
+    getStatusKilat?.data?.data?.total_transaction,
+    getStatusKilat?.data?.data?.total_success_transaction,
+    getStatusKilat?.data?.data?.total_rate_transaction,
   ])
 
-  const handleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const UseHandleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
     const getStatusKilat = useGetStatusKilat();
     if (getStatusKilat.data) {
       if (getStatusKilat.data?.data.total_transaction >= minimumAllTransaction && 
@@ -58,21 +61,30 @@ export default function ProsesKilatPage() {
       }
     }
   };
+  const UseHandleChangeCheck = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+		void getStatusKilat.refetch()
+    if (getStatusKilat.data) {
+      if (getStatusKilat.data?.data.total_transaction >= minimumAllTransaction && 
+        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
+        (getStatusKilat.data?.data.seller_has_kilat === false && getStatusKilat.data?.data.request_status === "")
+        ) {
+          setCheckedSnK(event.target.checked);
+      }
+    }
+	}, [getStatusKilat.data?.data.total_transaction]);
 
-  const onClickRequest = () => {
-    const postRequestKilat = useRequestKilat();
+  const UseClickRequest = () => {
     postRequestKilat.mutate(undefined, {
-      onSuccess: (res) => {
-        const response = res?.data
-        let responseStatusKilat = useGetStatusKilat();
-        setStatusKilatData(responseStatusKilat?.data?.data);
+      onSuccess: () => {
+        void getStatusKilat.refetch()
+        setStatusKilatData(getStatusKilat?.data?.data);
       },
-      onError(error: any, variables, context) {
-        setAlertMessage(error?.response?.data?.message)
+      onError: (error) => {
+        const err = error as ErrorResponse
+        setAlertMessage(err?.response?.data?.message)
         setSeverityAlert("error");
         setOpenSnackbar(true);
-        // console.log(error, variables, context)
-      },
+      }
     })
   };
 
@@ -183,7 +195,7 @@ export default function ProsesKilatPage() {
               <Grid item xs={8} sm={10}>
                 <Checkbox
                   checked={checkedSnK}
-                  onChange={handleChangeSnK}
+                  onChange={UseHandleChangeCheck}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
                 <Typography
@@ -201,7 +213,7 @@ export default function ProsesKilatPage() {
                   color={checkedSnK ? "success" : "secondary"}
                   sx={{ textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
                   disabled={!checkedSnK}
-                  onClick={onClickRequest} >
+                  onClick={UseClickRequest} >
                   {t("alert.confirmation.btn")}
                 </Button>
               </Grid>
