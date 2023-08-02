@@ -1,18 +1,48 @@
+import queryString from "query-string";
 import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { toast } from "react-toastify";
 
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
 import VGDialog from "~/components/atomic/VGDialog";
+import { useDeactive } from "~/services/api/product"
+import { toastOption } from "~/utils/toast";
+
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}
 
 export default function ConfirmationDeactiveDialog(props: {
+  id: string;
   image: string;
   name: string | "undefined";
   isOpen: boolean;
   handleClose: () => void;
+  refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
+  const deactive = useDeactive(queryString.stringify({variation_id: props.id}))
+
+  const onDeactive = () => {
+    deactive.mutate(undefined, {
+      onSuccess: () => {
+        props.handleClose()
+        toast.success(t("table.dialog.confirmationDeactive.onSuccess"), toastOption);
+        props.refetchProduct()
+      },
+      onError: (error) => {
+        const err = error as ErrorResponse
+        const errorMessage = `${t("table.dialog.confirmationDeactive.onError")}: ${err?.response?.data?.message}`
+        toast.error(errorMessage, toastOption)
+      }
+    })
+  }
 
   return (
     <VGDialog
@@ -89,6 +119,7 @@ export default function ConfirmationDeactiveDialog(props: {
           color="error"
           size="large"
           sx={{ width: "100%", ml: 1 }}
+          onClick={onDeactive}
         >
           {t("table.dialog.confirmationDeactive.actions.ok")}
         </VGButton>

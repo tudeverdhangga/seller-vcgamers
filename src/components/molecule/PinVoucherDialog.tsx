@@ -35,7 +35,7 @@ const PinInput = styled('input')<PinInputProps>`
 
 export default function PinVoucherDialog(props: {
   isOpen: boolean;
-  id: number;
+  id: string;
   handleClose: () => void;
 }) {
   const pinValue = "123456" // Contoh

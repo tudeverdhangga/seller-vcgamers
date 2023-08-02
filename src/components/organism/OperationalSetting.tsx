@@ -28,13 +28,13 @@ export default function OperationalSetting() {
   const getProfile = useGetProfile();
   const updateOperational = useUpdateOperational();
   const days = [
+    t("tab.operational.form.days.sun"),
     t("tab.operational.form.days.mon"),
     t("tab.operational.form.days.tues"),
     t("tab.operational.form.days.wed"),
     t("tab.operational.form.days.thurs"),
     t("tab.operational.form.days.fri"),
-    t("tab.operational.form.days.sat"),
-    t("tab.operational.form.days.sun")
+    t("tab.operational.form.days.sat")
   ]
   const [operational, setOperational] = useState<OperationalHour[]>()
   const [isLoading, setIsLoading] = useState(getProfile?.isLoading || updateOperational?.isLoading)

@@ -7,14 +7,18 @@ import type { SxProps, Theme } from "@mui/material/styles";
 
 import DrawerListSubItem from "~/components/molecule/DrawerListSubItem";
 
-
 export default function DrawerListItem(props: {
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
   sx?: SxProps<Theme>;
+  name: string;
   title: string;
   href?: string;
-  subList: { name: string; label: string; href: string }[];
+  subList: {
+    name: string;
+    label: string | JSX.Element;
+    href: string;
+  }[];
   activeMenu: string;
 }) {
   const { t } = useTranslation("layout");
@@ -57,7 +61,8 @@ export default function DrawerListItem(props: {
         {props.subList.map(list => (
           <DrawerListSubItem
             key={`menu-${list.name}`}
-            title={t(list.label as "drawer.myShop.dashboard")}
+            name={list.name}
+            label={t(list.label as "drawer.myShop.dashboard")}
             href={list.href}
             isActive={list.href === props.activeMenu}
           />

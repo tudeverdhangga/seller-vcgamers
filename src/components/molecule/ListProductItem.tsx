@@ -21,31 +21,37 @@ import ActivateKilatDialog from "~/components/molecule/ActivateKilatDialog";
 import ChangePriceDialog from "~/components/molecule/ChangePriceDialog";
 import ChangeStockDialog from "~/components/molecule/ChangeStockDialog";
 import ConfirmationDeactiveDialog from "~/components/molecule/ConfirmationDeactiveDialog";
+import ConfirmationActiveDialog from "~/components/molecule/ConfirmationActiveDialog";
 import ConfirmationDeleteDialog from "~/components/molecule/ConfirmationDeleteDialog";
-import { capitalizeFirstLetter, priceFormat } from "~/utils/format";
+import { priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
 import PinVoucherDialog from "~/components/molecule/PinVoucherDialog";
 
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
   name: string;
-  status: string;
+  active: boolean;
   price: number;
-  feature?: string;
+  feature: string;
+  isKilatActive: boolean;
   stock: number;
-  id: number; // can change to id or uuid
+  id: string;
+  nextUpdatePrice: string | null;
+  nextActiveKilat: string | null;
+  refetchProduct: () => void
 }) {
+  const { isMobile } = useResponsive();
+  const { t } = useTranslation("listProduct");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isOpenMenu = Boolean(anchorEl);
   const [isOpenDeactiveKilatDialog, setIsOpenDeactiveKilatDialog] = useState(false)
   const [isOpenActiveKilatDialog, setIsOpenActiveKilatDialog] = useState(false)
   const [isOpenChangePriceDialog, setIsOpenChangePriceDialog] = useState(false)
   const [isOpenChangeStockDialog, setIsOpenChangeStockDialog] = useState(false)
   const [isOpenDeactiveProductDialog, setIsOpenDeactiveProductDialog] = useState(false)
+  const [isOpenActiveProductDialog, setIsOpenActiveProductDialog] = useState(false)
   const [isOpenDeleteProductDialog, setIsOpenDeleteProductDialog] = useState(false)
   const [isOpenPinVoucherDialog, setIsOpenPinVoucherDialog] = useState(false)
-  const isOpenMenu = Boolean(anchorEl);
-  const { isMobile } = useResponsive();
-  const { t } = useTranslation("listProduct");
 
   const handleClickOptions = (e: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(e.currentTarget);
@@ -71,7 +77,7 @@ export default function ListProductItem(props: {
     <Box
       sx={{
         ...middleStyle,
-        justifyContent: isMobile ? "flex-start" : "center",
+        justifyContent: "flex-start",
         flexDirection: "row"
       }}
     >
@@ -90,13 +96,15 @@ export default function ListProductItem(props: {
           {props.name}
         </Typography>
         <VGChip
-          label={ capitalizeFirstLetter(props.status) }
+          label={
+            props.active 
+              ? t("filter.status.active")
+              : t("filter.status.nonAktive")
+          }
           color={
-            props.status === "active"
+            props.active
               ? "success"
-              : props.status === "nonActive"
-                ? "error"
-                : "warning"
+              : "error"
           }
           size="small"
         />
@@ -174,7 +182,11 @@ export default function ListProductItem(props: {
                       height={16}
                       alt="Badge Kilat"
                     />
-                    <Switch onChange={(e) => handleChangeKilat(e)} />
+                    <Switch
+                      disabled={!props.active}
+                      checked={props.isKilatActive}
+                      onChange={(e) => handleChangeKilat(e)}
+                    />
                   </Box>
               )
               : "-"
@@ -262,12 +274,25 @@ export default function ListProductItem(props: {
         <MenuItem onClick={handleCloseOptions}>
            <EditOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.editProduct")}
         </MenuItem>
-        <MenuItem onClick={() => setIsOpenDeactiveProductDialog(true)}>
-          <PowerSettingsNewIcon sx={{ pr: 1, color: "error.main" }} />
-          <Typography color="error">
-            {t("table.tBody.deactiveProduct")}
-          </Typography>
-        </MenuItem>
+        {
+          props.active
+            ? (
+              <MenuItem onClick={() => setIsOpenDeactiveProductDialog(true)}>
+                <PowerSettingsNewIcon sx={{ pr: 1, color: "error.main" }} />
+                <Typography color="error">
+                  {t("table.tBody.deactiveProduct")}
+                </Typography>
+              </MenuItem>
+            )
+            : (
+              <MenuItem onClick={() => setIsOpenActiveProductDialog(true)}>
+                <PowerSettingsNewIcon sx={{ pr: 1, color: "success.main" }} />
+                <Typography color="success.main">
+                  {t("table.tBody.activeProduct")}
+                </Typography>
+              </MenuItem>
+            )
+        }
         <MenuItem onClick={() => setIsOpenDeleteProductDialog(true)}>
           <DeleteOutlinedIcon sx={{ pr: 1, color: "error.main" }} />
           <Typography color="error">
@@ -323,42 +348,64 @@ export default function ListProductItem(props: {
 
       {/* Dialog */}
       <ActivateKilatDialog
+        id={props.id}
         name={props.name}
         isBulk={false}
         isOpen={isOpenActiveKilatDialog}
+        nextActiveKilat={props.nextActiveKilat}
         handleClose={() => setIsOpenActiveKilatDialog(false)}
+        refetchProduct={props.refetchProduct}
       />
       <DeactivateKilatDialog
+        id={props.id}
         name={props.name}
         isBulk={false}
         isOpen={isOpenDeactiveKilatDialog}
         handleClose={() => setIsOpenDeactiveKilatDialog(false)}
+        refetchProduct={props.refetchProduct}
       />
       <ChangePriceDialog
+        id={props.id}
         name={props.name}
         image={props.image}
         price={props.price}
+        nextUpdatePrice={props.nextUpdatePrice}
         isOpen={isOpenChangePriceDialog}
         handleClose={() => setIsOpenChangePriceDialog(false)}
+        refetchProduct={props.refetchProduct}
       />
       <ChangeStockDialog
+        id={props.id}
         name={props.name}
         image={props.image}
         stock={props.stock}
         isOpen={isOpenChangeStockDialog}
         handleClose={() => setIsOpenChangeStockDialog(false)}
+        refetchProduct={props.refetchProduct}
       />
       <ConfirmationDeactiveDialog
+        id={props.id}
         name={props.name}
         image={props.image}
         isOpen={isOpenDeactiveProductDialog}
         handleClose={() => setIsOpenDeactiveProductDialog(false)}
+        refetchProduct={props.refetchProduct}
+      />
+      <ConfirmationActiveDialog
+        id={props.id}
+        name={props.name}
+        image={props.image}
+        isOpen={isOpenActiveProductDialog}
+        handleClose={() => setIsOpenActiveProductDialog(false)}
+        refetchProduct={props.refetchProduct}
       />
       <ConfirmationDeleteDialog
+        id={props.id}
         name={props.name}
         image={props.image}
         isOpen={isOpenDeleteProductDialog}
         handleClose={() => setIsOpenDeleteProductDialog(false)}
+        refetchProduct={props.refetchProduct}
       />
       <PinVoucherDialog
         id={props.id}

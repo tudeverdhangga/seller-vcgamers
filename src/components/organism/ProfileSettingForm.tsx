@@ -59,17 +59,15 @@ export default function ProfileSettingForm() {
   const [bannerImage, setBannerImage] = useState<SellerPhoto | undefined>();
   const [shopUrl, setShopUrl] = useState<string | undefined>("");
   const [urlMessage, setUrlMessage] = useState<string | undefined>("");
+  const [phone, setPhone] = useState<string | undefined>("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
 
   useEffect(() => {
     setProfileImage(getProfile?.data?.data?.seller_photo)
     setBannerImage(getProfile?.data?.data?.seller_cover_photo)
     setShopUrl(getProfile?.data?.data?.seller_url)
-  }, [
-    getProfile?.data?.data?.seller_cover_photo,
-    getProfile?.data?.data?.seller_photo,
-    getProfile?.data?.data?.seller_url
-  ])
+    setPhone(getProfile?.data?.data?.phone)
+  }, [getProfile?.data])
 
   // Style
   const fieldStyle = {
@@ -124,7 +122,9 @@ export default function ProfileSettingForm() {
     formData.append("seller_name", data.seller_name);
     formData.append("seller_url", data.seller_url);
     formData.append("seller_description", data.seller_description);
-    formData.append("phone", data.phone);
+    if (typeof phone !== 'undefined') {
+      formData.append("phone", phone);
+    }
 
     if (typeof profileImage !== 'undefined') {
       formData.append("seller_photo", profileImage?.object_key);
@@ -247,15 +247,8 @@ export default function ProfileSettingForm() {
       variant="outlined" 
       size="small"
       fullWidth
-      {...register("phone", { required: "Nomor Handphone is required." })}
-      error={Boolean(errors.phone)}
+      disabled
       defaultValue={getProfile?.data?.data?.phone}
-      helperText={errors.phone?.message}
-      type="number"
-      inputProps={{
-        inputMode: "numeric",
-        pattern: "[0-9]*",
-      }}
     />
   );
   const bankNameContainer = (

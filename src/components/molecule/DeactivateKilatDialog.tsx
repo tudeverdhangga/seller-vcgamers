@@ -1,19 +1,50 @@
+import queryString from "query-string";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
+import { toast } from "react-toastify";
 
 import VGDialog from "~/components/atomic/VGDialog";
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
+import { useDeactiveKilat } from "~/services/api/product";
+import { toastOption } from "~/utils/toast";
+
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}
 
 export default function DeactivateKilatDialog (props: {
+  id: string;
   isBulk: boolean | false;
   name?: string | "undefined";
   isOpen: boolean;
+  nextUpdatePrice?: string | null;
   handleClose: () => void;
+  refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
+  const kilat = useDeactiveKilat(queryString.stringify({variation_id: props.id}))
+
+  const onDeactiveKilat = () => {
+    kilat.mutate(undefined, {
+      onSuccess: () => {
+        props.handleClose()
+        toast.success(t("table.dialog.nonActive.onSuccess"), toastOption);
+        props.refetchProduct()
+      },
+      onError: (error) => {
+        const err = error as ErrorResponse
+        const errorMessage = `${t("table.dialog.nonActive.onError")}: ${err?.response?.data?.message}`
+        toast.error(errorMessage, toastOption)
+      }
+    })
+  }
 
   return (
     <VGDialog
@@ -50,7 +81,12 @@ export default function DeactivateKilatDialog (props: {
               : t("table.dialog.nonActive.title")
           }
         </Typography>
-        <Typography my={1}>
+        <Typography
+          fontSize={14}
+          fontWeight={500}
+          color="common.shade.200"
+          my={1}
+        >
           {
             props.isBulk
               ? t("table.dialog.nonActive.bulkSubTitle")
@@ -76,7 +112,12 @@ export default function DeactivateKilatDialog (props: {
             {props.name}
           </Typography>
         </VGAlert>
-        <Typography my={1}>
+        <Typography
+          fontSize={14}
+          fontWeight={500}
+          color="common.shade.200"
+          my={1}
+        >
           {t("table.dialog.nonActive.alert")}
         </Typography>
       </Box>
@@ -94,15 +135,16 @@ export default function DeactivateKilatDialog (props: {
           sx={{ width: "100%", mr: 1 }}
           onClick={props.handleClose}
         >
-          {t("table.dialog.active.actions.cancel")}
+          {t("table.dialog.nonActive.actions.cancel")}
         </VGButton>
         <VGButton
           variant="outlined"
           color="secondary"
           size="large"
           sx={{ width: "100%", ml: 1 }}
+          onClick={onDeactiveKilat}
         >
-          {t("table.dialog.active.actions.ok")}
+          {t("table.dialog.nonActive.actions.ok")}
         </VGButton>
       </Box>
     </VGDialog>

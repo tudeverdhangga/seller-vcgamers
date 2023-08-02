@@ -60,7 +60,7 @@ export default function DrawerContent() {
   })
 
   return (
-    <div>
+    <>
       <SellerToolbar />
       <Divider />
       <ProfileCard name={sellerName} profile_src={sellerProfile} is_closed={!sellerOpen} />
@@ -69,6 +69,7 @@ export default function DrawerContent() {
         {menus.map(menu => (
           <DrawerListItem
             key={`sub-menu-${menu.name}`}
+            name={menu.name}
             title={t(menu.translationKey as "drawer.myShop.head")}
             leading={ <menu.leading /> }
             subList={menu.subList}
@@ -76,10 +77,10 @@ export default function DrawerContent() {
           />
         ))}
         <List component="div" disablePadding sx={{ display: { sm: "none" } }}>
-          <DrawerListSubItem title={t("drawer.other.helpCenter")} />
-          <DrawerListSubItem title={t("drawer.other.language")} />
+          <DrawerListSubItem name="navbar" label={t("drawer.other.helpCenter")} />
+          <DrawerListSubItem name="navbar" label={t("drawer.other.language")} />
         </List>
       </List>
-    </div>
+    </>
   );
 }

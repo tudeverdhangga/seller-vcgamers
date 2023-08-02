@@ -1,22 +1,74 @@
+import { useEffect, useState } from "react";
+import queryString from "query-string";
 import Image from "next/image";
 import { Box, TextField, Typography } from "@mui/material";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
+import { toast } from "react-toastify";
 
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
 import VGDialog from "~/components/atomic/VGDialog";
-import { priceFormat } from "~/utils/format";
+import { dateToTime, priceFormat } from "~/utils/format";
+import { useUpdatePrice } from "~/services/api/product"
+import { toastOption } from "~/utils/toast";
+
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}
 
 export default function ChangePriceDialog(props: {
+  id: string;
   image: string;
   name: string | "undefined";
   price: number;
   isOpen: boolean;
+  nextUpdatePrice: string | null;
   handleClose: () => void;
+  refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
-  const income = 98 * props.price / 100
+  const updatePrice = useUpdatePrice(queryString.stringify({variation_id: props.id}))
+  const [income, setIncome] = useState(98 * props.price / 100)
+  const [price, setPrice] = useState(props.price)
+  const [isUnder100, setIsUnder100] = useState(false)
+
+  useEffect(() => {
+    setIncome(98 * price / 100)
+  }, [price])
+
+  const onUpdatePrice = () => {
+    updatePrice.mutate(price, {
+      onSuccess: () => {
+        props.handleClose()
+        toast.success(t("table.dialog.changePrice.onSuccess"), toastOption);
+        props.refetchProduct()
+      },
+      onError: (error) => {
+        const err = error as ErrorResponse
+        const errorMessage = `${t("table.dialog.changePrice.onError")}: ${err?.response?.data?.message}`
+        toast.error(errorMessage, toastOption)
+      }
+    })
+  }
+  const onClose = () => {
+    setPrice(props.price)
+    props.handleClose()
+  }
+  const onChangePrice = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const price = e.target.value
+
+    if (parseInt(price) < 100) {
+      setIsUnder100(true)
+    } else {
+      setIsUnder100(false)
+      setPrice(parseInt(price))
+    }
+  }
 
   return (
     <VGDialog
@@ -71,7 +123,7 @@ export default function ChangePriceDialog(props: {
         <TextField
           variant="outlined"
           label={t("table.dialog.changePrice.field")}
-          defaultValue={props.price}
+          defaultValue={price}
           fullWidth
           type="number"
           inputProps={{
@@ -79,8 +131,34 @@ export default function ChangePriceDialog(props: {
             pattern: "[0-9]*",
           }}
           sx={{ my: 1 }}
+          disabled={props.nextUpdatePrice !== null}
+          onChange={(e) => onChangePrice(e)}
         />
-        <Typography>
+        {
+          props.nextUpdatePrice !== null && (
+            <Typography
+              color="success.dark"
+              fontSize={12}
+              fontWeight={600}
+              mb={1}
+            >
+              {t("table.dialog.changePrice.helper.time", { time: dateToTime(props.nextUpdatePrice) })}
+            </Typography>
+          )
+        }
+        {
+          isUnder100 && (
+            <Typography
+              color="error"
+              fontSize={12}
+              fontWeight={600}
+              mb={1}
+            >
+              {t("table.dialog.changePrice.helper.under100")}
+            </Typography>
+          )
+        }
+        <Typography fontSize={12}>
           {t("table.dialog.changePrice.note")}
         </Typography>
         <VGAlert
@@ -95,8 +173,20 @@ export default function ChangePriceDialog(props: {
             display="flex"
           >
             <ErrorOutlineOutlinedIcon />
-            <Typography>
-              {t("table.dialog.changePrice.alert", { percent: "2%", price: priceFormat(income) })}
+            <Typography ml={1} fontSize={12}>
+              <Trans
+                ns="listProduct"
+                i18nKey={"table.dialog.changePrice.alert"}
+                components={{
+                  strong: <Typography
+                    component="span"
+                    fontSize={12}
+                    fontWeight={700}
+                    color="primary"
+                  />
+                }}
+                values={{ income: priceFormat(income) }}
+              />
             </Typography>
           </Typography>
         </VGAlert>
@@ -113,7 +203,7 @@ export default function ChangePriceDialog(props: {
           color="secondary"
           size="large"
           sx={{ width: "100%", mr: 1 }}
-          onClick={props.handleClose}
+          onClick={onClose}
         >
         {t("table.dialog.changePrice.actions.cancel")}
         </VGButton>
@@ -122,6 +212,8 @@ export default function ChangePriceDialog(props: {
           color="success"
           size="large"
           sx={{ width: "100%", ml: 1 }}
+          disabled={price % 100 !== 0 || props.nextUpdatePrice !== null || isUnder100}
+          onClick={onUpdatePrice}
         >
           {t("table.dialog.changePrice.actions.ok")}
         </VGButton>

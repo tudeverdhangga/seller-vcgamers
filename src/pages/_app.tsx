@@ -37,7 +37,8 @@ const theme = createTheme({
     },
     success: {
       main: "#40D04F",
-      contrastText: "#FFFFFF"
+      contrastText: "#FFFFFF",
+      dark: "#00870E"
     },
     divider: "#F5F5F5",
     common: commonColors,

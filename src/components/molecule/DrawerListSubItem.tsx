@@ -1,8 +1,11 @@
-import { type MouseEventHandler } from "react";
-import Link from "next/link";
-import { type TypographyProps } from "@mui/material";
+import { ListItem, Switch, type TypographyProps } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import { useRouter } from "next/router";
+
+import InstantMenu from "~/components/icons/feature/InstantMenu";
+import KilatMenu from "~/components/icons/feature/KilatMenu";
+import VIPMenu from "~/components/icons/feature/VIPMenu";
 
 const activeProps: TypographyProps = {
   fontSize: 14,
@@ -17,21 +20,22 @@ const defaultProps: TypographyProps = {
 };
 
 export default function DrawerListSubItem({
-  title,
+  name,
+  label,
   isActive = false,
   trailing,
-  href,
-  onClick,
+  href
 }: {
-  title: string;
+  name: string;
+  label: string;
   isActive?: boolean;
   trailing?: React.ReactNode;
   href?: string;
-  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }) {
+  const router = useRouter()
+
   const listSubItem = (
     <ListItemButton
-      onClick={onClick}
       selected={isActive}
       component="a"
       sx={{
@@ -40,26 +44,45 @@ export default function DrawerListSubItem({
         minHeight: 28,
         textDecoration: "none",
         bgcolor: isActive ? "primary.light" : "#FBFAFF",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
       }}
     >
-      <ListItemText
-        primary={title}
-        primaryTypographyProps={isActive ? activeProps : defaultProps}
-      />
-      {trailing}
+      {
+        name === "instant"
+          ? <InstantMenu />
+          : name === "kilat"
+            ? <KilatMenu />
+            : name === "vip"
+              ? <VIPMenu />
+              : (
+                <ListItemText
+                  primary={label}
+                  primaryTypographyProps={isActive ? activeProps : defaultProps}
+                />
+              )
+      }
     </ListItemButton>
   );
 
   if (href) {
     return (
-      <Link
-        href={href}
-        passHref
-        legacyBehavior
-        style={{ textDecoration: "none" }}
+      <ListItem
+        secondaryAction={
+          name === "kilat"
+           ? (
+            <Switch
+              onClick={() => console.log('asd')}
+            />
+           )
+           : trailing
+        }
+        onClick={() => void router.push(href)}
+        sx={{ p: 0 }}
       >
         {listSubItem}
-      </Link>
+      </ListItem>
     );
   }
 

@@ -34,6 +34,7 @@
       "detailProduct": "Lihat Produk",
       "editProduct": "Edit Produk",
       "deactiveProduct": "Nonaktifkan",
+      "activeProduct": "Aktifkan",
       "deleteProduct": "Hapus Produk"
     },
     "dialog": {
@@ -52,7 +53,9 @@
         "actions": {
           "cancel": "Kembali",
           "ok": "Aktifkan"
-        }
+        },
+        "onSuccess": "Pengaktifan proses kilat berhasil",
+        "onError": "Pengaktifan proses kilat gagal"
       },
       "nonActive": {
         "title": "Nonaktifkan Proses Kilat",
@@ -63,21 +66,29 @@
         "actions": {
           "cancel": "Kembali",
           "ok": "Nonaktifkan"
-        }
+        },
+        "onSuccess": "Nonaktifkan proses kilat berhasil",
+        "onError": "Nonaktifkan proses kilat gagal"
       },
       "changePrice": {
         "title": "Ubah Harga Produk",
+        "helper": {
+          "time": "*Kamu dapat merubah harga lagi di jam {{time}}",
+          "under100": "Harga minimum Rp100"
+        },
         "note": "Catatan: Harap isi nominal dengan kelipatan 100",
-        "alert": "Setiap transaksi VCGamers menerapkan potongan {{percent}} sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar {{price}}",
+        "alert": "Setiap transaksi VCGamers menerapkan potongan <strong>2%</strong> sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar <strong>{{income}}</strong>",
         "field": "Harga (Rp)",
         "actions": {
           "cancel": "Batal",
           "ok": "Simpan"
-        }
+        },
+        "onSuccess": "Update harga produk berhasil",
+        "onError": "Update harga gagal"
       },
       "changeStock": {
         "title": "Ubah Stock Produk",
-        "field": "Harga (Rp)",
+        "field": "Stok",
         "alert": {
           "title": "Stok Kosong",
           "subTitle": "menyebabkan produk tidak bisa dibeli"
@@ -85,7 +96,19 @@
         "actions": {
           "cancel": "Batal",
           "ok": "Simpan"
-        }
+        },
+        "onSuccess": "Update stock produk berhasil",
+        "onError": "Update stock gagal"
+      },
+      "confirmationActive": {
+        "title": "Konfirmasi Pengaktifan",
+        "subTitle": "Kamu yakin ingin mengaktifkan varian produk ini?",
+        "actions": {
+          "cancel": "Kembali",
+          "ok": "Aktifkan"
+        },
+        "onSuccess": "Pengaktifan produk berhasil",
+        "onError": "Pengaktifan gagal"
       },
       "confirmationDeactive": {
         "title": "Konfirmasi Penonaktifan",
@@ -93,7 +116,9 @@
         "actions": {
           "cancel": "Batal",
           "ok": "Nonaktifkan"
-        }
+        },
+        "onSuccess": "Penonaktifan produk berhasil",
+        "onError": "Penonaktifan gagal"
       },
       "confirmationDelete": {
         "title": "Konfirmasi Penghapusan",
@@ -101,7 +126,9 @@
         "actions": {
           "cancel": "Batal",
           "ok": "Nonaktifkan"
-        }
+        },
+        "onSuccess": "Penghapusan produk berhasil",
+        "onError": "Penghapusan gagal"
       },
       "changeVoucher": {
         "title": "Kelola Voucher",

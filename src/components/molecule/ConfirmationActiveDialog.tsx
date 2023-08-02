@@ -1,13 +1,13 @@
+import queryString from "query-string";
 import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
-import queryString from "query-string";
 
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
 import VGDialog from "~/components/atomic/VGDialog";
-import { useDelete } from "~/services/api/product"
+import { useActivate } from "~/services/api/product"
 import { toastOption } from "~/utils/toast";
 
 interface ErrorResponse {
@@ -18,7 +18,7 @@ interface ErrorResponse {
   };
 }
 
-export default function ConfirmationDeleteDialog(props: {
+export default function ConfirmationActiveDialog(props: {
   id: string;
   image: string;
   name: string | "undefined";
@@ -27,18 +27,18 @@ export default function ConfirmationDeleteDialog(props: {
   refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
-  const deleteProduct = useDelete(queryString.stringify({variation_id: props.id}))
+  const activate = useActivate(queryString.stringify({variation_id: props.id}))
 
-  const onDelete = () => {
-    deleteProduct.mutate(undefined, {
+  const onActivate = () => {
+    activate.mutate(undefined, {
       onSuccess: () => {
         props.handleClose()
-        toast.success(t("table.dialog.confirmationDelete.onSuccess"), toastOption);
+        toast.success(t("table.dialog.confirmationActive.onSuccess"), toastOption);
         props.refetchProduct()
       },
       onError: (error) => {
         const err = error as ErrorResponse
-        const errorMessage = `${t("table.dialog.confirmationDelete.onError")}: ${err?.response?.data?.message}`
+        const errorMessage = `${t("table.dialog.confirmationActive.onError")}: ${err?.response?.data?.message}`
         toast.error(errorMessage, toastOption)
       }
     })
@@ -63,7 +63,7 @@ export default function ConfirmationDeleteDialog(props: {
             my: 1,
           }}
         >
-          {t("table.dialog.confirmationDelete.title")}
+          {t("table.dialog.confirmationActive.title")}
         </Typography>
         <VGAlert
           color="info"
@@ -91,11 +91,11 @@ export default function ConfirmationDeleteDialog(props: {
               color: "primary.main"
             }}
           >
-            {props.name}
+            { props.name }
           </Typography>
         </VGAlert>
         <Typography textAlign="center">
-          {t("table.dialog.confirmationDelete.subTitle")}
+          {t("table.dialog.confirmationActive.subTitle")}
         </Typography>
       </Box>
       <Box
@@ -112,16 +112,16 @@ export default function ConfirmationDeleteDialog(props: {
           sx={{ width: "100%", mr: 1 }}
           onClick={props.handleClose}
         >
-          {t("table.dialog.confirmationDelete.actions.cancel")}
+          {t("table.dialog.confirmationActive.actions.cancel")}
         </VGButton>
         <VGButton
           variant="contained"
-          color="error"
+          color="success"
           size="large"
           sx={{ width: "100%", ml: 1 }}
-          onClick={onDelete}
+          onClick={onActivate}
         >
-          {t("table.dialog.confirmationDelete.actions.ok")}
+          {t("table.dialog.confirmationActive.actions.ok")}
         </VGButton>
       </Box>
     </VGDialog>
