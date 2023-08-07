@@ -14,11 +14,14 @@ import { useTranslation } from "next-i18next";
 import { confirmationDialogOpenAtom, pinDialogOpenAtom } from "~/atom/balance";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
+import { useGetBalanceInfo } from "~/services/api/balance";
+import { priceFormat } from "~/utils/format";
 
 export default function BalanceConfirmationDialog() {
   const { t } = useTranslation("balance");
   const [modalOpen, setModalOpen] = useAtom(confirmationDialogOpenAtom);
   const [, setPinModalOpen] = useAtom(pinDialogOpenAtom);
+  const { data } = useGetBalanceInfo();
 
   return (
     <Dialog
@@ -67,11 +70,15 @@ export default function BalanceConfirmationDialog() {
           <Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <BodyTitle>{t("dialog.confirmation.body.owner")}</BodyTitle>
-              <BodyDesc>Fulan bin Fulan</BodyDesc>
+              <BodyDesc>{data?.data.bank.bank_account_name}</BodyDesc>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <BodyTitle>{t("dialog.confirmation.body.bank")}</BodyTitle>
-              <BodyDesc>BCA - 0225458788</BodyDesc>
+              <BodyDesc>
+                {data?.data.bank.bank_name}
+                {" - "}
+                {data?.data.bank.bank_account_number}
+              </BodyDesc>
             </Box>
           </Box>
           <Divider />
@@ -80,7 +87,7 @@ export default function BalanceConfirmationDialog() {
               <BodyTitle>
                 {t("dialog.confirmation.body.withdrawAmount")}
               </BodyTitle>
-              <BodyPrice>Rp9.890.000</BodyPrice>
+              <BodyPrice>{priceFormat(data?.data.balance ?? 0)}</BodyPrice>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <BodyTitle>{t("dialog.confirmation.body.withdrawFee")}</BodyTitle>
@@ -90,7 +97,7 @@ export default function BalanceConfirmationDialog() {
               <BodyTitle>
                 {t("dialog.confirmation.body.withdrawTotal")}
               </BodyTitle>
-              <BodyPrice>Rp9.890.000</BodyPrice>
+              <BodyPrice>{priceFormat(data?.data.balance ?? 0)}</BodyPrice>
             </Box>
           </Box>
         </Box>

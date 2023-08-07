@@ -2,19 +2,18 @@ import { useEffect, useRef, useState } from "react";
 
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import { atom, useAtom } from "jotai";
+
+export const pinErrorAtom = atom(false);
 
 export default function PinNumberInput({
   onSubmit,
-  onSuccess,
-  onFailed,
 }: {
-  onSubmit: (value: string) => Promise<void>;
-  onSuccess: () => void;
-  onFailed: () => void;
+  onSubmit: (value: string) => void;
 }) {
   const inputRefs = useRef<HTMLInputElement[]>([]); // Create a ref to hold references to the input fields
   const [pin, setPin] = useState<string[]>(Array(6).fill(""));
-  const [error, setError] = useState(false);
+  const [error] = useAtom(pinErrorAtom);
 
   const handleInputChange = (index: number, value: string) => {
     setPin((oldPin) => {
@@ -40,14 +39,9 @@ export default function PinNumberInput({
   useEffect(() => {
     // Check if all inputs are filled whenever pin state changes
     if (pin.every((digit) => digit !== "")) {
-      onSubmit(pin.join(""))
-        .then(onSuccess)
-        .catch(() => {
-          onFailed();
-          setError(true);
-        });
+      onSubmit(pin.join(""));
     }
-  }, [pin, onSubmit, onSuccess, onFailed, setError]);
+  }, [pin, onSubmit]);
 
   return (
     <Stack direction="row" spacing={1}>

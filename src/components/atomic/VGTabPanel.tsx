@@ -10,8 +10,8 @@ export default styled(
     children,
     ...props
   }: BoxProps & {
-    index: number;
-    value: number;
+    index: string | number;
+    value: string | number;
     id?: string;
     ariaLabel?: string;
   }) => (

@@ -1,29 +1,21 @@
-import Box from "@mui/material/Box";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useTranslation } from "next-i18next";
 import { useAtom } from "jotai";
+import { useTranslation } from "next-i18next";
 
+import { holdDialogOpenAtom, rejectedDialogOpenAtom } from "~/atom/balance";
+import type { BalanceHistory, BalanceType } from "~/services/api/balance";
+import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
 import MoneyIcon from "../icons/MoneyIcon";
-import MoneyPlusIcon from "../icons/MoneyPlusIcon";
 import MoneyMinusIcon from "../icons/MoneyMinusIcon";
-import BalanceRejectedDialog from "./BalanceRejectedDialog";
-import VGButton from "../atomic/VGButton";
-import { holdDialogOpenAtom, rejectedDialogOpenAtom } from "~/atom/balance";
+import MoneyPlusIcon from "../icons/MoneyPlusIcon";
 import BalanceHoldDialog from "./BalanceHoldDialog";
+import BalanceRejectedDialog from "./BalanceRejectedDialog";
 
-type BalanceType = "debit" | "credit" | "progress" | "cancel" | "hold";
-
-export default function BalanceHistoryCard(props: {
-  balance: {
-    date: string;
-    message: string;
-    amount?: string;
-  };
-  type: BalanceType;
-}) {
+export default function BalanceHistoryCard(props: { balance: BalanceHistory }) {
   return (
     <VGCard sx={{ display: "flex", flexDirection: "column", gap: 2, m: 0 }}>
       <Box
@@ -33,7 +25,7 @@ export default function BalanceHistoryCard(props: {
           alignItems: "center",
         }}
       >
-        <LabelChip type={props.type} />
+        <LabelChip type={props.balance.status} />
         <Box sx={{ display: "flex", gap: 1 }}>
           <CalendarTodayOutlinedIcon
             fontSize="small"
@@ -58,14 +50,14 @@ export default function BalanceHistoryCard(props: {
           alignItems: { sm: "center" },
         }}
       >
-        <Icon type={props.type} />
+        <Icon type={props.balance.status} />
         <Typography
           color="common.shade.200"
           textAlign="left"
           fontSize={14}
           fontWeight={600}
         >
-          {props.balance.message}
+          {props.balance.description}
         </Typography>
         <Box sx={{ gridColumn: { xs: "span 2", sm: "auto" } }}>
           {AdditionalComponent(props)}
@@ -75,28 +67,31 @@ export default function BalanceHistoryCard(props: {
   );
 }
 
-function AdditionalComponent(props: {
-  balance: {
-    date: string;
-    message: string;
-    amount?: string;
-  };
-  type: BalanceType;
-}) {
+function AdditionalComponent(props: { balance: BalanceHistory }) {
   const { t } = useTranslation("balance");
   const [, setRejectedModal] = useAtom(rejectedDialogOpenAtom);
   const [, setHoldModal] = useAtom(holdDialogOpenAtom);
 
-  switch (props.type) {
+  switch (props.balance.status) {
     case "debit":
       return (
-        <Typography color="common.green.900" fontSize={16} fontWeight={700}>
+        <Typography
+          color="common.green.900"
+          fontSize={16}
+          fontWeight={700}
+          textAlign="right"
+        >
           {props.balance.amount}
         </Typography>
       );
     case "credit":
       return (
-        <Typography color="common.red.500" fontSize={16} fontWeight={700}>
+        <Typography
+          color="common.red.500"
+          fontSize={16}
+          fontWeight={700}
+          textAlign="right"
+        >
           {props.balance.amount}
         </Typography>
       );

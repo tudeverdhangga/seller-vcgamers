@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -7,38 +5,37 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { useMutation } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
 
 import { pinDialogOpenAtom, pinRateLimitAtom } from "~/atom/balance";
+import { postRequestWithdrawal } from "~/services/api/balance";
 import { toastOption } from "~/utils/toast";
-import PinNumberInput from "../atomic/PinNumberInput";
+import PinNumberInput, { pinErrorAtom } from "../atomic/PinNumberInput";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 
 export default function BalancePinDialog() {
   const { t } = useTranslation("balance");
-  const [error, setError] = useState(false);
+  const [error, setError] = useAtom(pinErrorAtom);
   const [isRateLimit, setIsRateLimit] = useAtom(pinRateLimitAtom);
   const [modalOpen, setModalOpen] = useAtom(pinDialogOpenAtom);
+  const mutation = useMutation({
+    mutationFn: postRequestWithdrawal,
+    onSuccess: () => {
+      setModalOpen(false);
+      toast.success(t("toast.withdrawSuccess"), toastOption);
+    },
+    onError: () => {
+      setError(true);
 
-  const handleSubmit = async () => {
-    const timeout = new Promise((resolve) => setTimeout(resolve, 100));
-    await timeout;
-    console.log("submit");
-    setIsRateLimit(true);
-    throw new Error("test");
-  };
-
-  const handleSuccess = () => {
-    setModalOpen(false);
-    toast.success(t("toast.withdrawSuccess"), toastOption);
-  };
-
-  const handleError = () => {
-    setError(true);
-  };
+      if (false) {
+        setIsRateLimit(true);
+      }
+    },
+  });
 
   return (
     <Dialog
@@ -101,9 +98,9 @@ export default function BalancePinDialog() {
         )}
         {!isRateLimit && (
           <PinNumberInput
-            onSubmit={handleSubmit}
-            onSuccess={handleSuccess}
-            onFailed={handleError}
+            onSubmit={() => {
+              mutation.mutate();
+            }}
           />
         )}
       </DialogContent>
