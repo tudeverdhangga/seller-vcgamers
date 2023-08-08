@@ -40,7 +40,7 @@ interface PaginationData {
   current_records: number
 }
 
-export default function ListProduct({products, refetchProduct}: {
+export default function ListProduct({ products, refetchProduct }: {
   products: UseInfiniteQueryResult<ResponseProduct, string>;
   refetchProduct: () => void;
 }) {
@@ -50,7 +50,7 @@ export default function ListProduct({products, refetchProduct}: {
 
   const getFeature = (product: Item) => {
     let status = ""
-    
+
     if (product.is_instant) {
       status = "instant"
     } else if (product.is_kilat_switchable) {
@@ -153,7 +153,7 @@ export default function ListProduct({products, refetchProduct}: {
           {t("table.th.actions")}
         </Typography>
       </Grid>
-    </Grid> 
+    </Grid>
   )
   const tableRowContainer = (
     <>
@@ -168,11 +168,12 @@ export default function ListProduct({products, refetchProduct}: {
                       <ListProductItem
                         key={index}
                         id={product.id}
+                        productId={product.product_id}
                         image={product.image_url}
                         name={product.name}
                         active={product.is_active}
                         price={product.final_price}
-                        stock={product.stock} 
+                        stock={product.stock}
                         feature={getFeature(product)}
                         isKilatActive={product.is_kilat}
                         nextUpdatePrice={product.next_update_price}
@@ -217,10 +218,10 @@ export default function ListProduct({products, refetchProduct}: {
       }
     </>
   )
-  
+
   return (
     <>
-      { isDesktop && tableHeadContainer}
+      {isDesktop && tableHeadContainer}
       {tableRowContainer}
     </>
   )

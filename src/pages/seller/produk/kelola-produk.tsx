@@ -13,7 +13,6 @@ import VGButton from "~/components/atomic/VGButton";
 import { useResponsive } from "~/utils/mediaQuery";
 import { useGetProduct } from "~/services/api/product";
 import Skeleton from "@mui/material/Skeleton";
-import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 
 interface ListProductParams {
   brand_id?: string,
@@ -50,8 +49,6 @@ export default function KelolaProdukPage() {
 
   return (
     <>
-      <StyledToastContainer />
-
       <VGPageTitle
         subTitle={t("subTitle")}
         title={t("title")}
@@ -79,7 +76,7 @@ export default function KelolaProdukPage() {
             sx={{ width: isMobile ? "100%" : "auto" }}
             onClick={() => void router.push('/seller/produk/tambah-produk')}
           >
-            <AddOutlinedIcon/> {t("addProduct")}
+            <AddOutlinedIcon /> {t("addProduct")}
           </VGButton>
         </Box>
       </VGPageTitle>
@@ -93,7 +90,7 @@ export default function KelolaProdukPage() {
                 variant="rounded"
                 width="100%"
                 height={110}
-                sx={{mt:4}}
+                sx={{ mt: 4 }}
               />
             ))
           )

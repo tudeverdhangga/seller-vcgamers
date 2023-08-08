@@ -3,7 +3,6 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import { useTranslation } from "next-i18next";
 
-import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import JoinCampaignSidebarMenu from "~/components/molecule/JoinCampaignSidebarMenu";
@@ -22,8 +21,6 @@ export default function JoinCampaignPage() {
 
   return (
     <>
-      <StyledToastContainer />
-
       <VGPageTitle
         title={t("title")}
         subTitle={t("subtitle")}

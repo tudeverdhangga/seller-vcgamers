@@ -1,42 +1,268 @@
 import { useTranslation } from "next-i18next";
 import Typography from "@mui/material/Typography";
-import DropzoneArea from "mui-file-dropzone/dist/components/DropzoneArea";
-import { useState } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import UploadIcon from '@mui/icons-material/CloudUploadOutlined';
 import Box from "@mui/material/Box";
+import queryString from "query-string";
+import Skeleton from "@mui/material/Skeleton";
+import { toast } from "react-toastify";
 
 import VGCard from "~/components/atomic/VGCard";
 import VGRichEditor from "~/components/atomic/VGRichEditor/index";
+import { toastOption } from "~/utils/toast";
+import {
+  useGetCategory,
+  useGetBrandByCategory,
+  useGetGroup,
+} from '~/services/api/masterData';
+import { useDebounce } from "~/utils/debounce";
+import { useMediaUpload } from "~/services/api/media";
+import VGInputImage from "~/components/atomic/VGInputImage";
 
-export default function AddProductDetail() {
+interface Dropdown {
+  label: string;
+  value: string;
+  isVoucher?: boolean;
+}
+interface ImageResponse {
+  object_url: string
+  object_key: string
+}
+interface ProductDetail {
+  id: string
+  product_category: ProductCategory
+  product_brand: ProductBrand
+  product_group: ProductGroup
+  name: string
+  slug: string
+  description: string
+  images_url: ImagesUrl[]
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  variations: Variation[]
+}
+interface ProductCategory {
+  value: string
+  label: string
+}
+interface ProductBrand {
+  value: string
+  label: string
+}
+interface ProductGroup {
+  value: string
+  label: string
+}
+interface ImagesUrl {
+  object_key: string
+  object_url: string
+}
+interface Variation {
+  id: string
+  product_variation_master: ProductVariationMaster
+  slug: string
+  code: string
+  name: string
+  price: number
+  discount: number
+  final_price: number
+  rating: number
+  images_url: ImagesUrl[]
+  stock: number
+  sold: number
+  sla_second: number
+  max_sla_second: number
+  sold_total: number
+  is_active: boolean
+  is_featured: boolean
+  is_kilat: boolean
+  is_instant: boolean
+  is_host_active: boolean
+  is_preorder: boolean
+  is_new_item: boolean
+  min_order: number
+  success_rate: number
+  delivery_type: number
+  created_at: string
+  updated_at: string
+}
+interface ProductVariationMaster {
+  value: string
+  label: string
+}
+
+export default function AddProductDetail({
+  handleVoucherInstant,
+  handleChangeFilter,
+  productDetail,
+}: {
+  handleVoucherInstant: (isVoucher: boolean) => void;
+  handleChangeFilter: (
+    key: string,
+    value: string | number | boolean,
+    index?: number
+  ) => void;
+  productDetail?: ProductDetail;
+}) {
   const { t } = useTranslation("addProduct");
-  const category = [
-    { label: "Category A", value: "a" },
-    { label: "Category B", value: "b" },
-    { label: "Category C", value: "c" }
-  ]
-  const brand = [
-    { label: "Brand A", value: "a" },
-    { label: "Brand B", value: "b" },
-    { label: "Brand C", value: "c" }
-  ]
-  const group = [
-    { label: "Group A", value: "a" },
-    { label: "Group B", value: "b" },
-    { label: "Group C", value: "c" }
-  ]
+  const getCategory = useGetCategory();
+  const getBrand = useGetBrandByCategory();
+  const getGroup = useGetGroup();
+  const mediaUpload = useMediaUpload();
+  const [category, setCategory] = useState<Dropdown[]>([])
+  const [brand, setBrand] = useState<Dropdown[]>([])
+  const [group, setGroup] = useState<Dropdown[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<Dropdown>()
+  const [selectedBrand, setSelectedBrand] = useState<Dropdown>()
+  const [selectedGroup, setSelectedGroup] = useState<Dropdown>()
+  const [productImage, setProductImage] = useState<ImageResponse[]>([]);
 
-  const [fileObjects, setFileObjects] = useState<File[]>([]);
+  useEffect(() => {
+    const dataCategory: Dropdown[] = [];
+    getCategory?.data?.data?.map((item) => {
+      if (item) {
+        dataCategory?.push({
+          label: item.name,
+          value: item.id,
+          isVoucher: item.is_voucher
+        })
+      }
+    })
+    setCategory(dataCategory)
+  }, [getCategory?.data?.data])
+  useEffect(() => {
+    if (selectedCategory && selectedCategory.value !== "") {
+      const params = queryString.stringify({ category_id: selectedCategory.value })
+      getBrand.mutate(params, {
+        onSuccess: (res) => {
+          const dataBrand: Dropdown[] = [];
+          res?.data?.map((item) => {
+            if (item) {
+              dataBrand?.push({
+                label: item.name,
+                value: item.id
+              })
+            }
+          })
+          setBrand(dataBrand)
+        }
+      })
+    }
+  }, [selectedCategory])
+  useEffect(() => {
+    if (selectedBrand && selectedCategory && selectedBrand.value && selectedCategory.value) {
+      const params = queryString.stringify({
+        category_id: selectedCategory.value,
+        brand_id: selectedBrand.value
+      })
+      getGroup.mutate(params, {
+        onSuccess: (res) => {
+          const dataGroup: Dropdown[] = [];
+          res.data?.map((item) => {
+            if (item) {
+              dataGroup?.push({
+                label: item.name,
+                value: item.id
+              })
+            }
+          })
+          setGroup(dataGroup)
+        }
+      })
+    }
+  }, [selectedBrand, selectedCategory])
+  useEffect(() => {
+    if (productDetail) {
+      setSelectedCategory(productDetail?.product_category)
+      setSelectedBrand(productDetail?.product_brand)
+      setSelectedGroup(productDetail?.product_group)
+      setProductImage(productDetail.images_url)
+    }
+  }, [productDetail])
 
-  const handleFileChange = (newFileObjects: File[], index: number) => {
-    setFileObjects(newFileObjects);
-    // Handle the uploaded files
-    console.log(newFileObjects);
-    console.log(index);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files
+
+    if (file && typeof file[0] !== "undefined") {
+      if (file[0].size > 1024 * 1024) {
+        toast.error(t("updateImageSizeError"), toastOption)
+      } else {
+        const formData = new FormData();
+        formData.append("file", file[0]);
+        mediaUpload.mutate(formData, {
+          onSuccess: (res) => {
+            handleChangeFilter("images_url", res?.data.object_key, index)
+            const array = productImage
+            array[index] = res?.data
+            setProductImage(array)
+          }
+        });
+      }
+    }
   };
+  const onChangeFilter = (value: Dropdown | null, paramsKey: string) => {
+    if (value) {
+      handleChangeFilter(paramsKey, value?.value)
+
+      if (paramsKey === "product_category_id") {
+        setSelectedCategory(value)
+        if (value.isVoucher) {
+          handleVoucherInstant(value.isVoucher)
+        }
+        setSelectedBrand({
+          label: "",
+          value: ""
+        })
+        setSelectedGroup({
+          label: "",
+          value: ""
+        })
+      } else if (paramsKey === "product_brand_id") {
+        setSelectedBrand(value)
+        setSelectedGroup({
+          label: "",
+          value: ""
+        })
+      } else {
+        setSelectedGroup(value)
+      }
+    } else {
+      handleChangeFilter(paramsKey, "")
+
+      if (paramsKey === "product_category_id") {
+        setSelectedCategory({
+          label: "",
+          value: ""
+        })
+        setSelectedBrand({
+          label: "",
+          value: ""
+        })
+        setSelectedGroup({
+          label: "",
+          value: ""
+        })
+        setBrand([])
+        setGroup([])
+      } else if (paramsKey === "product_brand_id") {
+        setSelectedBrand({
+          label: "",
+          value: ""
+        })
+        setSelectedGroup({
+          label: "",
+          value: ""
+        })
+        setGroup([])
+      }
+    }
+  }
+  const onChangeRichEditor = useDebounce((e: string) => {
+    handleChangeFilter("description", e)
+  }, 1000)
 
   // Style
   const labelStyle = {
@@ -48,30 +274,6 @@ export default function AddProductDetail() {
     fontSize: "12px",
     fontWeight: "500",
     color: "common.shade.100"
-  }
-  const muiDropzoneStyle = {
-    "& .mui-dropzone": {
-      height: "124px",
-      minHeight: "auto",
-      width: "124px",
-      background: "#F5F5F5",
-      border: "2px dashed #9AA4BF",
-      borderRadius: "10px",
-      margin: "5px",
-      "& .MuiSvgIcon-fontSizeMedium": {
-        color: "#616A82",
-        width: "31px",
-        height: "21px"
-
-      },
-      "& .mui-dropzone__label": {
-        fontSize: '14px',
-        fontWeight: '500',
-        marginBottom: 0,
-        marginTop: "40px",
-        color: '#616A82',
-      }
-    }
   }
 
   return (
@@ -95,54 +297,98 @@ export default function AddProductDetail() {
           xs={12}
           md={4}
         >
-          <Autocomplete
-            id="product-category"
-            disablePortal
-            options={category}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t("detail.category")}
-                size="small"
-              />
-            )}
-          />
+          {
+            getCategory.isLoading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width="100%"
+                  height={40}
+                />
+              )
+              : (
+                <Autocomplete
+                  id="product-category"
+                  value={selectedCategory}
+                  disablePortal
+                  options={category}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t("detail.category")}
+                      size="small"
+                    />
+                  )}
+                  onChange={(_, e) => onChangeFilter(e, "product_category_id")}
+                />
+              )
+          }
         </Grid>
         <Grid
           item
           xs={12}
           md={4}
         >
-          <Autocomplete
-            id="product-brand"
-            disablePortal
-            options={brand}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t("detail.brand")}
-                size="small"
-              />
-            )}
-          />
+          {
+            getBrand.isLoading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width="100%"
+                  height={40}
+                />
+              )
+              : (
+                <Autocomplete
+                  id="product-brand"
+                  value={selectedBrand}
+                  disablePortal
+                  options={brand}
+                  disabled={selectedCategory && !selectedCategory.value}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t("detail.brand")}
+                      size="small"
+                    />
+                  )}
+                  onChange={(_, e) => onChangeFilter(e, "product_brand_id")}
+                />
+              )
+          }
         </Grid>
         <Grid
           item
           xs={12}
           md={4}
         >
-          <Autocomplete
-            id="product-group"
-            disablePortal
-            options={group}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t("detail.group")}
-                size="small"
-              />
-            )}
-          />
+          {
+            getGroup.isLoading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width="100%"
+                  height={40}
+                />
+              )
+              : (
+                <Autocomplete
+                  id="product-group"
+                  value={selectedGroup}
+                  disablePortal
+                  options={group}
+                  disabled={selectedCategory && selectedBrand && (!selectedCategory.value || !selectedBrand.value)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t("detail.group")}
+                      size="small"
+                    />
+                  )}
+                  onChange={(_, e) => onChangeFilter(e, "product_group_id")}
+                />
+              )
+          }
         </Grid>
       </Grid>
       <Grid
@@ -160,7 +406,10 @@ export default function AddProductDetail() {
             item
             xs={12}
           >
-            <VGRichEditor />
+            <VGRichEditor
+              content={productDetail?.description}
+              onChange={(e) => onChangeRichEditor(e)}
+            />
           </Grid>
         </Grid>
       </Grid>
@@ -183,41 +432,77 @@ export default function AddProductDetail() {
             xs={12}
           >
             <Box sx={{ display: "flex" }}>
-              <Box sx={muiDropzoneStyle}>
-                <DropzoneArea
-                  acceptedFiles={["image/*"]}
-                  fileObjects={fileObjects}
-                  dropzoneText={t("variant.table.td.image.label")}
-                  dropzoneClass="mui-dropzone"
-                  dropzoneParagraphClass="mui-dropzone__label"
-                  showPreviewsInDropzone={false}
-                  Icon={UploadIcon}
-                  onChange={(files) => handleFileChange(files, 0)}
-                />
+              <Box m={1}>
+                {
+                  mediaUpload.isLoading
+                    ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={124}
+                        height={124}
+                        sx={{ m: 1 }}
+                      />
+                    ) : (
+                      <VGInputImage
+                        id={`product-${0}`}
+                        width="124px"
+                        height="124px"
+                        imageUrl={
+                          productImage && productImage[0]
+                          && `url(${productImage[0].object_url})`
+                        }
+                        onChange={(e) => handleFileChange(e, 0)}
+                      />
+                    )
+                }
               </Box>
-              <Box sx={muiDropzoneStyle}>
-                <DropzoneArea
-                  acceptedFiles={["image/*"]}
-                  fileObjects={fileObjects}
-                  dropzoneText={t("variant.table.td.image.label")}
-                  dropzoneClass="mui-dropzone"
-                  dropzoneParagraphClass="mui-dropzone__label"
-                  showPreviewsInDropzone={false}
-                  Icon={UploadIcon}
-                  onChange={(files) => handleFileChange(files, 1)}
-                />
+              <Box m={1}>
+                {
+                  mediaUpload.isLoading
+                    ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={124}
+                        height={124}
+                        sx={{ m: 1 }}
+                      />
+                    ) : (
+                      <VGInputImage
+                        id={`product-${1}`}
+                        width="124px"
+                        height="124px"
+                        imageUrl={
+                          productImage && productImage[1]
+                          && `url(${productImage[1].object_url})`
+                        }
+                        onChange={(e) => handleFileChange(e, 1)}
+                      />
+                    )
+                }
               </Box>
-              <Box sx={muiDropzoneStyle}>
-                <DropzoneArea
-                  acceptedFiles={["image/*"]}
-                  fileObjects={fileObjects}
-                  dropzoneText={t("variant.table.td.image.label")}
-                  dropzoneClass="mui-dropzone"
-                  dropzoneParagraphClass="mui-dropzone__label"
-                  showPreviewsInDropzone={false}
-                  Icon={UploadIcon}
-                  onChange={(files) => handleFileChange(files, 2)}
-                />
+              <Box m={1}>
+                {
+                  mediaUpload.isLoading
+                    ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={124}
+                        height={124}
+                        sx={{ m: 1 }}
+                      />
+                    ) : (
+                      <VGInputImage
+                        id={`product-${2}`}
+                        width="124px"
+                        height="124px"
+                        imageUrl={
+                          productImage && productImage[2]
+                          && `url(${productImage[2].object_url})`
+                        }
+                        onChange={(e) => handleFileChange(e, 2)}
+                      />
+                    )
+                }
               </Box>
             </Box>
           </Grid>

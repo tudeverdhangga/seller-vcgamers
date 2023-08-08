@@ -78,11 +78,21 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
   );
 }
 
-export default function VGRichEditor() {
+export default function VGRichEditor({
+  content,
+  onChange
+}: {
+  content?: string;
+  onChange: (value: string) => void
+}) {
   const editor = useEditor({
     extensions: [
       StarterKit,
     ],
+    content: content,
+    onUpdate({ editor }) {
+      onChange(editor?.getHTML())
+    }
   })
 
   return (

@@ -3,16 +3,18 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import queryString from "query-string";
 
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import AddProductDetail from "~/components/organism/AddProductDetail";
 import AddProductVariant from "~/components/organism/AddProductVariant";
 import VGButton from "~/components/atomic/VGButton";
-import { useCreateProduct } from "~/services/api/product";
+import { useCreateProduct, useEditProduct, useGetProductDetail } from "~/services/api/product";
 import { toastOption } from "~/utils/toast";
+import AddProductDetailLoading from "~/components/atomic/AddProductDetailLoading";
 
 interface Response {
   product_category_id: string
@@ -25,6 +27,7 @@ interface Response {
 }
 
 interface Variation {
+  id?: string
   name: string
   product_variation_master_id: string
   delivery_type: number
@@ -47,7 +50,10 @@ interface ErrorResponse {
 
 export default function TambahProdukPage() {
   const { t } = useTranslation("addProduct");
+  const [id, setId] = useState("");
   const createProduct = useCreateProduct()
+  const editProduct = useEditProduct(queryString.stringify({ product_id: id }))
+  const productDetail = useGetProductDetail()
   const router = useRouter()
   const [params, setParams] = useState<Response>({
     product_category_id: "",
@@ -59,6 +65,41 @@ export default function TambahProdukPage() {
     variations: [],
   })
   const [isVoucherInstant, setIsVoucherInstant] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (typeof router.query.product_id === "string") {
+      setId(router.query.product_id)
+      productDetail.mutate(queryString.stringify({ product_id: router.query.product_id }), {
+        onSuccess: (res) => {
+          setParams({
+            product_category_id: res.data.product_category.value,
+            product_brand_id: res.data.product_brand.value,
+            product_group_id: res.data.product_group.value,
+            name: res.data.name,
+            description: res.data.description,
+            images_url: res.data.images_url.map((image) => image.object_key),
+            variations: res.data.variations.map((item) => {
+              return {
+                id: item.id,
+                name: item.name,
+                product_variation_master_id: item.product_variation_master.value,
+                delivery_type: item.delivery_type,
+                stock: item.stock,
+                price: item.price,
+                is_active: item.is_active,
+                is_custom_image: item.is_custom_image,
+                images_url: item.images_url.map((image) => image.object_key)
+              }
+            })
+          })
+        }
+      })
+    }
+  }, [router.query.product_id])
+  useEffect(() => {
+    setIsLoading(productDetail.isLoading)
+  }, [productDetail.isLoading])
 
   const handleFilter = (
     key: string,
@@ -103,11 +144,13 @@ export default function TambahProdukPage() {
 
     if (typeof indexImage === "undefined") {
       updatedVariation[key] = value;
-    } else if (typeof value === "object") {
+    } else {
       if (typeof updatedVariation.images_url === 'undefined') {
         updatedVariation.images_url = [];
       }
-      updatedVariation.images_url[indexImage] = value[0] as string;
+      if (typeof value === "object") {
+        updatedVariation.images_url[indexImage] = value[0] as string;
+      }
     }
 
     updatedArray[index] = updatedVariation;
@@ -134,56 +177,49 @@ export default function TambahProdukPage() {
     });
   }
   const onSubmit = () => {
-    const formData = new FormData()
-
-    formData.append("product_category_id", params.product_category_id)
-    formData.append("product_brand_id", params.product_brand_id)
-    formData.append("product_group_id", params.product_group_id)
-    formData.append("description", params.description)
-
-    params.images_url.forEach(element => {
-      formData.append("image_url[]", element)
-    });
-
-    params.variations.forEach((variation, index) => {
-      formData.append(`variations[${index}][name]`, variation.name);
-      formData.append(
-        `variations[${index}][product_variation_master_id]`,
-        variation.product_variation_master_id
-      );
-      formData.append(`variations[${index}][delivery_type]`, variation.delivery_type.toString());
-      formData.append(`variations[${index}][stock]`, variation.stock.toString());
-      formData.append(`variations[${index}][price]`, variation.price.toString());
-      formData.append(`variations[${index}][is_custom_image]`, variation.is_custom_image.toString());
-      formData.append(`variations[${index}][is_active]`, variation.is_active.toString());
-
-      if (variation.images_url !== undefined) {
-        variation.images_url.forEach((imageUrl, imageIndex) => {
-          formData.append(`variations[${index}][images_url][${imageIndex}]`, imageUrl);
-        });
-      }
-    });
-
-    createProduct.mutate(params, {
-      onSuccess: () => {
-        toast.success(t("detail.create.onSuccess"), toastOption);
-        setParams({
-          product_category_id: "",
-          product_brand_id: "",
-          product_group_id: "",
-          name: "",
-          description: "",
-          images_url: [],
-          variations: [],
-        })
-        void router.push('/seller/produk/kelola-produk');
-      },
-      onError: (error) => {
-        const err = error as ErrorResponse
-        const errorMessage = `${t("detail.create.onError")}: ${err?.response?.data?.message}`
-        toast.error(errorMessage, toastOption);
-      }
-    })
+    if (id) {
+      editProduct.mutate(params, {
+        onSuccess: () => {
+          toast.success(t("detail.edit.onSuccess"), toastOption);
+          setParams({
+            product_category_id: "",
+            product_brand_id: "",
+            product_group_id: "",
+            name: "",
+            description: "",
+            images_url: [],
+            variations: [],
+          })
+          void router.push('/seller/produk/kelola-produk');
+        },
+        onError: (error) => {
+          const err = error as ErrorResponse
+          const errorMessage = `${t("detail.edit.onError")}: ${err?.response?.data?.message}`
+          toast.error(errorMessage, toastOption);
+        }
+      })
+    } else {
+      createProduct.mutate(params, {
+        onSuccess: () => {
+          toast.success(t("detail.create.onSuccess"), toastOption);
+          setParams({
+            product_category_id: "",
+            product_brand_id: "",
+            product_group_id: "",
+            name: "",
+            description: "",
+            images_url: [],
+            variations: [],
+          })
+          void router.push('/seller/produk/kelola-produk');
+        },
+        onError: (error) => {
+          const err = error as ErrorResponse
+          const errorMessage = `${t("detail.create.onError")}: ${err?.response?.data?.message}`
+          toast.error(errorMessage, toastOption);
+        }
+      })
+    }
   }
   const handleVoucherInstant = (isVoucher: boolean) => {
     setIsVoucherInstant(isVoucher)
@@ -217,19 +253,30 @@ export default function TambahProdukPage() {
         title={t("title")}
         sx={{ width: "100%" }}
       />
-      <AddProductDetail
-        handleVoucherInstant={handleVoucherInstant}
-        handleChangeFilter={handleFilter}
-      />
-      <AddProductVariant
-        variant={params.variations}
-        groupId={params.product_group_id}
-        isVoucherInstant={isVoucherInstant}
-        onEditVariation={onEditVariation}
-        onDeleteVariant={onDeleteVariant}
-        handleChangeVariantField={handleChangeVariantField}
-        handleChangeFilter={handleFilter}
-      />
+      {
+        isLoading
+          ? (
+            <AddProductDetailLoading />
+          ) : (
+            <>
+              <AddProductDetail
+                handleVoucherInstant={handleVoucherInstant}
+                handleChangeFilter={handleFilter}
+                productDetail={productDetail.data?.data}
+              />
+              <AddProductVariant
+                productDetail={productDetail.data?.data}
+                variant={params.variations}
+                groupId={params.product_group_id}
+                isVoucherInstant={isVoucherInstant}
+                onEditVariation={onEditVariation}
+                onDeleteVariant={onDeleteVariant}
+                handleChangeVariantField={handleChangeVariantField}
+                handleChangeFilter={handleFilter}
+              />
+            </>
+          )
+      }
       <Box
         display="flex"
         justifyContent="flex-end"

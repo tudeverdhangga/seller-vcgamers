@@ -1,6 +1,5 @@
 import { useTranslation } from "next-i18next";
 
-import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import VipSellerTab from "~/components/molecule/VipSellerTab";
 import ManagePromoList from "~/components/organism/ManagePromoList";
@@ -12,8 +11,6 @@ export default function ManagePromoCodePage() {
 
   return (
     <>
-      <StyledToastContainer />
-
       <VGPageTitle
         title={t("title")}
         subTitle={t("subtitle")}

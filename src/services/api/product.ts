@@ -30,6 +30,78 @@ interface PaginationData {
   next_cursor: string
   current_records: number
 }
+interface ProductVariationMaster {
+  value: string
+  label: string
+}
+interface ResponseProductDetail {
+  code: number
+  status: string
+  data: Data
+  message: string
+}
+interface Data {
+  id: string
+  product_category: ProductCategory
+  product_brand: ProductBrand
+  product_group: ProductGroup
+  name: string
+  slug: string
+  description: string
+  images_url: ImagesUrl[]
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  variations: Variation[]
+}
+interface ProductCategory {
+  value: string
+  label: string
+}
+interface ProductBrand {
+  value: string
+  label: string
+}
+interface ProductGroup {
+  value: string
+  label: string
+}
+interface ImagesUrl {
+  object_key: string
+  object_url: string
+}
+interface Variation {
+  id: string
+  product_variation_master: ProductVariationMaster
+  slug: string
+  code: string
+  name: string
+  price: number
+  discount: number
+  final_price: number
+  rating: number
+  is_custom_image: boolean
+  images_url: ImagesUrl[]
+  stock: number
+  sold: number
+  total_visited: number
+  total_wishlist: number
+  sla_second: number
+  max_sla_second: number
+  sold_total: number
+  is_active: boolean
+  is_featured: boolean
+  is_kilat: boolean
+  is_instant: boolean
+  is_host_active: boolean
+  is_preorder: boolean
+  is_new_item: boolean
+  min_order: number
+  success_rate: number
+  delivery_type: number
+  created_at: string
+  updated_at: string
+}
 
 export const useGetProduct = (params: string) => {
   return useInfiniteQuery<ResponseProduct, string>({
@@ -52,6 +124,16 @@ export const useGetProduct = (params: string) => {
   })
 }
 
+export const useGetProductDetail = () => {
+  return useMutation({
+    mutationKey: ["product-detail"],
+    mutationFn: async (params: string) => {
+      const res = await HTTP.get(`/product/product/detail?${params}`);
+      return res.data as ResponseProductDetail;
+    }
+  })
+}
+
 export const useUpdatePrice = (params: string) => {
   return useMutation({
     mutationKey: ["update-price", params],
@@ -65,8 +147,8 @@ export const useUpdatePrice = (params: string) => {
 export const useUpdateStock = (params: string) => {
   return useMutation({
     mutationKey: ["update-stock", params],
-    mutationFn: async (price: number) => {
-      const res = await HTTP.put(`/product/product/update-price?${params}`, { price });
+    mutationFn: async (stock: number) => {
+      const res = await HTTP.put(`/product/product/update-stock?${params}`, { stock });
       return res.data as ResponseProduct;
     }
   })
@@ -117,6 +199,26 @@ export const useActiveKilat = (params: string) => {
     mutationKey: ["active-kilat", params],
     mutationFn: async () => {
       const res = await HTTP.put(`/product/product/kilat/activate?${params}`);
+      return res.data as ResponseProduct;
+    }
+  })
+}
+
+export const useCreateProduct = () => {
+  return useMutation({
+    mutationKey: ["add-product"],
+    mutationFn: async (payload: object) => {
+      const res = await HTTP.post("/product/product/create", payload);
+      return res.data as ResponseProduct;
+    }
+  })
+}
+
+export const useEditProduct = (params: string) => {
+  return useMutation({
+    mutationKey: ["edit-product", params],
+    mutationFn: async (payload: object) => {
+      const res = await HTTP.put(`/product/product/update?${params}`, payload);
       return res.data as ResponseProduct;
     }
   })

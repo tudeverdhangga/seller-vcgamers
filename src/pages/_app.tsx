@@ -11,6 +11,7 @@ import { Layout } from "~/layout";
 import { commonColors } from "~/utils/colors";
 
 import '~/components/atomic/VGRichEditor/index.css'
+import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 
 //TODO: Fix issue loading using next/font
 // const rajdhani = Rajdhani({
@@ -62,11 +63,15 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const queryClient = new QueryClient();
 
   return (
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <>
+      <StyledToastContainer />
+
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </>
   );
 };
 

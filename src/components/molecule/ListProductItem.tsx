@@ -26,6 +26,7 @@ import ConfirmationDeleteDialog from "~/components/molecule/ConfirmationDeleteDi
 import { priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
 import PinVoucherDialog from "~/components/molecule/PinVoucherDialog";
+import { useRouter } from "next/router";
 
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
@@ -36,6 +37,7 @@ export default function ListProductItem(props: {
   isKilatActive: boolean;
   stock: number;
   id: string;
+  productId: string;
   nextUpdatePrice: string | null;
   nextActiveKilat: string | null;
   refetchProduct: () => void
@@ -44,6 +46,7 @@ export default function ListProductItem(props: {
   const { t } = useTranslation("listProduct");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpenMenu = Boolean(anchorEl);
+  const router = useRouter()
   const [isOpenDeactiveKilatDialog, setIsOpenDeactiveKilatDialog] = useState(false)
   const [isOpenActiveKilatDialog, setIsOpenActiveKilatDialog] = useState(false)
   const [isOpenChangePriceDialog, setIsOpenChangePriceDialog] = useState(false)
@@ -64,6 +67,10 @@ export default function ListProductItem(props: {
       ? setIsOpenActiveKilatDialog(true)
       : setIsOpenDeactiveKilatDialog(true)
   };
+  const moveToDetail = () => {
+    void router.push(`/seller/produk/edit-produk?product_id=${props.productId}`);
+    handleCloseOptions()
+  }
 
   const middleStyle = {
     height: "100%",
@@ -82,10 +89,12 @@ export default function ListProductItem(props: {
       }}
     >
       <Image
-        src={ props.image }
+        src={props.image}
         width={60}
         height={60}
+        loading="lazy"
         alt="Product Picture"
+        style={{ objectFit: "cover" }}
       />
       <Box ml={2}>
         <Typography
@@ -97,7 +106,7 @@ export default function ListProductItem(props: {
         </Typography>
         <VGChip
           label={
-            props.active 
+            props.active
               ? t("filter.status.active")
               : t("filter.status.nonAktive")
           }
@@ -131,7 +140,7 @@ export default function ListProductItem(props: {
           pt: isMobile ? "12px" : 0
         }}
       >
-        { priceFormat(props.price) }
+        {priceFormat(props.price)}
       </Typography>
     </>
   )
@@ -152,7 +161,7 @@ export default function ListProductItem(props: {
       >
         {
           props.feature === "instant"
-          ? (
+            ? (
               <Box>
                 <Image
                   src="/assets/badge-instant.svg"
@@ -164,30 +173,30 @@ export default function ListProductItem(props: {
             )
             : props.feature === "kilat"
               ? (
-                  <Box
-                    sx={{
-                      display: isMobile ? "block" : "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      "& .MuiBox-root": {
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center"
-                      }
-                    }}
-                  >
-                    <Image
-                      src="/assets/badge-kilat.svg"
-                      width={78}
-                      height={16}
-                      alt="Badge Kilat"
-                    />
-                    <Switch
-                      disabled={!props.active}
-                      checked={props.isKilatActive}
-                      onChange={(e) => handleChangeKilat(e)}
-                    />
-                  </Box>
+                <Box
+                  sx={{
+                    display: isMobile ? "block" : "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    "& .MuiBox-root": {
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center"
+                    }
+                  }}
+                >
+                  <Image
+                    src="/assets/badge-kilat.svg"
+                    width={78}
+                    height={16}
+                    alt="Badge Kilat"
+                  />
+                  <Switch
+                    disabled={!props.active}
+                    checked={props.isKilatActive}
+                    onChange={(e) => handleChangeKilat(e)}
+                  />
+                </Box>
               )
               : "-"
         }
@@ -204,7 +213,7 @@ export default function ListProductItem(props: {
         {isMobile && t("table.th.stock")}
       </Typography>
       <Typography
-        color={ props.stock <= 5 ? "error" : "shade.700" }
+        color={props.stock <= 5 ? "error" : "shade.700"}
         textAlign="center"
         fontWeight="700"
         fontSize="14px"
@@ -214,7 +223,7 @@ export default function ListProductItem(props: {
           pt: isMobile ? "12px" : 0,
         }}
       >
-        { props.stock }
+        {props.stock}
       </Typography>
     </>
   )
@@ -268,11 +277,11 @@ export default function ListProductItem(props: {
           'aria-labelledby': 'basic-VGButton',
         }}
       >
-        <MenuItem onClick={handleCloseOptions}>
+        <MenuItem onClick={moveToDetail}>
           <VisibilityOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.detailProduct")}
         </MenuItem>
         <MenuItem onClick={handleCloseOptions}>
-           <EditOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.editProduct")}
+          <EditOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.editProduct")}
         </MenuItem>
         {
           props.active
@@ -339,7 +348,7 @@ export default function ListProductItem(props: {
             item
             xs={12}
             md={4}
-            sx={{ "&.MuiGrid-item": {pl: 0} }}
+            sx={{ "&.MuiGrid-item": { pl: 0 } }}
           >
             {actionsContainer}
           </Grid>

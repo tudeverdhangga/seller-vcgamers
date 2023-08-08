@@ -1,6 +1,7 @@
 {
   "title": "Tambah Produk",
   "subTitle": "Kembali",
+  "updateImageSizeError": "Gambar melebihi 1MB",
   "detail": {
     "title": "Masukkan Detail Produk",
     "category": "Kategori",
@@ -11,6 +12,14 @@
       "label": "Gambar Utama Produk (Minimum: 1)",
       "subLabel": "Digunakan sebagai default foto varian jika foto khusus varian tidak diaktifkan. (Max 1MB .PNG / .JPG) (Profil gambar tidak boleh kosong)",
       "add": "Tambah Gambar"
+    },
+    "create": {
+      "onSuccess": "Tambah product berhasil",
+      "onError": "Tambah product gagal"
+    },
+    "edit": {
+      "onSuccess": "Edit product berhasil",
+      "onError": "Edit product gagal"
     }
   },
   "variant": {
@@ -46,7 +55,10 @@
       }
     },
     "dialog": {
-      "title": "Tambah Varian",
+      "title": {
+        "add": "Tambah Varian",
+        "edit": "Edit Varian"
+      },
       "header": {
         "variant": "Pilih Variant",
         "customName": "Buat Nama Sendiri"
@@ -58,10 +70,20 @@
           "label": "Reguler",
           "subLabel": "Pengiriman standar. Penjual dapat menerima dan memproses pesanan"
         },
-        "kilat": "Jaminan bagi buyer bahwa tokomu berkomitmen memproses pengiriman pesanan dalam 10 menit",
+        "kilat": {
+          "label": "Jaminan bagi buyer bahwa tokomu berkomitmen memproses pengiriman pesanan dalam 10 menit",
+          "alert": {
+            "title": "Tokomu belum memiliki fitur ini. ",
+            "subTitle": "Request Fitur Sekarang"
+          }
+        },
         "instant": {
           "label": "Jaminan bagi buyer bahwa pesanannya akan diterima langsung tanpa menunggu (jika pembayaran sudah dilunasi)",
-          "subLabel": "Fitur ini hanya untuk kategori produk voucher"
+          "alert": {
+            "title": "Tokomu belum memiliki fitur ini. ",
+            "subTitle": "Request Fitur Sekarang",
+            "noVoucher": "Fitur ini hanya untuk kategori produk voucher"
+          }
         },
         "permissionFeature": {
           "label": "Tokomu belum memiliki fitur ini.",
@@ -70,19 +92,26 @@
       },
       "setting": {
         "title": "Pengaturan Varian",
-        "alert": "Setiap transaksi VCGamers menerapkan potongan {{discount}} sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar {{income}}",
+        "alert": "Setiap transaksi VCGamers menerapkan potongan <strong>2%</strong> sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar <strong>{{income}}</strong>",
         "stock": "Stok",
         "price": {
           "label": "Harga",
-          "subLabel": "Catatan: Harap isi nominal dengan kelipatan 100"
+          "subLabel": "Harap isi nominal dengan kelipatan 100"
         }
       },
       "image": {
-        "label": "Gunakan foto khusus varian (Optional)",
-        "subLabel": "Simpan Varian terlebih dahulu untuk mengunggah gambar varian di tabel"
+        "label": {
+          "yes": "Gunakan foto khusus varian (Optional)",
+          "no": "Tidak menggunakan foto khusus varian (Opsional)"
+        },
+        "subLabel": {
+          "yes": "Simpan Varian terlebih dahulu untuk mengunggah gambar varian di tabel",
+          "no": "Varian akan menggunakan gambar utama produk."
+        }
       },
       "cancel": "Batal",
-      "save": "Simpan Varian"
+      "save": "Simpan Varian",
+      "delete": "Hapus Variant"
     }
   },
   "cancel": "Batal",

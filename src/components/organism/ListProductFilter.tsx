@@ -91,7 +91,7 @@ export default function ListProductFilter({
     setSelectedStatus(status)
     handleChangeFilter('product_status', status)
   }
-  const onChangeFilter = (_: SyntheticEvent, value: Dropdown | null, filterBy: string) => {    
+  const onChangeFilter = (value: Dropdown | null, filterBy: string) => {    
     if (value?.value) {
       handleChangeFilter(filterBy, value?.value)
     } else {
@@ -161,7 +161,7 @@ export default function ListProductFilter({
                   size="small"
                 />
               )}
-              onChange={(_, value) => onChangeFilter(_, value, "category_id")}
+              onChange={(_, value) => onChangeFilter(value, "category_id")}
             />
           </Grid>
           <Grid
@@ -180,7 +180,7 @@ export default function ListProductFilter({
                   size="small"
                 />
               )}
-              onChange={(_, value) => onChangeFilter(_, value, "brand_id")}
+              onChange={(_, value) => onChangeFilter(value, "brand_id")}
             />
           </Grid>
           <Grid
@@ -200,7 +200,7 @@ export default function ListProductFilter({
                   size="small"
                 />
               )}
-              onChange={(_, value) => onChangeFilter(_, value, "feature")}
+              onChange={(_, value) => onChangeFilter(value, "feature")}
             />
           </Grid>
         </Grid>

@@ -6,7 +6,6 @@ import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import VGCard from "~/components/atomic/VGCard"
 import VGPageTitle from "~/components/atomic/VGPageTitle"
 import ProfileSettingForm from "~/components/organism/ProfileSettingForm"
-import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 
 import { Tabs, Tab } from "@mui/material"
 
@@ -21,8 +20,6 @@ export default function ProfilTokoPage() {
 
   return (
     <>
-      <StyledToastContainer />
-
       <VGPageTitle
         subTitle={t("subTitle")}
         title={t("title")}
