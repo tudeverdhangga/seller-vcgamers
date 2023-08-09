@@ -9,8 +9,8 @@ export default function CustomizedMidContent(props: {
   title: string,
   stringContents?: Array<string>,
   featureChecks?: Array<{
-    caption: string;
-    check: boolean;
+    text: string;
+    active: boolean;
   }>
 }) {
   const { t } = useTranslation("requestFitur");
@@ -35,7 +35,7 @@ export default function CustomizedMidContent(props: {
               <Stack direction="row" justifyContent={'start'} alignItems={'center'} spacing={1}>
                 <div>
                 {
-                  list.check === true ?
+                  list.active === true ?
                   <CheckOutlinedIcon sx={{color: "green", p: 0, m: 0}} />
                   :
                   <CloseIcon sx={{color: "red", p: 0, m: 0}} />
@@ -45,7 +45,7 @@ export default function CustomizedMidContent(props: {
                   component="div"
                   sx={subTitleStyle}
                 >
-                  {list.caption}
+                  {list.text}
                 </Typography>
               </Stack>
             </Grid>

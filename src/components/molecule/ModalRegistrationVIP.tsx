@@ -1,47 +1,137 @@
-import {Typography, Box, Grid, FormControl, InputLabel, Input, FormHelperText, OutlinedInput, Button, TextField, Stack} from "@mui/material";
+import {Typography, Box, Grid, Button, TextField, Stack, Alert, Snackbar} from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "next-i18next";
+import { useAtom } from "jotai";
 import DropzoneArea from "mui-file-dropzone/dist/components/DropzoneArea";
 import UploadIcon from '@mui/icons-material/CloudUploadOutlined';
 import UploadFlatIcon from '@mui/icons-material/Upload';
 import VGDialog from "~/components/atomic/VGDialog";
 import VGButton from "~/components/atomic/VGButton";
 import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
+import { toast } from "react-toastify";
+import { toastOption } from "~/utils/toast";
+import { sendRequestDialogOpenAtom } from "~/atom/requestFitur";
+import { useFileUpload, useMediaUpload } from "~/services/api/media";
+import { BodyPayloadRegisterVIP, CustomErrorResponse, ErrorResponse, MediaUploaded, PrintErrorMessages, SeverityType, useRequestVIP } from "~/services/api/request-fitur";
 
 export default function RegistrationVIPModal (props: {
-  // isBulk: boolean | false;
   name?: string;
   isOpen: boolean;
   handleClose: () => void;
+  refetchStatusVIP: () => void;
 }) {
   const { t } = useTranslation("requestFitur");
-  const [isActive] = useState(true)
+  const [transactionDataFileName, setTransactionDataFileName] = useState('Upload');
+  const [imageKTP, setImageKTP] = useState<MediaUploaded | undefined>();
+  const [imageSelfie, setImageSelfie] = useState<MediaUploaded | undefined>();
+  const [dataTransactionFile, setDataTransactionFile] = useState<MediaUploaded | undefined>();
+  const [fileObjects, setFileObjects] = useState<File[]>([]);
   const [otherPlatformUrl, setOtherPlatformUrl] = useState('');
   const [otherPlatformUrlError, setOtherPlatformUrlError] = useState('');
-  const [transactionDataFile, setTransactionDataFile] = useState('');
-  const [transactionDataFileName, setTransactionDataFileName] = useState('Upload');
-  const [fileObjects, setFileObjects] = useState<File[]>([]);
+  const [modalOpenRequestVIP, setModalOpenRequestVIP] = useAtom(sendRequestDialogOpenAtom);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [severityAlert, setSeverityAlert] = useState<SeverityType>("error");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const mediaUpload = useMediaUpload();
+  const fileUpload = useFileUpload();
+  const postRequestVIP = useRequestVIP();
 
-  const handleFileChange = (newFileObjects: File[], index: number) => {
-    setFileObjects(newFileObjects);
-    console.log(newFileObjects);
-    // TODO: // hit endpoint Image Upload
+  // const handleFileChange = (newFileObjects: File[], index: number) => {
+  //   setFileObjects(newFileObjects);
+  //   console.log(newFileObjects);
+  // };
+  const handleImageChangeKTP = (newFileObjects: Blob[]) => {
+    if (newFileObjects.length > 0) {
+      const file = newFileObjects[0]
+      if (file !== undefined){
+        if(file.size > 2048000) { // in Byte
+          toast.error(t("modalRegisterVIP.uploadFileSizeError"), toastOption)
+        } else {
+          const formData = new FormData();
+          formData.append("file", file);
+          mediaUpload.mutate(formData, {
+            onSuccess: (res) => {
+              setImageKTP(res.data)
+            }
+          });
+        }
+      }
+    }
+  };
+  const handleImageChangeSelfie = (newFileObjects: File[]) => {
+    if (newFileObjects.length > 0) {
+      const file = newFileObjects[0]
+      if (file !== undefined){
+        if(file.size > 2048000) { // in Byte
+          toast.error(t("modalRegisterVIP.uploadFileSizeError"), toastOption)
+        } else {
+          const formData = new FormData();
+          formData.append("file", file);
+          mediaUpload.mutate(formData, {
+            onSuccess: (res) => {
+              setImageSelfie(res.data)
+            }
+          });
+        }
+      }
+    }
+  };
+
+  const handleUploadTransaksi = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files
+    
+    if (file && typeof file[0] !== "undefined") {
+      if (file[0].size > 2 * 1024 * 1024) {
+        toast.error(t("modalRegisterVIP.uploadFileSizeError"), toastOption)
+      } else {
+        const formData = new FormData();
+        formData.append("file", file[0]);
+        fileUpload.mutate(formData, {
+          onSuccess: (res) => {
+            setDataTransactionFile(res.data)
+            setTransactionDataFileName(file[0]?.name ?? "File Uploaded")
+          }
+        });
+      }
+    }
   };
 
   const handleChangeOtherPlatformUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOtherPlatformUrl(event.target.value);
   };
-  const handleUploadTransaksi = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const fileName = event.target.files[0]?.name;
-      if (fileName){
-        setTransactionDataFile(fileName);
-      }
-    }
-  };
+
   const handleSubmitForm = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log(otherPlatformUrl);
+
+    if (imageKTP && imageSelfie && dataTransactionFile) {
+      let payload: BodyPayloadRegisterVIP = {
+        ktp_image_url: imageKTP.object_key,
+        ktp_selfie_image_url: imageSelfie.object_key,
+        transaction_data_file_url: dataTransactionFile.object_key,
+        other_platform_url: otherPlatformUrl
+      }
+      postRequestVIP.mutate(payload, {
+        onSuccess: () => {
+          // show Confirmed modal
+          setModalOpenRequestVIP(true);
+      
+          props.handleClose();
+          // refetch status VIP data & reset state
+          props.refetchStatusVIP();
+        },
+        onError: (error) => {
+          const err = error as CustomErrorResponse
+          console.log("Err: ", err.response.data)
+          let msg = `${err.response.data.code} ${err.response.data.status}: ` + PrintErrorMessages(err.response.data.validation_fields)
+          setAlertMessage(msg)
+          setSeverityAlert("error");
+          setOpenSnackbar(true);
+        }
+      });
+  
+      setOtherPlatformUrl('');
+      setOtherPlatformUrlError('');
+    }
   };
 
   const titleModalStyle = {
@@ -144,7 +234,7 @@ export default function RegistrationVIPModal (props: {
                 dropzoneParagraphClass="mui-dropzone__label"
                 showPreviewsInDropzone={true}
                 Icon={UploadIcon}
-                onChange={(files) => handleFileChange(files, 0)}
+                onChange={(files) => handleImageChangeKTP(files)}
               />
             </Box>
           </Grid>
@@ -166,7 +256,7 @@ export default function RegistrationVIPModal (props: {
                 dropzoneParagraphClass="mui-dropzone__label"
                 showPreviewsInDropzone={true}
                 Icon={UploadIcon}
-                onChange={(files) => handleFileChange(files, 1)}
+                onChange={(files) => handleImageChangeSelfie(files)}
               />
             </Box>
           </Grid>
@@ -180,11 +270,11 @@ export default function RegistrationVIPModal (props: {
           </Grid>
           <Grid item xs={12} sx={{my: 1}}>
             <input
-              accept="image/*"
+              accept="file/*"
               style={{ display: 'none' }}
               id="raised-button-file"
               type="file"
-              onChange={handleUploadTransaksi}
+              onChange={(e) => handleUploadTransaksi(e)}
             />
             <label htmlFor="raised-button-file">
               <Button fullWidth variant="outlined" component="span" startIcon={<UploadFlatIcon />} sx={{textTransform: 'none'}}>
@@ -238,6 +328,17 @@ export default function RegistrationVIPModal (props: {
           </Grid> 
         </Grid>
       </Box>
+      {/* for Alerting */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity={severityAlert} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </VGDialog>
   )
 }

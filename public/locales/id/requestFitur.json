@@ -179,6 +179,10 @@
       "danger": "Kamu belum bisa memenuhi syarat dan ketentuan",
       "sub": "Yuk perbanyak transaksi kamu dan jaga performa penjualan supaya bisa request fitur {{featurename}}"
     },
+    "rejected": {
+      "danger": "Permintaan Ditolak",
+      "sub": "Alasan: Kelengkapan dokumen untuk verifikasi tidak sesuai. Harap pastikan data foto yang di upload jelas serta dokumen yang dilampirkan dapat mendukung syarat pendaftaran."
+    },
     "permitted": {
       "msg": "Tokomu memenuhi syarat untuk bisa mengajukan fitur ini"
     },
@@ -196,11 +200,18 @@
       "msg": "Kamu sudah melakukan request fitur {{featurename}}. Admin VC Gamers akan melakukan respon request fitur kamu maksimal dalam 7 x 24 jam sejak request dikirimkan"
     }
   },
+  "modalRequestVIP": {
+    "title": "Request Terkirim",
+    "subtitle": "Admin akan melakukan peninjauan minimal 7x24 jam Harap periksa email secara berkala untuk mendapatkan formulir pendaftaran dan informasi lengkap mengenai pengajuanmu",
+    "closeBtn": "Mengerti"
+  },
   "modalRegisterVIP": {
     "title": "Request Upgrade ke VIP Seller",
     "subtitle": "Verifikasi Dokumen",
     "submitBtn": "Request",
     "backBtn": "Kembali",
+    "uploadImageError": "Upload Gambar Error",
+    "uploadFileSizeError": "File melebihi 2MB",
     "form": {
       "0": {
         "title": "Upload KTP",

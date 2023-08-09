@@ -63,7 +63,6 @@ export default function APIFeaturePage() {
   const [disableWebhookForm, setDisableWebhookForm] = useState(true);
   const [isOpenDeleteAccessKeyDialog, setIsOpenDeleteAccessKeyDialog] = useState(false);
   const [callbackTypes, setCallbackTypes] = useState(Array<string>);
-
   
 	useEffect( () => {
     const callbackTypesResponse = [

@@ -20,3 +20,13 @@ export const useMediaUpload = () => {
     },
   });
 };
+
+export const useFileUpload = () => {
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      const res = await HTTPMediaUpload.post("/file-upload", formData);
+
+      return res.data as Response;
+    },
+  });
+};
