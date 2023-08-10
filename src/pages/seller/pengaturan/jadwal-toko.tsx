@@ -34,12 +34,18 @@ export default function JadwalTokoPage() {
         <Tabs value={value}>
           <Tab
             label={t("tab.profile.label")}
-            sx={{ fontWeight: 700 }}
+            sx={{
+              fontWeight: 700,
+              textTransform: 'capitalize'
+            }}
             onClick={handleChangePage}
           />
           <Tab
             label={t("tab.operational.label")}
-            sx={{ fontWeight: 700 }}
+            sx={{
+              fontWeight: 700,
+              textTransform: 'capitalize'
+            }}
           />
         </Tabs>
       </VGCard>

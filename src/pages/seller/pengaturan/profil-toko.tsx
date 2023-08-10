@@ -30,11 +30,17 @@ export default function ProfilTokoPage() {
         <Tabs value={value}>
           <Tab
             label={t("tab.profile.label")}
-            sx={{ fontWeight: 700 }}
+            sx={{
+              fontWeight: 700,
+              textTransform: 'capitalize'
+            }}
           />
           <Tab
             label={t("tab.operational.label")}
-            sx={{ fontWeight: 700 }}
+            sx={{
+              fontWeight: 700,
+              textTransform: 'capitalize'
+            }}
             onClick={handleChangePage}
           />
         </Tabs>

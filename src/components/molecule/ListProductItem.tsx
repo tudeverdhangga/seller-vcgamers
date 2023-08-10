@@ -280,7 +280,7 @@ export default function ListProductItem(props: {
         <MenuItem onClick={moveToDetail}>
           <VisibilityOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.detailProduct")}
         </MenuItem>
-        <MenuItem onClick={handleCloseOptions}>
+        <MenuItem onClick={moveToDetail}>
           <EditOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.editProduct")}
         </MenuItem>
         {

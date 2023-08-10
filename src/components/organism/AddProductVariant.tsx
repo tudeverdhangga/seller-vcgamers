@@ -32,7 +32,7 @@ interface ImageResponse {
 }
 interface Variation {
   name: string
-  product_variation_master_id: string
+  product_variation_master_id?: string
   delivery_type: number
   stock: number
   price: number
@@ -336,7 +336,7 @@ export default function AddProductVariant({
       {
         row.delivery_type === 1
           ? (
-            <Box display={"flex"}>
+            <Box display="flex" alignItems="center">
               <Image
                 src="/assets/badge-kilat.svg"
                 alt="Badge Kilat"
@@ -347,7 +347,7 @@ export default function AddProductVariant({
             </Box>
           ) : row.delivery_type === 2
             ? (
-              <Box display={"flex"}>
+              <Box display="flex">
                 <Image
                   src="/assets/badge-instant.svg"
                   alt="Badge Instant"
@@ -434,7 +434,7 @@ export default function AddProductVariant({
         <Box display="flex" justifyContent="space-between">
           <Link
             underline="hover"
-            color={row.is_active ? "error" : "success"}
+            color={row.is_active ? "error" : "success.main"}
             sx={{ cursor: "pointer" }}
             onClick={() => onChangeVariant(!row.is_active, "is_active", index)}
           >

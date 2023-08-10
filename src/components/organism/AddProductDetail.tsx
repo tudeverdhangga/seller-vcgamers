@@ -98,6 +98,7 @@ export default function AddProductDetail({
   handleVoucherInstant,
   handleChangeFilter,
   productDetail,
+  clearVariations
 }: {
   handleVoucherInstant: (isVoucher: boolean) => void;
   handleChangeFilter: (
@@ -106,6 +107,7 @@ export default function AddProductDetail({
     index?: number
   ) => void;
   productDetail?: ProductDetail;
+  clearVariations?: () => void;
 }) {
   const { t } = useTranslation("addProduct");
   const getCategory = useGetCategory();
@@ -204,6 +206,7 @@ export default function AddProductDetail({
     }
   };
   const onChangeFilter = (value: Dropdown | null, paramsKey: string) => {
+    clearVariations && clearVariations()
     if (value) {
       handleChangeFilter(paramsKey, value?.value)
 
@@ -312,6 +315,7 @@ export default function AddProductDetail({
                   value={selectedCategory}
                   disablePortal
                   options={category}
+                  disabled={productDetail !== undefined}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -344,7 +348,7 @@ export default function AddProductDetail({
                   value={selectedBrand}
                   disablePortal
                   options={brand}
-                  disabled={selectedCategory && !selectedCategory.value}
+                  disabled={selectedCategory && selectedCategory.value !== undefined && productDetail !== undefined}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -377,7 +381,13 @@ export default function AddProductDetail({
                   value={selectedGroup}
                   disablePortal
                   options={group}
-                  disabled={selectedCategory && selectedBrand && (!selectedCategory.value || !selectedBrand.value)}
+                  disabled={
+                    productDetail !== undefined &&
+                    selectedCategory &&
+                    selectedBrand &&
+                    !selectedCategory.value !== undefined &&
+                    !selectedBrand.value !== undefined
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}

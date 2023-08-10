@@ -37,28 +37,22 @@ export default function OperationalSetting() {
     t("tab.operational.form.days.sat")
   ]
   const [operational, setOperational] = useState<OperationalHour[]>()
-  const [isLoading, setIsLoading] = useState(getProfile?.isLoading || updateOperational?.isLoading)
-  
+
   useEffect(() => {
-    setIsLoading(true)
     setOperational(getProfile?.data?.data?.operational_hours)
-    setIsLoading(false)
   }, [getProfile?.data?.data?.operational_hours])
 
   const onChangeField = (formData: OperationalHour) => {
-    setIsLoading(true)
     updateOperational.mutate(formData, {
       onSuccess: () => {
         void getProfile.refetch()
         toast.success(t("tab.operational.toast.updateSuccess"), toastOption)
-        setIsLoading(false)
       },
       onError: (error) => {
         const err = error as ErrorResponse
         const errorMessage = `${t("tab.operational.toast.updateFail")}: ${err?.response?.data?.message}`
-        
+
         toast.error(errorMessage, toastOption)
-        setIsLoading(false)
       }
     })
   }
@@ -70,7 +64,7 @@ export default function OperationalSetting() {
         spacing={2}
       >
         {
-          isLoading
+          getProfile?.isLoading || updateOperational?.isLoading
             ? (
               [0, 1, 2, 3, 4, 5, 6].map((index) => (
                 <Grid

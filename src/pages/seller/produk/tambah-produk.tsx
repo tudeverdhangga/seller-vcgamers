@@ -26,7 +26,7 @@ interface Response {
 
 interface Variation {
   name: string
-  product_variation_master_id: string
+  product_variation_master_id?: string
   delivery_type: number
   stock: number
   price: number
@@ -147,10 +147,6 @@ export default function TambahProdukPage() {
 
     params.variations.forEach((variation, index) => {
       formData.append(`variations[${index}][name]`, variation.name);
-      formData.append(
-        `variations[${index}][product_variation_master_id]`,
-        variation.product_variation_master_id
-      );
       formData.append(`variations[${index}][delivery_type]`, variation.delivery_type.toString());
       formData.append(`variations[${index}][stock]`, variation.stock.toString());
       formData.append(`variations[${index}][price]`, variation.price.toString());
@@ -161,6 +157,12 @@ export default function TambahProdukPage() {
         variation.images_url.forEach((imageUrl, imageIndex) => {
           formData.append(`variations[${index}][images_url][${imageIndex}]`, imageUrl);
         });
+      }
+      if (variation.product_variation_master_id !== undefined) {
+        formData.append(
+          `variations[${index}][product_variation_master_id]`,
+          variation.product_variation_master_id
+        );
       }
     });
 
@@ -187,6 +189,14 @@ export default function TambahProdukPage() {
   }
   const handleVoucherInstant = (isVoucher: boolean) => {
     setIsVoucherInstant(isVoucher)
+  }
+  const clearVariations = () => {
+    const clearArray = params.variations.splice(0, params.variations.length);
+
+    setParams({
+      ...params,
+      variations: clearArray
+    });
   }
 
   return (
@@ -220,6 +230,7 @@ export default function TambahProdukPage() {
       <AddProductDetail
         handleVoucherInstant={handleVoucherInstant}
         handleChangeFilter={handleFilter}
+        clearVariations={clearVariations}
       />
       <AddProductVariant
         variant={params.variations}

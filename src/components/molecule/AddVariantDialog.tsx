@@ -29,7 +29,7 @@ interface Dropdown {
 }
 interface Variation {
   name: string;
-  product_variation_master_id: string;
+  product_variation_master_id?: string;
   delivery_type: number;
   stock: number;
   price: number;
@@ -37,7 +37,17 @@ interface Variation {
   is_custom_image: boolean;
 }
 
-export default function AddVariantDialog(props: {
+export default function AddVariantDialog({
+  isOpen,
+  groupId,
+  isVoucherInstant,
+  variant,
+  index,
+  onSubmit,
+  onEditVariation,
+  onDeleteVariant,
+  handleClose
+}: {
   isOpen: boolean;
   groupId: string;
   isVoucherInstant: boolean;
@@ -57,44 +67,44 @@ export default function AddVariantDialog(props: {
   } = useForm<Variation>({
     criteriaMode: "all"
   });
-  const getVariation = useGetVariationMaster()
+  const getVariation = useGetVariationMaster();
   const getProfile = useGetProfile();
-  const {
-    isOpen,
-    handleClose,
-    onSubmit,
-    onEditVariation,
-    onDeleteVariant
-  } = props;
-  const [selectedVariation, setSelectedVariation] = useState<Dropdown>()
-  const [feature, setFeature] = useState(0)
-  const [stock, setStock] = useState<number>()
-  const [price, setPrice] = useState<number>()
-  const [image, setImage] = useState(true);
-  const [variationOptions, setVariationOptions] = useState<Dropdown[]>([])
+  const [selectedVariation, setSelectedVariation] = useState<Dropdown>();
+  const [isCustomName, setIsCustomName] = useState(false);
+  const [name, setName] = useState("");
+  const [feature, setFeature] = useState(0);
+  const [stock, setStock] = useState<number>();
+  const [price, setPrice] = useState<number>();
+  const [image, setImage] = useState(false);
+  const [variationOptions, setVariationOptions] = useState<Dropdown[]>([]);
   const [variationData, setVariationData] = useState<Variation>();
 
   useEffect(() => {
     if (isOpen) {
-      getVariation.mutate(queryString.stringify({ group_id: props.groupId }))
+      getVariation.mutate(queryString.stringify({ group_id: groupId }))
       onChangeField("delivery_type", 0);
     }
   }, [isOpen])
   useEffect(() => {
-    if (typeof props.variant !== "undefined") {
-      const value = {
-        label: props.variant.name,
-        value: props.variant.product_variation_master_id,
-        price: props.variant.price,
+    if (typeof variant !== "undefined") {
+      if (variant.product_variation_master_id !== undefined) {
+        const value = {
+          label: variant.name,
+          value: variant.product_variation_master_id,
+          price: variant.price,
+        }
+        onChangeVariation(value)
+      } else {
+        setIsCustomName(true)
+        setName(variant.name)
       }
-      onChangeVariation(value)
-      setFeature(props.variant.delivery_type)
-      setStock(props.variant.stock)
-      setPrice(props.variant.price)
-      onChangeImage(props.variant.is_custom_image)
-      setVariationData(props.variant)
+      setFeature(variant.delivery_type)
+      setStock(variant.stock)
+      setPrice(variant.price)
+      onChangeImage(variant.is_custom_image)
+      setVariationData(variant)
     }
-  }, [props.variant])
+  }, [variant])
   useEffect(() => {
     const variationOption: Dropdown[] = [];
     getVariation?.data?.data?.map((item) => {
@@ -107,10 +117,10 @@ export default function AddVariantDialog(props: {
       }
     })
     setVariationOptions(variationOption)
-    if (typeof props.variant === "undefined") {
-      onChangeImage(true);
+    if (typeof variant === "undefined") {
+      onChangeImage(false);
     }
-  }, [getVariation?.data?.data, props.variant])
+  }, [getVariation?.data?.data, variant])
   useEffect(() => {
     if (typeof selectedVariation?.label !== 'undefined') {
       onChangeField("name", selectedVariation?.label);
@@ -123,7 +133,14 @@ export default function AddVariantDialog(props: {
     }
   }, [variationData?.name])
   useEffect(() => {
-    onChangeField("delivery_type", feature);
+    if (typeof name !== 'undefined') {
+      onChangeField("name", name);
+    }
+  }, [name])
+  useEffect(() => {
+    if (typeof stock !== 'undefined') {
+      onChangeField("delivery_type", feature);
+    }
   }, [feature])
   useEffect(() => {
     if (typeof stock !== 'undefined') {
@@ -141,18 +158,21 @@ export default function AddVariantDialog(props: {
   useEffect(() => {
     if (
       typeof variationData?.is_active !== 'undefined' &&
-      typeof props.variant === 'undefined'
+      typeof variant === 'undefined'
     ) {
       onSubmit(variationData);
       onCloseDialog();
     }
-  }, [variationData?.is_active, props.variant])
+  }, [variationData?.is_active, variant])
 
   const onInputStock = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStock(parseInt(event.target.value))
   }
   const onInputPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(parseInt(event.target.value))
+  }
+  const onInputName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setName(event.target.value)
   }
   const income = () => {
     if (!price) return 0
@@ -190,26 +210,28 @@ export default function AddVariantDialog(props: {
   const onCloseDialog = () => {
     setPrice(undefined)
     setStock(undefined)
+    setName("")
     setVariationData(undefined)
     setSelectedVariation(undefined)
     setFeature(0)
-    setImage(true)
-    handleClose()
+    setIsCustomName(false)
+    setImage(false)
     reset()
+    handleClose()
   }
   const onSaveCreate = () => {
     onChangeField("is_active", true);
   }
   const onSaveEdit = () => {
-    if (typeof variationData !== "undefined" && typeof props.index !== "undefined") {
-      onEditVariation(variationData, props.index)
+    if (typeof variationData !== "undefined" && typeof index !== "undefined") {
+      onEditVariation(variationData, index)
     }
     onCloseDialog()
   }
   const onDelete = () => {
     onCloseDialog()
-    if (typeof props.index !== "undefined") {
-      onDeleteVariant(props.index)
+    if (typeof index !== "undefined") {
+      onDeleteVariant(index)
     }
   }
 
@@ -245,29 +267,45 @@ export default function AddVariantDialog(props: {
               width="100%"
               height={40}
             />
-          ) : (
-            <Autocomplete
-              value={selectedVariation}
-              disablePortal
-              options={variationOptions}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={t("variant.dialog.header.variant")}
-                  size="small"
-                  {...register("product_variation_master_id", { required: "Variant is required." })}
-                  error={Boolean(errors.product_variation_master_id)}
-                  helperText={errors.product_variation_master_id?.message}
-                />
-              )}
-              sx={{ width: "100%" }}
-              onChange={(_, e) => onChangeVariation(e)}
-            />
-          )
+          ) : !isCustomName
+            ? (
+              <Autocomplete
+                value={selectedVariation}
+                disablePortal
+                options={variationOptions}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={t("variant.dialog.header.variant")}
+                    size="small"
+                    {...register("name", { required: "Variant is required." })}
+                    error={Boolean(errors.name)}
+                    helperText={errors.name?.message}
+                  />
+                )}
+                sx={{ width: "100%" }}
+                onChange={(_, e) => onChangeVariation(e)}
+              />
+            ) : (
+              <TextField
+                value={name}
+                label={t("variant.dialog.header.variantCustom")}
+                variant="outlined"
+                size="small"
+                fullWidth
+                {...register("name", { required: "Variant is required." })}
+                error={Boolean(errors.name)}
+                helperText={errors.name?.message}
+                onChange={(e) => onInputName(e)}
+              />
+            )
       }
       <FormControlLabel
         control={
-          <Checkbox />
+          <Checkbox
+            defaultChecked={isCustomName}
+            onChange={(_, checked) => setIsCustomName(checked)}
+          />
         }
         label={t("variant.dialog.header.customName")}
       />
@@ -341,7 +379,7 @@ export default function AddVariantDialog(props: {
         <Box>
           <FormControlLabel
             value={2}
-            disabled={getProfile?.data?.data?.seller_has_kilat && !props.isVoucherInstant}
+            disabled={getProfile?.data?.data?.seller_has_kilat && !isVoucherInstant}
             control={<Radio />}
             label={
               <Image
@@ -374,7 +412,7 @@ export default function AddVariantDialog(props: {
                     {t("variant.dialog.delivery.kilat.alert.subTitle")}
                   </Typography>
                 </Typography>
-              ) : !props.isVoucherInstant
+              ) : !isVoucherInstant
                 ? (
                   <Typography sx={{
                     fontSize: 12,
@@ -435,7 +473,7 @@ export default function AddVariantDialog(props: {
         md={6}
       >
         <TextField
-          value={stock}
+          value={stock !== undefined ? stock : ""}
           variant="outlined"
           label={t("variant.dialog.setting.stock")}
           {...register("stock", {
@@ -446,10 +484,6 @@ export default function AddVariantDialog(props: {
           helperText={errors.stock?.message}
           fullWidth
           type="number"
-          inputProps={{
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          }}
           disabled={feature === 2}
           size="small"
           onChange={onInputStock}
@@ -461,7 +495,7 @@ export default function AddVariantDialog(props: {
         md={6}
       >
         <TextField
-          value={price}
+          value={price !== undefined ? price : ""}
           variant="outlined"
           label={t("variant.dialog.setting.price.label")}
           {...register("price", {
@@ -479,10 +513,6 @@ export default function AddVariantDialog(props: {
           helperText={errors.price?.message}
           fullWidth
           type="number"
-          inputProps={{
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          }}
           size="small"
           onChange={onInputPrice}
         />
@@ -516,14 +546,14 @@ export default function AddVariantDialog(props: {
       <Box
         display="flex"
         justifyContent={
-          typeof props.variant !== "undefined"
+          typeof variant !== "undefined"
             ? "space-between"
             : "flex-end"
         }
         mt={3}
       >
         {
-          typeof props.variant !== "undefined" && (
+          typeof variant !== "undefined" && (
             <VGButton
               variant="outlined"
               color="error"
@@ -562,13 +592,13 @@ export default function AddVariantDialog(props: {
       <Box p={2}>
         <Typography sx={titleLargeStyle}>
           {
-            typeof props.variant !== "undefined"
+            typeof variant !== "undefined"
               ? t("variant.dialog.title.add")
               : t("variant.dialog.title.edit")
           }
         </Typography>
         <form onSubmit={handleSubmit(
-          typeof props.variant !== "undefined" ? onSaveEdit : onSaveCreate
+          typeof variant !== "undefined" ? onSaveEdit : onSaveCreate
         )}>
           {headingContiner}
           {deliveryContainer}

@@ -15,6 +15,7 @@ import {
   useCheckUrlAvailability
 } from "~/services/api/auth";
 import { toastOption } from "~/utils/toast";
+import { env } from "~/env.mjs";
 
 interface ProfileForm {
   seller_name: string;
@@ -51,6 +52,8 @@ export default function ProfileSettingForm() {
     criteriaMode: "all"
   });
   const { t } = useTranslation("setting");
+  const whatsappLink = env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK;
+  const emailLink = env.NEXT_PUBLIC_SUPPORT_EMAIL_LINK;
   const mediaUpload = useMediaUpload();
   const getProfile = useGetProfile();
   const updateProfile = useUpdateProfile();
@@ -88,7 +91,7 @@ export default function ProfileSettingForm() {
   // Methods
   const handleChangeProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files
-    
+
     if (file && typeof file[0] !== "undefined") {
       if (file[0].size > 1024 * 1024) {
         toast.error(t("tab.profile.toast.updateImageProfileSizeError"), toastOption)
@@ -152,7 +155,7 @@ export default function ProfileSettingForm() {
       checkUrl.mutate(url, {
         onSuccess: (res) => {
           const isAvailable = res?.data?.available
-          
+
           if (!isAvailable) {
             setUrlMessage("URL sudah terpakai")
           } else {
@@ -167,9 +170,9 @@ export default function ProfileSettingForm() {
   // Container
   const shopNameContainer = (
     <>
-      <TextField 
+      <TextField
         label={t("tab.profile.form.name")}
-        variant="outlined" 
+        variant="outlined"
         size="small"
         fullWidth
         {...register("seller_name", { required: "Nama Toko is required." })}
@@ -187,19 +190,20 @@ export default function ProfileSettingForm() {
       </Typography>
       <Typography
         component="span"
-        color="primary.main"
         fontSize={12}
         fontWeight={600}
       >
-        {t("tab.profile.form.alert.subLabel")}
+        <Link href={whatsappLink} style={{ color: "#7750F8" }}>
+          {t("tab.profile.form.alert.subLabel")}
+        </Link>
       </Typography>
     </>
   );
   const shopUrlContainer = (
     <>
-      <TextField 
+      <TextField
         label={t("tab.profile.form.url")}
-        variant="outlined" 
+        variant="outlined"
         size="small"
         fullWidth
         {...register("seller_url", {
@@ -230,9 +234,9 @@ export default function ProfileSettingForm() {
     </>
   );
   const shopDescContainer = (
-    <TextField 
+    <TextField
       label={t("tab.profile.form.desc")}
-      variant="outlined" 
+      variant="outlined"
       size="small"
       fullWidth
       {...register("seller_description", { required: "Deskripsi Toko is required." })}
@@ -242,9 +246,9 @@ export default function ProfileSettingForm() {
     />
   );
   const shopPhoneContainer = (
-    <TextField 
+    <TextField
       label={t("tab.profile.form.phone")}
-      variant="outlined" 
+      variant="outlined"
       size="small"
       fullWidth
       disabled
@@ -252,31 +256,31 @@ export default function ProfileSettingForm() {
     />
   );
   const bankNameContainer = (
-    <TextField 
+    <TextField
       label={t("tab.profile.form.bankName")}
-      variant="outlined" 
+      variant="outlined"
       size="small"
-      fullWidth 
+      fullWidth
       disabled
       defaultValue={getProfile?.data?.data?.seller_bank?.bank_name}
     />
   );
   const bankNumberContainer = (
-    <TextField 
+    <TextField
       label={t("tab.profile.form.bankNumber")}
-      variant="outlined" 
+      variant="outlined"
       size="small"
-      fullWidth 
+      fullWidth
       disabled
       defaultValue={getProfile?.data?.data?.seller_bank?.bank_account_number}
     />
   );
   const bankCustomerNameContainer = (
-    <TextField 
+    <TextField
       label={t("tab.profile.form.bankCustomerName")}
-      variant="outlined" 
+      variant="outlined"
       size="small"
-      fullWidth 
+      fullWidth
       disabled
       defaultValue={getProfile?.data?.data?.seller_bank?.bank_account_name}
     />
@@ -290,7 +294,7 @@ export default function ProfileSettingForm() {
         style={{ display: "none" }}
         onChange={(e) => handleChangeProfileImage(e)}
       />
-      <label htmlFor="upload-profile" style={{width: "124px", display: "block"}}>
+      <label htmlFor="upload-profile" style={{ width: "124px", display: "block" }}>
         <Box
           component="div"
           sx={{
@@ -462,7 +466,12 @@ export default function ProfileSettingForm() {
             </Typography>
             <VGAlert color="info">
               {t("tab.profile.form.info.alert")}{" "}
-              <Link href="mailto:support@vcgamers.com">support@vcgamers.com</Link>
+              <Link
+                href={emailLink}
+                style={{ color: "#7750F8" }}
+              >
+                support@vcgamers.com
+              </Link>
             </VGAlert>
           </Grid>
         </Grid>

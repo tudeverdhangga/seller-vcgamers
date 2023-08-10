@@ -61,6 +61,7 @@
       },
       "header": {
         "variant": "Pilih Variant",
+        "variantCustom": "Nama Variant",
         "customName": "Buat Nama Sendiri"
       },
       "delivery": {

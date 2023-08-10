@@ -25,11 +25,10 @@ interface Response {
   images_url: string[]
   variations: Variation[]
 }
-
 interface Variation {
   id?: string
   name: string
-  product_variation_master_id: string
+  product_variation_master_id?: string
   delivery_type: number
   stock: number
   price: number
@@ -82,8 +81,8 @@ export default function TambahProdukPage() {
             variations: res.data.variations.map((item) => {
               return {
                 id: item.id,
-                name: item.name,
-                product_variation_master_id: item.product_variation_master.value,
+                name: item.product_variation_master ? item.product_variation_master.label : item.name,
+                product_variation_master_id: item.product_variation_master ? item.product_variation_master.value : undefined,
                 delivery_type: item.delivery_type,
                 stock: item.stock,
                 price: item.price,
