@@ -1,14 +1,16 @@
-import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import DashboardStatDescription from "./DashboardStatDescription";
 import { type SxProps } from "@mui/material/styles";
+import DashboardStatDescription from "./DashboardStatDescription";
 
 export default function DashboardStatCard(props: {
   icon: JSX.Element;
   title: string;
   subtitle: string;
   sx?: SxProps;
+  stat: Parameters<typeof DashboardStatDescription>[0];
+  onClick: () => void;
 }) {
   return (
     <Box
@@ -26,6 +28,7 @@ export default function DashboardStatCard(props: {
         borderRadius: "12px",
         ...props.sx,
       }}
+      onClick={props.onClick}
     >
       <Box sx={{ display: "inline-flex", mx: 2, mt: 2, gap: "10px" }}>
         <Box
@@ -73,11 +76,7 @@ export default function DashboardStatCard(props: {
           width: "100%",
         }}
       />
-      <DashboardStatDescription
-        type="increase"
-        value="+2"
-        sx={{ mx: 2, mb: 2 }}
-      />
+      <DashboardStatDescription {...props.stat} sx={{ mx: 2, mb: 2 }} />
     </Box>
   );
 }

@@ -22,6 +22,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPPORT_EMAIL_LINK: z.string().min(1),
     NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK: z.string().min(1),
     NEXT_PUBLIC_AUTH_URL: z.string().min(1),
+    NEXT_PUBLIC_MARKET_API_URL: z.string().min(1),
   },
 
   /**
@@ -37,6 +38,7 @@ export const env = createEnv({
     NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
     NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK:
       process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK,
+    NEXT_PUBLIC_MARKET_API_URL: process.env.NEXT_PUBLIC_MARKET_API_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

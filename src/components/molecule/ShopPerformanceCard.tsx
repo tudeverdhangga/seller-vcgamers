@@ -1,23 +1,28 @@
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
-
 import { useTranslation } from "next-i18next";
+import { useQueryState } from "next-usequerystate";
 
+import { useGetDashboardSellerPerformance } from "~/services/dashboard/hooks";
 import DashboardCard from "../atomic/DashboardCard";
-import HelpToolTip from "../atomic/HelpToolTip";
+import DashboardStatDescription from "../atomic/DashboardStatDescription";
+import LightTooltip from "../atomic/LightToolTip";
 import DeliveryTimeIcon from "../icons/svg/deliveryTime.svg";
 import ShopRatingIcon from "../icons/svg/shopRating.svg";
 import TransactionSuccessIcon from "../icons/svg/transactionSuccess.svg";
 import VisitorCountIcon from "../icons/svg/visitorCount.svg";
-import DashboardStatDescription from "../atomic/DashboardStatDescription";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import LightTooltip from "../atomic/LightToolTip";
 import DashboardPerformanceHelpToolTip from "./DashboardPerformanceHelpToolTip";
 
 export default function ShopPerformanceCard() {
   const { t } = useTranslation("dashboard");
+  const [periodFilter] = useQueryState("periode_filter");
+  const { data } = useGetDashboardSellerPerformance({
+    periode_filter: periodFilter,
+  });
 
   return (
     <DashboardCard
@@ -35,43 +40,59 @@ export default function ShopPerformanceCard() {
         disablePadding
       >
         <ListItem disablePadding>
-          <PerformanceCard
-            icon={<ShopRatingIcon />}
-            title={t("card.performance.body.shopRating")}
-            subtitle="5.00"
-            tooltip={t("tooltip.shopRating")}
-            stat={{ type: "decrease", value: "-0.5" }}
-          />
+          {data ? (
+            <PerformanceCard
+              icon={<ShopRatingIcon />}
+              title={t("card.performance.body.shopRating")}
+              subtitle={data.data.rating}
+              tooltip={t("tooltip.shopRating")}
+              stat={data.data.rating_diff}
+            />
+          ) : (
+            <Skeleton variant="rounded" height={24} />
+          )}
         </ListItem>
         <Divider />
         <ListItem disablePadding>
-          <PerformanceCard
-            icon={<TransactionSuccessIcon />}
-            title={t("card.performance.body.transactionSuccess")}
-            subtitle={"100%"}
-            tooltip={t("tooltip.transactionSuccess")}
-            stat={{ type: "increase", value: "+2%" }}
-          />
+          {data ? (
+            <PerformanceCard
+              icon={<TransactionSuccessIcon />}
+              title={t("card.performance.body.transactionSuccess")}
+              subtitle={data.data.transaction_success_rate}
+              tooltip={t("tooltip.transactionSuccess")}
+              stat={data.data.transaction_success_rate_diff}
+            />
+          ) : (
+            <Skeleton variant="rounded" height={24} />
+          )}
         </ListItem>
         <Divider />
         <ListItem disablePadding>
-          <PerformanceCard
-            icon={<DeliveryTimeIcon />}
-            title={t("card.performance.body.deliveryTime")}
-            subtitle="± 32 menit"
-            tooltip={t("tooltip.deliveryTime")}
-            stat={{ type: "decrease", value: "+12 Menit" }}
-          />
+          {data ? (
+            <PerformanceCard
+              icon={<DeliveryTimeIcon />}
+              title={t("card.performance.body.deliveryTime")}
+              subtitle={data.data.average_sla}
+              tooltip={t("tooltip.deliveryTime")}
+              stat={data.data.average_sla_diff}
+            />
+          ) : (
+            <Skeleton variant="rounded" height={24} />
+          )}
         </ListItem>
         <Divider />
         <ListItem disablePadding>
-          <PerformanceCard
-            icon={<VisitorCountIcon />}
-            title={t("card.performance.body.visitorCount")}
-            subtitle="234"
-            tooltip={t("tooltip.visitorCount")}
-            stat={{ type: "equal" }}
-          />
+          {data ? (
+            <PerformanceCard
+              icon={<VisitorCountIcon />}
+              title={t("card.performance.body.visitorCount")}
+              subtitle={data.data.total_visitor}
+              tooltip={t("tooltip.visitorCount")}
+              stat={data.data.total_visitor_diff}
+            />
+          ) : (
+            <Skeleton variant="rounded" height={24} />
+          )}
         </ListItem>
       </List>
     </DashboardCard>
@@ -81,7 +102,7 @@ export default function ShopPerformanceCard() {
 function PerformanceCard(props: {
   icon: JSX.Element;
   title: string;
-  subtitle: string;
+  subtitle?: string | number;
   tooltip: string;
   stat: Parameters<typeof DashboardStatDescription>[0];
 }) {

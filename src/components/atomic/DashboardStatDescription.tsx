@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import { type SxProps } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
-import IncreaseIcon from "../icons/IncreaseIcon";
 import DecreaseIcon from "../icons/DecreaseIcon";
 import EqualIcon from "../icons/EqualIcon";
+import IncreaseIcon from "../icons/IncreaseIcon";
 
 const typeMapping = {
   increase: {
@@ -39,8 +39,8 @@ export default function DashboardStatDescription(
     description?: string;
     sx?: SxProps;
   } & (
-    | { type: "increase" | "decrease"; value: string }
-    | { type: "equal"; value?: string }
+    | { type: "increase" | "decrease"; value?: string | number }
+    | { type: "equal"; value?: string | number }
   )
 ) {
   const prop = typeMapping[props.type];

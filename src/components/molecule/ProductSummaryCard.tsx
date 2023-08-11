@@ -5,21 +5,26 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
 
+import { useGetDashboardProductStat } from "~/services/dashboard/hooks";
 import DashboardCard from "../atomic/DashboardCard";
 import CubeIcon from "../icons/svg/cube.svg";
 
 export default function ProductSummaryCard() {
   const { t } = useTranslation("dashboard");
+  const { data } = useGetDashboardProductStat();
 
   return (
     <DashboardCard title={t("card.myProduct.title")}>
       <Grid container spacing="10px" sx={{ alignSelf: "stretch" }}>
         <Grid xs={12} sm={6}>
           <ActiveProductSummaryCard
-            active={{ title: t("card.myProduct.body.active"), value: "0" }}
+            active={{
+              title: t("card.myProduct.body.active"),
+              value: data?.data.total_active,
+            }}
             nonactive={{
               title: t("card.myProduct.body.nonactive"),
-              value: "0",
+              value: data?.data.total_inactive,
             }}
           />
         </Grid>
@@ -34,14 +39,14 @@ export default function ProductSummaryCard() {
                 height={15}
               />
             }
-            subtitle="0"
+            subtitle={data?.data.total_stock_run_out}
             color="common.red.500"
           />
         </Grid>
         <Grid xs={6} sm={3}>
           <SummaryCard
             title={t("card.myProduct.body.review")}
-            subtitle="0"
+            subtitle={data?.data.total_review}
             color="primary.main"
           />
         </Grid>
@@ -52,12 +57,12 @@ export default function ProductSummaryCard() {
 
 function ActiveProductSummaryCard(props: {
   active: {
-    title: string;
-    value: string;
+    title?: string | number;
+    value?: string | number;
   };
   nonactive: {
-    title: string;
-    value: string;
+    title?: string | number;
+    value?: string | number;
   };
 }) {
   return (
@@ -120,7 +125,7 @@ function ActiveProductSummaryCard(props: {
 function SummaryCard(props: {
   title: string;
   titleTrailing?: JSX.Element;
-  subtitle: string;
+  subtitle?: string | number;
   color: string;
 }) {
   return (

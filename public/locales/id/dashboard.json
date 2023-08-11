@@ -42,6 +42,15 @@
         "nearEmpty": "Akan Habis",
         "review": "Total Ulasan"
       }
+    },
+    "transactionSummary": {
+      "title": "Ringkasan Transaksi",
+      "body": {
+        "success": "Selesai",
+        "sent": "Dikirim",
+        "pending": "Perlu Diproses",
+        "moderation": "Moderasi"
+      }
     }
   },
   "tooltip": {
@@ -53,7 +62,7 @@
     "visitorCount": "Jumlah pengunjung halaman tokomu"
   },
   "suggestionBox": {
-    "title":"Kotak Saran",
+    "title": "Kotak Saran",
     "subtitle": "Bantu kami agar melayani lebih baik",
     "placeholder": "Tulis disini...",
     "back": "Kembali",

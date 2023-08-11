@@ -1,28 +1,43 @@
-import { useEffect } from "react";
-import { useAtom } from "jotai";
-
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
+import { useAtom } from "jotai";
 import { Trans, useTranslation } from "next-i18next";
+import { useQueryState } from "next-usequerystate";
+import { useEffect, useState } from "react";
 
-import { priceFormat } from "~/utils/format";
-import { getStaticPropsWithTransNamespace } from "~/utils/translation";
-
+import { mobileAppBarAtom } from "~/atom/layout";
 import DashboardStatCard from "~/components/atomic/DashboardStatCard";
 import EarningIcon from "~/components/icons/svg/earningIcon.svg";
 import MarketIcon from "~/components/icons/svg/marketPlaceIcon.svg";
+import DashboardCarousel from "~/components/molecule/DashboardCarousel";
+import DashboardChart from "~/components/molecule/DashboardChart";
 import DashboardTitle from "~/components/molecule/DashboardTitle";
 import HelpContactCard from "~/components/molecule/HelpContactCard";
 import ProductSummaryCard from "~/components/molecule/ProductSummaryCard";
 import ShopPerformanceCard from "~/components/molecule/ShopPerformanceCard";
 import TransactionSummaryCard from "~/components/molecule/TransactionSummaryCard";
-import DashboardChart from "~/components/molecule/DashboardChart";
-import DashboardCarousel from "~/components/molecule/DashboardCarousel";
-import { mobileAppBarAtom } from "~/atom/layout";
-import Divider from "@mui/material/Divider";
+import {
+  useGetDashboardGraphSuccess,
+  useGetDashboardTotalSuccessAmount,
+  useGetDashboardTotalSuccessQty,
+} from "~/services/dashboard/hooks";
+import type { GraphSuccessUrl } from "~/services/dashboard/types";
+import { priceFormat } from "~/utils/format";
+import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 
 export default function DashboardSellerPage() {
   const { t } = useTranslation("dashboard");
   const [, setMobileAppBarAtom] = useAtom(mobileAppBarAtom);
+  const [periodFilter] = useQueryState("periode_filter");
+  const [selectedChart, setSelectedChart] = useState<GraphSuccessUrl>("qty");
+  const { data: totalQtyData, isLoading } = useGetDashboardTotalSuccessQty({
+    periode_filter: periodFilter,
+  });
+  const { data: totalAmountData } = useGetDashboardTotalSuccessAmount({
+    periode_filter: periodFilter,
+  });
+  const { data: graphData } = useGetDashboardGraphSuccess(selectedChart);
 
   useEffect(() => {
     setMobileAppBarAtom({
@@ -66,32 +81,54 @@ export default function DashboardSellerPage() {
               display: "flex",
               gap: "20px",
               "&::-webkit-scrollbar": {
-                width: "0.4em",
-              },
-              "&::-webkit-scrollbar-track": {
-                "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "rgba(0,0,0,.1)",
-                outline: "1px solid slategrey",
+                display: "none",
+                width: "0 !important",
               },
             }}
           >
-            <DashboardStatCard
-              icon={<MarketIcon />}
-              title={t("card.sales.title")}
-              subtitle={t("card.sales.subtitle", { count: 0 })}
-              sx={{
-                borderColor: "primary.main",
-              }}
-            />
-            <DashboardStatCard
-              icon={<EarningIcon />}
-              title={t("card.earning.title")}
-              subtitle={priceFormat(123456.789)}
-            />
+            {isLoading ? (
+              <>
+                <Skeleton variant="rounded" height={100} width={230} />
+                <Skeleton variant="rounded" height={100} width={230} />
+              </>
+            ) : (
+              <>
+                {totalQtyData ? (
+                  <DashboardStatCard
+                    icon={<MarketIcon />}
+                    title={t("card.sales.title")}
+                    subtitle={t("card.sales.subtitle", {
+                      count: totalQtyData.data.current_value,
+                    })}
+                    sx={{
+                      borderColor:
+                        selectedChart === "qty"
+                          ? "primary.main"
+                          : "common.shade.75",
+                    }}
+                    stat={totalQtyData.data.last_value_diff}
+                    onClick={() => setSelectedChart("qty")}
+                  />
+                ) : null}
+                {totalAmountData ? (
+                  <DashboardStatCard
+                    icon={<EarningIcon />}
+                    title={t("card.earning.title")}
+                    subtitle={priceFormat(totalAmountData.data.current_value)}
+                    sx={{
+                      borderColor:
+                        selectedChart === "price"
+                          ? "primary.main"
+                          : "common.shade.75",
+                    }}
+                    stat={totalAmountData.data.last_value_diff}
+                    onClick={() => setSelectedChart("price")}
+                  />
+                ) : null}
+              </>
+            )}
           </Box>
-          <DashboardChart />
+          {graphData ? <DashboardChart graphData={graphData.data} /> : null}
         </Box>
         <Box sx={{ gridArea: "performance" }}>
           <ShopPerformanceCard />

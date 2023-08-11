@@ -1,4 +1,29 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
+import { env } from "~/env.mjs";
+
+function responseHandler(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  response: AxiosResponse<any, any>
+) {
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  // Do something with response data
+  return response;
+}
+
+function errorHandler(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error: any
+) {
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (error.response && error.response.status === 401) {
+    window.location.href = env.NEXT_PUBLIC_AUTH_URL;
+  }
+
+  return Promise.reject(error);
+}
 
 export const HTTP = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -8,6 +33,8 @@ export const HTTP = axios.create({
   withCredentials: true,
 });
 
+HTTP.interceptors.response.use(responseHandler, errorHandler);
+
 export const HTTPMediaUpload = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -15,3 +42,13 @@ export const HTTPMediaUpload = axios.create({
   },
   withCredentials: true,
 });
+
+HTTPMediaUpload.interceptors.response.use(responseHandler, errorHandler);
+
+export const HTTPMarket = axios.create({
+  baseURL: env.NEXT_PUBLIC_MARKET_API_URL,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
+});
+
+HTTPMarket.interceptors.response.use(responseHandler, errorHandler);

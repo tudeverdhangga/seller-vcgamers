@@ -1,12 +1,24 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 
 import { useTranslation } from "next-i18next";
+import { useQueryState } from "next-usequerystate";
 
 export default function DashboardTitle() {
   const { t } = useTranslation("dashboard");
+  const [periodFilter, setPeriodFilter] = useQueryState("periode_filter");
+
+  const handlePeriodChange = (event: SelectChangeEvent) => {
+    void setPeriodFilter(event.target.value);
+  };
+
+  const currentDate = dayjs();
+  const periods = [0, 1, 2, 3, 4, 5].map((i) =>
+    currentDate.subtract(i, "month")
+  );
 
   return (
     <Box
@@ -46,14 +58,23 @@ export default function DashboardTitle() {
       </Box>
       <Select
         id="month-select"
-        value="DEC-2021"
+        value={periodFilter ?? currentDate.format("YYYY-MM")}
+        onChange={handlePeriodChange}
         sx={{
           width: { sm: "183px", xs: "150px" },
           borderRadius: "11px",
           backgroundColor: "common.shade.0",
         }}
       >
-        <MenuItem value="DEC-2021">DEC-2021</MenuItem>
+        {periods.map((period) => {
+          const month = period.format("YYYY-MM");
+
+          return (
+            <MenuItem key={month} value={month}>
+              {period.format("MMM-YYYY").toUpperCase()}
+            </MenuItem>
+          );
+        })}
       </Select>
     </Box>
   );

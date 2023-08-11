@@ -104,7 +104,7 @@ export default function RegistrationVIPModal (props: {
     event.preventDefault();
 
     if (imageKTP && imageSelfie && dataTransactionFile) {
-      let payload: BodyPayloadRegisterVIP = {
+      const payload: BodyPayloadRegisterVIP = {
         ktp_image_url: imageKTP.object_key,
         ktp_selfie_image_url: imageSelfie.object_key,
         transaction_data_file_url: dataTransactionFile.object_key,
@@ -122,7 +122,7 @@ export default function RegistrationVIPModal (props: {
         onError: (error) => {
           const err = error as CustomErrorResponse
           console.log("Err: ", err.response.data)
-          let msg = `${err.response.data.code} ${err.response.data.status}: ` + PrintErrorMessages(err.response.data.validation_fields)
+          const msg = `${err.response.data.code} ${err.response.data.status}: ` + PrintErrorMessages(err.response.data.validation_fields)
           setAlertMessage(msg)
           setSeverityAlert("error");
           setOpenSnackbar(true);

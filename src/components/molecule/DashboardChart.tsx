@@ -1,19 +1,21 @@
 import { Box } from "@mui/material";
 import {
-  Chart as ChartJS,
   CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
+  Chart as ChartJS,
   Filler,
   Legend,
-  type ChartData,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
   type ChartArea,
+  type ChartData,
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
+
+import type { DataGraphSuccess } from "~/services/dashboard/types";
 import { useResponsive } from "~/utils/mediaQuery";
 
 ChartJS.register(
@@ -27,15 +29,17 @@ ChartJS.register(
   Legend
 );
 
-export default function DashboardChart() {
+export default function DashboardChart({
+  graphData,
+}: {
+  graphData: DataGraphSuccess;
+}) {
   const chartRef = useRef<ChartJS<"line">>(null);
   const { isMobile } = useResponsive();
 
-  const labels = isMobile
-    ? ["Apr", "Mei", "Jun"]
-    : ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"];
+  const labels = isMobile ? graphData.label.slice(-3) : graphData.label;
 
-  const dataSets = isMobile ? [19, 20, 23] : [12, 13, 17, 19, 20, 23];
+  const dataSets = isMobile ? graphData.data.slice(-3) : graphData.data;
 
   const data = {
     labels,
