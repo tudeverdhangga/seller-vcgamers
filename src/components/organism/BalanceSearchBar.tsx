@@ -4,7 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
-import { queryTypes, useQueryState } from "next-usequerystate";
+import { useQueryState } from "next-usequerystate";
 
 import VGCard from "~/components/atomic/VGCard";
 import { useResponsive } from "~/utils/mediaQuery";
@@ -12,14 +12,16 @@ import { useResponsive } from "~/utils/mediaQuery";
 export default function BalanceSearchBar() {
   const { t } = useTranslation("balance");
   const { isMobile } = useResponsive();
-  const [dateStart, setDateStart] = useQueryState(
-    "date_start",
-    queryTypes.isoDateTime.withDefault(dayjs().subtract(3, "month").toDate())
-  );
-  const [dateEnd, setDateEnd] = useQueryState(
-    "date_end",
-    queryTypes.isoDateTime.withDefault(dayjs().toDate())
-  );
+  const [dateStart, setDateStart] = useQueryState("date_start", {
+    parse: (query: string) => dayjs(query),
+    serialize: (value) => value.format("YYYY-MM-DD"),
+    defaultValue: dayjs().subtract(3, "month"),
+  });
+  const [dateEnd, setDateEnd] = useQueryState("date_end", {
+    parse: (query: string) => dayjs(query),
+    serialize: (value) => value.format("YYYY-MM-DD"),
+    defaultValue: dayjs(),
+  });
 
   return (
     <VGCard
@@ -52,9 +54,7 @@ export default function BalanceSearchBar() {
           }}
           value={dayjs(dateStart)}
           onChange={(value) =>
-            setDateStart(
-              value?.toDate() ?? dayjs().subtract(3, "month").toDate()
-            )
+            setDateStart(value ?? dayjs().subtract(3, "month"))
           }
         />
         <DatePicker
@@ -69,7 +69,7 @@ export default function BalanceSearchBar() {
             },
           }}
           value={dayjs(dateEnd)}
-          onChange={(value) => setDateEnd(value?.toDate() ?? dayjs().toDate())}
+          onChange={(value) => setDateEnd(value ?? dayjs())}
         />
       </LocalizationProvider>
     </VGCard>

@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
 import { holdDialogOpenAtom, rejectedDialogOpenAtom } from "~/atom/balance";
-import type { BalanceHistory, BalanceType } from "~/services/api/balance";
+import type { BalanceHistory, BalanceType } from "~/services/balance/types";
 import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
@@ -44,7 +44,7 @@ export default function BalanceHistoryCard(props: { balance: BalanceHistory }) {
             xs: `"a b" "c c"`,
           },
           gridTemplateColumns: {
-            sm: "auto 10fr 1fr",
+            sm: "auto 10fr 2fr",
           },
           gap: { xs: 1, sm: 2 },
           alignItems: { sm: "center" },

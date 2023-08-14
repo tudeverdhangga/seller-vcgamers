@@ -7,8 +7,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import {
   useGetBalanceHistories,
   useGetBalanceHistoryStatus,
-  type BalanceHistory,
-} from "~/services/api/balance";
+} from "~/services/balance/hooks";
+import { type BalanceHistory } from "~/services/balance/types";
 import VGTabChip from "../atomic/VGTabChip";
 import VGTabPanel from "../atomic/VGTabPanel";
 import VGTabsChip from "../atomic/VGTabsChip";

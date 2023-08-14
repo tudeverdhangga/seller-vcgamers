@@ -10,7 +10,7 @@ import NextLink from "next/link";
 import { confirmationDialogOpenAtom } from "~/atom/balance";
 import VGCard from "~/components/atomic/VGCard";
 import { useResponsive } from "~/utils/mediaQuery";
-import { useGetBalanceInfo } from "~/services/api/balance";
+import { useGetBalanceInfo } from "~/services/balance/hooks";
 import VGButton from "../atomic/VGButton";
 import WalletIcon from "../icons/WalletIcon";
 import WalletOnHoldIcon from "../icons/WalletOnHoldIcon";
@@ -170,11 +170,13 @@ export default function BalanceInformationCard() {
             Limit tarik saldo: Rp20.000 - Rp10.000.000. Penarikan akan dikenakan
             biaya sesuai dengan{" "}
             <Link
-              href="/"
+              href="https://www.vcgamers.com/news/help/faq-sell-digital-goods/"
               component={NextLink}
               underline="hover"
               color="primary.main"
               fontWeight={700}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Syarat dan Ketentuan
             </Link>

@@ -45,10 +45,10 @@ export const HTTPMediaUpload = axios.create({
 
 HTTPMediaUpload.interceptors.response.use(responseHandler, errorHandler);
 
-export const HTTPMarket = axios.create({
-  baseURL: env.NEXT_PUBLIC_MARKET_API_URL,
+export const HTTPApi = axios.create({
+  baseURL: env.NEXT_PUBLIC_API_URL,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
-HTTPMarket.interceptors.response.use(responseHandler, errorHandler);
+HTTPApi.interceptors.response.use(responseHandler, errorHandler);

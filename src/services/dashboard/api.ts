@@ -1,4 +1,4 @@
-import { type APIResponse } from "../api/types";
+import { type APIResponse } from "../types";
 import { HTTP } from "../http";
 import { mapSellerPerformance, mapTotalSuccess } from "./mapper";
 import type {

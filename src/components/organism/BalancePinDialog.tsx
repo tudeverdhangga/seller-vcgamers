@@ -11,7 +11,9 @@ import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
 
 import { pinDialogOpenAtom, pinRateLimitAtom } from "~/atom/balance";
-import { postRequestWithdrawal } from "~/services/api/balance";
+import { postRequestWithdrawal } from "~/services/balance/api";
+import { usePostValidatePin } from "~/services/pin/hooks";
+import { type BodyValidatePin } from "~/services/pin/types";
 import { toastOption } from "~/utils/toast";
 import PinNumberInput, { pinErrorAtom } from "../atomic/PinNumberInput";
 import VGButton from "../atomic/VGButton";
@@ -23,19 +25,23 @@ export default function BalancePinDialog() {
   const [isRateLimit, setIsRateLimit] = useAtom(pinRateLimitAtom);
   const [modalOpen, setModalOpen] = useAtom(pinDialogOpenAtom);
   const mutation = useMutation({
-    mutationFn: postRequestWithdrawal,
+    mutationFn: (body: BodyValidatePin) => postRequestWithdrawal(body),
     onSuccess: () => {
       setModalOpen(false);
       toast.success(t("toast.withdrawSuccess"), toastOption);
     },
     onError: () => {
       setError(true);
-
+    },
+  });
+  const pinMutation = usePostValidatePin(
+    (pin) => mutation.mutate(pin),
+    () => {
       if (false) {
         setIsRateLimit(true);
       }
-    },
-  });
+    }
+  );
 
   return (
     <Dialog
@@ -98,8 +104,8 @@ export default function BalancePinDialog() {
         )}
         {!isRateLimit && (
           <PinNumberInput
-            onSubmit={() => {
-              mutation.mutate();
+            onSubmit={(value) => {
+              pinMutation.mutate({ pin: value });
             }}
           />
         )}

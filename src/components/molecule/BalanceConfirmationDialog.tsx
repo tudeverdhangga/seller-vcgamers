@@ -14,7 +14,7 @@ import { useTranslation } from "next-i18next";
 import { confirmationDialogOpenAtom, pinDialogOpenAtom } from "~/atom/balance";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
-import { useGetBalanceInfo } from "~/services/api/balance";
+import { useGetBalanceInfo } from "~/services/balance/hooks";
 import { priceFormat } from "~/utils/format";
 
 export default function BalanceConfirmationDialog() {

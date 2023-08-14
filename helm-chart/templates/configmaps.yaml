@@ -11,3 +11,4 @@ data:
   NEXT_PUBLIC_API_BASE_URL: "https://apis.vcgamers.io/seller"
   NEXT_PUBLIC_API_TOKEN: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjI0MzMyMjEsImlhdCI6MTY5MDgxMDgyMSwiaWQiOiI2YWZiZWM3MC1kNmQ1LTQ2ZWMtYWE5NS1jZTc0MGYwNzJhZWUifQ.6HpnU3d1XabeG8duUF5VV24aryMCGSsc_u4hlv-TY5I"
   NEXT_PUBLIC_AUTH_URL: "https://auth-v2.vcgamers.io"
+  NEXT_PUBLIC_API_URL: "https://apis.vcgamers.io/api"
