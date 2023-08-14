@@ -26,7 +26,7 @@ export default function ActivateKilatDialog (props: {
   isBulk: boolean | false;
   name?: string | "undefined";
   isOpen: boolean;
-  nextActiveKilat: string | null;
+  nextActiveKilat: string;
   handleClose: () => void;
   refetchProduct: () => void;
 }) {

@@ -1,11 +1,14 @@
 .ProseMirror {
   padding: 10px;
-  border: 1px solid #DEDEDE;
+  outline: 1px solid #cccccc;
   background: white;
   min-height: 100px;
+  border-radius: 4px;
+  max-height: 142px;
+  overflow-y: auto;
 }
-.ProseMirror:focus {
-  border: 1px solid #7750F8;
+.ProseMirror:focus-visible {
+  outline: 2px solid #7750F8;
 }
 
 .ProseMirror > * {

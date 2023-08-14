@@ -71,6 +71,7 @@ export default function ProfileSettingForm() {
     setShopUrl(getProfile?.data?.data?.seller_url)
     setPhone(getProfile?.data?.data?.phone)
   }, [getProfile?.data])
+  useEffect(() => console.log({ loading: getProfile.isLoading, fetch: getProfile.isFetching }))
 
   // Style
   const fieldStyle = {

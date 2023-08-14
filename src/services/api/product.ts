@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
 import { HTTP } from "../http"
 
 interface ResponseProduct {
@@ -13,7 +13,8 @@ interface Data {
 }
 interface Item {
   final_price: number
-  id: string
+  variation_id: string
+  product_id: string
   image_url: string
   is_active: boolean
   is_instant: boolean
@@ -22,7 +23,6 @@ interface Item {
   next_update_price: string
   next_activate_kilat: string
   name: string
-  product_id: string
   stock: number
 }
 interface PaginationData {
@@ -37,10 +37,10 @@ interface ProductVariationMaster {
 interface ResponseProductDetail {
   code: number
   status: string
-  data: Data
+  data: DataProductDetail
   message: string
 }
-interface Data {
+interface DataProductDetail {
   id: string
   product_category: ProductCategory
   product_brand: ProductBrand
@@ -101,6 +101,33 @@ interface Variation {
   delivery_type: number
   created_at: string
   updated_at: string
+}
+interface ResponseVoucher {
+  code: number
+  status: string
+  data: DataVoucher
+  message: string
+}
+interface DataVoucher {
+  available: number
+  vouchers: Voucher[]
+}
+interface Voucher {
+  id: string
+  voucher_code: string
+  status: number
+  status_name: string
+  pulled_reason: string
+}
+interface ResponseValidateVoucher {
+  code: number,
+  status: string,
+  data: {
+    is_duplicate: boolean,
+    vouchers: string,
+    total: number
+  },
+  message: string
 }
 
 export const useGetProduct = (params: string) => {
@@ -220,6 +247,50 @@ export const useEditProduct = (params: string) => {
     mutationFn: async (payload: object) => {
       const res = await HTTP.put(`/product/product/update?${params}`, payload);
       return res.data as ResponseProduct;
+    }
+  })
+}
+
+export const useCreateVoucher = () => {
+  return useMutation({
+    mutationKey: ["add-voucher"],
+    mutationFn: async (payload: object) => {
+      const res = await HTTP.post("product/product/voucher/create", payload);
+      return res.data as ResponseVoucher;
+    }
+  })
+}
+
+export const useGetVoucher = () => {
+  return useMutation({
+    mutationKey: ["get-voucher"],
+    mutationFn: async (params: string) => {
+      const res = await HTTP.get(`product/product/voucher?${params}`);
+      return res.data as ResponseVoucher;
+    }
+  })
+}
+
+export const useUpdateVoucher = (params: string) => {
+  const str = params.split("=");
+
+  return useMutation({
+    mutationKey: ["update-voucher", params],
+    mutationFn: async (payload: object) => {
+      if (str[1] !== "") {
+        const res = await HTTP.put(`product/product/voucher/update?${params}`, payload);
+        return res.data as ResponseVoucher;
+      }
+    }
+  })
+}
+
+export const useValidateVoucher = () => {
+  return useMutation({
+    mutationKey: ["update-voucher"],
+    mutationFn: async (payload: object) => {
+      const res = await HTTP.post("product/product/voucher/validate", payload);
+      return res.data as ResponseValidateVoucher;
     }
   })
 }

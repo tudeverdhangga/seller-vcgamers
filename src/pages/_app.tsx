@@ -12,6 +12,7 @@ import { commonColors } from "~/utils/colors";
 
 import '~/components/atomic/VGRichEditor/index.css'
 import StyledToastContainer from "~/components/atomic/StyledToastContainer";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 //TODO: Fix issue loading using next/font
 // const rajdhani = Rajdhani({
@@ -69,6 +70,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+          <ReactQueryDevtools initialIsOpen />
         </QueryClientProvider>
       </ThemeProvider>
     </>

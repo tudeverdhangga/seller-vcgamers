@@ -9,20 +9,23 @@ import VGButton from "~/components/atomic/VGButton";
 import WithdrawDialog from "~/components/molecule/WithdrawDialog";
 
 export default function VoucherItem(props: {
-  status: string,
+  status: number,
+  label: string,
   code: string,
-  reason?: string
+  id: string,
+  reason?: string,
+  handleWithdraw: () => void
 }) {
   const { t } = useTranslation("voucher");
-  const { status, code, reason } = props
+  const { status, code, reason, label, id, handleWithdraw } = props
   const [isOpenWithdrawDialog, setIsOpenWithdrawDialog] = useState(false)
 
   const statusStyle = {
     fontSize: 14,
     fontWeight: 700,
-    color: status === "Terjual"
+    color: status === 2
       ? "common.shade.100"
-      : status === "Tersedia"
+      : status === 1
         ? "common.green.900"
         : "common.red.500",
     width: 76,
@@ -32,7 +35,7 @@ export default function VoucherItem(props: {
   }
   const codeStyle = {
     fontSize: 14,
-    color: status === "Terjual"
+    color: status === 2
       ? "common.shade.75"
       : "common.shade.700",
     mr: 2,
@@ -46,7 +49,7 @@ export default function VoucherItem(props: {
           container
           spacing={2}
           justifyContent="space-between"
-          alignItems="center"        
+          alignItems="center"
         >
           <Grid
             item
@@ -54,7 +57,7 @@ export default function VoucherItem(props: {
             md={1}
           >
             <Typography sx={statusStyle}>
-              { status }
+              {label}
             </Typography>
           </Grid>
           <Grid
@@ -63,7 +66,7 @@ export default function VoucherItem(props: {
             md={7}
           >
             <Typography sx={codeStyle}>
-              { code }
+              {code}
             </Typography>
           </Grid>
           <Grid
@@ -74,7 +77,7 @@ export default function VoucherItem(props: {
             justifyContent="flex-end"
           >
             {
-              status === "Tersedia"
+              status === 1
                 ? (
                   <>
                     <VGButton
@@ -83,11 +86,11 @@ export default function VoucherItem(props: {
                       size="small"
                       onClick={() => setIsOpenWithdrawDialog(true)}
                     >
-                      {t("list.withdrawnButton")}
+                      {t("list.withdrawButton")}
                     </VGButton>
                   </>
                 )
-                : status === "Ditarik"
+                : status === 3
                   ? (
                     <>
                       <MessageIcon
@@ -112,9 +115,11 @@ export default function VoucherItem(props: {
         </Grid>
       </VGCard>
       <WithdrawDialog
+        id={id}
         code={code}
         isOpen={isOpenWithdrawDialog}
         handleClose={() => setIsOpenWithdrawDialog(false)}
+        handleWithdraw={handleWithdraw}
       />
     </>
   )

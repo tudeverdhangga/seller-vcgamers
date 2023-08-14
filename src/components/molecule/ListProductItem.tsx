@@ -361,7 +361,7 @@ export default function ListProductItem(props: {
         name={props.name}
         isBulk={false}
         isOpen={isOpenActiveKilatDialog}
-        nextActiveKilat={props.nextActiveKilat}
+        nextActiveKilat={props.nextActiveKilat || ""}
         handleClose={() => setIsOpenActiveKilatDialog(false)}
         refetchProduct={props.refetchProduct}
       />
@@ -418,6 +418,7 @@ export default function ListProductItem(props: {
       />
       <PinVoucherDialog
         id={props.id}
+        productId={props.productId}
         isOpen={isOpenPinVoucherDialog}
         handleClose={() => setIsOpenPinVoucherDialog(false)}
       />

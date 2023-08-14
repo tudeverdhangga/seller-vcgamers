@@ -15,7 +15,7 @@ interface PinInputProps {
   isError: boolean;
 }
 
-const PinInput = styled('input')<PinInputProps>`
+const PinInput = styled('input') <PinInputProps>`
   height: 58px;
   width: 30px !important;
   text-align: center;
@@ -36,12 +36,13 @@ const PinInput = styled('input')<PinInputProps>`
 export default function PinVoucherDialog(props: {
   isOpen: boolean;
   id: string;
+  productId: string;
   handleClose: () => void;
 }) {
   const pinValue = "123456" // Contoh
   const { t } = useTranslation("listProduct");
   const router = useRouter()
-  const { isOpen, id, handleClose } = props;
+  const { isOpen, id, handleClose, productId } = props;
   const [pin, setPin] = useState('');
   const [isError, setIsError] = useState(false);
   const [open, setOpenSnackbar] = useState(false);
@@ -57,7 +58,7 @@ export default function PinVoucherDialog(props: {
         if (typeof window !== "undefined" && window.localStorage) {
           localStorage.setItem("voucherPermission", "true")
         }
-        void router.push(`/seller/produk/kelola-voucher?id=${id}`)
+        void router.push(`/seller/produk/kelola-voucher?variation_id=${id}&product_id=${productId}`)
       } else {
         setIsError(true)
       }

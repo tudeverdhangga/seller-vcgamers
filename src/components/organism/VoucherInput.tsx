@@ -3,13 +3,51 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
+import Skeleton from "@mui/material/Skeleton";
+import Collapse from "@mui/material/Collapse";
 
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
-import TextField from "@mui/material/TextField";
+import VGRichEditor from "~/components/atomic/VGRichEditor/index";
+import { checkVoucher, isSuccessCreateVoucher, voucherCode } from "~/atom/voucher";
+import VGAlert from "~/components/atomic/VGAlert";
 
-export default function VoucherInput() {
+export default function VoucherInput({
+  name,
+  available,
+  isLoading,
+  handleCheckTotalCode,
+  handleSubmitCode
+}: {
+  name: string
+  available: number,
+  isLoading: boolean,
+  handleCheckTotalCode: () => void
+  handleSubmitCode: () => void
+}) {
   const { t } = useTranslation("voucher");
+  const [, setVoucher] = useAtom(voucherCode)
+  const [isSuccessCreate] = useAtom(isSuccessCreateVoucher);
+  const [checkVoucherData, setCheckVoucherData] = useAtom(checkVoucher);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(isLoading)
+  }, [isLoading])
+  useEffect(() => {
+    setOpen(checkVoucherData.isDuplicate || isSuccessCreate)
+  }, [checkVoucherData.isDuplicate, isSuccessCreate])
+
+  const onEdit = () => {
+    setLoading(true)
+    setCheckVoucherData({ ...checkVoucherData, isValidate: false })
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000);
+  }
 
   const titleStyle = {
     fontSize: 16,
@@ -40,7 +78,7 @@ export default function VoucherInput() {
               fontWeight: 700,
               color: "#9AA4BF"
             }}>
-              asd
+              {name}
             </Typography>
           </Box>
         </Grid>
@@ -81,7 +119,7 @@ export default function VoucherInput() {
               color="primary.main"
               px={2}
             >
-              53
+              {available}
             </Typography>
           </Box>
         </Grid>
@@ -116,26 +154,78 @@ export default function VoucherInput() {
             {t("input.note.3")}
           </li>
         </ul>
-        <Box position="relative">
-          <TextField
-            hiddenLabel
-            placeholder={t("input.placeholder")}
-            multiline
-            fullWidth
-            rows={5}
-          />
-          <VGButton
-            variant="contained"
-            color="primary"
-            size="small"
-            sx={{
-              position: "absolute",
-              bottom: 15,
-              right: 15
-            }}
+        <Collapse in={open}>
+          <VGAlert
+            color={isSuccessCreate ? "success" : "error"}
+            icon={false}
+            sx={{ mb: 2 }}
+            onClose={() => setOpen(false)}
           >
-            {t("input.check")}
-          </VGButton>
+            {isSuccessCreate ? t("input.onSuccess", { total: checkVoucherData.total }) : t("input.alert")}
+          </VGAlert>
+        </Collapse>
+        <Box position="relative">
+          {
+            loading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width="100%"
+                  height={142}
+                />
+              ) : (
+                <VGRichEditor
+                  isToolbar={false}
+                  enable={!checkVoucherData.isValidate}
+                  content={checkVoucherData.vouchers}
+                  onChange={(e) => setVoucher(e)}
+                />
+              )
+          }
+          {
+            checkVoucherData.isValidate
+              ? (
+                <Box
+                  display="flex"
+                  position="absolute"
+                  bottom={15}
+                  right={15}
+                >
+                  <VGButton
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    sx={{ mr: 1 }}
+                    onClick={onEdit}
+                  >
+                    {t("input.edit")}
+                  </VGButton>
+                  <VGButton
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={handleSubmitCode}
+                  >
+                    {t("input.save", { total: checkVoucherData.total })}
+                  </VGButton>
+                </Box>
+              ) : (
+                <VGButton
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    bottom: 15,
+                    right: 15
+                  }}
+                  disabled={loading}
+                  onClick={handleCheckTotalCode}
+                >
+                  {t("input.check")}
+                </VGButton>
+              )
+          }
         </Box>
       </Box>
     </VGCard>

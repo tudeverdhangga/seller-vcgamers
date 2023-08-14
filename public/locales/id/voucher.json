@@ -14,15 +14,17 @@
     "placeholder": "Contoh memasukkan 4 voucher:\nkode1\nkode2",
     "check": "Perika Jumlah Kode",
     "save": "Masukkan {{total}} data",
-    "edit": "Edit Data"
+    "edit": "Edit Data",
+    "onSuccess": "{{total}} Kode Baru berhasil ditambahkan",
+    "onError": "Tambah kode gagal"
   },
   "list": {
     "label": "List Kode Voucher",
     "placeholder": "Cari Kode",
     "available": "Tersedia",
     "sold": "Terjual",
-    "withdrawn": "Ditarik",
-    "withdrawnButton": "Tarik Code",
+    "withdraw": "Ditarik",
+    "withdrawButton": "Tarik Code",
     "reason": {
       "label": "Alasan: ",
       "title": "Alasan Penarikan Kode",
@@ -33,6 +35,10 @@
       "another": "Lainnya",
       "back": "Kembali",
       "ok": "Tarik Kode"
+    },
+    "alert": {
+      "onSuccess": "Tarik kode berhasil",
+      "onError": "Tarik kode gagal"
     }
   }
 }

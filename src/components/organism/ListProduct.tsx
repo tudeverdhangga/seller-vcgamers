@@ -22,7 +22,8 @@ interface Data {
 }
 interface Item {
   final_price: number
-  id: string
+  variation_id: string
+  product_id: string
   image_url: string
   is_active: boolean
   is_instant: boolean
@@ -31,7 +32,6 @@ interface Item {
   next_update_price: string
   next_activate_kilat: string
   name: string
-  product_id: string
   stock: number
 }
 interface PaginationData {
@@ -167,7 +167,7 @@ export default function ListProduct({ products, refetchProduct }: {
                     group?.data?.data.map((product, index) => (
                       <ListProductItem
                         key={index}
-                        id={product.id}
+                        id={product.variation_id}
                         productId={product.product_id}
                         image={product.image_url}
                         name={product.name}

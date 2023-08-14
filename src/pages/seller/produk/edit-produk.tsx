@@ -81,7 +81,7 @@ export default function TambahProdukPage() {
             variations: res.data.variations.map((item) => {
               return {
                 id: item.id,
-                name: item.product_variation_master ? item.product_variation_master.label : item.name,
+                name: item.name,
                 product_variation_master_id: item.product_variation_master ? item.product_variation_master.value : undefined,
                 delivery_type: item.delivery_type,
                 stock: item.stock,

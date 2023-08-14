@@ -79,17 +79,20 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 }
 
 export default function VGRichEditor({
+  isToolbar = true,
+  enable = true,
   content,
-  onChange
+  onChange,
 }: {
+  isToolbar?: boolean,
+  enable?: boolean,
   content?: string;
   onChange: (value: string) => void
 }) {
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-    ],
+    extensions: [StarterKit],
     content: content,
+    editable: enable,
     onUpdate({ editor }) {
       onChange(editor?.getHTML())
     }
@@ -97,8 +100,14 @@ export default function VGRichEditor({
 
   return (
     <div className='vg-rich-editor'>
-      <EditorToolbar editor={editor} />
-      <EditorContent editor={editor} />
+      {
+        isToolbar && (
+          <EditorToolbar editor={editor} />
+        )
+      }
+      <EditorContent
+        editor={editor}
+      />
     </div>
   )
 }
