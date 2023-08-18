@@ -33,14 +33,14 @@ export const HTTP = axios.create({
 });
 HTTP.interceptors.response.use(responseHandler, errorHandler);
 
-export const HTTPMediaUpload = axios.create({
+export const HTTPUpload = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "multipart/form-data",
   },
   withCredentials: true,
 });
-HTTPMediaUpload.interceptors.response.use(responseHandler, errorHandler);
+HTTPUpload.interceptors.response.use(responseHandler, errorHandler);
 
 export const HTTPApi = axios.create({
   baseURL: env.NEXT_PUBLIC_API_URL,
@@ -51,10 +51,17 @@ HTTPApi.interceptors.response.use(responseHandler, errorHandler);
 
 export const HTTPCsv = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  headers: {
-    "Content-Type": "text/csv",
-    "responseType": "blob"
-  },
+  headers: {  "Content-Type": "text/csv" },
   withCredentials: true,
 });
 HTTPCsv.interceptors.response.use(responseHandler, errorHandler);
+
+export const HTTPXlsx = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  headers: {
+    "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  },
+  responseType: "arraybuffer",
+  withCredentials: true,
+});
+HTTPXlsx.interceptors.response.use(responseHandler, errorHandler);

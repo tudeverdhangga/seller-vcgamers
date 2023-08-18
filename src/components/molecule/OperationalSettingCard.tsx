@@ -9,7 +9,7 @@ import {
   Switch,
   Typography
 } from "@mui/material";
-import { LocalizationProvider, TimeField } from "@mui/x-date-pickers";
+import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useTranslation } from "next-i18next";
 import dayjs, { type Dayjs } from "dayjs";
@@ -106,7 +106,7 @@ export default function OperationalSettingCard(props: {
             color: "common.shade.200"
           }}
         >
-          { props.day }
+          {props.day}
         </Typography>
         {
           props.isToday &&
@@ -143,37 +143,41 @@ export default function OperationalSettingCard(props: {
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.fullHour")}
           </Typography>
-          <Radio value="fullDay"/>
+          <Radio value="fullDay" />
         </Box>
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.customHour")}
           </Typography>
-          <Radio value="custom"/>
+          <Radio value="custom" />
         </Box>
       </RadioGroup>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimeField
+        <TimePicker
           label={t("tab.operational.form.openHour")}
           value={open}
           format="HH:mm"
           disabled={isFullDay}
+          ampm={false}
+          closeOnSelect={true}
           sx={{
             width: "100%",
             py: 1
           }}
-          onChange={(event) => handleChangeTime(event, 'open')}
+          onAccept={(event) => handleChangeTime(event, 'open')}
         />
-        <TimeField
+        <TimePicker
           label={t("tab.operational.form.closeHour")}
           value={close}
           format="HH:mm"
           disabled={isFullDay}
+          ampm={false}
+          closeOnSelect={true}
           sx={{
             width: "100%",
             py: 1
           }}
-          onChange={(event) => handleChangeTime(event, 'close')}
+          onAccept={(event) => handleChangeTime(event, 'close')}
         />
       </LocalizationProvider>
     </>

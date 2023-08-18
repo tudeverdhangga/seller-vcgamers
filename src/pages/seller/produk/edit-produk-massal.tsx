@@ -30,21 +30,13 @@ export default function EditProdukMassalPage() {
           width: isMobile ? "100%" : "auto"
         }}>
           <VGButton
-            variant="outlined"
-            color="secondary"
-            size="large"
-            sx={{ mr: 2, width: isMobile ? "100%" : "auto" }}
-          >
-            {t("bulkUpdate")}
-          </VGButton>
-          <VGButton
             variant="contained"
             color="success"
             size="large"
             sx={{ width: isMobile ? "100%" : "auto" }}
             onClick={() => void router.push('/seller/produk/tambah-produk')}
           >
-            <AddOutlinedIcon/> {t("addProduct")}
+            <AddOutlinedIcon /> {t("addProduct")}
           </VGButton>
         </Box>
       </VGPageTitle>

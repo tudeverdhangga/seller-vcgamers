@@ -23,6 +23,8 @@
       "2": "Format yang dapat diterima adalah .xlsx",
       "3": "Kamu dapat menghapus baris yang tidak kamu rubah dalam excel agar proses upload bisa lebih cepat."
     },
-    "label": "Upload File Excel (.xlsx)"
+    "label": "Upload File Excel (.xlsx)",
+    "onSuccess": "Upload file berhasil",
+    "onError": "Upload file gagal: "
   }
 }

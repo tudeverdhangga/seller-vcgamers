@@ -14,6 +14,13 @@ interface History {
   timestamp: string
   status: number
 }
+interface History {
+  description: string
+  description_text: string
+  code: string
+  timestamp: string
+  status: number
+}
 
 export default function TransactionDetailStatus(props: {
   status: History[];

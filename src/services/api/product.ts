@@ -1,5 +1,5 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
-import { HTTP } from "../http"
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query"
+import { HTTP, HTTPUpload, HTTPXlsx } from "../http"
 
 interface ResponseProduct {
   code: number
@@ -134,6 +134,9 @@ export const useGetProduct = (params: string) => {
   return useInfiniteQuery<ResponseProduct, string>({
     queryKey: ["product-list", params],
     queryFn: async ({ pageParam }) => {
+      console.log(pageParam);
+      console.log(params);
+      
       let nextCursor = ""
       if (typeof pageParam !== "undefined") {
         nextCursor = "&next_cursor=" + (pageParam as string);
@@ -291,6 +294,26 @@ export const useValidateVoucher = () => {
     mutationFn: async (payload: object) => {
       const res = await HTTP.post("product/product/voucher/validate", payload);
       return res.data as ResponseValidateVoucher;
+    }
+  })
+}
+
+export const useDownloadBulkProduct = (params: string) => {
+  return useMutation({
+    mutationKey: ["download", params],
+    mutationFn: async () => {
+      const res = await HTTPXlsx.get(`/product/product/export-excel-mass-update?${params}`);
+      return res;
+    }
+  })
+}
+
+export const useUploadBulkProduct = () => {
+  return useMutation({
+    mutationKey: ["upload"],
+    mutationFn: async (payload: FormData) => {
+      const res = await HTTPUpload.post("/product/product/import-excel-product", payload);
+      return res.data as string;
     }
   })
 }

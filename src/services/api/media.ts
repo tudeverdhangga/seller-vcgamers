@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { HTTPMediaUpload } from "../http";
+import { HTTPUpload } from "../http";
 
 interface Response {
   code: number;
@@ -14,7 +14,7 @@ interface Response {
 export const useMediaUpload = () => {
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const res = await HTTPMediaUpload.post("/media-upload", formData);
+      const res = await HTTPUpload.post("/media-upload", formData);
 
       return res.data as Response;
     },
@@ -24,7 +24,7 @@ export const useMediaUpload = () => {
 export const useFileUpload = () => {
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const res = await HTTPMediaUpload.post("/file-upload", formData);
+      const res = await HTTPUpload.post("/file-upload", formData);
 
       return res.data as Response;
     },
