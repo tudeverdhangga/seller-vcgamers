@@ -24,3 +24,58 @@ export function dateToTime(dateString: string) {
 
   return time
 }
+
+export function shortDateFormat(dateString: string) {
+  const date = new Date(dateString);
+
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  const formattedDate = `${day} ${month as string} ${year}`;
+
+  return formattedDate
+}
+
+export function fullDateFormat(dateString: string) {
+  const date = new Date(dateString);
+
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const formattedDate = `${day} ${month as string} ${year}, ${hour}:${minute < 10 ? '0' : ''}${minute}`;
+
+  return formattedDate
+}
+
+export function diffDateInTime(dateString: string) {
+  const currentDate = new Date();
+  const targetDate = new Date(dateString);
+  const timeDifference = targetDate.getTime() - currentDate.getTime();
+  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+
+  return(`${hoursDifference} hours`);
+}
+
+export function getCurrentTimestamp() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+
+  const timestamp = `${year}${month}${day}_${hours}${minutes}`;
+  return timestamp;
+}

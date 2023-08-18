@@ -10,18 +10,11 @@
     "feature": "Fitur",
     "startDate": "Filter Tanggal Awal",
     "endDate": "Filter Tanggal Akhir",
-    "status": {
-      "process": "Perlu Diproses",
-      "onProcess": "Diproses",
-      "sent": "Dikirim",
-      "done": "Selesai",
-      "cancel": "Dibatalkan",
-      "complain": "Dikomplain"
-    }
+    "all": "Semua"
   },
   "label": {
     "price": "Harga",
-    "qty": "Qty",
+    "qty": "Jml Beli",
     "emptyBad": "Belum ada data di status transaksi ini",
     "emptyGood": "Tidak ada data di status transaksi ini"
   },
@@ -44,14 +37,71 @@
         "cancel": "Dibatalkan",
         "complain": "Komplain"
       },
-      "notes": "Catatan",
-      "seeNotes": "Lihat Catatan",
-      "emptyNotes": "Tidak ada catatan",
-      "copyNotes": "Salin catatan",
       "cancelTime": "Batal Otomatis",
+      "processTime": "Waktu Proses",
+      "minutes": "Menit",
+      "seconds": "Detik",
+      "warning": "Pesanan ini melebihi jaminan 10 menit",
       "subTotal": "Subtotal",
       "processTransaction": "Proses Pesanan",
-      "contactBuyer": "Hubungi Pembeli"
+      "contactBuyer": "Hubungi Pembeli",
+      "voucher": {
+        "button": "Lihat Voucher",
+        "title": "Masukan Kode Voucher",
+        "placeholder": "Kode Voucher {{counter}}",
+        "submit": "Kirim Pesanan",
+        "onSuccess": "Transaksi berhasil diproses",
+        "onError": "Transaksi gagal diproses",
+        "detail": "Kode Voucher",
+        "copyAll": "Salin Semua",
+        "copyCode": "Salin Kode",
+        "close": "Tutup"
+      },
+      "noVoucher": {
+        "title": "Konfirmasi",
+        "subTitle": "Kamu yakin ingin mengirimkan pesanan ini?",
+        "back": "Batalkan",
+        "submit": "Ya",
+        "onSuccess": "Transaksi berhasil diproses",
+        "onError": "Transaksi gagal diproses"
+      },
+      "cancel": {
+        "title": "Alasan Pembatalan",
+        "placeholder": "Tulis alasan pembatalan",
+        "back": "Kembali",
+        "submit": "Konfirmasi",
+        "onSuccess": "Transaksi berhasil dibatalkan",
+        "onError": "Transaksi gagal dibatalkan"
+      },
+      "detailCancel": {
+        "button": "Detail Pembatalan",
+        "title": "Detail Pembatalan",
+        "back": "Tutup"
+      },
+      "note": {
+        "title": "Catatan",
+        "back": "Tutup",
+        "seeNotes": "Lihat Catatan",
+        "emptyNotes": "Tidak ada catatan",
+        "copyNotes": "Salin catatan"
+      },
+      "account": {
+        "button": "Lihat List Akun",
+        "title": "Kirim Pesanan",
+        "subTitle": "Data Akun",
+        "label": "Akun {{counter}}",
+        "placeholder": "Isi ID/email akun, password dan lainnya",
+        "submit": "Kirim Pesanan",
+        "onSuccess": "Transaksi berhasil diproses",
+        "onError": "Transaksi gagal diproses",
+        "detail": "List Akun",
+        "copyAll": "Salin Semua",
+        "copyCode": "Salin",
+        "close": "Tutup"
+      },
+      "complain": {
+        "button": "Cek Komplain"
+      }
     },
     "sale": {
       "title": "Penjualan",
@@ -74,9 +124,7 @@
       "back": "Kembali",
       "confirmation": "Konfirmasi",
       "process": "Masukkan Kode Voucher",
-      "send": "Kirim Pesanan",
-      "close": "Tutup",
-      "notes": "Catatan"
+      "send": "Kirim Pesanan"
     }
   }
 }

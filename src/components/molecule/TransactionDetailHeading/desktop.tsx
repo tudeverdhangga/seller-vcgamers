@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 
@@ -10,6 +11,7 @@ export default function TransactionDetailHeadingDesktop(props: {
   buyer: string;
   code: string;
   date: string;
+  isLoading: boolean;
 }) {
   const { t } = useTranslation("transaction");
 
@@ -23,7 +25,7 @@ export default function TransactionDetailHeadingDesktop(props: {
     fontWeight: "700",
     color: "common.shade.700"
   }
-  
+
   return (
     <>
       <VGCard>
@@ -38,9 +40,20 @@ export default function TransactionDetailHeadingDesktop(props: {
             <Typography sx={titleStyle}>
               {t("detail.heading.buyer")}
             </Typography>
-            <Typography sx={bodyStyle}>
-              {props.buyer}
-            </Typography>
+            {
+              props.isLoading
+                ? (
+                  <Skeleton
+                    variant="rounded"
+                    width="100%"
+                    height={20}
+                  />
+                ) : (
+                  <Typography sx={bodyStyle}>
+                    {props.buyer}
+                  </Typography>
+                )
+            }
           </Grid>
           <Grid
             item
@@ -56,9 +69,20 @@ export default function TransactionDetailHeadingDesktop(props: {
                 <Typography sx={titleStyle}>
                   {t("detail.heading.transactionId")}
                 </Typography>
-                <Typography sx={bodyStyle}>
-                  #{props.code}
-                </Typography>
+                {
+                  props.isLoading
+                    ? (
+                      <Skeleton
+                        variant="rounded"
+                        width="100%"
+                        height={20}
+                      />
+                    ) : (
+                      <Typography sx={bodyStyle}>
+                        #{props.code}
+                      </Typography>
+                    )
+                }
               </Box>
             </Box>
           </Grid>
@@ -76,9 +100,20 @@ export default function TransactionDetailHeadingDesktop(props: {
                 <Typography sx={titleStyle}>
                   {t("detail.heading.date")}
                 </Typography>
-                <Typography sx={bodyStyle}>
-                  {props.date}
-                </Typography>
+                {
+                  props.isLoading
+                    ? (
+                      <Skeleton
+                        variant="rounded"
+                        width="100%"
+                        height={20}
+                      />
+                    ) : (
+                      <Typography sx={bodyStyle}>
+                        {props.date}
+                      </Typography>
+                    )
+                }
               </Box>
             </Box>
           </Grid>

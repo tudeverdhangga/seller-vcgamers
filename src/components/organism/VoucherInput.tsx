@@ -157,7 +157,6 @@ export default function VoucherInput({
         <Collapse in={open}>
           <VGAlert
             color={isSuccessCreate ? "success" : "error"}
-            icon={false}
             sx={{ mb: 2 }}
             onClose={() => setOpen(false)}
           >

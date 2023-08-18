@@ -71,7 +71,6 @@ export default function ProfileSettingForm() {
     setShopUrl(getProfile?.data?.data?.seller_url)
     setPhone(getProfile?.data?.data?.phone)
   }, [getProfile?.data])
-  useEffect(() => console.log({ loading: getProfile.isLoading, fetch: getProfile.isFetching }))
 
   // Style
   const fieldStyle = {
@@ -176,7 +175,11 @@ export default function ProfileSettingForm() {
         variant="outlined"
         size="small"
         fullWidth
-        {...register("seller_name", { required: "Nama Toko is required." })}
+        {
+        ...register("seller_name", {
+          required: t("tab.profile.form.error.required.name")
+        })
+        }
         error={Boolean(errors.seller_name)}
         helperText={errors.seller_name?.message}
         defaultValue={getProfile?.data?.data?.seller_name}
@@ -207,10 +210,12 @@ export default function ProfileSettingForm() {
         variant="outlined"
         size="small"
         fullWidth
-        {...register("seller_url", {
-          required: "URL Toko is required.",
+        {
+        ...register("seller_url", {
+          required: t("tab.profile.form.error.required.url"),
           validate: () => !urlMessage
-        })}
+        })
+        }
         error={Boolean(errors.seller_url) || Boolean(urlMessage)}
         helperText={errors.seller_url?.message || urlMessage}
         defaultValue={getProfile?.data?.data?.seller_url}
@@ -240,7 +245,11 @@ export default function ProfileSettingForm() {
       variant="outlined"
       size="small"
       fullWidth
-      {...register("seller_description", { required: "Deskripsi Toko is required." })}
+      {
+      ...register("seller_description", {
+        required: t("tab.profile.form.error.required.desc")
+      })
+      }
       error={Boolean(errors.seller_description)}
       defaultValue={getProfile?.data?.data?.seller_description}
       helperText={errors.seller_description?.message}

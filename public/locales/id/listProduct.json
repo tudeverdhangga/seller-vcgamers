@@ -125,7 +125,7 @@
         "subTitle": "Kamu yakin ingin menghapus varian produk ini? Varian akan hilang dari data penjual dan tidak akan terlihat oleh pembeli.",
         "actions": {
           "cancel": "Batal",
-          "ok": "Nonaktifkan"
+          "ok": "Hapus"
         },
         "onSuccess": "Penghapusan produk berhasil",
         "onError": "Penghapusan gagal"

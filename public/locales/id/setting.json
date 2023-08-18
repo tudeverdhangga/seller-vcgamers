@@ -29,7 +29,14 @@
           "title": "Info Rekening",
           "alert": "Untuk merubah Info rekening, silakan hubungi"
         },
-        "submit": "Simpan"
+        "submit": "Simpan",
+        "error": {
+          "required": {
+            "name": "Nama Toko tidak boleh kosong.",
+            "url": "URL Toko tidak boleh kosong.",
+            "desc": "Deskripsi Toko tidak boleh kosong."
+          }
+        }
       },
       "toast": {
         "updateImageProfileSizeError": "Gambar melebihi 1MB",

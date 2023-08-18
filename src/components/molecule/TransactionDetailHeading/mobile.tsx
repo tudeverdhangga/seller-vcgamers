@@ -4,11 +4,13 @@ import { useTranslation } from "next-i18next";
 import CopyIcon from '@mui/icons-material/ContentCopyOutlined';
 
 import VGCard from "~/components/atomic/VGCard";
+import Skeleton from "@mui/material/Skeleton";
 
 export default function TransactionDetailHeadingMobile(props: {
   buyer: string;
   code: string;
   date: string;
+  isLoading: boolean;
 }) {
   const { t } = useTranslation("transaction");
 
@@ -27,7 +29,7 @@ export default function TransactionDetailHeadingMobile(props: {
     fontWeight: "600",
     color: "common.shade.700"
   }
-  
+
   return (
     <>
       <VGCard>
@@ -48,18 +50,29 @@ export default function TransactionDetailHeadingMobile(props: {
           <Typography sx={titleStyle}>
             {t("detail.heading.transactionId")}
           </Typography>
-          <Typography sx={bodyStyle} display="flex">
-            #{props.code}
-            <CopyIcon
-              sx={{
-                cursor: "pointer",
-                ml: 1,
-                fontSize: "16px",
-                color: "primary.main"
-              }}
-              onClick={copyTransactionId}
-            />
-          </Typography>
+          {
+            props.isLoading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width={120}
+                  height={20}
+                />
+              ) : (
+                <Typography sx={bodyStyle} display="flex">
+                  #{props.code}
+                  <CopyIcon
+                    sx={{
+                      cursor: "pointer",
+                      ml: 1,
+                      fontSize: "16px",
+                      color: "primary.main"
+                    }}
+                    onClick={copyTransactionId}
+                  />
+                </Typography>
+              )
+          }
         </Box>
         <Box
           my={1}
@@ -70,9 +83,20 @@ export default function TransactionDetailHeadingMobile(props: {
           <Typography sx={titleStyle}>
             {t("detail.heading.date")}
           </Typography>
-          <Typography sx={bodyStyle}>
-            {props.date}
-          </Typography>
+          {
+            props.isLoading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width={120}
+                  height={20}
+                />
+              ) : (
+                <Typography sx={bodyStyle}>
+                  {props.date}
+                </Typography>
+              )
+          }
         </Box>
         <Box
           my={1}
@@ -83,9 +107,20 @@ export default function TransactionDetailHeadingMobile(props: {
           <Typography sx={titleStyle}>
             {t("detail.heading.buyer")}
           </Typography>
-          <Typography sx={bodyStyle}>
-            {props.buyer}
-          </Typography>
+          {
+            props.isLoading
+              ? (
+                <Skeleton
+                  variant="rounded"
+                  width={120}
+                  height={20}
+                />
+              ) : (
+                <Typography sx={bodyStyle}>
+                  {props.buyer}
+                </Typography>
+              )
+          }
         </Box>
       </VGCard>
     </>

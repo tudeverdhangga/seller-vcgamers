@@ -62,7 +62,13 @@
       "header": {
         "variant": "Pilih Variant",
         "variantCustom": "Nama Variant",
-        "customName": "Buat Nama Sendiri"
+        "customName": "Buat Nama Sendiri",
+        "error": {
+          "required": {
+            "variant": "Variant tidak boleh kosong.",
+            "variantCustom": "Variant tidak boleh kosong."
+          }
+        }
       },
       "delivery": {
         "label": "Proses Pengiriman",
@@ -98,6 +104,12 @@
         "price": {
           "label": "Harga",
           "subLabel": "Harap isi nominal dengan kelipatan 100"
+        },
+        "error": {
+          "required": {
+            "stock": "Stok tidak boleh kosong.",
+            "price": "Harga tidak boleh kosong."
+          }
         }
       },
       "image": {

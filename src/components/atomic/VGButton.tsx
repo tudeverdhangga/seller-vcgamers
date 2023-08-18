@@ -11,6 +11,6 @@ export default styled(LoadingButton)((props) => ({
     props.size === "small"
       ? "5px 8px"
       : props.size === "medium"
-      ? "8px 14px"
-      : "10px 15px",
+        ? "8px 14px"
+        : "10px 15px",
 }));

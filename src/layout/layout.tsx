@@ -14,10 +14,11 @@ export default function Layout(props: { children: React.ReactNode }) {
       <Drawer />
       <Box
         component="main"
+        width="100%"
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+          // width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
         }}
       >
         <Toolbar />

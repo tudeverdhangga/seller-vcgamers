@@ -285,6 +285,7 @@ export default function TambahProdukPage() {
           color="secondary"
           sx={{ mr: 2 }}
           size="large"
+          onClick={() => void router.push('/seller/produk/kelola-produk')}
         >
           {t("cancel")}
         </VGButton>

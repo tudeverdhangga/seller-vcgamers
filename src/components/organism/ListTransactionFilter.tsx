@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Grid from "@mui/material/Grid";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
@@ -8,21 +8,83 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Box from "@mui/material/Box";
+import dayjs, { type Dayjs } from 'dayjs';
+import Skeleton from '@mui/material/Skeleton';
 
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
+import { useDebounce } from '~/utils/debounce';
+import { useGetTransactionStatus } from '~/services/api/transaction';
+import { useGetFeature } from '~/services/api/masterData';
 
-export default function ListTransactionFilter() {
+interface TabsStatus {
+  label: string;
+  value: string;
+  counter: string;
+}
+interface Dropdown {
+  label: string;
+  value: string;
+}
+
+export default function ListTransactionFilter({ handleFilter }: {
+  handleFilter: (key: string, param: string | number) => void
+}) {
   const { t } = useTranslation("transaction");
-  const category = [
-    { label: "Category A", value: "a" },
-    { label: "Category B", value: "b" },
-    { label: "Category C", value: "c" }
-  ]
-  const [selectedStatus, setSelectedStatus] = useState("process")
+  const [feature, setFeature] = useState<Dropdown[]>([])
+  const [selectedFeature, setSelectedFeature] = useState({
+    label: "Semua Layanan",
+    value: ""
+  })
+  const [selectedStatus, setSelectedStatus] = useState("")
+  const [transactionStatus, setTransactionStatus] = useState<TabsStatus[]>([])
+  const getTransactionStatus = useGetTransactionStatus()
+  const getFeature = useGetFeature()
 
-  const handleFilterStatus = (status: string) => {
-    setSelectedStatus(status)
+  useEffect(() => {
+    const dataProductStatus: TabsStatus[] = [];
+    getTransactionStatus?.data?.data?.map((item) => {
+      if (item) {
+        dataProductStatus?.push({
+          label: item.label,
+          value: item.value,
+          counter: item.counter
+        })
+      }
+    })
+    setTransactionStatus(dataProductStatus)
+  }, [getTransactionStatus?.data?.data])
+  useEffect(() => {
+    const dataFeature: Dropdown[] = [{
+      label: "Semua Layanan",
+      value: ""
+    }];
+
+    getFeature?.data?.data?.map((item) => {
+      if (item) {
+        dataFeature?.push({
+          label: item.name,
+          value: item.value
+        })
+      }
+    })
+    setFeature(dataFeature)
+  }, [getFeature?.data?.data])
+
+  const handleFilterTabs = (status: string) => {
+    setSelectedStatus(status);
+    handleFilter('status', status);
+  }
+  const handleFilterFeature = (event: Dropdown) => {
+    setSelectedFeature(event);
+    handleFilter("feature", event.value);
+  }
+  const onSearch = useDebounce((event: React.ChangeEvent<HTMLInputElement>) => {
+    handleFilter('search', event?.target?.value);
+  }, 1200)
+  const onChangeDate = (value: Dayjs | null, key: string) => {
+    const date = dayjs(value).format("YYYY-MM-DD");
+    handleFilter(key, date)
   }
 
   return (
@@ -35,7 +97,7 @@ export default function ListTransactionFilter() {
           <Grid
             item
             xs={12}
-            md={5 }
+            md={5}
           >
             <TextField
               id="filter-by-search"
@@ -49,6 +111,7 @@ export default function ListTransactionFilter() {
               }}
               variant="outlined"
               fullWidth
+              onChange={onSearch}
             />
           </Grid>
           <Grid
@@ -56,17 +119,32 @@ export default function ListTransactionFilter() {
             xs={12}
             md
           >
-            <Autocomplete
-              id="filter-by-feature"
-              disablePortal
-              options={category}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={t("filter.feature")}
-                />
-              )}
-            />
+            {
+              getFeature.isLoading
+                ? (
+                  <Skeleton
+                    variant="rounded"
+                    width="100%"
+                    height={56}
+                  />
+                ) : (
+                  <Autocomplete
+                    id="filter-by-feature"
+                    clearOnEscape
+                    options={feature}
+                    value={selectedFeature}
+                    fullWidth
+                    disableClearable
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={t("filter.feature")}
+                      />
+                    )}
+                    onChange={(_, value) => handleFilterFeature(value as Dropdown)}
+                  />
+                )
+            }
           </Grid>
           <Grid
             item
@@ -77,6 +155,7 @@ export default function ListTransactionFilter() {
               <DatePicker
                 label={t("filter.startDate")}
                 sx={{ width: "100%" }}
+                onChange={(e) => onChangeDate(e as Dayjs, 'date_start')}
               />
             </LocalizationProvider>
           </Grid>
@@ -89,6 +168,7 @@ export default function ListTransactionFilter() {
               <DatePicker
                 label={t("filter.endDate")}
                 sx={{ width: "100%" }}
+                onChange={(e) => onChangeDate(e as Dayjs, 'date_end')}
               />
             </LocalizationProvider>
           </Grid>
@@ -97,62 +177,66 @@ export default function ListTransactionFilter() {
       <Box
         display="flex"
         overflow="auto"
-        width="100vw"
       >
-        <VGButton
-          sx={{m: 1, minWidth: "fit-content"}}
-          color={ selectedStatus === "process" ? "primary" : "secondary" }
-          variant="outlined"
-          size="small"
-          onClick={() => handleFilterStatus("process")}
-        >
-          {t("filter.status.process")}
-        </VGButton>
-        <VGButton
-          sx={{m: 1, minWidth: "fit-content"}}
-          color={ selectedStatus === "onProcess" ? "primary" : "secondary" }
-          variant="outlined"
-          size="small"
-          onClick={() => handleFilterStatus("onProcess")}
-        >
-          {t("filter.status.onProcess")}
-        </VGButton>
-        <VGButton
-          sx={{m: 1, minWidth: "fit-content"}}
-          color={ selectedStatus === "sent" ? "primary" : "secondary" }
-          variant="outlined"
-          size="small"
-          onClick={() => handleFilterStatus("sent")}
-        >
-          {t("filter.status.sent")}
-        </VGButton>
-        <VGButton
-          sx={{m: 1, minWidth: "fit-content"}}
-          color={ selectedStatus === "done" ? "primary" : "secondary" }
-          variant="outlined"
-          size="small"
-          onClick={() => handleFilterStatus("done")}
-        >
-          {t("filter.status.done")}
-        </VGButton>
-        <VGButton
-          sx={{m: 1, minWidth: "fit-content"}}
-          color={ selectedStatus === "cancel" ? "primary" : "secondary" }
-          variant="outlined"
-          size="small"
-          onClick={() => handleFilterStatus("cancel")}
-        >
-          {t("filter.status.cancel")}
-        </VGButton>
-        <VGButton
-          sx={{m: 1, minWidth: "fit-content"}}
-          color={ selectedStatus === "complain" ? "primary" : "secondary" }
-          variant="outlined"
-          size="small"
-          onClick={() => handleFilterStatus("complain")}
-        >
-          {t("filter.status.complain")}
-        </VGButton>
+        {
+          getTransactionStatus.isLoading
+            ? (
+              [0, 1, 2, 3, 4, 5].map((index) => (
+                <Skeleton
+                  key={index}
+                  variant="rounded"
+                  width={64}
+                  height={36.5}
+                  sx={{ m: 1 }}
+                />
+              ))
+            ) : (
+              <>
+                <VGButton
+                  sx={{ m: 1, minWidth: "fit-content" }}
+                  color={selectedStatus === "" ? "primary" : "secondary"}
+                  variant="outlined"
+                  size="small"
+                  onClick={() => handleFilterTabs("")}
+                >
+                  {t("filter.all")}
+                </VGButton>
+                {
+                  transactionStatus.map((item, index) => (
+                    <VGButton
+                      key={index}
+                      sx={{ m: 1, minWidth: "fit-content" }}
+                      color={selectedStatus === item.value ? "primary" : "secondary"}
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleFilterTabs(item.value)}
+                    >
+                      {item.label}
+                      {
+                        item.value !== "4" && item.value !== "5" && (
+                          <Box
+                            sx={{
+                              backgroundColor: "error.main",
+                              borderRadius: "20px",
+                              height: "15px",
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "6px",
+                              marginLeft: "5px"
+                            }}
+                            color="white"
+                            fontSize={10}
+                          >
+                            {item.counter}
+                          </Box>
+                        )
+                      }
+                    </VGButton>
+                  ))
+                }
+              </>
+            )
+        }
       </Box>
     </>
   )

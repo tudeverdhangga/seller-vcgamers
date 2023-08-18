@@ -1,4 +1,4 @@
-import { type SyntheticEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
 import Grid from '@mui/material/Grid';
@@ -86,12 +86,12 @@ export default function ListProductFilter({
     })
     setProductStatus(dataProductStatus)
   }, [getProductStatus?.data?.data])
-  
+
   const handleFilterStatus = (status: string) => {
     setSelectedStatus(status)
     handleChangeFilter('product_status', status)
   }
-  const onChangeFilter = (value: Dropdown | null, filterBy: string) => {    
+  const onChangeFilter = (value: Dropdown | null, filterBy: string) => {
     if (value?.value) {
       handleChangeFilter(filterBy, value?.value)
     } else {
@@ -215,7 +215,7 @@ export default function ListProductFilter({
                   variant="rounded"
                   width={64}
                   height={36.5}
-                  sx={{m: 1}}
+                  sx={{ m: 1 }}
                 />
               ))
             )
@@ -223,8 +223,8 @@ export default function ListProductFilter({
               productStatus.map((item, index) => (
                 <VGButton
                   key={index}
-                  sx={{m: 1}}
-                  color={ selectedStatus === item.value ? "primary" : "secondary" }
+                  sx={{ m: 1 }}
+                  color={selectedStatus === item.value ? "primary" : "secondary"}
                   variant="outlined"
                   size="small"
                   onClick={() => handleFilterStatus(item.value)}

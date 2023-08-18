@@ -278,7 +278,7 @@ export default function AddVariantDialog({
                     {...params}
                     label={t("variant.dialog.header.variant")}
                     size="small"
-                    {...register("name", { required: "Variant is required." })}
+                    {...register("name", { required: t("variant.dialog.header.error.required.variant") })}
                     error={Boolean(errors.name)}
                     helperText={errors.name?.message}
                   />
@@ -293,7 +293,7 @@ export default function AddVariantDialog({
                 variant="outlined"
                 size="small"
                 fullWidth
-                {...register("name", { required: "Variant is required." })}
+                {...register("name", { required: t("variant.dialog.header.error.required.variantCustom") })}
                 error={Boolean(errors.name)}
                 helperText={errors.name?.message}
                 onChange={(e) => onInputName(e)}
@@ -478,7 +478,7 @@ export default function AddVariantDialog({
           label={t("variant.dialog.setting.stock")}
           {...register("stock", {
             value: stock,
-            required: "Stock is required."
+            required: t("variant.dialog.setting.error.required.stock")
           })}
           error={Boolean(errors.stock)}
           helperText={errors.stock?.message}
@@ -500,7 +500,7 @@ export default function AddVariantDialog({
           label={t("variant.dialog.setting.price.label")}
           {...register("price", {
             value: price,
-            required: "Price is required.",
+            required: t("variant.dialog.setting.error.required.price"),
             validate: (inputPrice) => {
               if (inputPrice % 100 === 0) {
                 return true;

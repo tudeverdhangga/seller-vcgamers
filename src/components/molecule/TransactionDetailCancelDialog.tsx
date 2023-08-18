@@ -4,21 +4,13 @@ import { useTranslation } from "next-i18next";
 
 import VGDialog from "~/components/atomic/VGDialog";
 import VGButton from "~/components/atomic/VGButton";
-import Link from "@mui/material/Link";
 
-export default function TransactionNotesDialog(props: {
-  notes: string | undefined;
+export default function TransactionDetailCancelDialog(props: {
+  reason?: string;
   isOpen: boolean;
   handleClose: () => void;
 }) {
   const { t } = useTranslation("transaction");
-
-  const copyNotes = async () => {
-    if (typeof props.notes !== 'undefined') {
-      await navigator.clipboard.writeText(props.notes);
-    }
-    return;
-  }
 
   return (
     <VGDialog
@@ -37,7 +29,7 @@ export default function TransactionNotesDialog(props: {
           fontWeight={700}
           color="primary"
         >
-          {t("detail.list.note.title")}
+          {t("detail.list.detailCancel.title")}
         </Typography>
         <Typography
           fontSize={14}
@@ -46,21 +38,8 @@ export default function TransactionNotesDialog(props: {
           textAlign="center"
           my={2}
         >
-          {props.notes}
+          {props.reason}
         </Typography>
-        <Link
-          fontSize={14}
-          fontWeight={600}
-          color="primary"
-          mb={2}
-          sx={{
-            cursor: "pointer",
-            textDecoration: "none"
-          }}
-          onClick={copyNotes}
-        >
-          {t("detail.list.note.copyNotes")}
-        </Link>
         <VGButton
           variant="contained"
           color="primary"
@@ -68,7 +47,7 @@ export default function TransactionNotesDialog(props: {
           fullWidth
           onClick={props.handleClose}
         >
-          {t("detail.list.note.back")}
+          {t("detail.list.detailCancel.back")}
         </VGButton>
       </Box>
     </VGDialog>

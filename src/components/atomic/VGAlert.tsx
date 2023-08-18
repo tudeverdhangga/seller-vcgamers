@@ -31,9 +31,28 @@ const getBgColor = (color?: string) => {
   }
 }
 
-export default styled(Alert)<
-  AlertProps & { color?: "primary" | "info" | "error" | "success" | "warning" | "secondary" }
->(({ color }) => ({
+const CustomAlertWrapper = styled(({ ...props }) => (
+  <Alert {...props} />
+))<
+  AlertProps & {
+    color?:
+    "primary" |
+    "info" |
+    "error" |
+    "success" |
+    "warning" |
+    "secondary";
+    icon?: boolean;
+  }
+>(({
+  color,
+  icon = false,
+}) => ({
   color: getTextColor(color),
   backgroundColor: getBgColor(color),
+  '& .MuiAlert-icon': {
+    display: icon ? 'block' : 'none',
+  },
 }));
+
+export default CustomAlertWrapper;

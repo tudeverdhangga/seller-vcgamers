@@ -9,7 +9,6 @@ function responseHandler(
   // Do something with response data
   return response;
 }
-
 function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any
@@ -32,7 +31,6 @@ export const HTTP = axios.create({
   },
   withCredentials: true,
 });
-
 HTTP.interceptors.response.use(responseHandler, errorHandler);
 
 export const HTTPMediaUpload = axios.create({
@@ -42,7 +40,6 @@ export const HTTPMediaUpload = axios.create({
   },
   withCredentials: true,
 });
-
 HTTPMediaUpload.interceptors.response.use(responseHandler, errorHandler);
 
 export const HTTPApi = axios.create({
@@ -50,5 +47,14 @@ export const HTTPApi = axios.create({
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
-
 HTTPApi.interceptors.response.use(responseHandler, errorHandler);
+
+export const HTTPCsv = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  headers: {
+    "Content-Type": "text/csv",
+    "responseType": "blob"
+  },
+  withCredentials: true,
+});
+HTTPCsv.interceptors.response.use(responseHandler, errorHandler);

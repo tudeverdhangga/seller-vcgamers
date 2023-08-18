@@ -4,38 +4,24 @@ import Box from "@mui/material/Box";
 import CircleIcon from '@mui/icons-material/CircleOutlined';
 
 import VGCard from "~/components/atomic/VGCard";
+import { dateToTime, shortDateFormat } from "~/utils/format";
+import Skeleton from "@mui/material/Skeleton";
 
-interface StatusItem {
-  time: string;
-  status: string;
-  date: string;
-  productName?: string;
-  code: string;
+interface History {
+  description: string
+  description_text: string
+  code: string
+  timestamp: string
+  status: number
 }
 
-export default function TransactionDetailStatus(props: {status: StatusItem[]}) {
+export default function TransactionDetailStatus(props: {
+  status: History[];
+  isLoading: boolean;
+}) {
   const { t } = useTranslation("transaction");
-  const warningStatus = ["wait", "complain", "cancel"]
-  const progressStatus = ["onProcess", "sent"]
-
-  const getLabelStatus = (status: string | undefined) => {
-    switch(status) {
-      case "wait":
-        return t("detail.status.wait")
-      case "onProcess":
-        return t("detail.status.process")
-      case "sent":
-        return t("detail.status.sent")
-      case "complain":
-        return t("detail.status.complain")
-      case "done":
-        return t("detail.status.done")
-      case "cancel":
-        return t("detail.status.cancel")
-      default:
-        return "unknown status"
-    }
-  }
+  const warningStatus = [6, 5]
+  const progressStatus = [2, 3]
 
   return (
     <VGCard>
@@ -48,66 +34,91 @@ export default function TransactionDetailStatus(props: {status: StatusItem[]}) {
         {t("detail.status.title")}
       </Typography>
       {
-        props.status.map((item, index) => (
-          <Box
-            key={index}
-            display="flex"
-            my={1}
-          >
-            <Box
-              mr={2}
-              display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-            >
-              <Typography
-                fontSize={14}
-                fontWeight={700}
-                color="common.shade.700"
-              >
-                {item.time}
-              </Typography>
-              <Typography
-                fontSize={14}
-                fontWeight={500}
-                color="common.shade.100"
-              >
-                WIB
-              </Typography>
-            </Box>
-            <CircleIcon
-              fontSize="small"
-              color={
-                warningStatus.includes(item.status)
-                  ? "error"
-                  : progressStatus.includes(item.status)
-                    ? "primary"
-                    : "success"
-              }
+        props.isLoading
+          ? (
+            <Skeleton
+              variant="rounded"
+              width="100%"
+              height={60}
             />
-            <Box
-              ml={1}
-              display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-            >
-              <Typography
-                fontSize={14}
-                fontWeight={600}
-                color="common.shade.700"
+          ) : (
+            props.status && props.status.map((item, index) => (
+              <Box
+                key={index}
+                display="flex"
+                my={1}
               >
-                {`${getLabelStatus(item.status)} (${item.code})`}
-              </Typography>
-              <Typography
-                fontSize={12}
-                fontWeight={600}
-                color="common.shade.200"
-              >
-                {item.date}
-              </Typography>
-            </Box>
-          </Box>
-        ))
+                <Box
+                  mr={2}
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography
+                    fontSize={14}
+                    fontWeight={700}
+                    color="common.shade.700"
+                  >
+                    {dateToTime(item.timestamp)}
+                  </Typography>
+                  <Typography
+                    fontSize={14}
+                    fontWeight={500}
+                    color="common.shade.100"
+                  >
+                    WIB
+                  </Typography>
+                </Box>
+                <CircleIcon
+                  fontSize="small"
+                  color={
+                    warningStatus.includes(item.status)
+                      ? "error"
+                      : progressStatus.includes(item.status)
+                        ? "primary"
+                        : "success"
+                  }
+                />
+                <Box
+                  ml={1}
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                >
+                  <Typography
+                    fontSize={14}
+                    fontWeight={600}
+                    color="common.shade.700"
+                  >
+                    {item.description}
+                  </Typography>
+                  <Box display="flex">
+                    <Typography
+                      fontSize={14}
+                      fontWeight={600}
+                      color="common.shade.700"
+                      mr={1}
+                    >
+                      {item.description_text}
+                    </Typography>
+                    <Typography
+                      fontSize={14}
+                      fontWeight={600}
+                      color="common.shade.100"
+                    >
+                      ({item.code})
+                    </Typography>
+                  </Box>
+                  <Typography
+                    fontSize={12}
+                    fontWeight={600}
+                    color="common.shade.200"
+                  >
+                    {shortDateFormat(item.timestamp)}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          )
       }
     </VGCard>
   )

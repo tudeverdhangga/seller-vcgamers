@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 import queryString from "query-string";
@@ -19,29 +21,51 @@ interface ErrorResponse {
 
 export default function TransactionProcessVoucherDialog(props: {
   id: string;
+  qty: number;
   isOpen: boolean;
   handleClose: () => void;
   refetch: () => void;
 }) {
   const { t } = useTranslation("transaction");
-  const processTransaction = useProcessTransaction(queryString.stringify({ transaction_detail_id: props.id }))
+  const processTransaction = useProcessTransaction(queryString.stringify({ transaction_detail_id: props.id }));
+  const [voucherValues, setVoucherValues] = useState<string[]>(Array(props.qty).fill(''));
 
   const onProcess = () => {
     processTransaction.mutate(
-      [""],
+      voucherValues,
       {
         onSuccess: () => {
-          toast.success(t("detail.list.noVoucher.onSuccess"), toastOption)
+          toast.success(t("detail.list.voucher.onSuccess"), toastOption)
           props.handleClose()
           props.refetch()
         },
         onError: (error) => {
           const err = error as ErrorResponse
-          const errorMessage = `${t("detail.list.noVoucher.onError")}: ${err?.response?.data?.message}`
+          const errorMessage = `${t("detail.list.voucher.onError")}: ${err?.response?.data?.message}`
           toast.error(errorMessage, toastOption)
         }
       }
     )
+  }
+  const handleVoucherChange = (index: number, value: string) => {
+    const newVoucherValues = voucherValues;
+    newVoucherValues[index] = value;
+    setVoucherValues(newVoucherValues);
+  };
+
+  const textFields = [];
+  for (let index = 0; index < props.qty; index++) {
+    textFields.push(
+      <TextField
+        key={index}
+        variant="outlined"
+        placeholder={t("detail.list.voucher.placeholder", { counter: index + 1 })}
+        fullWidth
+        size="small"
+        sx={{ my: 2 }}
+        onChange={(event) => handleVoucherChange(index, event.target.value)}
+      />
+    );
   }
 
   return (
@@ -61,41 +85,24 @@ export default function TransactionProcessVoucherDialog(props: {
           fontWeight={700}
           color="primary"
         >
-          {t("detail.list.noVoucher.title")}
-        </Typography>
-        <Typography
-          fontSize={14}
-          fontWeight={500}
-          color="common.shade.200"
-          my={3}
-        >
-          {t("detail.list.noVoucher.subTitle")}
+          {t("detail.list.voucher.title")}
         </Typography>
         <Box
-          display="flex"
-          width="100%"
+          maxHeight={360}
+          overflow="auto"
         >
-          <VGButton
-            variant="outlined"
-            color="secondary"
-            size="large"
-            fullWidth
-            sx={{ mr: 2 }}
-            onClick={props.handleClose}
-          >
-            {t("detail.list.noVoucher.back")}
-          </VGButton>
-          <VGButton
-            variant="contained"
-            color="success"
-            size="large"
-            fullWidth
-            onClick={onProcess}
-          >
-            {t("detail.list.noVoucher.submit")}
-          </VGButton>
+          {textFields}
         </Box>
+        <VGButton
+          variant="contained"
+          color="success"
+          size="large"
+          fullWidth
+          onClick={onProcess}
+        >
+          {t("detail.list.voucher.submit")}
+        </VGButton>
       </Box>
     </VGDialog>
-  )
+  );
 }

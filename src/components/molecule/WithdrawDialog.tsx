@@ -47,9 +47,6 @@ export default function WithdrawDialog(props: {
       ...withdrawData,
       voucher_id: id
     })
-
-    handleWithdraw()
-    handleClose()
   }
 
   return (

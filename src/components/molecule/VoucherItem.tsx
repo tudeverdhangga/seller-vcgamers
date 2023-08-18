@@ -114,13 +114,17 @@ export default function VoucherItem(props: {
           </Grid>
         </Grid>
       </VGCard>
-      <WithdrawDialog
-        id={id}
-        code={code}
-        isOpen={isOpenWithdrawDialog}
-        handleClose={() => setIsOpenWithdrawDialog(false)}
-        handleWithdraw={handleWithdraw}
-      />
+      {
+        isOpenWithdrawDialog && (
+          <WithdrawDialog
+            id={id}
+            code={code}
+            isOpen={isOpenWithdrawDialog}
+            handleClose={() => setIsOpenWithdrawDialog(false)}
+            handleWithdraw={handleWithdraw}
+          />
+        )
+      }
     </>
   )
 }
