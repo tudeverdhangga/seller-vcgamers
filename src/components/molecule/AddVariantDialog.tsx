@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import queryString from "query-string";
 import Skeleton from "@mui/material/Skeleton";
 import { useForm } from "react-hook-form";
+import Switch from "@mui/material/Switch";
 
 import { priceFormat } from "~/utils/format";
 import VGDialog from "~/components/atomic/VGDialog";
@@ -82,7 +83,7 @@ export default function AddVariantDialog({
   useEffect(() => {
     if (isOpen) {
       getVariation.mutate(queryString.stringify({ group_id: groupId }))
-      onChangeField("delivery_type", 0);
+      // onChangeField("delivery_type", 0);
     }
   }, [isOpen])
   useEffect(() => {
@@ -138,8 +139,9 @@ export default function AddVariantDialog({
     }
   }, [name])
   useEffect(() => {
-    if (typeof stock !== 'undefined') {
-      onChangeField("delivery_type", feature);
+    onChangeField("delivery_type", feature);
+    if (feature === 2) {
+      setStock(0)
     }
   }, [feature])
   useEffect(() => {
@@ -179,9 +181,6 @@ export default function AddVariantDialog({
     return 98 * price / 100
   }
   const onChangeSendFeature = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === '2') {
-      setStock(0)
-    }
     setFeature(parseInt(event.target.value))
   }
   const onChangeVariation = (value: Dropdown | null) => {
@@ -243,7 +242,7 @@ export default function AddVariantDialog({
   const titleMediumStyle = {
     fontSize: "14px",
     fontWeight: 700,
-    color: image ? "primary.main" : "common.shade.100"
+    color: "primary.main"
   }
   const deliverySublabelStyle = {
     fontSize: "12px",
@@ -341,7 +340,7 @@ export default function AddVariantDialog({
         <Box>
           <FormControlLabel
             value={1}
-            disabled={getProfile?.data?.data?.seller_has_kilat}
+            disabled={!getProfile?.data?.data?.seller_has_kilat}
             control={<Radio />}
             label={
               <Image
@@ -356,7 +355,7 @@ export default function AddVariantDialog({
             {t("variant.dialog.delivery.kilat.label")}
           </Typography>
           {
-            getProfile?.data?.data?.seller_has_kilat && (
+            !getProfile?.data?.data?.seller_has_kilat && (
               <Typography component="p">
                 <Typography
                   component="span"
@@ -379,7 +378,7 @@ export default function AddVariantDialog({
         <Box>
           <FormControlLabel
             value={2}
-            disabled={getProfile?.data?.data?.seller_has_kilat && !isVoucherInstant}
+            disabled={!getProfile?.data?.data?.seller_has_instant || !isVoucherInstant}
             control={<Radio />}
             label={
               <Image
@@ -394,7 +393,7 @@ export default function AddVariantDialog({
             {t("variant.dialog.delivery.instant.label")}
           </Typography>
           {
-            getProfile?.data?.data?.seller_has_kilat
+            !getProfile?.data?.data?.seller_has_instant
               ? (
                 <Typography component="p">
                   <Typography
@@ -478,7 +477,14 @@ export default function AddVariantDialog({
           label={t("variant.dialog.setting.stock")}
           {...register("stock", {
             value: stock,
-            required: t("variant.dialog.setting.error.required.stock")
+            required: t("variant.dialog.setting.error.required.stock"),
+            validate: (inputStock) => {
+              if (inputStock >= 0) {
+                return true;
+              }
+
+              return t("variant.dialog.setting.error.noMinus", { field: "Stock" });
+            }
           })}
           error={Boolean(errors.stock)}
           helperText={errors.stock?.message}
@@ -502,12 +508,15 @@ export default function AddVariantDialog({
             value: price,
             required: t("variant.dialog.setting.error.required.price"),
             validate: (inputPrice) => {
-              if (inputPrice % 100 === 0) {
-                return true;
+              if (inputPrice % 100 !== 0) {
+                return t("variant.dialog.setting.error.multiple100");
+              }
+              if (inputPrice < 0) {
+                return t("variant.dialog.setting.error.noMinus", { field: "Price" });
               }
 
-              return t("variant.dialog.setting.price.subLabel");
-            }
+              return true;
+            },
           })}
           error={Boolean(errors.price)}
           helperText={errors.price?.message}
@@ -524,8 +533,8 @@ export default function AddVariantDialog({
       <Box>
         <FormControlLabel
           control={
-            <Checkbox
-              defaultChecked={image}
+            <Switch
+              checked={image}
               onChange={(_, checked) => onChangeImage(checked)}
             />
           }
@@ -535,7 +544,12 @@ export default function AddVariantDialog({
               : t("variant.dialog.image.label.no")
           }
         />
-        <Typography sx={titleMediumStyle}>
+        <Typography
+          sx={{
+            ...titleMediumStyle,
+            color: image ? "primary.main" : "common.shade.100"
+          }}
+        >
           {
             image
               ? t("variant.dialog.image.subLabel.yes")
@@ -593,8 +607,8 @@ export default function AddVariantDialog({
         <Typography sx={titleLargeStyle}>
           {
             typeof variant !== "undefined"
-              ? t("variant.dialog.title.add")
-              : t("variant.dialog.title.edit")
+              ? t("variant.dialog.title.edit")
+              : t("variant.dialog.title.add")
           }
         </Typography>
         <form onSubmit={handleSubmit(

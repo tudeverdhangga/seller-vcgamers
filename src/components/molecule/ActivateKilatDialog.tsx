@@ -1,7 +1,7 @@
 import queryString from "query-string";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
@@ -21,7 +21,7 @@ interface ErrorResponse {
   };
 }
 
-export default function ActivateKilatDialog (props: {
+export default function ActivateKilatDialog(props: {
   id: string;
   isBulk: boolean | false;
   name?: string | "undefined";
@@ -31,7 +31,7 @@ export default function ActivateKilatDialog (props: {
   refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
-  const kilat = useActiveKilat(queryString.stringify({variation_id: props.id}))
+  const kilat = useActiveKilat(queryString.stringify({ variation_id: props.id }))
 
   const onActiveKilat = () => {
     kilat.mutate(undefined, {
@@ -67,7 +67,7 @@ export default function ActivateKilatDialog (props: {
           width={175}
           height={36}
           alt="Badge Kilat"
-          style={{margin: '20px'}}
+          style={{ margin: '20px' }}
         />
         <Typography
           sx={{
@@ -121,7 +121,7 @@ export default function ActivateKilatDialog (props: {
           my={1}
         >
           {
-            props.nextActiveKilat !== null
+            props.nextActiveKilat !== ""
               ? t("table.dialog.active.alert.active", { time: dateToTime(props.nextActiveKilat) })
               : props.isBulk
                 ? (
@@ -157,7 +157,7 @@ export default function ActivateKilatDialog (props: {
           color="success"
           size="large"
           sx={{ width: "100%", ml: 1 }}
-          disabled={props.nextActiveKilat !== null}
+          disabled={props.nextActiveKilat !== ""}
           onClick={onActiveKilat}
         >
           {t("table.dialog.active.actions.ok")}

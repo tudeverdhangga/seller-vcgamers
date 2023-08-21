@@ -227,23 +227,24 @@ export default function ListTransaction({
                                     {transaction.member_name}
                                   </Typography>
                                   {
-                                    transaction.is_kilat
-                                      ? (
+                                    transaction.is_kilat ?
+                                      (
                                         <Image
                                           src="/assets/badge-kilat.svg"
                                           width={66}
                                           height={16}
                                           alt="Badge Kilat"
                                         />
-                                      )
-                                      : (
-                                        <Image
-                                          src="/assets/badge-instant.svg"
-                                          width={62}
-                                          height={14}
-                                          alt="Badge Instant"
-                                        />
-                                      )
+                                      ) :
+                                      transaction.is_instant ?
+                                        (
+                                          <Image
+                                            src="/assets/badge-instant.svg"
+                                            width={62}
+                                            height={14}
+                                            alt="Badge Instant"
+                                          />
+                                        ) : ""
                                   }
                                   {
                                     isMobile && (

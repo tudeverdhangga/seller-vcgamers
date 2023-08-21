@@ -47,6 +47,7 @@ interface ProductDetail {
 interface ProductCategory {
   value: string
   label: string
+  is_voucher?: boolean
 }
 interface ProductBrand {
   value: string
@@ -152,6 +153,10 @@ export default function AddProductDetail({
           setBrand(dataBrand)
         }
       })
+
+      if (selectedCategory.isVoucher) {
+        handleVoucherInstant(selectedCategory.isVoucher)
+      }
     }
   }, [selectedCategory])
   useEffect(() => {
@@ -178,7 +183,11 @@ export default function AddProductDetail({
   }, [selectedBrand, selectedCategory])
   useEffect(() => {
     if (productDetail) {
-      setSelectedCategory(productDetail?.product_category)
+      setSelectedCategory({
+        label: productDetail?.product_category.label,
+        value: productDetail?.product_category.value,
+        isVoucher: productDetail?.product_category.is_voucher
+      })
       setSelectedBrand(productDetail?.product_brand)
       setSelectedGroup(productDetail?.product_group)
       setProductImage(productDetail.images_url)
@@ -212,9 +221,6 @@ export default function AddProductDetail({
 
       if (paramsKey === "product_category_id") {
         setSelectedCategory(value)
-        if (value.isVoucher) {
-          handleVoucherInstant(value.isVoucher)
-        }
         setSelectedBrand({
           label: "",
           value: ""

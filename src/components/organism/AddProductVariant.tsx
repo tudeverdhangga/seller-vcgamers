@@ -17,6 +17,7 @@ import { type ChangeEvent, useState, useEffect, SetStateAction } from "react";
 import TextField from "@mui/material/TextField";
 import Skeleton from "@mui/material/Skeleton";
 import { toast } from "react-toastify";
+import Link from "@mui/material/Link";
 
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
@@ -24,12 +25,7 @@ import AddVariantDialog from "~/components/molecule/AddVariantDialog";
 import { useMediaUpload } from "~/services/api/media";
 import VGInputImage from "~/components/atomic/VGInputImage";
 import { toastOption } from "~/utils/toast";
-import Link from "@mui/material/Link";
 
-interface ImageResponse {
-  object_url: string
-  object_key: string
-}
 interface Variation {
   name: string
   product_variation_master_id?: string
@@ -57,6 +53,7 @@ interface ProductDetail {
 interface ProductCategory {
   value: string
   label: string
+  is_voucher?: boolean
 }
 interface ProductBrand {
   value: string
@@ -115,7 +112,8 @@ export default function AddProductVariant({
   handleChangeVariantField,
   handleChangeFilter,
   onEditVariation,
-  onDeleteVariant
+  onDeleteVariant,
+  onError
 }: {
   productDetail?: ProductDetail;
   variant: Variation[];
@@ -134,6 +132,7 @@ export default function AddProductVariant({
   ) => void;
   onEditVariation: (value: Variation, index: number) => void;
   onDeleteVariant: (index: number) => void;
+  onError: (error: boolean) => void;
 }) {
   const { t } = useTranslation("addProduct");
   const mediaUpload = useMediaUpload();
@@ -141,6 +140,7 @@ export default function AddProductVariant({
   const [variantImage, setVariantImage] = useState<string[][]>([]);
   const [variantData, setVariantData] = useState<Variation>();
   const [indexRow, setIndexRow] = useState<number>();
+  const [multiple100, setMultiple100] = useState<string[]>([]);
 
   useEffect(() => {
     if (typeof variantData !== 'undefined' && typeof indexRow !== 'undefined') {
@@ -159,6 +159,9 @@ export default function AddProductVariant({
 
     setVariantImage(imageUrl)
   }, [productDetail])
+  useEffect(() => {
+    onError(multiple100.some(item => typeof item === "string" && item !== ""))
+  }, [multiple100])
 
   const onChangeImage = (checked: boolean, index: number) => {
     handleChangeVariantField("is_custom_image", checked, index)
@@ -171,6 +174,17 @@ export default function AddProductVariant({
     key: keyof Variation,
     index: number
   ) => {
+    if (key === "price") {
+      if (parseInt(event.target.value) % 100 !== 0) {
+        const updatedArray = [...multiple100];
+        updatedArray[index] = t("variant.dialog.setting.error.multiple100");
+        setMultiple100(updatedArray)
+      } else {
+        const updatedArray = [...multiple100];
+        updatedArray[index] = "";
+        setMultiple100(updatedArray)
+      }
+    }
     onChangeVariant(parseInt(event.target.value), key, index)
   }
   const onChangeVariant = (
@@ -219,12 +233,10 @@ export default function AddProductVariant({
     setIsShowAddVariantDialog(false);
   }
   const getImageUrl = (index: number, indexImg: number) => {
-    if (variantImage && variantImage[index]) {
+    if (variantImage && variantImage[index] && (variantImage[index] as string[])[indexImg]) {
       return `url(${(variantImage[index] as string[])[indexImg] as string})`
-    } else if (productDetail) {
-      return `url(${productDetail?.variations[index]?.images_url[indexImg]?.object_url as string})`
     } else {
-      return
+      return undefined
     }
   }
 
@@ -279,11 +291,12 @@ export default function AddProductVariant({
     <TableCell width={193} sx={{ borderRight: "1px solid #DEDEDE", minWidth: "193px" }}>
       <Switch
         checked={row.is_custom_image}
+        disabled={!row.is_active}
         onChange={(_, event) => onChangeImage(event, index)}
       />
       <Typography
         fontSize={12}
-        color={row.is_custom_image ? "common.shade.200" : "common.shade.100"}
+        color={row.is_custom_image && row.is_active ? "common.shade.200" : "common.shade.100"}
       >
         {row.is_custom_image
           ? t("variant.table.td.image.enabled")
@@ -310,6 +323,7 @@ export default function AddProductVariant({
                           width="47px"
                           height="47px"
                           imageUrl={getImageUrl(index, indexImg)}
+                          disabled={!row.is_active}
                           onChange={(e) => handleFileChange(e, index, indexImg)}
                         />
                       )
@@ -328,7 +342,7 @@ export default function AddProductVariant({
         sx={{
           fontSize: "14px",
           fontWeight: 600,
-          color: "common.shade.700"
+          color: row.is_active ? "common.shade.700" : "common.shade.100"
         }}
       >
         {row.name}
@@ -343,7 +357,7 @@ export default function AddProductVariant({
                 width={53}
                 height={11}
               />
-              <Switch defaultChecked />
+              <Switch defaultChecked disabled={!row.is_active} />
             </Box>
           ) : row.delivery_type === 2
             ? (
@@ -369,7 +383,9 @@ export default function AddProductVariant({
         inputProps={{
           inputMode: "numeric",
           pattern: "[0-9]*",
+          min: "0"
         }}
+        disabled={!row.is_active || row.delivery_type === 2}
         onChange={(e) => onChangeStockPrice(e, "stock", index)}
       />
     </TableCell>
@@ -384,7 +400,11 @@ export default function AddProductVariant({
         inputProps={{
           inputMode: "numeric",
           pattern: "[0-9]*",
+          min: "100"
         }}
+        error={Boolean(multiple100[index])}
+        helperText={multiple100[index]}
+        disabled={!row.is_active}
         onChange={(e) => onChangeStockPrice(e, "price", index)}
       />
     </TableCell>

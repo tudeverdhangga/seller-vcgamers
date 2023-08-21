@@ -8,13 +8,15 @@ export default function VGInputImage({
   id,
   imageUrl,
   width,
-  height
-}:{
+  height,
+  disabled
+}: {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   id: string;
   imageUrl?: string;
   width: string;
   height: string;
+  disabled?: boolean;
 }) {
   return (
     <Box>
@@ -23,9 +25,10 @@ export default function VGInputImage({
         id={id}
         accept="image/png, image/jpg"
         style={{ display: "none" }}
+        disabled={disabled}
         onChange={(e) => onChange(e)}
       />
-      <label htmlFor={id} style={{width, display: "block"}}>
+      <label htmlFor={id} style={{ width, display: "block" }}>
         <Box
           component="div"
           sx={{
@@ -41,12 +44,12 @@ export default function VGInputImage({
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             position: "relative",
-            cursor: "pointer",
+            cursor: !disabled ? "pointer" : "auto",
           }}
         >
           {
             imageUrl
-              ? (
+              ? !disabled && (
                 <Box
                   component="div"
                   sx={{

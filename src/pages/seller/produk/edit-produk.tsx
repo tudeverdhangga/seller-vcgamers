@@ -65,6 +65,7 @@ export default function TambahProdukPage() {
   })
   const [isVoucherInstant, setIsVoucherInstant] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (typeof router.query.product_id === "string") {
@@ -223,6 +224,9 @@ export default function TambahProdukPage() {
   const handleVoucherInstant = (isVoucher: boolean) => {
     setIsVoucherInstant(isVoucher)
   }
+  const onError = (error: boolean) => {
+    setError(error)
+  }
 
   return (
     <>
@@ -249,7 +253,7 @@ export default function TambahProdukPage() {
             </Link>
           </>
         )}
-        title={t("title")}
+        title={t("titleEdit")}
         sx={{ width: "100%" }}
       />
       {
@@ -272,6 +276,7 @@ export default function TambahProdukPage() {
                 onDeleteVariant={onDeleteVariant}
                 handleChangeVariantField={handleChangeVariantField}
                 handleChangeFilter={handleFilter}
+                onError={onError}
               />
             </>
           )
@@ -293,6 +298,7 @@ export default function TambahProdukPage() {
           variant="contained"
           color="success"
           size="large"
+          disabled={error}
           onClick={onSubmit}
         >
           {t("save")}

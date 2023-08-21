@@ -57,6 +57,7 @@ interface DataProductDetail {
 interface ProductCategory {
   value: string
   label: string
+  is_voucher?: boolean
 }
 interface ProductBrand {
   value: string

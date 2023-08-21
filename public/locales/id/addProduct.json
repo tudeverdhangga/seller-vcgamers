@@ -1,5 +1,6 @@
 {
   "title": "Tambah Produk",
+  "titleEdit": "Edit Produk",
   "subTitle": "Kembali",
   "updateImageSizeError": "Gambar melebihi 1MB",
   "detail": {
@@ -109,7 +110,9 @@
           "required": {
             "stock": "Stok tidak boleh kosong.",
             "price": "Harga tidak boleh kosong."
-          }
+          },
+          "multiple100": "Harap isi nominal dengan kelipatan 100",
+          "noMinus": "{{field}} tidak boleh minus"
         }
       },
       "image": {
