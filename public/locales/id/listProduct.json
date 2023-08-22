@@ -133,7 +133,9 @@
       "changeVoucher": {
         "title": "Kelola Voucher",
         "subTitle": "Masukan Pin",
-        "forget": "Lupa PIN?"
+        "forget": "Lupa PIN?",
+        "errorText": "PIN Salah",
+        "errorDescription": "Kamu mencapai batas percobaan PIN.\nHarap coba kembali setelah 15 menit atau pada pukul {{ time }}"
       }
     }
   }

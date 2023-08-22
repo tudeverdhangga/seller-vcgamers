@@ -134,9 +134,6 @@ export const useGetProduct = (params: string) => {
   return useInfiniteQuery<ResponseProduct, string>({
     queryKey: ["product-list", params],
     queryFn: async ({ pageParam }) => {
-      console.log(pageParam);
-      console.log(params);
-      
       let nextCursor = ""
       if (typeof pageParam !== "undefined") {
         nextCursor = "&next_cursor=" + (pageParam as string);

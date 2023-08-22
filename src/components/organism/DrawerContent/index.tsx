@@ -22,8 +22,8 @@ export default function DrawerContent() {
   const { t } = useTranslation("layout");
 
   useEffect(() => {
-    setSellerName(getProfile?.data?.data?.seller_name ? getProfile?.data?.data?.seller_name : "Nama Toko" )
-    setSellerProfile(getProfile?.data?.data?.seller_photo ? getProfile?.data?.data?.seller_photo.object_url : "" )
+    setSellerName(getProfile?.data?.data?.seller_name ? getProfile?.data?.data?.seller_name : "Nama Toko")
+    setSellerProfile(getProfile?.data?.data?.seller_photo ? getProfile?.data?.data?.seller_photo.object_url : "")
     setSellerOpen(!getProfile?.data?.data?.is_closed)
   }, [
     getProfile?.data?.data?.seller_name,
@@ -38,13 +38,17 @@ export default function DrawerContent() {
     const mainUrl = matches && matches[2]
 
     if (mainUrl === "/kelola-voucher") {
-      if (!localStorage.getItem("voucherPermission")) {
+      if (
+        !localStorage.getItem("voucherPermission") &&
+        !localStorage.getItem("pin")
+      ) {
         void router.push("/seller/produk/kelola-produk")
       }
     } else {
       localStorage.removeItem("voucherPermission")
+      localStorage.removeItem("pin")
     }
-    
+
     // Handle the route change here
     const handleRouteChange = (activeMenu: string) => {
       setActiveMenu(activeMenu);
@@ -71,7 +75,7 @@ export default function DrawerContent() {
             key={`sub-menu-${menu.name}`}
             name={menu.name}
             title={t(menu.translationKey as "drawer.myShop.head")}
-            leading={ <menu.leading /> }
+            leading={<menu.leading />}
             subList={menu.subList}
             activeMenu={activeMenu}
           />

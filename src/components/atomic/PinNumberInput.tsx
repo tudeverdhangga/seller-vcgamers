@@ -41,7 +41,7 @@ export default function PinNumberInput({
     if (pin.every((digit) => digit !== "")) {
       onSubmit(pin.join(""));
     }
-  }, [pin, onSubmit]);
+  }, [pin]);
 
   return (
     <Stack direction="row" spacing={1}>
@@ -58,15 +58,22 @@ export default function PinNumberInput({
             inputMode: "numeric",
             pattern: "[0-9]",
             maxLength: 1,
-            style: { textAlign: "center" },
+            style: { textAlign: "center" }
           }}
           InputProps={{
             onKeyDown: (e) => handleBackspace(index, e),
           }}
           autoFocus={index === 0}
           sx={{
-            fontSize: "20px",
-            width: "30px",
+            "& .MuiInputBase-input": {
+              fontSize: "3rem",
+              width: "30px",
+              height: "23px",
+              color: !error ? "success.main" : "error.main",
+              fontFamily: "serif",
+              caretColor: "black",
+              borderBottom: "black"
+            }
           }}
           onChange={(e) => handleInputChange(index, e.target.value)}
         />

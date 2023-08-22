@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:unit": "vitest --watch",
-    "test:coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

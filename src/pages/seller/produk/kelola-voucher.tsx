@@ -60,7 +60,7 @@ export default function KelolaVoucherPage() {
       updateVoucher.mutate({
         status: withdrawData.status,
         pulled_reason: withdrawData.pulled_reason,
-        pin: "123456"
+        pin: localStorage.getItem("pin")
       }, {
         onSuccess: () => {
           getVoucher.mutate(queryString.stringify(params));
@@ -78,7 +78,7 @@ export default function KelolaVoucherPage() {
     validateVoucher.mutate({
       variation_id: id,
       vouchers,
-      pin: "123456"
+      pin: localStorage.getItem("pin")
     }, {
       onSuccess: (res) => {
         setCheckVoucher({
@@ -100,7 +100,7 @@ export default function KelolaVoucherPage() {
     createVoucher.mutate({
       variation_id: id,
       vouchers,
-      pin: "123456"
+      pin: localStorage.getItem("pin")
     }, {
       onSuccess: () => {
         setCheckVoucher({

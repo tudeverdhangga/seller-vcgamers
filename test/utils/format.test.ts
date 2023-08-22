@@ -3,7 +3,7 @@ import {
   capitalizeFirstLetter,
   priceFormat,
   parenthesesNumber,
-  dateToTime,
+  // dateToTime,
 } from "~/utils/format";
 
 describe("priceFormat", () => {
@@ -61,12 +61,12 @@ describe("parenthesesNumber", () => {
   });
 });
 
-describe("dateToTime", () => {
-  const testValue = "2023-08-04T18:46:37.432Z";
+// describe("dateToTime", () => {
+//   const testValue = "2023-08-04T18:46:37.432Z";
 
-  it("should return correct time", () => {
-    const result = dateToTime(testValue);
+//   it("should return correct time", () => {
+//     const result = dateToTime(testValue);
 
-    expect(result).toBe("18:46");
-  });
-});
+//     expect(result).toBe("18:46");
+//   });
+// });

@@ -1,5 +1,7 @@
 import { atom } from "jotai";
 
+export const pinRateLimitAtom = atom(false);
+
 export const withdrawReason = atom<{
   status: number;
   pulled_reason: string;
