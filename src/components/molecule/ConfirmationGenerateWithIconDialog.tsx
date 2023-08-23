@@ -5,14 +5,12 @@ import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
 import VGDialog from "~/components/atomic/VGDialog";
 
-export default function ConfirmationDeleteWithIconDialog(props: {
+export default function ConfirmationGenerateWithIconDialog(props: {
   title: string | "undefined";
-  contentDeleteAlert: string | "undefined";
+  contentGenerateAlert: string | "undefined";
   desc?: string;
   isOpen: boolean;
-  iconSrc: string;
   handleClose: () => void;
-  handleSubmit: () => void;
 }) {
   const { t } = useTranslation("vip");
 
@@ -23,22 +21,6 @@ export default function ConfirmationDeleteWithIconDialog(props: {
       onClose={props.handleClose}
     >
       <Box>
-        <Stack
-          direction={{ xs: 'row', sm: 'column' }}
-          justifyContent="center"
-          alignItems="center"
-          spacing={2}
-          useFlexGap flexWrap="wrap"
-        >
-          <Card sx={{ width: {xs: '20%', sm: '25%'}, boxShadow: 0 }}>
-            <CardMedia
-              sx={{border: 0}}
-              component="img"
-              image={props.iconSrc}
-              title={`Delete Access Token`}
-            />
-          </Card>
-        </Stack>
         <Typography
           sx={{
             width: "100%",
@@ -57,7 +39,7 @@ export default function ConfirmationDeleteWithIconDialog(props: {
           color="info"
           sx={{
             width: "100%",
-            my: 1,
+            my: 2,
             "& .MuiAlert-message" : {
               width: "100%",
               alignItems: "center"
@@ -72,7 +54,7 @@ export default function ConfirmationDeleteWithIconDialog(props: {
               color: "primary.main"
             }}
           >
-            { props.contentDeleteAlert }
+            { props.contentGenerateAlert }
           </Typography>
         </VGAlert>
         <Typography 
@@ -99,16 +81,7 @@ export default function ConfirmationDeleteWithIconDialog(props: {
           sx={{ width: "100%", mr: 1 }}
           onClick={props.handleClose}
         >
-          {t("contentApi.accessKey.modalDelete.backBtn")}
-        </VGButton>
-        <VGButton
-          variant="outlined"
-          color="secondary"
-          size="large"
-          sx={{ width: "100%", ml: 1 }}
-          onClick={props.handleSubmit}
-        >
-          {t("contentApi.accessKey.modalDelete.deleteBtn")}
+          {t("contentApi.accessKey.modalGenerate.copyBtn")}
         </VGButton>
       </Box>
     </VGDialog>

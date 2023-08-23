@@ -25,6 +25,10 @@
           "subtitle" : "Kamu ingin menghapus akses token ini. Lanjutkan?",
           "backBtn" : "Kembali",
           "deleteBtn" : "Hapus"
+        },
+        "modalGenerate": {
+          "title" : "API Access Key",
+          "copyBtn" : "Salin"
         }
       },
       "webhook": {

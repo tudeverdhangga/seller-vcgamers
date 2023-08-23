@@ -7,6 +7,9 @@ import VGCard from "~/components/atomic/VGCard";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ConfirmationDeleteWithIconDialog from "~/components/molecule/ConfirmationDeleteWithIconDialog";
+import { AccessKeyApiAccess, BodyPayloadIPWhitelist, BodyPayloadWebhookConfig, CustomErrorResponse, DataCallbackWebhook, useDeleteAccessKey, useGenerateAccessKey, useGetApiAccess, useGetIPWhitelist, useGetWebhookConfig, usePostIPWhitelist, usePostWebhookConfig } from "~/services/api/api-integration";
+import ConfirmationGenerateWithIconDialog from "../molecule/ConfirmationGenerateWithIconDialog";
+import queryString from "query-string";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,33 +54,94 @@ function a11yProps(index: number) {
   };
 }
 
+const CallbackWebhookArr = [
+  {
+    key: "callback_type_withdraw",
+    label: "Withdraw",
+    value: false
+  },
+  {
+    key: "callback_type_notification",
+    label: "Notifikasi Update VCGamers",
+    value: true
+  },
+  {
+    key: "callback_type_promo",
+    label: "Update Kode promo",
+    value: false
+  },
+  {
+    key: "callback_type_transaction",
+    label: "Update Transaksi",
+    value: true
+  },
+  {
+    key: "callback_type_product_stock",
+    label: "Update Stok Produk",
+    value: false
+  },
+  {
+    key: "callback_type_campaign",
+    label: "Update Campaign",
+    value: true
+  },
+  {
+    key: "callback_type_feature_request",
+    label: "Update Fitur Layanan",
+    value: false
+  }
+];
+
 export default function APIFeaturePage() {
   const { t } = useTranslation("vip");
   const [valueTab, setValueTab] = useState(0);
   const [apiWhitelist, setApiWhitelist] = useState('');
   const [urlWebhook, setUrlWebhook] = useState('');
-  const [accessKey, setAccessKey] = useState('c527d84501ae885652e121215567d249bc527d84501ae885652e121215567d249b');
-  const [accessTokens, setAccessTokens] = useState(Array<string>);
+  const [secretKey, setSecretKey] = useState('c527d84501ae885652e121215567d249bc527d84501ae885652e121215567d249b');
+  const [accessTokens, setAccessTokens] = useState(Array<AccessKeyApiAccess>);
+  const [deleteAccessTokenID, setDeleteAccessTokenID] = useState('');
   const [deleteAccessToken, setDeleteAccessToken] = useState('');
-  const [disableAPIWhitelistForm, setDisableAPIWhitelistForm] = useState(true);
+  const [generatedAccessToken, setGeneratedAccessToken] = useState('');
   const [disableWebhookForm, setDisableWebhookForm] = useState(true);
+  const [availableGenerateAccessToken, setAvailableGenerateAccessToken] = useState(false);
+  const [isOpenGenerateAccessKeyDialog, setIsOpenGenerateAccessKeyDialog] = useState(false);
   const [isOpenDeleteAccessKeyDialog, setIsOpenDeleteAccessKeyDialog] = useState(false);
-  const [callbackTypes, setCallbackTypes] = useState(Array<string>);
+  const [disableAPIWhitelistForm, setDisableAPIWhitelistForm] = useState(true);
+  const [callbackWebhookConfigs, setCallbackWebhookConfigs] = useState<DataCallbackWebhook>();
+  const [webhookCheckboxes, setWebhookCheckboxes] = useState(CallbackWebhookArr);
+  const getIPWhitelist = useGetIPWhitelist();
+  const postIPWhitelist = usePostIPWhitelist();
+  const getWebhookConfig = useGetWebhookConfig();
+  const postWebhookConfig = usePostWebhookConfig();
+  const getApiAccess = useGetApiAccess();
+  const postGenerateAccessKey = useGenerateAccessKey();
   
 	useEffect( () => {
-    const callbackTypesResponse = [
-      'Riwayat Saldo',
-      'Withdraw',
-      'List Produk',
-      'Tambah Produk',
-      'Edit Produk',
-      'Delete Produk'
-    ];
-    setCallbackTypes(callbackTypesResponse);
-    
-    setAccessTokens(['a4c21hj1v231v31h321hg3']);
+    setAccessTokens([{
+      "id": "1ed7e28c-df2b-498a-a59e-3ec09147b510",
+      "access_key": "JRqO*******"
+    }]);
 	}, []);
   
+  useEffect(() => {
+    if(getIPWhitelist?.data?.data) {
+      setApiWhitelist(getIPWhitelist.data.data.ip_whitelist)
+    }
+    if(getWebhookConfig?.data?.data) {
+      setCallbackWebhookConfigs(getWebhookConfig.data.data);
+      setUrlWebhook(getWebhookConfig.data.data.callback_url);
+    }
+    if(getApiAccess?.data?.data) {
+      setSecretKey(getApiAccess.data.data.secret_key);
+      setAvailableGenerateAccessToken(getApiAccess.data.data.can_generate_access_key);
+      setAccessTokens(getApiAccess.data.data.access_keys);
+    }
+  }, [
+    getIPWhitelist.data,
+    getWebhookConfig.data,
+    getApiAccess.data,
+  ])
+
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
   };
@@ -86,7 +150,7 @@ export default function APIFeaturePage() {
     setApiWhitelist(event.target.value);
   };
   const handleAccessKey = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAccessKey(event.target.value);
+    setSecretKey(event.target.value);
   };
   const handleUrlWebhook = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUrlWebhook(event.target.value);
@@ -94,16 +158,105 @@ export default function APIFeaturePage() {
 
   const handleSubmitAPIWhitelist = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log(apiWhitelist);
+    const payload: BodyPayloadIPWhitelist = {
+      ip_list: apiWhitelist
+    }
+    postIPWhitelist.mutate(payload, {
+      onSuccess: () => {
+        void getIPWhitelist.refetch()
+        setDisableAPIWhitelistForm(true);
+      },
+      onError: (error) => {
+        const err = error as CustomErrorResponse
+        console.log("Err: ", err.response.data);
+      }
+    });
   };
+
+  const collectValueOfWebhookChecboxes = () => {
+    const checkedItems = webhookCheckboxes.reduce<{ [key: string]: boolean }>((acc, item) => {
+      acc[item.key] = item.value;
+      return acc;
+    }, {});
+
+    return checkedItems;
+  };
+
   const handleSubmitUrlWebhook = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log(urlWebhook);
+    const checkedItemObject = collectValueOfWebhookChecboxes();
+
+    const payloads: BodyPayloadWebhookConfig = {
+      callback_url: urlWebhook,
+      callback_type_withdraw: checkedItemObject["callback_type_withdraw"] ? checkedItemObject["callback_type_withdraw"] : false,
+      callback_type_notification: checkedItemObject["callback_type_notification"] ? checkedItemObject["callback_type_notification"] : false,
+      callback_type_promo: checkedItemObject["callback_type_promo"] ? checkedItemObject["callback_type_promo"] : false,
+      callback_type_transaction: checkedItemObject["callback_type_transaction"] ? checkedItemObject["callback_type_transaction"] : false,
+      callback_type_product_stock: checkedItemObject["callback_type_product_stock"] ? checkedItemObject["callback_type_product_stock"] : false,
+      callback_type_campaign: checkedItemObject["callback_type_campaign"] ? checkedItemObject["callback_type_campaign"] : false,
+      callback_type_feature_request: checkedItemObject["callback_type_feature_request"] ? checkedItemObject["callback_type_feature_request"] : false
+    };
+    
+    postWebhookConfig.mutate(payloads, {
+      onSuccess: () => {
+        void getWebhookConfig.refetch()
+        setDisableWebhookForm(true);
+      },
+      onError: (error) => {
+        const err = error as CustomErrorResponse
+        console.log("Err: ", err.response.data);
+      }
+    });
   };
-  
-  
+
+  const handleWebhookCheckbox = (itemKey: string) => {
+    const webhookCheckboxesTemp = webhookCheckboxes.map((item, idx) => {
+      if (item.key === itemKey) {
+        return { ...item, value: !item.value };
+      }
+      return item;
+    });
+
+    setWebhookCheckboxes(webhookCheckboxesTemp);
+  };
+
+  const handleGenerateAccessToken = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    
+    postGenerateAccessKey.mutate(undefined, {
+      onSuccess: (res) => {
+        console.log("res: ", res)
+        setGeneratedAccessToken(res?.data.access_key);
+        setIsOpenGenerateAccessKeyDialog(true);
+      },
+      onError: (error) => {
+        const err = error as CustomErrorResponse
+        console.log("Err: ", err.response.data);
+      }
+    });
+
+    void getApiAccess.refetch()
+  };
+
+  const deleteAccessTokenAction = useDeleteAccessKey(queryString.stringify({id: deleteAccessTokenID}));
+  const handleDeleteAccessToken = () => {
+    deleteAccessTokenAction.mutate(undefined, {
+      onSuccess: (res) => {
+        console.log("result: ",res)
+        void getApiAccess.refetch();
+        setIsOpenDeleteAccessKeyDialog(false);
+      },
+      onError: (error) => {
+        const err = error as CustomErrorResponse
+        console.log("Err: ", err.response.data);
+        void getApiAccess.refetch();
+        setIsOpenDeleteAccessKeyDialog(false);
+      }
+    });
+  };
+
   const clickCopyAccessKey = async () => {
-    await navigator.clipboard.writeText(accessKey);
+    await navigator.clipboard.writeText(secretKey);
     return;
   };
 
@@ -150,6 +303,14 @@ export default function APIFeaturePage() {
           iconSrc="/assets/caution-warning.png"
           isOpen={isOpenDeleteAccessKeyDialog}
           handleClose={() => setIsOpenDeleteAccessKeyDialog(false)}
+          handleSubmit={handleDeleteAccessToken}
+        />
+
+        <ConfirmationGenerateWithIconDialog
+          title={t("contentApi.accessKey.modalGenerate.title")}
+          contentGenerateAlert={generatedAccessToken}
+          isOpen={isOpenGenerateAccessKeyDialog}
+          handleClose={() => setIsOpenGenerateAccessKeyDialog(false)}
         />
 
         <Grid container spacing={2} justifyContent={'space-between'} >
@@ -165,7 +326,7 @@ export default function APIFeaturePage() {
                     >
                       {t("contentApi.whitelist.title")}
                     </Typography>
-                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 1}}>
+                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
                       <Grid item xs={12}>
                         <TextField
                           id="ip-whitelist"
@@ -226,7 +387,7 @@ export default function APIFeaturePage() {
                     >
                       {t("contentApi.accessKey.title")}
                     </Typography>
-                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 1}}>
+                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
                       <Grid item xs={9} sm={10}>
                         <TextField
                           id="access-key-text"
@@ -236,7 +397,7 @@ export default function APIFeaturePage() {
                           InputProps={{
                             readOnly: true,
                           }}
-                          value={accessKey}
+                          value={secretKey}
                           onChange={handleAccessKey}
                         />
                       </Grid>
@@ -271,8 +432,13 @@ export default function APIFeaturePage() {
                         >
                           {t("contentApi.accessKey.title")}
                         </Typography>
-                        <div>
-                          <IconButton aria-label="delete" size="small">
+                        {
+                          availableGenerateAccessToken == true ? <div>
+                          <IconButton 
+                            aria-label="delete" 
+                            size="small"
+                            onClick={handleGenerateAccessToken}
+                          >
                             <ReplayIcon color="primary" fontSize="inherit" /> 
                             <Typography
                               component="span"
@@ -282,7 +448,8 @@ export default function APIFeaturePage() {
                               {t("contentApi.accessKey.generateTokenBtn")}
                             </Typography>
                           </IconButton>
-                        </div>
+                        </div> : ''
+                        }
                     </Stack>
                     <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 1}}>
                       <Grid item xs={12}>
@@ -309,14 +476,15 @@ export default function APIFeaturePage() {
                                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                   <TableCell component="th" scope="row">
-                                    {maskStringWithChar(accToken)}
+                                    {accToken.access_key}
                                   </TableCell>
                                   <TableCell align="right">
                                   <IconButton 
                                     aria-label="delete" 
                                     size="small"
                                     onClick={() => {
-                                      setDeleteAccessToken(accToken)
+                                      setDeleteAccessTokenID(accToken.id)
+                                      setDeleteAccessToken(accToken.access_key)
                                       setIsOpenDeleteAccessKeyDialog(true)
                                     }}
                                   >
@@ -350,7 +518,7 @@ export default function APIFeaturePage() {
                     >
                       {t("contentApi.webhook.title")}
                     </Typography>
-                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 1}}>
+                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
                       <Grid item xs={12}>
                         <TextField
                           id="ip-whitelist"
@@ -398,9 +566,16 @@ export default function APIFeaturePage() {
                     <FormGroup>
                     <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 1}}>
                       {
-                        callbackTypes.map((val, idx) => {
+                        webhookCheckboxes.map((val, idx) => {
                           return (<Grid key={idx} item xs={6}>
-                            <FormControlLabel disabled={disableWebhookForm} control={<Checkbox />} label={val} />
+                            <FormControlLabel disabled={disableWebhookForm} 
+                            control={
+                              <Checkbox
+                                checked={val.value}
+                                onChange={(_, checked) => handleWebhookCheckbox(val.key)}
+                              />
+                            } 
+                            label={val.label} />
                           </Grid>)
                         })
                       }
