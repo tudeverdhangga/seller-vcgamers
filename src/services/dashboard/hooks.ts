@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   fetchDashboardGraphSuccess,
   fetchDashboardProductStat,
@@ -6,47 +6,67 @@ import {
   fetchDashboardTotalSuccessAmount,
   fetchDashboardTotalSuccessQty,
   fetchDashboardTransactionSummary,
+  sendFeedback,
 } from "./api";
-import type { GraphSuccessUrl, PeriodFilterParams } from "./types";
+import type { GraphSuccessUrl } from "./types";
+import { useQueryState } from "next-usequerystate";
 
 export function useGetDashboardProductStat() {
+  const [periode_filter] = useQueryState("periode_filter");
+
   return useQuery({
-    queryKey: ["dashboard-product-stat"],
-    queryFn: () => fetchDashboardProductStat(),
+    queryKey: ["dashboard-product-stat", periode_filter],
+    queryFn: () => fetchDashboardProductStat({ periode_filter }),
   });
 }
 
 export function useGetDashboardTransactionSummary() {
+  const [periode_filter] = useQueryState("periode_filter");
+
   return useQuery({
-    queryKey: ["dashboard-transaction-summary"],
-    queryFn: () => fetchDashboardTransactionSummary(),
+    queryKey: ["dashboard-transaction-summary", periode_filter],
+    queryFn: () => fetchDashboardTransactionSummary({ periode_filter }),
   });
 }
 
-export function useGetDashboardTotalSuccessQty(params: PeriodFilterParams) {
+export function useGetDashboardTotalSuccessQty() {
+  const [periode_filter] = useQueryState("periode_filter");
+
   return useQuery({
-    queryKey: ["dashboard-total-success-qty", params.periode_filter],
-    queryFn: () => fetchDashboardTotalSuccessQty(params),
+    queryKey: ["dashboard-total-success-qty", periode_filter],
+    queryFn: () => fetchDashboardTotalSuccessQty({ periode_filter }),
   });
 }
 
-export function useGetDashboardTotalSuccessAmount(params: PeriodFilterParams) {
+export function useGetDashboardTotalSuccessAmount() {
+  const [periode_filter] = useQueryState("periode_filter");
+
   return useQuery({
-    queryKey: ["dashboard-total-success-amount", params.periode_filter],
-    queryFn: () => fetchDashboardTotalSuccessAmount(params),
+    queryKey: ["dashboard-total-success-amount", periode_filter],
+    queryFn: () => fetchDashboardTotalSuccessAmount({ periode_filter }),
   });
 }
 
-export function useGetDashboardSellerPerformance(params: PeriodFilterParams) {
+export function useGetDashboardSellerPerformance() {
+  const [periode_filter] = useQueryState("periode_filter");
+
   return useQuery({
-    queryKey: ["dashboard-seller-performance", params.periode_filter],
-    queryFn: () => fetchDashboardSellerPerformance(params),
+    queryKey: ["dashboard-seller-performance", periode_filter],
+    queryFn: () => fetchDashboardSellerPerformance({ periode_filter }),
   });
 }
 
 export function useGetDashboardGraphSuccess(url: GraphSuccessUrl) {
+  const [periode_filter] = useQueryState("periode_filter");
+
   return useQuery({
-    queryKey: [`dashboard-graph-success-${url}`],
-    queryFn: () => fetchDashboardGraphSuccess(url),
+    queryKey: [`dashboard-graph-success-${url}`, periode_filter],
+    queryFn: () => fetchDashboardGraphSuccess(url, { periode_filter }),
+  });
+}
+
+export function useSendFeedback() {
+  return useMutation({
+    mutationFn: sendFeedback,
   });
 }

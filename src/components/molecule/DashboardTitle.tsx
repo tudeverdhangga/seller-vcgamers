@@ -2,23 +2,17 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs, { Dayjs } from "dayjs";
 
 import { useTranslation } from "next-i18next";
 import { useQueryState } from "next-usequerystate";
 
 export default function DashboardTitle() {
   const { t } = useTranslation("dashboard");
-  const [periodFilter, setPeriodFilter] = useQueryState("periode_filter");
-
-  const handlePeriodChange = (event: SelectChangeEvent) => {
-    void setPeriodFilter(event.target.value);
-  };
-
-  const currentDate = dayjs();
-  const periods = [0, 1, 2, 3, 4, 5].map((i) =>
-    currentDate.subtract(i, "month")
-  );
+  const [, setPeriodFilter] = useQueryState("periode_filter");
 
   return (
     <Box
@@ -56,26 +50,28 @@ export default function DashboardTitle() {
           {t("subtitle")}
         </Typography>
       </Box>
-      <Select
-        id="month-select"
-        value={periodFilter ?? currentDate.format("YYYY-MM")}
-        onChange={handlePeriodChange}
-        sx={{
-          width: { sm: "183px", xs: "150px" },
-          borderRadius: "11px",
-          backgroundColor: "common.shade.0",
-        }}
-      >
-        {periods.map((period) => {
-          const month = period.format("YYYY-MM");
-
-          return (
-            <MenuItem key={month} value={month}>
-              {period.format("MMM-YYYY").toUpperCase()}
-            </MenuItem>
-          );
-        })}
-      </Select>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Pilih Periode"
+          format="MMM-YYYY"
+          views={["month", "year"]}
+          onChange={(e: Dayjs | null) => {
+            void setPeriodFilter((e ?? dayjs()).format("YYYY-MM"));
+          }}
+          sx={{ borderRadius: "11px" }}
+          slotProps={{
+            textField: {
+              sx: {
+                ".MuiOutlinedInput-root": { borderRadius: "11px" },
+                width: { sm: "183px", xs: "150px" },
+                height: "100%",
+                borderRadius: "11px",
+                backgroundColor: "common.shade.0",
+              },
+            },
+          }}
+        />
+      </LocalizationProvider>
     </Box>
   );
 }

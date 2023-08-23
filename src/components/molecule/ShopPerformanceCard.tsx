@@ -5,7 +5,6 @@ import ListItem from "@mui/material/ListItem";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
-import { useQueryState } from "next-usequerystate";
 
 import { useGetDashboardSellerPerformance } from "~/services/dashboard/hooks";
 import DashboardCard from "../atomic/DashboardCard";
@@ -19,10 +18,7 @@ import DashboardPerformanceHelpToolTip from "./DashboardPerformanceHelpToolTip";
 
 export default function ShopPerformanceCard() {
   const { t } = useTranslation("dashboard");
-  const [periodFilter] = useQueryState("periode_filter");
-  const { data } = useGetDashboardSellerPerformance({
-    periode_filter: periodFilter,
-  });
+  const { data } = useGetDashboardSellerPerformance();
 
   return (
     <DashboardCard

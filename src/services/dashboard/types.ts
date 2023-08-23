@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface DataProductStat {
   total_active: number;
   total_inactive: number;
@@ -59,3 +61,7 @@ export interface DataGraphSuccess {
 }
 
 export type GraphSuccessUrl = "qty" | "price";
+
+export const feedbackSchema = z.object({ message: z.string().min(1) });
+
+export type Feedback = z.infer<typeof feedbackSchema>;

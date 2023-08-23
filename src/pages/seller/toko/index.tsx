@@ -3,7 +3,6 @@ import Divider from "@mui/material/Divider";
 import Skeleton from "@mui/material/Skeleton";
 import { useAtom } from "jotai";
 import { Trans, useTranslation } from "next-i18next";
-import { useQueryState } from "next-usequerystate";
 import { useEffect, useState } from "react";
 
 import { mobileAppBarAtom } from "~/atom/layout";
@@ -29,14 +28,9 @@ import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 export default function DashboardSellerPage() {
   const { t } = useTranslation("dashboard");
   const [, setMobileAppBarAtom] = useAtom(mobileAppBarAtom);
-  const [periodFilter] = useQueryState("periode_filter");
   const [selectedChart, setSelectedChart] = useState<GraphSuccessUrl>("qty");
-  const { data: totalQtyData, isLoading } = useGetDashboardTotalSuccessQty({
-    periode_filter: periodFilter,
-  });
-  const { data: totalAmountData } = useGetDashboardTotalSuccessAmount({
-    periode_filter: periodFilter,
-  });
+  const { data: totalQtyData, isLoading } = useGetDashboardTotalSuccessQty();
+  const { data: totalAmountData } = useGetDashboardTotalSuccessAmount();
   const { data: graphData } = useGetDashboardGraphSuccess(selectedChart);
 
   useEffect(() => {
