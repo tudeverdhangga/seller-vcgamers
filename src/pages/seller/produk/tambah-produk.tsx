@@ -59,6 +59,7 @@ export default function TambahProdukPage() {
     variations: [],
   })
   const [isVoucherInstant, setIsVoucherInstant] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleFilter = (
     key: string,
@@ -198,6 +199,9 @@ export default function TambahProdukPage() {
       variations: clearArray
     });
   }
+  const onError = (error: boolean) => {
+    setError(error)
+  }
 
   return (
     <>
@@ -240,6 +244,7 @@ export default function TambahProdukPage() {
         onDeleteVariant={onDeleteVariant}
         handleChangeVariantField={handleChangeVariantField}
         handleChangeFilter={handleFilter}
+        onError={onError}
       />
       <Box
         display="flex"
@@ -258,6 +263,7 @@ export default function TambahProdukPage() {
           variant="contained"
           color="success"
           size="large"
+          disabled={error}
           onClick={onSubmit}
         >
           {t("save")}
