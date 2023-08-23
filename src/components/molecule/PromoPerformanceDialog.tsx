@@ -12,41 +12,55 @@ import { useTranslation } from "next-i18next";
 import { performanceDialogOpenAtom } from "~/atom/managePromo";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
+import {
+  useGetPromoDetail,
+  useGetPromoPerformance,
+} from "~/services/managePromo/hooks";
+import { priceFormat } from "~/utils/format";
 
-export default function PromoRejectedDialog() {
+export default function PromoPerformanceDialog(props: { promoId: string }) {
   const { t } = useTranslation("managePromo");
   const [modalOpen, setModalOpen] = useAtom(performanceDialogOpenAtom);
+  const { data } = useGetPromoDetail(props.promoId, modalOpen);
+  const { data: performanceData } = useGetPromoPerformance(
+    props.promoId,
+    modalOpen
+  );
 
   const performanceList = [
     {
       title: t("dialog.performance.totalUsage.title"),
       subtitle: t("dialog.performance.totalUsage.subtitle"),
-      content: t("dialog.performance.content", { value: 0 }),
+      content: t("dialog.performance.content", {
+        value: performanceData?.data.total_usage ?? 0,
+      }),
     },
     {
       title: t("dialog.performance.gross.title"),
       subtitle: t("dialog.performance.gross.subtitle"),
-      content: "Rp0",
+      content: priceFormat(performanceData?.data.total_gross_amount ?? 0),
     },
     {
       title: t("dialog.performance.net.title"),
       subtitle: t("dialog.performance.net.subtitle"),
-      content: t("dialog.performance.content", { value: 0 }),
+      content: t("dialog.performance.content", {
+        value: performanceData?.data.total_nett_amount ?? 0,
+      }),
     },
     {
       title: t("dialog.performance.fee.title"),
       subtitle: t("dialog.performance.fee.subtitle"),
-      content: "Rp0",
+      content: priceFormat(performanceData?.data.total_fee_amount ?? 0),
     },
     {
       title: t("dialog.performance.discount.title"),
       subtitle: t("dialog.performance.discount.subtitle"),
-      content: "Rp0",
+      content: priceFormat(performanceData?.data.total_discount_amount ?? 0),
     },
     {
       title: t("dialog.performance.checkoutWithPromo.title"),
       subtitle: t("dialog.performance.checkoutWithPromo.subtitle"),
-      content: "Rp0",
+      content: priceFormat(performanceData?.data.total_percent_comparison ?? 0),
     },
   ];
 
@@ -99,7 +113,7 @@ export default function PromoRejectedDialog() {
           <Typography
             sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
           >
-            Nama Promo tampil disini
+            {data?.data.name}
           </Typography>
         </Box>
 

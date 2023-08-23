@@ -1,5 +1,6 @@
 import TextField, { type TextFieldProps } from "@mui/material/TextField";
 import React from "react";
+import { NumericFormat, type NumericFormatProps } from "react-number-format";
 import {
   type ControllerProps,
   Controller,
@@ -7,7 +8,36 @@ import {
   type FieldPath,
 } from "react-hook-form";
 
-export default function VGInputText<
+interface CustomProps {
+  onChange: (event: { target: { name: string; value: string } }) => void;
+  name: string;
+}
+
+const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
+  function NumericFormatCustom(props, ref) {
+    const { onChange, ...other } = props;
+
+    return (
+      <NumericFormat
+        {...other}
+        getInputRef={ref}
+        onValueChange={(values) => {
+          onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator="."
+        decimalSeparator=","
+        valueIsNumericString
+      />
+    );
+  }
+);
+
+export default function VGInputNumber<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
@@ -38,6 +68,10 @@ export default function VGInputText<
           }
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={value}
+          InputProps={{
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+            inputComponent: NumericFormatCustom as any,
+          }}
           {...TextFieldProps}
         >
           {children}

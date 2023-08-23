@@ -14,10 +14,13 @@ import { deleteDialogOpenAtom } from "~/atom/managePromo";
 import { toastOption } from "~/utils/toast";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
+import { useDeletePromo } from "~/services/managePromo/hooks";
+import { type Promo } from "~/services/managePromo/types";
 
-export default function PromoDeleteDialog() {
+export default function PromoDeleteDialog(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
   const [modalOpen, setModalOpen] = useAtom(deleteDialogOpenAtom);
+  const deletePromoMutation = useDeletePromo();
 
   return (
     <Dialog
@@ -74,7 +77,7 @@ export default function PromoDeleteDialog() {
           <Typography
             sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
           >
-            CHECKOUTOKOKUJUNI1214125
+            {props.promo.name}
           </Typography>
         </Box>
         <Typography
@@ -103,8 +106,12 @@ export default function PromoDeleteDialog() {
           size="large"
           fullWidth
           onClick={() => {
-            setModalOpen(false);
-            toast.success(t("toast.deleteSuccess"), toastOption);
+            deletePromoMutation.mutate(props.promo.id, {
+              onSuccess: () => {
+                setModalOpen(false);
+                toast.success(t("toast.deleteSuccess"), toastOption);
+              },
+            });
           }}
           color="primary"
         >

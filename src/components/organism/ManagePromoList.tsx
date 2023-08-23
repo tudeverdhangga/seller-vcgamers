@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import { useAtom } from "jotai";
@@ -13,6 +11,10 @@ import VGTabPanel from "../atomic/VGTabPanel";
 import VGTabsChip from "../atomic/VGTabsChip";
 import BadgeIcon from "../icons/BadgeIcon";
 import ManagePromoForm from "./ManagePromoForm";
+import { useGetTabStatus, useGetPromoList } from "~/services/managePromo/hooks";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Skeleton from "@mui/material/Skeleton";
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 const PromoCodeCard = dynamic(() => import("../molecule/PromoCodeCard"), {
   ssr: false,
@@ -20,8 +22,13 @@ const PromoCodeCard = dynamic(() => import("../molecule/PromoCodeCard"), {
 
 export default function ManagePromoList() {
   const { t } = useTranslation("managePromo");
-  const [tabPosition, setTabPosition] = useState(1);
+  const [tabPosition, setTabPosition] = useQueryState(
+    "status",
+    queryTypes.integer.withDefault(3)
+  );
   const [, setManagePromoForm] = useAtom(managePromoFormAtom);
+  const { data: tabData } = useGetTabStatus();
+  const { data: promoData, hasNextPage, fetchNextPage } = useGetPromoList();
 
   return (
     <Box>
@@ -30,21 +37,15 @@ export default function ManagePromoList() {
           value={tabPosition}
           onChange={(_, value) => setTabPosition(value as number)}
         >
-          <VGTabChip
-            label={t("tab.request")}
-            icon={<BadgeIcon content={0} />}
-            iconPosition="end"
-          />
-          <VGTabChip
-            label={t("tab.inProgress")}
-            icon={<BadgeIcon content={0} />}
-            iconPosition="end"
-          />
-          <VGTabChip
-            label={t("tab.completed")}
-            icon={<BadgeIcon content={0} />}
-            iconPosition="end"
-          />
+          {tabData?.data.map((tab) => (
+            <VGTabChip
+              key={tab.value}
+              label={tab.name}
+              value={tab.value}
+              icon={<BadgeIcon content={tab.counter} />}
+              iconPosition="end"
+            />
+          ))}
         </VGTabsChip>
 
         <VGButton
@@ -58,79 +59,20 @@ export default function ManagePromoList() {
       </Box>
       <ManagePromoForm />
 
-      <VGTabPanel value={tabPosition} index={0}>
-        <PromoCodeCard
-          promo={{
-            name: "Nama Promo disini",
-            code: "CHECKOUTOKOKUJUNI1214125CONTOHPANJANG",
-            qty: "20",
-            period: "20 - 30 Okt 2023",
-            transaction: { min: "Rp10.000", max: "Rp40.000" },
-            discount: { min: "Rp1.000", max: "Rp30.000" },
-          }}
-          type="waiting-approval"
-        />
-        <PromoCodeCard
-          promo={{
-            name: "Nama Promo disini",
-            code: "CHECKOUTOKOKUJUNI1214125CONTOHPANJANG",
-            qty: "20",
-            period: "20 - 30 Okt 2023",
-            transaction: { min: "Rp10.000", max: "Rp40.000" },
-            discount: { min: "Rp1.000", max: "Rp30.000" },
-          }}
-          type="rejected"
-        />
-      </VGTabPanel>
-
-      <VGTabPanel value={tabPosition} index={1}>
-        <PromoCodeCard
-          promo={{
-            name: "Nama Promo disini",
-            code: "CHECKOUTOKOKUJUNI1214125CONTOHPANJANG",
-            qty: "20",
-            period: "20 - 30 Okt 2023",
-            transaction: { min: "Rp10.000", max: "Rp40.000" },
-            discount: { min: "Rp1.000", max: "Rp30.000" },
-          }}
-          type="in-progress"
-        />
-        <PromoCodeCard
-          promo={{
-            name: "Nama Promo disini",
-            code: "CHECKOUTOKOKUJUNI1214125CONTOHPANJANG",
-            qty: "20",
-            period: "20 - 30 Okt 2023",
-            transaction: { min: "Rp10.000", max: "Rp40.000" },
-            discount: { min: "Rp1.000", max: "Rp30.000" },
-          }}
-          type="in-progress"
-        />
-      </VGTabPanel>
-
-      <VGTabPanel value={tabPosition} index={2}>
-        <PromoCodeCard
-          promo={{
-            name: "Nama Promo disini",
-            code: "CHECKOUTOKOKUJUNI1214125CONTOHPANJANG",
-            qty: "20",
-            period: "20 - 30 Okt 2023",
-            transaction: { min: "Rp10.000", max: "Rp40.000" },
-            discount: { min: "Rp1.000", max: "Rp30.000" },
-          }}
-          type="completed"
-        />
-        <PromoCodeCard
-          promo={{
-            name: "Nama Promo disini",
-            code: "CHECKOUTOKOKUJUNI1214125CONTOHPANJANG",
-            qty: "20",
-            period: "20 - 30 Okt 2023",
-            transaction: { min: "Rp10.000", max: "Rp40.000" },
-            discount: { min: "Rp1.000", max: "Rp30.000" },
-          }}
-          type="disabled"
-        />
+      <VGTabPanel value={tabPosition} index={tabPosition}>
+        <InfiniteScroll
+          dataLength={promoData?.pages ? promoData.pages.length : 0}
+          hasMore={hasNextPage ?? false}
+          next={fetchNextPage}
+          style={{ display: "flex", flexDirection: "column" }}
+          loader={<Skeleton variant="rounded" height={100} width="75%" />}
+        >
+          {promoData?.pages
+            .flatMap((page) => page.data.data)
+            .map((promo) => (
+              <PromoCodeCard key={promo.id} promo={promo} />
+            ))}
+        </InfiniteScroll>
       </VGTabPanel>
     </Box>
   );

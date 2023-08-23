@@ -14,12 +14,20 @@ import { disableDialogOpenAtom } from "~/atom/managePromo";
 import { toastOption } from "~/utils/toast";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
+import {
+  useDeactivatePromo,
+  useGetPromoDetail,
+} from "~/services/managePromo/hooks";
+import dayjs from "dayjs";
 
-export default function PromoDisableDialog() {
+export default function PromoDisableDialog(props: { promoId: string }) {
   const { t } = useTranslation("managePromo");
   const [modalOpen, setModalOpen] = useAtom(disableDialogOpenAtom);
+  const deactivateMutation = useDeactivatePromo();
+  const { data } = useGetPromoDetail(props.promoId, modalOpen);
 
-  const isOverTimeLimit = true;
+  const isUnderTimeLimit =
+    dayjs() < dayjs(data?.data.approved_date).add(3, "days");
 
   return (
     <Dialog
@@ -71,15 +79,15 @@ export default function PromoDisableDialog() {
           <Typography
             sx={{ color: "primary.main", fontSize: 14, fontWeight: 700 }}
           >
-            Nama promo disini
+            {data?.data.name}
           </Typography>
           <Typography
             sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
           >
-            CHECKOUTOKOKUJUNI1214125
+            {data?.data.promo_code}
           </Typography>
         </Box>
-        {!isOverTimeLimit && (
+        {!isUnderTimeLimit && (
           <Typography
             sx={{
               mt: "10px",
@@ -91,7 +99,7 @@ export default function PromoDisableDialog() {
             {t("dialog.disabled.subtitle")}
           </Typography>
         )}
-        {isOverTimeLimit && (
+        {isUnderTimeLimit && (
           <Box>
             <Typography
               sx={{
@@ -110,7 +118,11 @@ export default function PromoDisableDialog() {
                 fontWeight: 500,
               }}
             >
-              {t("dialog.disabled.errorHint", { date: "3 Jul 2023 12:03" })}
+              {t("dialog.disabled.errorHint", {
+                date: dayjs(data?.data.approved_date)
+                  .add(3, "days")
+                  .format("DD MMM YYYY HH:mm"),
+              })}
             </Typography>
           </Box>
         )}
@@ -129,9 +141,14 @@ export default function PromoDisableDialog() {
           variant="outlined"
           size="large"
           fullWidth
+          disabled={isUnderTimeLimit}
           onClick={() => {
-            setModalOpen(false);
-            toast.success(t("toast.disableSuccess"), toastOption);
+            deactivateMutation.mutate(props.promoId, {
+              onSuccess: () => {
+                setModalOpen(false);
+                toast.success(t("toast.disableSuccess"), toastOption);
+              },
+            });
           }}
           color="primary"
         >

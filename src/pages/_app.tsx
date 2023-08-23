@@ -1,18 +1,20 @@
-import type { ReactElement, ReactNode } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NextPage } from "next";
-import type { AppProps } from "next/app";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { appWithTranslation } from "next-i18next";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import type { AppProps } from "next/app";
+import type { ReactElement, ReactNode } from "react";
 
 import nextI18NextConfig from "../../next-i18next.config.mjs";
 
+import { env } from "~/env.mjs";
 import { Layout } from "~/layout";
 import { commonColors } from "~/utils/colors";
 
-import '~/components/atomic/VGRichEditor/index.css'
 import StyledToastContainer from "~/components/atomic/StyledToastContainer";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "~/components/atomic/VGRichEditor/index.css";
+import { queryClient } from "~/services/http";
 
 //TODO: Fix issue loading using next/font
 // const rajdhani = Rajdhani({
@@ -20,6 +22,10 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 //   weight: ["500", "600", "700"],
 //   display: "swap",
 // });
+
+if (env.NEXT_PUBLIC_API_MOCKING === "enabled") {
+  require("../../mocks");
+}
 
 const theme = createTheme({
   palette: {
@@ -35,12 +41,12 @@ const theme = createTheme({
       default: "#f5f5f5",
     },
     secondary: {
-      main: "#616A82"
+      main: "#616A82",
     },
     success: {
       main: "#40D04F",
       contrastText: "#FFFFFF",
-      dark: "#00870E"
+      dark: "#00870E",
     },
     divider: "#F5F5F5",
     common: commonColors,
@@ -61,7 +67,6 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
-  const queryClient = new QueryClient();
 
   return (
     <>

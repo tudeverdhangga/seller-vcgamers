@@ -6,6 +6,7 @@ import {
   fetchBalanceHistoryStatus,
   fetchBalanceInfo,
 } from "./api";
+import { paginationNextPageParam } from "../utils";
 
 export function useGetBalanceInfo() {
   return useQuery({
@@ -34,12 +35,7 @@ export function useGetBalanceHistories() {
         dateEnd,
         pageParam: pageParam as string,
       }),
-    getNextPageParam: (currentPage) => {
-      const nextCursor = currentPage.data.pagination_data.next_cursor;
-      const prevCursor = currentPage.data.pagination_data.prev_cursor;
-
-      return nextCursor === prevCursor ? undefined : nextCursor || "";
-    },
+    getNextPageParam: paginationNextPageParam,
   });
 }
 

@@ -12,10 +12,13 @@ import { rejectedDialogOpenAtom } from "~/atom/managePromo";
 import CloseIcon from "../icons/chat/CloseIcon";
 import VGButton from "../atomic/VGButton";
 import Typography from "@mui/material/Typography";
+import { type Promo } from "~/services/managePromo/types";
+import { useGetPromoDetail } from "~/services/managePromo/hooks";
 
-export default function PromoRejectedDialog() {
+export default function PromoRejectedDialog(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
   const [modalOpen, setModalOpen] = useAtom(rejectedDialogOpenAtom);
+  const { data } = useGetPromoDetail(props.promo.id, modalOpen);
 
   return (
     <Dialog
@@ -50,7 +53,7 @@ export default function PromoRejectedDialog() {
           sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
         >
           {t("dialog.rejected.subtitle", {
-            value: "[Admin nanti akan menuliskan alasan dan tampil disini]",
+            value: data?.data.rejected_reason,
           })}
         </Typography>
         <Box

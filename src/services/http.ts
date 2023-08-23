@@ -1,3 +1,4 @@
+import { QueryClient } from "@tanstack/react-query";
 import axios, { type AxiosResponse } from "axios";
 import { env } from "~/env.mjs";
 
@@ -23,6 +24,8 @@ function errorHandler(
 
   return Promise.reject(error);
 }
+
+export const queryClient = new QueryClient();
 
 export const HTTP = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,

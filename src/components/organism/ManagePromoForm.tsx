@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
@@ -16,20 +17,41 @@ import RadioGroup from "@mui/material/RadioGroup";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import CloseIcon from "@mui/icons-material/Close";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
+import {
+  useForm,
+  Controller,
+  useFieldArray,
+  type FieldArrayWithId,
+  type UseFormReturn,
+} from "react-hook-form";
 
 import {
+  disableDialogOpenAtom,
   managePromoFormAtom,
   performanceDialogOpenAtom,
-  disableDialogOpenAtom,
 } from "~/atom/managePromo";
+import {
+  type BodyPromo,
+  promoSchema,
+  promoSchemaMerge,
+} from "~/services/managePromo/types";
+import {
+  useGetBrandsByCategory,
+  useGetCategory,
+} from "~/services/api/masterData";
 import VGButton from "../atomic/VGButton";
 import VGChip from "../atomic/VGChip";
-import CloseIcon from "../icons/chat/CloseIcon";
+import VGInputText from "../atomic/VGInputText";
+import VGInputDate from "../atomic/VGInputDate";
+import VGInputNumber from "../atomic/VGInputNumber";
+import {
+  useCheckPromoCode,
+  useCreatePromo,
+  useGetPromoDetailMapped,
+} from "~/services/managePromo/hooks";
 
 export default function ManagePromoForm() {
   const { t } = useTranslation("managePromo");
@@ -39,6 +61,44 @@ export default function ManagePromoForm() {
   const [discountType, setDiscountType] = useState<"price" | "percentage">(
     "price"
   );
+  const { data: categoriesData } = useGetCategory();
+  const { data: promoDetailData } = useGetPromoDetailMapped(
+    managePromoForm.promoId,
+    managePromoForm.isOpen
+  );
+
+  const checkCodeMutation = useCheckPromoCode();
+  const createPromoMutation = useCreatePromo();
+
+  const form = useForm<BodyPromo>({
+    resolver: zodResolver(
+      promoSchema.merge(promoSchemaMerge(checkCodeMutation.mutateAsync)),
+      undefined,
+      {
+        mode: "async",
+      }
+    ),
+    values: promoDetailData?.data,
+  });
+  const productForm = useFieldArray<BodyPromo, "items", "id">({
+    control: form.control,
+    name: "items",
+    rules: { minLength: 1 },
+  });
+
+  useEffect(() => {
+    if (!managePromoForm.isOpen) {
+      form.reset();
+      productForm.remove();
+    } else {
+      if (productForm.fields.length === 0) {
+        productForm.append({ category_id: "", brand_id: [] });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [managePromoForm.isOpen]);
+
+  const isDisabled = managePromoForm.type === "disabled";
 
   return (
     <Dialog
@@ -52,7 +112,15 @@ export default function ManagePromoForm() {
       }}
       maxWidth="md"
     >
-      <form>
+      <form
+        onSubmit={form.handleSubmit((data) => {
+          createPromoMutation.mutate(data, {
+            onSuccess: () => {
+              setManagePromoForm({ isOpen: false });
+            },
+          });
+        })}
+      >
         <DialogTitle
           sx={{
             fontSize: 16,
@@ -62,11 +130,7 @@ export default function ManagePromoForm() {
           }}
         >
           <p>
-            {t(
-              managePromoForm.type === "disabled"
-                ? "form.detailPromo.title"
-                : "form.addPromo.title"
-            )}
+            {t(isDisabled ? "form.detailPromo.title" : "form.addPromo.title")}
           </p>
           <IconButton
             onClick={() => setManagePromoForm({ isOpen: false })}
@@ -82,109 +146,115 @@ export default function ManagePromoForm() {
         <DialogContent sx={{ px: 3 }}>
           <Grid container spacing={2} sx={{ py: 1 }}>
             <Grid xs={12}>
-              <TextField
-                label={t("form.addPromo.fields.name.label")}
-                placeholder={t("form.addPromo.fields.name.placeholder")}
-                fullWidth
+              <VGInputText
+                ControllerProps={{
+                  control: form.control,
+                  name: "name",
+                }}
+                TextFieldProps={{
+                  label: t("form.addPromo.fields.name.label"),
+                  placeholder: t("form.addPromo.fields.name.placeholder"),
+                  fullWidth: true,
+                  disabled: isDisabled,
+                }}
               />
             </Grid>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Grid xs={6}>
-                <DatePicker
-                  label={t("form.addPromo.fields.period.start.label")}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      placeholder: t(
-                        "form.addPromo.fields.period.start.placeholder"
-                      ),
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <DatePicker
-                  label={t("form.addPromo.fields.period.end.label")}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      placeholder: t(
-                        "form.addPromo.fields.period.end.placeholder"
-                      ),
-                    },
-                  }}
-                />
-              </Grid>
-            </LocalizationProvider>
-            <Grid sm={4}>
-              <TextField
-                label={t("form.addPromo.fields.code.label")}
-                placeholder={t("form.addPromo.fields.code.placeholder")}
-                FormHelperTextProps={{ sx: { m: 0 } }}
-                helperText={
-                  <>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        backgroundColor: "common.shade.50",
-                        px: "20px",
-                        py: 1,
-                        borderRadius: "0 0 5px 5px",
-                      }}
-                    >
-                      <Typography
-                        component="span"
-                        color="common.shade.100"
-                        fontWeight={600}
-                      >
-                        {t("form.addPromo.fields.code.helperText")}
-                      </Typography>
-                      <Typography
-                        component="span"
-                        color="common.purple.500"
-                        fontWeight={600}
-                      >
-                        NAMATOKOKU
-                      </Typography>
-                    </Box>
-                    {/* <Typography
-                        component="span"
-                        color="common.red.500"
-                        fontSize={12}
-                        fontWeight={600}
-                      >
-                        {t("form.addPromo.fields.code.errorText")}
-                      </Typography> */}
-                  </>
-                }
-                fullWidth
-                inputProps={{
-                  maxLength: 5,
+            <Grid xs={6}>
+              <VGInputDate
+                ControllerProps={{
+                  name: "date_start",
+                  control: form.control,
                 }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">0/5</InputAdornment>
+                DatePickerProps={{
+                  label: t("form.addPromo.fields.period.start.label"),
+                }}
+                TextFieldProps={{
+                  fullWidth: true,
+                  placeholder: t(
+                    "form.addPromo.fields.period.start.placeholder"
                   ),
+                  disabled: isDisabled,
+                }}
+              />
+            </Grid>
+            <Grid xs={6}>
+              <VGInputDate
+                ControllerProps={{
+                  name: "date_end",
+                  control: form.control,
+                }}
+                DatePickerProps={{
+                  label: t("form.addPromo.fields.period.end.label"),
+                }}
+                TextFieldProps={{
+                  fullWidth: true,
+                  placeholder: t("form.addPromo.fields.period.end.placeholder"),
+                  disabled: isDisabled,
                 }}
               />
             </Grid>
             <Grid sm={4}>
-              <TextField
-                label={t("form.addPromo.fields.qty.label")}
-                helperText={t("form.addPromo.fields.qty.helperText")}
-                defaultValue={10}
-                type="number"
-                fullWidth
+              <Controller
+                control={form.control}
+                name="promo_code"
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    label={t("form.addPromo.fields.code.label")}
+                    placeholder={t("form.addPromo.fields.code.placeholder")}
+                    FormHelperTextProps={{ sx: { m: 0 } }}
+                    onChange={onChange}
+                    value={value}
+                    fullWidth
+                    helperText={error ? error.message : null}
+                    error={!!error}
+                    disabled={isDisabled}
+                    inputProps={{
+                      maxLength: 5,
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {value?.length ?? 0}/5
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
               />
             </Grid>
             <Grid sm={4}>
-              <TextField
-                label={t("form.addPromo.fields.userLimit.label")}
-                helperText={t("form.addPromo.fields.userLimit.helperText")}
-                defaultValue={1}
-                type="number"
-                fullWidth
+              <VGInputNumber
+                ControllerProps={{
+                  control: form.control,
+                  name: "stock",
+                  defaultValue: 10,
+                }}
+                TextFieldProps={{
+                  label: t("form.addPromo.fields.qty.label"),
+                  placeholder: t("form.addPromo.fields.qty.helperText"),
+                  helperText: "Minimum: 10",
+                  fullWidth: true,
+                  disabled: isDisabled,
+                }}
+              />
+            </Grid>
+            <Grid sm={4}>
+              <VGInputNumber
+                ControllerProps={{
+                  control: form.control,
+                  name: "limit_user",
+                  defaultValue: 1,
+                }}
+                TextFieldProps={{
+                  label: t("form.addPromo.fields.userLimit.label"),
+                  placeholder: t("form.addPromo.fields.userLimit.helperText"),
+                  helperText: "Minimum: 1",
+                  fullWidth: true,
+                  disabled: isDisabled,
+                }}
               />
             </Grid>
             <Grid xs={12}>
@@ -220,9 +290,11 @@ export default function ManagePromoForm() {
               <RadioGroup
                 row
                 value={discountType}
-                onChange={(e) =>
-                  setDiscountType(e.target.value as "price" | "percentage")
-                }
+                onChange={(e) => {
+                  const value = e.target.value as "price" | "percentage";
+                  setDiscountType(value);
+                  form.setValue("is_percent", value === "percentage");
+                }}
               >
                 <FormControlLabel
                   control={<Radio />}
@@ -242,28 +314,40 @@ export default function ManagePromoForm() {
             {discountType === "price" && (
               <>
                 <Grid xs={4}>
-                  <TextField
-                    label={t("form.addPromo.fields.discountNominal.label")}
-                    placeholder={t(
-                      "form.addPromo.fields.discountNominal.placeholder"
-                    )}
-                    type="number"
-                    fullWidth
+                  <VGInputNumber
+                    ControllerProps={{
+                      control: form.control,
+                      name: "amount_promo",
+                    }}
+                    TextFieldProps={{
+                      label: t("form.addPromo.fields.discountNominal.label"),
+                      placeholder: t(
+                        "form.addPromo.fields.discountNominal.placeholder"
+                      ),
+                      fullWidth: true,
+                      disabled: isDisabled,
+                    }}
                   />
                 </Grid>
                 <Grid xs={4}>
-                  <TextField
-                    label={t(
-                      "form.addPromo.fields.discountMinimumTransaction.label"
-                    )}
-                    placeholder={t(
-                      "form.addPromo.fields.discountMinimumTransaction.placeholder"
-                    )}
-                    helperText={t(
-                      "form.addPromo.fields.discountMinimumTransaction.helperText"
-                    )}
-                    type="number"
-                    fullWidth
+                  <VGInputNumber
+                    ControllerProps={{
+                      control: form.control,
+                      name: "minimum_transaction_amount",
+                    }}
+                    TextFieldProps={{
+                      label: t(
+                        "form.addPromo.fields.discountMinimumTransaction.label"
+                      ),
+                      placeholder: t(
+                        "form.addPromo.fields.discountMinimumTransaction.placeholder"
+                      ),
+                      helperText: t(
+                        "form.addPromo.fields.discountMinimumTransaction.helperText"
+                      ),
+                      fullWidth: true,
+                      disabled: isDisabled,
+                    }}
                   />
                 </Grid>
               </>
@@ -272,37 +356,55 @@ export default function ManagePromoForm() {
             {discountType === "percentage" && (
               <>
                 <Grid xs={4}>
-                  <TextField
-                    label={t("form.addPromo.fields.discountNominal.label")}
-                    placeholder={t(
-                      "form.addPromo.fields.discountNominal.placeholder"
-                    )}
-                    type="number"
-                    fullWidth
+                  <VGInputNumber
+                    ControllerProps={{
+                      control: form.control,
+                      name: "percent_promo",
+                    }}
+                    TextFieldProps={{
+                      label: t("form.addPromo.fields.discountNominal.label"),
+                      placeholder: t(
+                        "form.addPromo.fields.discountNominal.placeholder"
+                      ),
+                      fullWidth: true,
+                      disabled: isDisabled,
+                    }}
                   />
                 </Grid>
                 <Grid xs={4}>
-                  <TextField
-                    label={t(
-                      "form.addPromo.fields.discountMinimumTransaction.label"
-                    )}
-                    placeholder={t(
-                      "form.addPromo.fields.discountMinimumTransaction.placeholder"
-                    )}
-                    type="number"
-                    fullWidth
+                  <VGInputNumber
+                    ControllerProps={{
+                      control: form.control,
+                      name: "minimum_transaction_amount",
+                    }}
+                    TextFieldProps={{
+                      label: t(
+                        "form.addPromo.fields.discountMinimumTransaction.label"
+                      ),
+                      placeholder: t(
+                        "form.addPromo.fields.discountMinimumTransaction.placeholder"
+                      ),
+                      fullWidth: true,
+                      disabled: isDisabled,
+                    }}
                   />
                 </Grid>
                 <Grid xs={4}>
-                  <TextField
-                    label={t(
-                      "form.addPromo.fields.discountMaximumTransaction.label"
-                    )}
-                    placeholder={t(
-                      "form.addPromo.fields.discountMaximumTransaction.placeholder"
-                    )}
-                    type="number"
-                    fullWidth
+                  <VGInputNumber
+                    ControllerProps={{
+                      control: form.control,
+                      name: "maximum_discount_amount",
+                    }}
+                    TextFieldProps={{
+                      label: t(
+                        "form.addPromo.fields.discountMaximumTransaction.label"
+                      ),
+                      placeholder: t(
+                        "form.addPromo.fields.discountMaximumTransaction.placeholder"
+                      ),
+                      fullWidth: true,
+                      disabled: isDisabled,
+                    }}
                   />
                 </Grid>
               </>
@@ -320,48 +422,51 @@ export default function ManagePromoForm() {
                 {t("form.addPromo.fields.product.title")}
               </Typography>
             </Grid>
-            <Grid xs={4}>
-              <TextField
-                label={t("form.addPromo.fields.category.label", { value: 1 })}
-                select
-                fullWidth
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid xs={8}>
-              <TextField
-                label={t("form.addPromo.fields.brand.label")}
-                placeholder={t("form.addPromo.fields.brand.placeholder")}
-                select
-                fullWidth
-                value={[]}
-                SelectProps={{
-                  multiple: true,
-                  renderValue: (selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {(selected as string[]).map((value) => (
-                        <VGChip key={value} label={value} onDelete={() => {
-                          console.log("delete")
-                        }} />
-                      ))}
-                    </Box>
-                  ),
-                }}
-              >
-                <MenuItem value={"ten"}>Ten</MenuItem>
-                <MenuItem value={"two"}>Twenty</MenuItem>
-                <MenuItem value={"three"}>Thirty</MenuItem>
-              </TextField>
-            </Grid>
+            {productForm.fields.map((field, index) => (
+              <>
+                <Grid xs={4} key={field.id}>
+                  <VGInputText
+                    ControllerProps={{
+                      control: form.control,
+                      name: `items.${index}.category_id` as const,
+                    }}
+                    TextFieldProps={{
+                      label: t("form.addPromo.fields.category.label", {
+                        value: index + 1,
+                      }),
+                      select: true,
+                      fullWidth: true,
+                      disabled: isDisabled,
+                    }}
+                    addOnChange={() =>
+                      form.resetField(`items.${index}.brand_id` as const)
+                    }
+                  >
+                    {categoriesData?.data.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </VGInputText>
+                </Grid>
+                <Grid xs={8}>
+                  <BrandInputText field={field} form={form} index={index} />
+                </Grid>
+              </>
+            ))}
             <Grid xs={12}>
-              <VGButton>{t("form.addPromo.fields.addCategory.title")}</VGButton>
+              <VGButton
+                disabled={isDisabled}
+                onClick={() =>
+                  productForm.append({ category_id: "", brand_id: [] })
+                }
+              >
+                {t("form.addPromo.fields.addCategory.title")}
+              </VGButton>
             </Grid>
           </Grid>
         </DialogContent>
-        {managePromoForm.type === "disabled" && (
+        {isDisabled && (
           <DialogActions sx={{ justifyContent: "space-between", px: 3, pb: 3 }}>
             <VGButton
               variant="outlined"
@@ -406,7 +511,7 @@ export default function ManagePromoForm() {
             <VGButton
               variant="contained"
               size="large"
-              onClick={() => setManagePromoForm({ isOpen: false })}
+              type="submit"
               color="success"
             >
               {t("btn.editPromo")}
@@ -420,7 +525,7 @@ export default function ManagePromoForm() {
             <VGButton
               variant="contained"
               size="large"
-              onClick={() => setManagePromoForm({ isOpen: false })}
+              type="submit"
               color="success"
             >
               {t(
@@ -431,5 +536,72 @@ export default function ManagePromoForm() {
         )}
       </form>
     </Dialog>
+  );
+}
+
+function BrandInputText({
+  field,
+  form,
+  index,
+}: {
+  field: FieldArrayWithId<BodyPromo, "items", "id">;
+  form: UseFormReturn<BodyPromo>;
+  index: number;
+}) {
+  const { t } = useTranslation("managePromo");
+  const categoryId = form.watch(`items.${index}.category_id` as const);
+  const { data: brandsData } = useGetBrandsByCategory(categoryId);
+
+  return (
+    <VGInputText
+      key={field.id}
+      ControllerProps={{
+        control: form.control,
+        name: `items.${index}.brand_id` as const,
+      }}
+      TextFieldProps={{
+        label: t("form.addPromo.fields.brand.label", {
+          value: 1,
+        }),
+        placeholder: t("form.addPromo.fields.brand.placeholder"),
+        select: true,
+        fullWidth: true,
+        SelectProps: {
+          multiple: true,
+          renderValue: (selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {(selected as string[]).map((value) => (
+                <VGChip
+                  key={value}
+                  label={
+                    brandsData?.data.find((brand) => brand.id === value)?.name
+                  }
+                  color="primary"
+                  sx={{ color: "primary.main" }}
+                  onMouseDown={(event) => {
+                    event.stopPropagation();
+                  }}
+                  deleteIcon={<CloseIcon />}
+                  onDelete={() => {
+                    form.setValue(
+                      `items.${index}.brand_id` as const,
+                      (selected as string[]).filter(
+                        (brandId) => brandId !== value
+                      )
+                    );
+                  }}
+                />
+              ))}
+            </Box>
+          ),
+        },
+      }}
+    >
+      {brandsData?.data.map((brand) => (
+        <MenuItem key={brand.id} value={brand.id}>
+          {brand.name}
+        </MenuItem>
+      ))}
+    </VGInputText>
   );
 }

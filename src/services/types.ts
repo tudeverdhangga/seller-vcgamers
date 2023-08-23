@@ -16,6 +16,20 @@ export interface ResponsePagination<T> {
 
 export type APIResponsePagination<T> = APIResponse<ResponsePagination<T>>;
 
+export interface APIApiResponse<T> {
+  code: number;
+  status: string;
+  data: T;
+}
+
+export type APIApiResponsePagination<T> = APIApiResponse<T> & {
+  paginate: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+};
+
 export interface SellerBank {
   bank_name: string;
   bank_account_number: string;

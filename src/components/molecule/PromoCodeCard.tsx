@@ -25,25 +25,10 @@ import PromoDeleteDialog from "./PromoDeleteDialog";
 import PromoDisableDialog from "./PromoDisableDialog";
 import PromoPerformanceDialog from "./PromoPerformanceDialog";
 import PromoRejectedDialog from "./PromoRejectedDialog";
+import type { Promo, PromoType } from "~/services/managePromo/types";
+import { useDeletePromo } from "~/services/managePromo/hooks";
 
-type PromoType =
-  | "waiting-approval"
-  | "rejected"
-  | "in-progress"
-  | "completed"
-  | "disabled";
-
-export default function PromoCodeCard(props: {
-  promo: {
-    name: string;
-    code: string;
-    qty: string;
-    period: string;
-    transaction: { min: string; max: string };
-    discount: { min: string; max: string };
-  };
-  type: PromoType;
-}) {
+export default function PromoCodeCard(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
   const [, setManagePromoForm] = useAtom(managePromoFormAtom);
 
@@ -51,7 +36,7 @@ export default function PromoCodeCard(props: {
     await navigator.clipboard.writeText(code);
 
   const handleCardClick = (type: PromoType) => {
-    let formType: "create" | "edit" | "reuse" | "disabled" = "create";
+    let formType: "create" | "edit" | "disabled" = "create";
 
     switch (type) {
       case "in-progress":
@@ -75,11 +60,11 @@ export default function PromoCodeCard(props: {
           fontSize={16}
           fontWeight={700}
           sx={{ flexGrow: 1 }}
-          onClick={() => handleCardClick(props.type)}
+          onClick={() => handleCardClick(props.promo.status_name)}
         >
           {props.promo.name}
         </Typography>
-        <LabelChip type={props.type} />
+        <LabelChip type={props.promo.status_name} />
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: "20px" }}>
@@ -87,12 +72,12 @@ export default function PromoCodeCard(props: {
           <Title>{t("card.code")}</Title>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <SubTitle maxWidth={200} noWrap>
-              {props.promo.code}
+              {props.promo.promo_code}
             </SubTitle>
             <IconButton
               edge="end"
               aria-label="copy"
-              onClick={() => void clickCopyCode(props.promo.code)}
+              onClick={() => void clickCopyCode(props.promo.promo_code)}
             >
               <CopyIcon />
             </IconButton>
@@ -100,36 +85,26 @@ export default function PromoCodeCard(props: {
         </Box>
         <Box>
           <Title>{t("card.qty")}</Title>
-          <SubTitle>{props.promo.qty}</SubTitle>
+          <SubTitle>{props.promo.stock}</SubTitle>
         </Box>
         <Box sx={{ flex: 1 }}>
           <Title>{t("card.period")}</Title>
-          <SubTitle>{props.promo.period}</SubTitle>
+          <SubTitle>{props.promo.periode}</SubTitle>
         </Box>
         <Box sx={{ flex: 1 }}>
           <Title>{t("card.transaction")}</Title>
           <Box sx={{ display: "flex", gap: "10px" }}>
-            <SubTitle>
-              {t("card.min", { value: props.promo.transaction.min })}
-            </SubTitle>
-            <SubTitle>
-              {t("card.max", { value: props.promo.transaction.max })}
-            </SubTitle>
+            <SubTitle>{props.promo.transaction_rule}</SubTitle>
           </Box>
         </Box>
         <Box sx={{ flex: 1 }}>
           <Title>{t("card.discount")}</Title>
           <Box sx={{ display: "flex", gap: "10px" }}>
-            <SubTitle>
-              {t("card.min", { value: props.promo.discount.min })}
-            </SubTitle>
-            <SubTitle>
-              {t("card.max", { value: props.promo.discount.max })}
-            </SubTitle>
+            <SubTitle>{props.promo.discount_rule}</SubTitle>
           </Box>
         </Box>
         <Box sx={{ display: "flex", gap: "10px", flex: 1 }}>
-          <ActionButton type={props.type} />
+          <ActionButton promo={props.promo} />
         </Box>
       </Box>
     </VGCard>
@@ -139,7 +114,7 @@ export default function PromoCodeCard(props: {
 function LabelChip(props: { type: PromoType }) {
   const { t } = useTranslation("managePromo");
 
-  if (props.type === "in-progress") return <></>;
+  if (props.type === "in-progress" || props.type === "") return <></>;
 
   const typeMapping = {
     "waiting-approval": {
@@ -175,14 +150,15 @@ function LabelChip(props: { type: PromoType }) {
   return <VGChip label={label} sx={{ backgroundColor, color }} />;
 }
 
-function ActionButton(props: { type: PromoType }) {
+function ActionButton(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
   const [, setDeleteOpen] = useAtom(deleteDialogOpenAtom);
   const [, setRejectedOpen] = useAtom(rejectedDialogOpenAtom);
   const [, setPerformanceOpen] = useAtom(performanceDialogOpenAtom);
   const [, setManagePromoForm] = useAtom(managePromoFormAtom);
+  const deleteMutation = useDeletePromo();
 
-  switch (props.type) {
+  switch (props.promo.status_name) {
     case "waiting-approval":
       return (
         <VGButton
@@ -190,7 +166,10 @@ function ActionButton(props: { type: PromoType }) {
           color="error"
           fullWidth
           onClick={() => {
-            toast.success(t("toast.cancelSuccess"), toastOption);
+            deleteMutation.mutate(props.promo.id, {
+              onSuccess: () =>
+                toast.success(t("toast.cancelSuccess"), toastOption),
+            });
           }}
         >
           {t("btn.cancel")}
@@ -213,8 +192,8 @@ function ActionButton(props: { type: PromoType }) {
           >
             <DeleteOutlineOutlinedIcon />
           </VGButton>
-          <PromoDeleteDialog />
-          <PromoRejectedDialog />
+          <PromoDeleteDialog promo={props.promo} />
+          <PromoRejectedDialog promo={props.promo} />
         </>
       );
     case "in-progress":
@@ -227,8 +206,8 @@ function ActionButton(props: { type: PromoType }) {
           >
             {t("btn.promoPerformance")}
           </VGButton>
-          <PromoMoreButtonPopover />
-          <PromoPerformanceDialog />
+          <PromoMoreButtonPopover promoId={props.promo.id} />
+          <PromoPerformanceDialog promoId={props.promo.id} />
         </>
       );
     case "completed":
@@ -249,17 +228,23 @@ function ActionButton(props: { type: PromoType }) {
               borderColor: "common.shade.100",
               color: "common.shade.100",
             }}
-            onClick={() => setManagePromoForm({ isOpen: true, type: "reuse" })}
+            onClick={() =>
+              setManagePromoForm({
+                isOpen: true,
+                type: "reuse",
+                promoId: props.promo.id,
+              })
+            }
           >
             {t("btn.reuse")}
           </VGButton>
-          <PromoPerformanceDialog />
+          <PromoPerformanceDialog promoId={props.promo.id} />
         </>
       );
   }
 }
 
-function PromoMoreButtonPopover() {
+function PromoMoreButtonPopover(props: { promoId: string }) {
   const { t } = useTranslation("managePromo");
   const [, setDisableOpen] = useAtom(disableDialogOpenAtom);
 
@@ -274,7 +259,7 @@ function PromoMoreButtonPopover() {
           {t("btn.disablePromo")}
         </VGButton>
       }
-      dialog={<PromoDisableDialog />}
+      dialog={<PromoDisableDialog promoId={props.promoId} />}
     />
   );
 }
