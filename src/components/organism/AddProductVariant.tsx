@@ -25,6 +25,7 @@ import AddVariantDialog from "~/components/molecule/AddVariantDialog";
 import { useMediaUpload } from "~/services/api/media";
 import VGInputImage from "~/components/atomic/VGInputImage";
 import { toastOption } from "~/utils/toast";
+import CropImageModal from "~/components/molecule/CropImageModal";
 
 interface Variation {
   name: string
@@ -141,6 +142,10 @@ export default function AddProductVariant({
   const [variantData, setVariantData] = useState<Variation>();
   const [indexRow, setIndexRow] = useState<number>();
   const [multiple100, setMultiple100] = useState<string[]>([]);
+  const [isShowCropImage, setIsShowCropImage] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState("");
+  const [uploadedImageDataIndex, setUploadedImageDataIndex] = useState(0);
+  const [uploadedImageIndex, setUploadedImageIndex] = useState(0);
 
   useEffect(() => {
     if (typeof variantData !== 'undefined' && typeof indexRow !== 'undefined') {
@@ -194,25 +199,37 @@ export default function AddProductVariant({
   ) => {
     handleChangeVariantField(key, value, index)
   }
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, index: number, indexImage: number) => {
+  const handleFileChange = (file: File, index: number, indexImage: number) => {
+    if (file.size > 1024 * 1024) {
+      toast.error(t("updateImageSizeError"), toastOption)
+    } else {
+      const formData = new FormData();
+      formData.append("file", file);
+      mediaUpload.mutate(formData, {
+        onSuccess: (res) => {
+          handleChangeVariantField("images_url", [res?.data.object_key], index, indexImage)
+          const array = variantImage;
+          if (array && array[index]) {
+            (array[index] as string[])[indexImage] = res?.data.object_url;
+          }
+          setVariantImage(array);
+          setIsShowCropImage(false)
+        }
+      });
+    }
+  }
+  const onInputImage = (e: ChangeEvent<HTMLInputElement>, index: number, indexImage: number) => {
     const file = e.target.files
 
-    if (file && file[0]) {
-      if (file[0].size > 1024 * 1024) {
-        toast.error(t("updateImageSizeError"), toastOption)
+    if (file && typeof file[0] !== "undefined") {
+      if (file[0].size < 1024 * 1024) {
+        const url = URL.createObjectURL(file[0]);
+        setUploadedImageDataIndex(index);
+        setUploadedImageIndex(indexImage);
+        setUploadedImage(url);
+        setIsShowCropImage(true);
       } else {
-        const formData = new FormData();
-        formData.append("file", file[0]);
-        mediaUpload.mutate(formData, {
-          onSuccess: (res) => {
-            handleChangeVariantField("images_url", [res?.data.object_key], index, indexImage)
-            const array = variantImage;
-            if (array && array[index]) {
-              (array[index] as string[])[indexImage] = res?.data.object_url;
-            }
-            setVariantImage(array);
-          }
-        });
+        toast.error(t("updateImageSizeError"), toastOption)
       }
     }
   }
@@ -324,7 +341,7 @@ export default function AddProductVariant({
                           height="47px"
                           imageUrl={getImageUrl(index, indexImg)}
                           disabled={!row.is_active}
-                          onChange={(e) => handleFileChange(e, index, indexImg)}
+                          onChange={(e) => onInputImage(e, index, indexImg)}
                         />
                       )
                   }
@@ -542,6 +559,7 @@ export default function AddProductVariant({
       >
         <AddIcon />{t("variant.buttonLabel")}
       </VGButton>
+
       <AddVariantDialog
         isOpen={isShowAddVariantDialog}
         isVoucherInstant={isVoucherInstant}
@@ -552,6 +570,17 @@ export default function AddProductVariant({
         onDeleteVariant={handleDeleteVariation}
         onSubmit={onSubmit}
         handleClose={handleCloseModal}
+      />
+      <CropImageModal
+        url={uploadedImage}
+        isOpen={isShowCropImage}
+        onClose={() => {
+          setUploadedImage("")
+          setUploadedImageDataIndex(0)
+          setUploadedImageIndex(0)
+          setIsShowCropImage(false)
+        }}
+        onSave={(file) => handleFileChange(file, uploadedImageDataIndex, uploadedImageIndex)}
       />
     </VGCard>
   )

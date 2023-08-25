@@ -3,6 +3,12 @@
   "titleEdit": "Edit Produk",
   "subTitle": "Kembali",
   "updateImageSizeError": "Gambar melebihi 1MB",
+  "cropImage": {
+    "title": "Atur Gambar Produk",
+    "subTitle": "Pastikan bagian gambar yang ingin ditampilkan berada didalam area terang",
+    "cancel": "Batalkan",
+    "save": "Simpan Gambar"
+  },
   "detail": {
     "title": "Masukkan Detail Produk",
     "category": "Kategori",

@@ -20,6 +20,7 @@ import {
 import { useDebounce } from "~/utils/debounce";
 import { useMediaUpload } from "~/services/api/media";
 import VGInputImage from "~/components/atomic/VGInputImage";
+import CropImageModal from "~/components/molecule/CropImageModal";
 
 interface Dropdown {
   label: string;
@@ -122,6 +123,9 @@ export default function AddProductDetail({
   const [selectedBrand, setSelectedBrand] = useState<Dropdown>()
   const [selectedGroup, setSelectedGroup] = useState<Dropdown>()
   const [productImage, setProductImage] = useState<ImageResponse[]>([]);
+  const [isShowCropImage, setIsShowCropImage] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState("");
+  const [uploadedImageIndex, setUploadedImageIndex] = useState(0);
 
   useEffect(() => {
     const dataCategory: Dropdown[] = [];
@@ -194,26 +198,37 @@ export default function AddProductDetail({
     }
   }, [productDetail])
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleFileChange = (file: File, index: number) => {
+    if (file.size > 1024 * 1024) {
+      toast.error(t("updateImageSizeError"), toastOption)
+    } else {
+      const formData = new FormData();
+      formData.append("file", file);
+      mediaUpload.mutate(formData, {
+        onSuccess: (res) => {
+          handleChangeFilter("images_url", res?.data.object_key, index)
+          const array = productImage
+          array[index] = res?.data
+          setProductImage(array)
+          setIsShowCropImage(false)
+        }
+      });
+    }
+  };
+  const onInputImage = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files
 
     if (file && typeof file[0] !== "undefined") {
-      if (file[0].size > 1024 * 1024) {
-        toast.error(t("updateImageSizeError"), toastOption)
+      if (file[0].size < 1024 * 1024) {
+        const url = URL.createObjectURL(file[0]);
+        setUploadedImageIndex(index);
+        setUploadedImage(url);
+        setIsShowCropImage(true);
       } else {
-        const formData = new FormData();
-        formData.append("file", file[0]);
-        mediaUpload.mutate(formData, {
-          onSuccess: (res) => {
-            handleChangeFilter("images_url", res?.data.object_key, index)
-            const array = productImage
-            array[index] = res?.data
-            setProductImage(array)
-          }
-        });
+        toast.error(t("updateImageSizeError"), toastOption)
       }
     }
-  };
+  }
   const onChangeFilter = (value: Dropdown | null, paramsKey: string) => {
     clearVariations && clearVariations()
     if (value) {
@@ -467,7 +482,7 @@ export default function AddProductDetail({
                           productImage && productImage[0]
                           && `url(${productImage[0].object_url})`
                         }
-                        onChange={(e) => handleFileChange(e, 0)}
+                        onChange={(e) => onInputImage(e, 0)}
                       />
                     )
                 }
@@ -491,7 +506,7 @@ export default function AddProductDetail({
                           productImage && productImage[1]
                           && `url(${productImage[1].object_url})`
                         }
-                        onChange={(e) => handleFileChange(e, 1)}
+                        onChange={(e) => onInputImage(e, 1)}
                       />
                     )
                 }
@@ -515,7 +530,7 @@ export default function AddProductDetail({
                           productImage && productImage[2]
                           && `url(${productImage[2].object_url})`
                         }
-                        onChange={(e) => handleFileChange(e, 2)}
+                        onChange={(e) => onInputImage(e, 2)}
                       />
                     )
                 }
@@ -524,6 +539,17 @@ export default function AddProductDetail({
           </Grid>
         </Grid>
       </Grid>
+
+      <CropImageModal
+        url={uploadedImage}
+        isOpen={isShowCropImage}
+        onClose={() => {
+          setUploadedImage("")
+          setUploadedImageIndex(0)
+          setIsShowCropImage(false)
+        }}
+        onSave={(file) => handleFileChange(file, uploadedImageIndex)}
+      />
     </VGCard>
   )
 }
