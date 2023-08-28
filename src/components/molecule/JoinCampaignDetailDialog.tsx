@@ -36,21 +36,26 @@ export default function JoinCampaignDetailDialog() {
           fontSize: 16,
           fontWeight: 700,
           color: "primary.main",
-          textAlign: "start",
+          textAlign: "center",
           py: "10px",
           mt: "30px",
         }}
       >
         <img
-          src={detailDialog.campaign?.imageUrl}
+          src={detailDialog.campaign?.image_url}
           alt={detailDialog.campaign?.name}
+          height={200}
           style={{
             overflow: "hidden",
             borderRadius: "10px",
-            width: "100%",
           }}
         />
-        <Typography component="p" fontSize={16} fontWeight={700} sx={{ mb: 0 }}>
+        <Typography
+          component="p"
+          fontSize={16}
+          fontWeight={700}
+          sx={{ mb: 0, textAlign: "start" }}
+        >
           {t("dialog.campaignDetail.title")}
         </Typography>
         <IconButton

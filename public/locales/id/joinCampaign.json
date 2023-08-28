@@ -23,6 +23,10 @@
     "searchBar": {
       "title": "Riwayat Ikut Program",
       "textInput": "Masukkan Kata Kunci"
+    },
+    "history": {
+      "period": "Penayangan:",
+      "status": "Status:"
     }
   },
   "chip": {
@@ -37,7 +41,7 @@
     },
     "confirmation": {
       "title": "Konfirmasi",
-      "subtitle": "Kamu mengikuti program:"      
+      "subtitle": "Kamu mengikuti program:"
     },
     "abort": {
       "title": "Konfirmasi Pembatalan",
@@ -53,5 +57,9 @@
   },
   "toast": {
     "joinCampaignSuccess": "Permintaanmu telah terkirim ke admin.\n Admin akan meninjau perintaan"
+  },
+  "emptyState": {
+    "campaignHistory": "Tidak ada program",
+    "campaign": "Program akan segera hadir"
   }
 }

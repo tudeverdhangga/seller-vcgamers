@@ -1,8 +1,5 @@
-import { useState } from "react";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { useTranslation } from "next-i18next";
@@ -14,10 +11,32 @@ import VGTabChip from "../atomic/VGTabChip";
 import BadgeIcon from "../icons/BadgeIcon";
 import JoinCampaignHistoryCard from "../molecule/JoinCampaignHistoryCard";
 import VGTabPanel from "../atomic/VGTabPanel";
+import {
+  useGetHistoryCampaign,
+  useGetHistoryCampaignTabStatus,
+} from "~/services/joinCampaign/hooks";
+import { queryTypes, useQueryState } from "next-usequerystate";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Skeleton from "@mui/material/Skeleton";
+import type { CampaignHistory } from "~/services/joinCampaign/types";
+import { useForm } from "react-hook-form";
+import VGInputText from "../atomic/VGInputText";
+import EmptyState from "../molecule/EmptyState/campaignHistory";
 
 export default function JoinCampaignHistoryList() {
   const { t } = useTranslation(["vipSeller", "joinCampaign"]);
-  const [tabPosition, setTabPosition] = useState(0);
+  const [tabPosition, setTabPosition] = useQueryState(
+    "status",
+    queryTypes.integer.withDefault(1)
+  );
+  const [, setSearch] = useQueryState("search");
+  const { data, hasNextPage, fetchNextPage } = useGetHistoryCampaign();
+  const { data: tabData } = useGetHistoryCampaignTabStatus();
+  const { control, handleSubmit } = useForm<{ search: string }>();
+
+  const campaigns = data?.pages.reduce((acc, page) => {
+    return [...acc, ...page.data.data] as CampaignHistory[];
+  }, [] as CampaignHistory[]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -32,133 +51,59 @@ export default function JoinCampaignHistoryList() {
         >
           {t("joinCampaign:card.searchBar.title")}
         </Typography>
-        <TextField
-          label={t("joinCampaign:card.searchBar.textInput")}
-          variant="outlined"
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="search"
-                  // onClick={() => {}}
-                  onMouseDown={(e) => e.preventDefault()}
-                  edge="end"
-                >
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <form onSubmit={handleSubmit((data) => setSearch(data.search))}>
+          <VGInputText
+            ControllerProps={{ name: "search", control }}
+            TextFieldProps={{
+              label: t("joinCampaign:card.searchBar.textInput"),
+              variant: "outlined",
+              fullWidth: true,
+              InputProps: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton aria-label="search" type="submit" edge="end">
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </form>
       </VGCard>
       <VGTabsChip
         value={tabPosition}
         onChange={(_, value) => setTabPosition(value as number)}
       >
-        <VGTabChip
-          label={t("tab.request")}
-          icon={<BadgeIcon content={2} />}
-          iconPosition="end"
-        />
-        <VGTabChip
-          label={t("tab.inProgress")}
-          icon={<BadgeIcon content={2} />}
-          iconPosition="end"
-        />
-        <VGTabChip
-          label={t("tab.completed")}
-          icon={<BadgeIcon content={2} />}
-          iconPosition="end"
-        />
+        {tabData?.data.map((tab) => (
+          <VGTabChip
+            key={tab.name}
+            label={tab.name}
+            icon={<BadgeIcon content={tab.counter} />}
+            iconPosition="end"
+            value={tab.value}
+          />
+        ))}
       </VGTabsChip>
 
       <Box>
-        <VGTabPanel
-          value={tabPosition}
-          index={0}
-          sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
-        >
-          <JoinCampaignHistoryCard
-            campaign={{
-              imageUrl: "/assets/join-campaign.png",
-              name: "Narsis di Banner Ads",
-              period: "17 Jun 2023 - 17 Jul 2023",
-              deadline: "Gabung sebelum 5 Jun 2023",
-              isJoined: true,
-              isExpired: false,
-            }}
-            type="waiting-approval"
-          />
-          <JoinCampaignHistoryCard
-            campaign={{
-              imageUrl: "/assets/join-campaign.png",
-              name: "Narsis di Banner Ads",
-              period: "17 Jun 2023 - 17 Jul 2023",
-              deadline: "Gabung sebelum 5 Jun 2023",
-              isJoined: true,
-              isExpired: false,
-            }}
-            type="rejected"
-          />
-        </VGTabPanel>
-
-        <VGTabPanel
-          value={tabPosition}
-          index={1}
-          sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
-        >
-          <JoinCampaignHistoryCard
-            campaign={{
-              imageUrl: "/assets/join-campaign.png",
-              name: "Narsis di Banner Ads",
-              period: "17 Jun 2023 - 17 Jul 2023",
-              deadline: "Gabung sebelum 5 Jun 2023",
-              isJoined: true,
-              isExpired: false,
-            }}
-            type="in-progress"
-          />
-          <JoinCampaignHistoryCard
-            campaign={{
-              imageUrl: "/assets/join-campaign.png",
-              name: "Narsis di Banner Ads",
-              period: "17 Jun 2023 - 17 Jul 2023",
-              deadline: "Gabung sebelum 5 Jun 2023",
-              isJoined: true,
-              isExpired: false,
-            }}
-            type="in-progress"
-          />
-        </VGTabPanel>
-
-        <VGTabPanel
-          value={tabPosition}
-          index={2}
-          sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
-        >
-          <JoinCampaignHistoryCard
-            campaign={{
-              imageUrl: "/assets/join-campaign.png",
-              name: "Narsis di Banner Ads",
-              period: "17 Jun 2023 - 17 Jul 2023",
-              deadline: "Gabung sebelum 5 Jun 2023",
-              isJoined: true,
-              isExpired: false,
-            }}
-            type="completed"
-          />
-          <JoinCampaignHistoryCard
-            campaign={{
-              imageUrl: "/assets/join-campaign.png",
-              name: "Narsis di Banner Ads",
-              period: "17 Jun 2023 - 17 Jul 2023",
-              deadline: "Gabung sebelum 5 Jun 2023",
-              isJoined: true,
-              isExpired: false,
-            }}
-            type="canceled"
-          />
+        <VGTabPanel value={tabPosition} index={tabPosition}>
+          {campaigns && campaigns.length === 0 && <EmptyState />}
+          <InfiniteScroll
+            dataLength={campaigns ? campaigns.length : 0}
+            hasMore={hasNextPage ?? false}
+            next={fetchNextPage}
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+            loader={<Skeleton variant="rounded" height={100} width="75%" />}
+          >
+            {campaigns &&
+              campaigns.map((campaign) => (
+                <JoinCampaignHistoryCard
+                  key={campaign.id}
+                  campaign={campaign}
+                />
+              ))}
+          </InfiniteScroll>
         </VGTabPanel>
       </Box>
     </Box>

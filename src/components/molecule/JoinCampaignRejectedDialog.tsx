@@ -12,15 +12,17 @@ import { rejectedDialogOpenAtom } from "~/atom/joinCampaign";
 import CloseIcon from "../icons/chat/CloseIcon";
 import VGButton from "../atomic/VGButton";
 import Typography from "@mui/material/Typography";
+import { useGetCampaignRejectedDetail } from "~/services/joinCampaign/hooks";
 
 export default function JoinCampaignRejectedDialog() {
   const { t } = useTranslation("joinCampaign");
   const [modalOpen, setModalOpen] = useAtom(rejectedDialogOpenAtom);
+  const { data } = useGetCampaignRejectedDetail(modalOpen.campaign?.id);
 
   return (
     <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
+      open={modalOpen.isOpen}
+      onClose={() => setModalOpen((data) => ({ ...data, isOpen: false }))}
       fullWidth
       maxWidth="xs"
     >
@@ -35,7 +37,7 @@ export default function JoinCampaignRejectedDialog() {
       >
         <p style={{ marginBottom: "0px" }}>{t("dialog.rejected.title")}</p>
         <IconButton
-          onClick={() => setModalOpen(false)}
+          onClick={() => setModalOpen((data) => ({ ...data, isOpen: false }))}
           sx={{
             position: "absolute",
             right: 8,
@@ -50,7 +52,7 @@ export default function JoinCampaignRejectedDialog() {
           sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
         >
           {t("dialog.rejected.subtitle", {
-            value: "[Admin nanti akan menuliskan alasan dan tampil disini]",
+            value: data?.data.rejected_reason,
           })}
         </Typography>
         <Box
@@ -74,7 +76,7 @@ export default function JoinCampaignRejectedDialog() {
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => setModalOpen(false)}
+          onClick={() => setModalOpen((data) => ({ ...data, isOpen: false }))}
           color="primary"
         >
           {t("btn.close")}

@@ -12,15 +12,17 @@ import Image from "next/image";
 import { cancelDialogOpenAtom } from "~/atom/joinCampaign";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
+import { useRequestCancelCampaign } from "~/services/joinCampaign/hooks";
 
 export default function JoinCampaignCancelDialog() {
   const { t } = useTranslation("joinCampaign");
-  const [modalOpen, setModalOpen] = useAtom(cancelDialogOpenAtom);
+  const [modal, setModal] = useAtom(cancelDialogOpenAtom);
+  const mutation = useRequestCancelCampaign();
 
   return (
     <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
+      open={modal.isOpen}
+      onClose={() => setModal({ isOpen: false })}
       fullWidth
       maxWidth="xs"
     >
@@ -42,7 +44,7 @@ export default function JoinCampaignCancelDialog() {
         />
         <p style={{ marginBottom: "0px" }}>{t("dialog.abort.title")}</p>
         <IconButton
-          onClick={() => setModalOpen(false)}
+          onClick={() => setModal({ isOpen: false })}
           sx={{
             position: "absolute",
             right: 8,
@@ -72,7 +74,7 @@ export default function JoinCampaignCancelDialog() {
           <Typography
             sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
           >
-            CHECKOUTOKOKUJUNI1214125
+            {modal.campaign?.name}
           </Typography>
         </Box>
         <Typography
@@ -91,7 +93,7 @@ export default function JoinCampaignCancelDialog() {
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => setModalOpen(false)}
+          onClick={() => setModal({ isOpen: false })}
           color="primary"
         >
           {t("btn.back")}
@@ -100,7 +102,14 @@ export default function JoinCampaignCancelDialog() {
           variant="outlined"
           size="large"
           fullWidth
-          onClick={() => setModalOpen(false)}
+          onClick={() =>
+            modal.campaign?.id &&
+            mutation.mutate(modal.campaign.id, {
+              onSuccess: () => {
+                setModal({ isOpen: false });
+              },
+            })
+          }
           color="primary"
         >
           {t("btn.deactivate")}

@@ -35,3 +35,9 @@ export interface SellerBank {
   bank_account_number: string;
   bank_account_name: string;
 }
+
+export interface TabStatus {
+  value: number;
+  name: string;
+  counter: number;
+}

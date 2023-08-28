@@ -16,13 +16,13 @@ import {
 import { toastOption } from "~/utils/toast";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
+import { useJoinCampaign } from "~/services/joinCampaign/hooks";
 
 export default function JoinCampaignConfirmationDialog() {
   const { t } = useTranslation("joinCampaign");
   const [modalOpen, setModalOpen] = useAtom(confirmationDialogOpenAtom);
   const [detailDialog] = useAtom(detailDialogAtom);
-
-  console.log(detailDialog);
+  const { mutate: joinCampaign } = useJoinCampaign();
 
   return (
     <Dialog
@@ -97,8 +97,13 @@ export default function JoinCampaignConfirmationDialog() {
           size="large"
           fullWidth
           onClick={() => {
-            setModalOpen(false);
-            toast.success(t("toast.joinCampaignSuccess"), toastOption);
+            detailDialog.campaign &&
+              joinCampaign(detailDialog.campaign.id, {
+                onSuccess: () => {
+                  setModalOpen(false);
+                  toast.success(t("toast.joinCampaignSuccess"), toastOption);
+                },
+              });
           }}
           color="primary"
         >

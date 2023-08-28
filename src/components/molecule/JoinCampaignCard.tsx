@@ -9,17 +9,9 @@ import { detailDialogAtom } from "~/atom/joinCampaign";
 import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
+import { type Campaign } from "~/services/joinCampaign/types";
 
-export default function JoinCampaignCard(props: {
-  campaign: {
-    imageUrl: string;
-    name: string;
-    period: string;
-    deadline: string;
-    isJoined: boolean;
-    isExpired: boolean;
-  };
-}) {
+export default function JoinCampaignCard(props: { campaign: Campaign }) {
   const { t } = useTranslation("joinCampaign");
   const [, setDetailDialog] = useAtom(detailDialogAtom);
 
@@ -34,10 +26,11 @@ export default function JoinCampaignCard(props: {
       }}
     >
       <img
-        src={props.campaign.imageUrl}
+        src={props.campaign.image_url}
         alt={props.campaign.name}
+        height={143}
         style={{
-          filter: props.campaign.isExpired ? "grayscale(100%)" : "none",
+          filter: props.campaign.is_expired ? "grayscale(100%)" : "none",
         }}
       />
       <Box sx={{ display: "flex", gap: "10px", p: "20px", flexGrow: 1 }}>
@@ -64,7 +57,7 @@ export default function JoinCampaignCard(props: {
               >
                 {props.campaign.period}
               </Typography>
-              {props.campaign.isExpired ? (
+              {props.campaign.is_expired ? (
                 <Typography
                   color="common.red.500"
                   fontSize={12}
@@ -82,7 +75,7 @@ export default function JoinCampaignCard(props: {
                 </Typography>
               )}
 
-              {props.campaign.isJoined && (
+              {props.campaign.has_joined && (
                 <VGChip color="success" label={t("card.joinCampaign")} />
               )}
             </Box>
@@ -97,7 +90,7 @@ export default function JoinCampaignCard(props: {
           >
             {t("btn.seeDetail")}
           </VGButton>
-          {props.campaign.isExpired && (
+          {props.campaign.is_expired && (
             <VGButton variant="outlined">
               {t("btn.performanceSummary")}
             </VGButton>
