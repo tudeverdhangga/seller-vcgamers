@@ -12,7 +12,6 @@ export const paginationNextPageParam = <T>(
   currentPage: APIResponsePagination<T>
 ) => {
   const nextCursor = currentPage.data.pagination_data.next_cursor;
-  const prevCursor = currentPage.data.pagination_data.prev_cursor;
 
-  return nextCursor === prevCursor ? undefined : nextCursor || "";
+  return nextCursor === "" ? undefined : nextCursor;
 };

@@ -58,22 +58,21 @@ export default function PinNumberInput({
             inputMode: "numeric",
             pattern: "[0-9]",
             maxLength: 1,
-            style: { textAlign: "center" }
+            style: { textAlign: "center" },
           }}
           InputProps={{
             onKeyDown: (e) => handleBackspace(index, e),
           }}
           autoFocus={index === 0}
           sx={{
-            "& .MuiInputBase-input": {
-              fontSize: "3rem",
+            ".MuiInputBase-input": {
               width: "30px",
               height: "23px",
               color: !error ? "success.main" : "error.main",
               fontFamily: "serif",
               caretColor: "black",
-              borderBottom: "black"
-            }
+              borderBottom: "1px solid black",
+            },
           }}
           onChange={(e) => handleInputChange(index, e.target.value)}
         />

@@ -27,7 +27,7 @@ export async function fetchBalanceHistories(params: {
   const queryParams: BalanceHistoryRequestParams = {
     limit: 10,
     prev_cursor: "",
-    next_cursor: params.pageParam ?? "",
+    next_cursor: params.pageParam,
     search: "",
     status: params.status,
     date_start: params.dateStart,

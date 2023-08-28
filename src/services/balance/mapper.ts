@@ -13,7 +13,7 @@ import type {
 export function mapBalanceInfo(value: DataBalanceInfo) {
   return {
     ...value,
-    withdrawal_status_error: value.withdrawal_status === 1,
+    withdrawal_status_error: value.withdrawal_status !== 0,
     withdrawal_status_text:
       value.withdrawal_status_name === "Diproses" ? "progress" : "hold",
     bank_info: `BANK ${value.bank.bank_name} ${value.bank.bank_account_number} a/n ${value.bank.bank_account_name}`,

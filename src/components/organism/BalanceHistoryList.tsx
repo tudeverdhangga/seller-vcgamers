@@ -29,7 +29,7 @@ export default function BalanceHistoryList() {
 
   return (
     <>
-      <Box width="90vw">
+      <Box>
         {!statusIsLoading ? (
           <VGTabsChip
             value={tabPosition}
