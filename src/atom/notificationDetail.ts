@@ -1,8 +1,7 @@
 import { atom } from "jotai";
-
-export const notificationDetailOpenAtom = atom(false);
+import { type DataNotification } from "~/services/notification/types";
 
 export const notificationDetailAtom = atom<{
-  title: string;
-  body: string;
-} | null>(null);
+  isOpen: boolean;
+  notification?: DataNotification;
+}>({ isOpen: false });

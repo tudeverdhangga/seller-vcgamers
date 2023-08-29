@@ -1,20 +1,36 @@
+import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
+import { notificationDetailAtom } from "~/atom/notificationDetail";
+import { useReadNotification } from "~/services/notification/hooks";
+import type { DataNotification } from "~/services/notification/types";
+import NotificationUpdateIcon from "../icons/NotificationUpdateIcon";
 import TimeIcon from "../icons/svg/notification/time.svg";
 
 export default function NotificationCard(props: {
-  title?: string;
-  subtitle?: string;
-  time?: string;
-  unread?: boolean;
-  onClick?: () => void;
-  icon: JSX.Element;
+  notification: DataNotification;
 }) {
   const { t } = useTranslation("notification");
+  const [, setNotificationDetail] = useAtom(notificationDetailAtom);
+  const { mutate } = useReadNotification();
+
+  const handleClick = () => {
+    mutate(
+      { notification_id: props.notification.id, flag: props.notification.flag },
+      {
+        onSettled: () => {
+          setNotificationDetail({
+            isOpen: true,
+            notification: props.notification,
+          });
+        },
+      }
+    );
+  };
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", p: 2, width: "100%" }}>
@@ -26,7 +42,11 @@ export default function NotificationCard(props: {
           flex: "1 0 0",
         }}
       >
-        {props.icon}
+        {props.notification.flag === "update" ? (
+          <NotificationUpdateIcon />
+        ) : (
+          <></>
+        )}
         <Box
           sx={{
             display: "flex",
@@ -44,7 +64,7 @@ export default function NotificationCard(props: {
               fontWeight: 700,
             }}
           >
-            {props.title}
+            {props.notification.title}
           </Typography>
           <div
             style={{
@@ -61,10 +81,10 @@ export default function NotificationCard(props: {
                 fontWeight: 500,
               }}
             >
-              {props.subtitle}
+              {props.notification.description}
             </Typography>
           </div>
-          {props.onClick && (
+          {props.notification.is_clickable && (
             <Button
               sx={{
                 color: "primary.main",
@@ -73,7 +93,7 @@ export default function NotificationCard(props: {
                 textTransform: "none",
                 p: 0,
               }}
-              onClick={props.onClick}
+              onClick={handleClick}
             >
               {t("readMore")}
             </Button>
@@ -87,12 +107,12 @@ export default function NotificationCard(props: {
                 fontWeight: 500,
               }}
             >
-              {props.time}
+              {props.notification.desc_date}
             </Typography>
           </Box>
         </Box>
       </Box>
-      {props.unread && (
+      {!props.notification.is_read && (
         <Box
           sx={{
             backgroundColor: "common.red.500",

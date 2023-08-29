@@ -1,7 +1,5 @@
-import * as React from "react";
-
-import { useTranslation } from "next-i18next";
 import { useAtom } from "jotai";
+import { useTranslation } from "next-i18next";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,21 +8,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import {
-  notificationDetailAtom,
-  notificationDetailOpenAtom,
-} from "~/atom/notificationDetail";
+import { notificationDetailAtom } from "~/atom/notificationDetail";
 
 export default function NotificationDetailDialog() {
   const { t } = useTranslation("notification");
 
-  const [open, setOpen] = useAtom(notificationDetailOpenAtom);
-  const [notificationDetail] = useAtom(notificationDetailAtom);
+  const [detail, setDetail] = useAtom(notificationDetailAtom);
 
-  const onClose = () => setOpen(false);
+  const onClose = () => setDetail({ isOpen: false });
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+    <Dialog open={detail.isOpen} onClose={onClose} fullWidth maxWidth="xs">
       <DialogTitle
         sx={{
           fontSize: 16,
@@ -43,7 +37,7 @@ export default function NotificationDetailDialog() {
             color: "common.shade.700",
           }}
         >
-          {notificationDetail?.title}
+          {detail.notification?.title}
         </DialogContentText>
         <DialogContentText
           sx={{
@@ -53,7 +47,7 @@ export default function NotificationDetailDialog() {
             whiteSpace: "pre-wrap",
           }}
         >
-          {notificationDetail?.body}
+          {detail.notification?.description}
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>

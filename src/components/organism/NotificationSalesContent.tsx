@@ -1,13 +1,19 @@
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
-import TagIcon from "../icons/svg/notification/tag.svg";
-import WalletIcon from "../icons/svg/notification/wallet.svg";
+import Skeleton from "@mui/material/Skeleton";
+
+import { useGetNotificationList } from "~/services/notification/hooks";
 import NotificationCard from "../molecule/NotificationCard";
-// import NotificationEmptyState from "../molecule/NotificationEmptyState";
+import NotificationEmptyState from "../molecule/NotificationEmptyState";
 
 export default function NotificationSalesContent() {
-  // return <NotificationEmptyState />;
+  const { data, hasNextPage, fetchNextPage } = useGetNotificationList();
+
+  if (!data?.pages.length) return <NotificationEmptyState />;
+
+  const notifications = data?.pages.flatMap((page) => page.data);
 
   return (
     <Box
@@ -20,20 +26,21 @@ export default function NotificationSalesContent() {
       }}
     >
       <List sx={{ width: "100%" }}>
-        <NotificationCard
-          icon={<TagIcon />}
-          title="Pesanan baru"
-          subtitle="Kamu baru saja mendapatkan pesanan baru TRXOD-12312. Harap segera melakukan pengiriman pesanan. Terima kasih"
-          time="Baru saja"
-        />
-        <Divider />
-        <NotificationCard
-          icon={<WalletIcon />}
-          title="Penarikan Saldo Toko"
-          subtitle="Penarikan saldo toko sebesar Rp100.000 dengan kode TRXWDS-12312  telah berhasil ditransfer. Silakan cek rekening kamu secara berkala."
-          time="Baru saja"
-          unread
-        />
+        <InfiniteScroll
+          dataLength={notifications ? notifications.length : 0}
+          hasMore={hasNextPage ?? false}
+          next={fetchNextPage}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          loader={<Skeleton variant="rounded" height={100} width="100%" />}
+        >
+          {notifications &&
+            notifications.map((notification) => (
+              <NotificationCard
+                key={notification.id}
+                notification={notification}
+              />
+            ))}
+        </InfiniteScroll>
       </List>
     </Box>
   );

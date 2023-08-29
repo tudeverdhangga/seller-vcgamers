@@ -1,60 +1,57 @@
-import { useState } from "react";
-
-import { useTranslation } from "next-i18next";
-
 import Button from "@mui/material/Button";
-import Tabs from "@mui/material/Tabs";
+import { useTranslation } from "next-i18next";
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 import VGTabChip from "~/components/atomic/VGTabChip";
 import BadgeIcon from "~/components/icons/BadgeIcon";
+import { useGetNotificationCount } from "~/services/notification/hooks";
 import VGTabPanel from "../atomic/VGTabPanel";
+import VGTabsChip from "../atomic/VGTabsChip";
 import NotificationSalesContent from "./NotificationSalesContent";
 import NotificationUpdateContent from "./NotificationUpdateContent";
 
 export default function NotificationTab() {
   const { t } = useTranslation("notification");
 
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+  const [type, setType] = useQueryState(
+    "type",
+    queryTypes.string.withDefault("store")
+  );
+  const { data } = useGetNotificationCount();
 
   return (
     <div style={{ width: "100%" }}>
-      <div style={{ display: "flex" }}>
-        <Tabs
-          sx={{
-            "& .MuiTabs-flexContainer": {
-              gap: "10px",
-            },
-            "& .MuiTabs-indicator": {
-              display: "none",
-            },
-            flex: "1 0 0",
-          }}
-          value={value}
-          onChange={handleChange}
+      <div style={{ display: "flex", marginBottom: "10px" }}>
+        <VGTabsChip
+          value={type}
+          onChange={(_, value) => setType(value as string)}
         >
-          <VGTabChip
-            label={t("salesTab")}
-            icon={<BadgeIcon content={1} />}
-            iconPosition="end"
-          />
-          <VGTabChip
-            label={t("updateTab")}
-            icon={<BadgeIcon content={1} />}
-            iconPosition="end"
-          />
-        </Tabs>
+          {data?.data.map((tab) => {
+            if (tab.flag === "store" || tab.flag === "update") {
+              const label =
+                tab.flag === "store" ? t("salesTab") : t("updateTab");
+
+              return (
+                <VGTabChip
+                  key={tab.flag}
+                  label={label}
+                  icon={<BadgeIcon content={tab.count} />}
+                  iconPosition="end"
+                  value={tab.flag}
+                />
+              );
+            }
+            return <></>;
+          })}
+        </VGTabsChip>
         <Button sx={{ textTransform: "none", fontWeight: 600 }}>
           {t("readAll")}
         </Button>
       </div>
-      <VGTabPanel value={value} index={0} style={{ marginTop: "10px" }}>
+      <VGTabPanel value={type} index="store">
         <NotificationSalesContent />
       </VGTabPanel>
-      <VGTabPanel value={value} index={1} style={{ marginTop: "10px" }}>
+      <VGTabPanel value={type} index="update">
         <NotificationUpdateContent />
       </VGTabPanel>
     </div>
