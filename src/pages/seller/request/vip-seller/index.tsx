@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import { Box, Button, Checkbox, Grid, Typography } from "@mui/material";
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import ContentCard from "~/components/molecule/ContentCard";
@@ -25,13 +26,21 @@ export default function VIPSellerPage() {
   const [allFeatureCheck, setAllFeatureCheck] = React.useState(false);
   const [minimumTrueCounter, setMinimumTrueCounter] = React.useState(7);
   const getStatusVIP = useGetStatusVIP();
+  const router = useRouter();
 
   React.useEffect(() => {
     if(getStatusVIP?.data?.data && getStatusVIP?.data?.data?.seller_has_vip !== undefined && getStatusVIP?.data?.data?.status !== undefined) {
-      setFeatureChecksVIPData(getStatusVIP.data.data.requirement_text);
+      const tempFeatureChecksVIPData = getStatusVIP.data.data.requirement_text
+      setFeatureChecksVIPData(tempFeatureChecksVIPData);
       
       setStatusVIPData(getStatusVIP.data.data);
       // setFeatureChecksVIPData(getStatusVIP?.data?.data?.requirement_text)
+      
+      if (
+        handleEligibleToRegisterVip(tempFeatureChecksVIPData) == minimumTrueCounter && 
+        getStatusVIP.data.data?.seller_has_vip === true ) {
+        void router.push(`/seller/request/vip-seller/join-campaign`);
+      }
     }
   }, [
     getStatusVIP?.data?.data?.seller_has_vip,
