@@ -90,6 +90,7 @@ interface Variation {
   delivery_type: number
   created_at: string
   updated_at: string
+  next_update_price: string
 }
 interface ProductVariationMaster {
   value: string
@@ -126,6 +127,7 @@ export default function AddProductDetail({
   const [isShowCropImage, setIsShowCropImage] = useState(false);
   const [uploadedImage, setUploadedImage] = useState("");
   const [uploadedImageIndex, setUploadedImageIndex] = useState(0);
+  const [isLoadingCategoryDetail, setIsLoadingCategoryDetail] = useState(false);
 
   useEffect(() => {
     const dataCategory: Dropdown[] = [];
@@ -161,6 +163,8 @@ export default function AddProductDetail({
       if (selectedCategory.isVoucher) {
         handleVoucherInstant(selectedCategory.isVoucher)
       }
+
+      setIsLoadingCategoryDetail(false)
     }
   }, [selectedCategory])
   useEffect(() => {
@@ -187,6 +191,7 @@ export default function AddProductDetail({
   }, [selectedBrand, selectedCategory])
   useEffect(() => {
     if (productDetail) {
+      setIsLoadingCategoryDetail(true)
       setSelectedCategory({
         label: productDetail?.product_category.label,
         value: productDetail?.product_category.value,
@@ -322,7 +327,7 @@ export default function AddProductDetail({
           md={4}
         >
           {
-            getCategory.isLoading
+            getCategory.isLoading || isLoadingCategoryDetail
               ? (
                 <Skeleton
                   variant="rounded"

@@ -13,7 +13,7 @@ import Image from "next/image";
 import SeeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
-import { type ChangeEvent, useState, useEffect, SetStateAction } from "react";
+import { type ChangeEvent, useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Skeleton from "@mui/material/Skeleton";
 import { toast } from "react-toastify";
@@ -26,6 +26,7 @@ import { useMediaUpload } from "~/services/api/media";
 import VGInputImage from "~/components/atomic/VGInputImage";
 import { toastOption } from "~/utils/toast";
 import CropImageModal from "~/components/molecule/CropImageModal";
+import { dateToTime } from "~/utils/format";
 
 interface Variation {
   name: string
@@ -36,6 +37,7 @@ interface Variation {
   is_custom_image: boolean
   is_active: boolean
   images_url?: string[]
+  next_update_price?: string
 }
 interface ProductDetail {
   id: string
@@ -421,9 +423,21 @@ export default function AddProductVariant({
         }}
         error={Boolean(multiple100[index])}
         helperText={multiple100[index]}
-        disabled={!row.is_active}
+        disabled={!row.is_active || Boolean(row.next_update_price)}
         onChange={(e) => onChangeStockPrice(e, "price", index)}
       />
+      {
+        Boolean(row.next_update_price) && (
+          <Typography
+            color="success.dark"
+            fontSize={12}
+            fontWeight={600}
+            mt={1}
+          >
+            {t("variant.dialog.setting.error.updatePriceTime", { time: dateToTime(row.next_update_price as string) })}
+          </Typography>
+        )
+      }
     </TableCell>
   )
   const statisticContainer = (index: number) => (

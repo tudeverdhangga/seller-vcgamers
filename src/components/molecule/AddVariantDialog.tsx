@@ -83,7 +83,7 @@ export default function AddVariantDialog({
   useEffect(() => {
     if (isOpen) {
       getVariation.mutate(queryString.stringify({ group_id: groupId }))
-      // onChangeField("delivery_type", 0);
+      onChangeField("delivery_type", 0);
     }
   }, [isOpen])
   useEffect(() => {

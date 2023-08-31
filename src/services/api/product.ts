@@ -102,6 +102,7 @@ interface Variation {
   delivery_type: number
   created_at: string
   updated_at: string
+  next_update_price: string
 }
 interface ResponseVoucher {
   code: number

@@ -1,7 +1,7 @@
 import { type ChangeEvent, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { BorderColorOutlined, CloudUploadOutlined } from "@mui/icons-material";
+import { CloudUploadOutlined } from "@mui/icons-material";
 import { Box, Grid, Typography, TextField, Skeleton } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ import {
 } from "~/services/api/auth";
 import { toastOption } from "~/utils/toast";
 import { env } from "~/env.mjs";
+import VGInputImage from "~/components/atomic/VGInputImage";
 
 interface ProfileForm {
   seller_name: string;
@@ -64,6 +65,7 @@ export default function ProfileSettingForm() {
   const [urlMessage, setUrlMessage] = useState<string | undefined>("");
   const [phone, setPhone] = useState<string | undefined>("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
+  const [isChangeImage, setIsChangeImage] = useState(false);
 
   useEffect(() => {
     setProfileImage(getProfile?.data?.data?.seller_photo)
@@ -99,7 +101,10 @@ export default function ProfileSettingForm() {
         const formData = new FormData();
         formData.append("file", file[0]);
         mediaUpload.mutate(formData, {
-          onSuccess: (res) => setProfileImage(res.data)
+          onSuccess: (res) => {
+            setProfileImage(res.data)
+            setIsChangeImage(true)
+          }
         });
       }
     }
@@ -114,7 +119,10 @@ export default function ProfileSettingForm() {
         const formData = new FormData();
         formData.append("file", file[0]);
         mediaUpload.mutate(formData, {
-          onSuccess: (res) => setBannerImage(res.data)
+          onSuccess: (res) => {
+            setBannerImage(res.data)
+            setIsChangeImage(true)
+          }
         });
       }
     }
@@ -297,50 +305,25 @@ export default function ProfileSettingForm() {
   );
   const uploadProfileContainer = (
     <Box>
-      <input
-        type="file"
-        id="upload-profile"
-        accept="image/png, image/jpg"
-        style={{ display: "none" }}
-        onChange={(e) => handleChangeProfileImage(e)}
-      />
-      <label htmlFor="upload-profile" style={{ width: "124px", display: "block" }}>
-        <Box
-          component="div"
-          sx={{
-            width: "124px",
-            height: "124px",
-            borderRadius: "10px",
-            backgroundColor: "common.shade.50",
-            backgroundImage: profileImage
-              ? `url(${profileImage.object_url})`
-              : "none",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            position: "relative",
-            cursor: "pointer",
-          }}
-        >
-          <Box
-            component="div"
-            sx={{
-              width: "124px",
-              height: "51px",
-              borderRadius: "0 0 10px 10px",
-              backgroundColor: "#2A324999",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-            }}
-          >
-            <BorderColorOutlined sx={{ color: "common.shade.0" }} />
-          </Box>
-        </Box>
-      </label>
+      {
+        mediaUpload.isLoading
+          ? (
+            <Skeleton
+              variant="rounded"
+              width={124}
+              height={124}
+              sx={{ m: 1 }}
+            />
+          ) : (
+            <VGInputImage
+              id="upload-profile"
+              width="124px"
+              height="124px"
+              imageUrl={profileImage?.object_url && `url(${profileImage.object_url})`}
+              onChange={(e) => handleChangeProfileImage(e)}
+            />
+          )
+      }
     </Box>
   );
   const uploadBannerContainer = (
@@ -549,7 +532,7 @@ export default function ProfileSettingForm() {
             color="primary"
             type="submit"
             size="large"
-            disabled={!isDirty || getProfile?.isLoading}
+            disabled={(!isDirty && !isChangeImage) || getProfile?.isLoading}
             loading={isSaveLoading}
           >
             {t("tab.profile.form.submit")}

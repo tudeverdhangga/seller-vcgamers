@@ -29,16 +29,16 @@ export default function VIPSellerPage() {
   const router = useRouter();
 
   React.useEffect(() => {
-    if(getStatusVIP?.data?.data && getStatusVIP?.data?.data?.seller_has_vip !== undefined && getStatusVIP?.data?.data?.status !== undefined) {
+    if (getStatusVIP?.data?.data && getStatusVIP?.data?.data?.seller_has_vip !== undefined && getStatusVIP?.data?.data?.status !== undefined) {
       const tempFeatureChecksVIPData = getStatusVIP.data.data.requirement_text
       setFeatureChecksVIPData(tempFeatureChecksVIPData);
-      
+
       setStatusVIPData(getStatusVIP.data.data);
       // setFeatureChecksVIPData(getStatusVIP?.data?.data?.requirement_text)
-      
+
       if (
-        handleEligibleToRegisterVip(tempFeatureChecksVIPData) == minimumTrueCounter && 
-        getStatusVIP.data.data?.seller_has_vip === true ) {
+        handleEligibleToRegisterVip(tempFeatureChecksVIPData) == minimumTrueCounter &&
+        getStatusVIP.data.data?.seller_has_vip === true) {
         void router.push(`/seller/request/vip-seller/join-campaign`);
       }
     }
@@ -47,7 +47,7 @@ export default function VIPSellerPage() {
     getStatusVIP?.data?.data?.status,
     getStatusVIP?.data?.data?.requirement_text,
   ])
-  
+
   const refetchStatusVIP = () => {
     void getStatusVIP.refetch()
   }
@@ -57,14 +57,14 @@ export default function VIPSellerPage() {
   };
 
   const handleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if(handleEligibleToRegisterVip(featureChecksVIPData) >= minimumTrueCounter) {
+    if (handleEligibleToRegisterVip(featureChecksVIPData) >= minimumTrueCounter) {
       setCheckedSnK(event.target.checked);
     }
   };
 
   const confirmationAlertMessageStyle = {
     color: "common.shade.200",
-    fontSize: {xs: "12px", md: "14px"}, 
+    fontSize: { xs: "12px", md: "14px" },
     fontWeight: 800
   }
 
@@ -113,28 +113,28 @@ export default function VIPSellerPage() {
         subTitle={t("title")}
         title={t("subtitleVIP")}
       />
-      
+
       {/* Banner */}
-      <BannerRequestFeatures 
+      <BannerRequestFeatures
         imageSrc={`url("/assets/vip_hero_bg.png")`}
         title="Upgrade Tokomu ke VIP Seller dan Nikmati Berbagai Keuntungan berjualan"
         desc="Persembahan VCGamers untuk kamu para seller supaya makin semangat berjualan. Dengan status VIP Seller dapatkan banyak manfaat berjualan di VCGamers"
       />
 
       {/* Table Features */}
-      <TableRequestFeatures 
-        rowsFeatures={rows} 
-        feature="Instant" 
+      <TableRequestFeatures
+        rowsFeatures={rows}
+        feature="Instant"
         badgeSrc="/assets/vip-head-logo.png"
       />
 
       {/* Persyaratan kelengkapan */}
       <CustomizedMidContent title={t("syaratVip.title")} featureChecks={featureChecksVIPData} />
-      
+
       <Grid container spacing={4} justifyContent={'center'} >
         <Grid item xs={12}>
           {/* Permission Request */}
-          <ContentCard sx={{p: 1, display: (handleEligibleToRegisterVip(featureChecksVIPData) >= minimumTrueCounter && statusVIPData?.seller_has_vip === false && (statusVIPData?.status === "" || statusVIPData?.status === SellerStatusRejected)) ? 'flex' : 'none'}}>
+          <ContentCard sx={{ p: 1, display: (handleEligibleToRegisterVip(featureChecksVIPData) >= minimumTrueCounter && statusVIPData?.seller_has_vip === false && (statusVIPData?.status === "" || statusVIPData?.status === SellerStatusRejected)) ? 'flex' : 'none' }}>
             <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'}>
               <Grid item xs={8} sm={10}>
                 <Checkbox
@@ -148,7 +148,7 @@ export default function VIPSellerPage() {
                   sx={confirmationAlertMessageStyle}
                 >
                   {t("alert.upgradeVip.msg")}
-                </Typography> 
+                </Typography>
               </Grid>
               <Grid item xs={2}>
                 <Button
@@ -163,59 +163,59 @@ export default function VIPSellerPage() {
               </Grid>
             </Grid>
           </ContentCard>
-          
+
           {/* Permission Deactivated */}
           {
-            statusVIPData && statusVIPData.status === SellerStatusDeactivated && statusVIPData.deactivate_reason && 
+            statusVIPData && statusVIPData.status === SellerStatusDeactivated && statusVIPData.deactivate_reason &&
             <CustomizedPermissionAlert
-              alertSeverity="error" 
-              alertIcon={<CancelIcon fontSize="inherit" />} 
-              alertMessage={statusVIPData.deactivate_reason} alertTitle={t("alert.inactive.title", { featurename: "VIP" })} 
+              alertSeverity="error"
+              alertIcon={<CancelIcon fontSize="inherit" />}
+              alertMessage={statusVIPData.deactivate_reason} alertTitle={t("alert.inactive.title", { featurename: "VIP" })}
             />
           }
 
           {/* Permission Rejected */}
           {
-            statusVIPData && statusVIPData.status === SellerStatusRejected && statusVIPData.reject_reason && 
+            statusVIPData && statusVIPData.status === SellerStatusRejected && statusVIPData.reject_reason &&
             <CustomizedPermissionAlert
-              alertSeverity="error" 
-              alertIcon={<CancelIcon fontSize="inherit" />} 
-              alertMessage={statusVIPData.reject_reason} alertTitle={t("alert.rejected.danger")} 
+              alertSeverity="error"
+              alertIcon={<CancelIcon fontSize="inherit" />}
+              alertMessage={statusVIPData.reject_reason} alertTitle={t("alert.rejected.danger")}
             />
           }
-          
+
           {/* Permission Actived */}
           {
-            (statusVIPData && (statusVIPData.status === SellerStatusApproved || statusVIPData.seller_has_vip)) && 
+            (statusVIPData && (statusVIPData.status === SellerStatusApproved || statusVIPData.seller_has_vip)) &&
             <CustomizedPermissionAlert
-              alertSeverity="success" 
-              alertIcon={<CheckCircleIcon fontSize="inherit" />} 
-              alertMessage={t("alert.already.msg", { featurename: "VIP" })} 
+              alertSeverity="success"
+              alertIcon={<CheckCircleIcon fontSize="inherit" />}
+              alertMessage={t("alert.already.msg", { featurename: "VIP" })}
             />
           }
-          
+
           {/* Permission Requested */}
           {
-            statusVIPData && statusVIPData.status === SellerStatusPending && 
+            statusVIPData && statusVIPData.status === SellerStatusPending &&
             <CustomizedPermissionAlert
-              alertSeverity="info" 
-              alertIcon={<PageviewIcon fontSize="inherit" />} 
-              alertMessage={t("alert.requested.msg", { featurename: "VIP" })} 
+              alertSeverity="info"
+              alertIcon={<PageviewIcon fontSize="inherit" />}
+              alertMessage={t("alert.requested.msg", { featurename: "VIP" })}
             />
           }
-          
+
           {/* Modal Ragister VIP */}
           <ModalRegistrationVIP
             name={t("modalRegisterVIP.title")}
             isOpen={isOpenRegisterVip}
             handleClose={handleModalRegisterVip}
             refetchStatusVIP={refetchStatusVIP}
-           />
+          />
           {/* Modal confirmation of registration VIP */}
           <SendVIPRequestDialog />
         </Grid>
       </Grid>
-        
+
     </>
   );
 }

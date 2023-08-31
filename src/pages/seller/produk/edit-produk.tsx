@@ -24,6 +24,7 @@ interface Response {
   description: string
   images_url: string[]
   variations: Variation[]
+  next_update_price?: string
 }
 interface Variation {
   id?: string
@@ -38,6 +39,7 @@ interface Variation {
   visit?: number;
   favorite?: number;
   sold?: number;
+  next_update_price?: string
 }
 interface ErrorResponse {
   response: {
@@ -62,6 +64,7 @@ export default function TambahProdukPage() {
     description: "",
     images_url: [],
     variations: [],
+    next_update_price: ""
   })
   const [isVoucherInstant, setIsVoucherInstant] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +92,8 @@ export default function TambahProdukPage() {
                 price: item.price,
                 is_active: item.is_active,
                 is_custom_image: item.is_custom_image,
-                images_url: item.images_url.map((image) => image.object_key)
+                images_url: item.images_url.map((image) => image.object_key),
+                next_update_price: item.next_update_price,
               }
             })
           })

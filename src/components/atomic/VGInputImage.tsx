@@ -37,7 +37,7 @@ export default function VGInputImage({
             borderRadius: "10px",
             border: imageUrl ? "none" : "2px dashed #9AA4BF",
             backgroundColor: "common.shade.50",
-            backgroundImage: imageUrl
+            backgroundImage: Boolean(imageUrl)
               ? imageUrl
               : "none",
             backgroundSize: "cover",

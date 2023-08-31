@@ -1,5 +1,5 @@
-import {Typography, Box, Grid, Button, TextField, Stack, Alert, Snackbar} from "@mui/material";
-import { useState } from "react";
+import { Typography, Box, Grid, Button, TextField, Stack, Alert, Snackbar, Skeleton } from "@mui/material";
+import { ChangeEvent, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useAtom } from "jotai";
 import DropzoneArea from "mui-file-dropzone/dist/components/DropzoneArea";
@@ -13,8 +13,14 @@ import { toastOption } from "~/utils/toast";
 import { sendRequestDialogOpenAtom } from "~/atom/requestFitur";
 import { useFileUpload, useMediaUpload } from "~/services/api/media";
 import { BodyPayloadRegisterVIP, CustomErrorResponse, ErrorResponse, MediaUploaded, PrintErrorMessages, SeverityType, useRequestVIP } from "~/services/api/request-fitur";
+import VGInputImage from "~/components/atomic/VGInputImage";
 
-export default function RegistrationVIPModal (props: {
+interface ResponsePhoto {
+  object_url: string
+  object_key: string
+}
+
+export default function RegistrationVIPModal(props: {
   name?: string;
   isOpen: boolean;
   handleClose: () => void;
@@ -40,15 +46,15 @@ export default function RegistrationVIPModal (props: {
   //   setFileObjects(newFileObjects);
   //   console.log(newFileObjects);
   // };
-  const handleImageChangeKTP = (newFileObjects: Blob[]) => {
-    if (newFileObjects.length > 0) {
-      const file = newFileObjects[0]
-      if (file !== undefined){
-        if(file.size > 2048000) { // in Byte
+  const handleImageChangeKTP = (newFileObjects: ChangeEvent<HTMLInputElement>) => {
+    if (newFileObjects) {
+      const file = newFileObjects.target.files
+      if (file && typeof file[0] !== "undefined") {
+        if (file[0].size > 2048000) { // in Byte
           toast.error(t("modalRegisterVIP.uploadFileSizeError"), toastOption)
         } else {
           const formData = new FormData();
-          formData.append("file", file);
+          formData.append("file", file[0]);
           mediaUpload.mutate(formData, {
             onSuccess: (res) => {
               setImageKTP(res.data)
@@ -58,15 +64,15 @@ export default function RegistrationVIPModal (props: {
       }
     }
   };
-  const handleImageChangeSelfie = (newFileObjects: File[]) => {
-    if (newFileObjects.length > 0) {
-      const file = newFileObjects[0]
-      if (file !== undefined){
-        if(file.size > 2048000) { // in Byte
+  const handleImageChangeSelfie = (newFileObjects: ChangeEvent<HTMLInputElement>) => {
+    if (newFileObjects) {
+      const file = newFileObjects.target.files
+      if (file && typeof file[0] !== "undefined") {
+        if (file[0].size > 2048000) { // in Byte
           toast.error(t("modalRegisterVIP.uploadFileSizeError"), toastOption)
         } else {
           const formData = new FormData();
-          formData.append("file", file);
+          formData.append("file", file[0]);
           mediaUpload.mutate(formData, {
             onSuccess: (res) => {
               setImageSelfie(res.data)
@@ -79,7 +85,7 @@ export default function RegistrationVIPModal (props: {
 
   const handleUploadTransaksi = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files
-    
+
     if (file && typeof file[0] !== "undefined") {
       if (file[0].size > 2 * 1024 * 1024) {
         toast.error(t("modalRegisterVIP.uploadFileSizeError"), toastOption)
@@ -114,7 +120,7 @@ export default function RegistrationVIPModal (props: {
         onSuccess: () => {
           // show Confirmed modal
           setModalOpenRequestVIP(true);
-      
+
           props.handleClose();
           // refetch status VIP data & reset state
           props.refetchStatusVIP();
@@ -128,11 +134,17 @@ export default function RegistrationVIPModal (props: {
           setOpenSnackbar(true);
         }
       });
-  
+
       setOtherPlatformUrl('');
       setOtherPlatformUrlError('');
     }
   };
+
+  const onClose = () => {
+    setImageKTP(undefined)
+    setImageSelfie(undefined)
+    props.handleClose()
+  }
 
   const titleModalStyle = {
     textAlign: "center",
@@ -208,7 +220,7 @@ export default function RegistrationVIPModal (props: {
               {props.name}
             </Typography>
           </Grid>
-          <Grid item xs={12} sx={{mt: 1}}>
+          <Grid item xs={12} sx={{ mt: 1 }}>
             <Typography
               component="div"
               sx={subtitleModalStyle}
@@ -216,7 +228,7 @@ export default function RegistrationVIPModal (props: {
               {t("modalRegisterVIP.subtitle")}
             </Typography>
           </Grid>
-          <Grid item xs={12} sx={{mt: 1}}>
+          <Grid item xs={12} sx={{ mt: 1 }}>
             <Typography sx={labelFormStyle}>
               {t("modalRegisterVIP.form.0.title")}
             </Typography>
@@ -225,8 +237,27 @@ export default function RegistrationVIPModal (props: {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box sx={muiDropzoneStyle}>
-              <DropzoneArea
+            <Box display="flex">
+              {
+                mediaUpload.isLoading
+                  ? (
+                    <Skeleton
+                      variant="rounded"
+                      width={124}
+                      height={124}
+                      sx={{ m: 1 }}
+                    />
+                  ) : (
+                    <VGInputImage
+                      id="ktp-image"
+                      width="124px"
+                      height="124px"
+                      imageUrl={imageKTP?.object_url && `url(${imageKTP.object_url})`}
+                      onChange={(files) => handleImageChangeKTP(files)}
+                    />
+                  )
+              }
+              {/* <DropzoneArea
                 acceptedFiles={["image/*"]}
                 fileObjects={fileObjects}
                 dropzoneText={t("modalRegisterVIP.form.0.label")}
@@ -235,10 +266,10 @@ export default function RegistrationVIPModal (props: {
                 showPreviewsInDropzone={true}
                 Icon={UploadIcon}
                 onChange={(files) => handleImageChangeKTP(files)}
-              />
+              /> */}
             </Box>
           </Grid>
-          <Grid item xs={12} sx={{mt: 1}}>
+          <Grid item xs={12} sx={{ mt: 1 }}>
             <Typography sx={labelFormStyle}>
               {t("modalRegisterVIP.form.1.title")}
             </Typography>
@@ -247,8 +278,27 @@ export default function RegistrationVIPModal (props: {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box sx={muiDropzoneStyle}>
-              <DropzoneArea
+            <Box>
+              {
+                mediaUpload.isLoading
+                  ? (
+                    <Skeleton
+                      variant="rounded"
+                      width={124}
+                      height={124}
+                      sx={{ m: 1 }}
+                    />
+                  ) : (
+                    <VGInputImage
+                      id="selfie-ktp"
+                      width="124px"
+                      height="124px"
+                      imageUrl={imageSelfie?.object_url && `url(${imageSelfie.object_url})`}
+                      onChange={(files) => handleImageChangeSelfie(files)}
+                    />
+                  )
+              }
+              {/* <DropzoneArea
                 acceptedFiles={["image/*"]}
                 fileObjects={fileObjects}
                 dropzoneText={t("modalRegisterVIP.form.1.label")}
@@ -257,10 +307,10 @@ export default function RegistrationVIPModal (props: {
                 showPreviewsInDropzone={true}
                 Icon={UploadIcon}
                 onChange={(files) => handleImageChangeSelfie(files)}
-              />
+              /> */}
             </Box>
           </Grid>
-          <Grid item xs={12} sx={{mt: 1}}>
+          <Grid item xs={12} sx={{ mt: 1 }}>
             <Typography sx={labelFormStyle}>
               {t("modalRegisterVIP.form.2.title")}
             </Typography>
@@ -268,7 +318,7 @@ export default function RegistrationVIPModal (props: {
               {t("modalRegisterVIP.form.2.subtitle")}
             </Typography>
           </Grid>
-          <Grid item xs={12} sx={{my: 1}}>
+          <Grid item xs={12} sx={{ my: 1 }}>
             <input
               accept="file/*"
               style={{ display: 'none' }}
@@ -277,12 +327,12 @@ export default function RegistrationVIPModal (props: {
               onChange={(e) => handleUploadTransaksi(e)}
             />
             <label htmlFor="raised-button-file">
-              <Button fullWidth variant="outlined" component="span" startIcon={<UploadFlatIcon />} sx={{textTransform: 'none'}}>
+              <Button fullWidth variant="outlined" component="span" startIcon={<UploadFlatIcon />} sx={{ textTransform: 'none' }}>
                 {transactionDataFileName}
               </Button>
             </label>
           </Grid>
-          <Grid item xs={12} sx={{mt: 1}}>
+          <Grid item xs={12} sx={{ mt: 1 }}>
             <TextField
               id={t("modalRegisterVIP.form.3.label")}
               value={otherPlatformUrl}
@@ -312,20 +362,20 @@ export default function RegistrationVIPModal (props: {
               {t("modalRegisterVIP.form.3.subtitle")}
             </Typography>
           </Grid>
-          <Grid item xs={12} sx={{mt: 2}}>
-          <Stack 
-            justifyContent="center"
-            alignItems="center"
-            direction="row" 
-            spacing={2}>
-              <Button onClick={props.handleClose} fullWidth variant="outlined" sx={{textTransform: 'none'}}>
+          <Grid item xs={12} sx={{ mt: 2 }}>
+            <Stack
+              justifyContent="center"
+              alignItems="center"
+              direction="row"
+              spacing={2}>
+              <Button onClick={onClose} fullWidth variant="outlined" sx={{ textTransform: 'none' }}>
                 {t("modalRegisterVIP.backBtn")}
               </Button>
-              <Button onClick={handleSubmitForm} fullWidth variant="contained" color="success" sx={{textTransform: 'none'}}>
+              <Button onClick={handleSubmitForm} fullWidth variant="contained" color="success" sx={{ textTransform: 'none' }}>
                 {t("modalRegisterVIP.submitBtn")}
               </Button>
-          </Stack>
-          </Grid> 
+            </Stack>
+          </Grid>
         </Grid>
       </Box>
       {/* for Alerting */}

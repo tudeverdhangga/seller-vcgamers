@@ -118,7 +118,8 @@
             "price": "Harga tidak boleh kosong."
           },
           "multiple100": "Harap isi nominal dengan kelipatan 100",
-          "noMinus": "{{field}} tidak boleh minus"
+          "noMinus": "{{field}} tidak boleh minus",
+          "updatePriceTime": "Kamu dapat merubah harga lagi di jam {{time}}"
         }
       },
       "image": {
