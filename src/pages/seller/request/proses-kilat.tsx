@@ -190,7 +190,7 @@ export default function ProsesKilatPage() {
       <Grid container spacing={4} justifyContent={'center'} >
         <Grid item xs={12}>
           {/* Permission Request */}
-          <ContentCard sx={{p: 1}}>
+          <ContentCard sx={{p: 1, display: (statusKilatData && (statusKilatData.request_status === SellerStatusApproved || statusKilatData.seller_has_kilat)) ? 'none' : 'flex'}}>
             <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'}>
               <Grid item xs={8} sm={10}>
                 <Checkbox
