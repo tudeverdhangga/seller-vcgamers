@@ -22,6 +22,7 @@ interface Response {
   description: string
   images_url: string[]
   variations: Variation[]
+  next_update_price?: string
 }
 
 interface Variation {
@@ -36,6 +37,7 @@ interface Variation {
   visit?: number;
   favorite?: number;
   sold?: number;
+  next_update_price?: string
 }
 interface ErrorResponse {
   response: {
