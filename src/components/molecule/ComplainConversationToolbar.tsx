@@ -1,17 +1,26 @@
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
+import { useMemo } from "react";
 
-import { complainListAtom } from "~/atom/complain";
+import { useGetModerationList } from "~/services/moderation/hooks";
 import { parenthesesNumber } from "~/utils/format";
 
 export default function ComplainConversationToolbar() {
   const { t } = useTranslation("complain");
-  const [complainList] = useAtom(complainListAtom);
+  const { data: inProcessData } = useGetModerationList("1");
+  const { data: completeData } = useGetModerationList("2");
 
-  const unread =
-    complainList?.reduce((prev, curr) => prev + (curr?.unread ? 1 : 0), 0) ?? 0;
+  const unread = useMemo(
+    () =>
+      (inProcessData?.pages
+        .flatMap((page) => page.data)
+        .reduce((acc, data) => acc + (data.is_read ? 0 : 1), 0) ?? 0) +
+      (completeData?.pages
+        .flatMap((page) => page.data)
+        .reduce((acc, data) => acc + (data.is_read ? 0 : 1), 0) ?? 0),
+    [inProcessData, completeData]
+  );
 
   return (
     <Toolbar>

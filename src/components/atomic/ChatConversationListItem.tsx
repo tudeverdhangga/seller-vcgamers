@@ -6,19 +6,26 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import BadgeIcon from "../icons/BadgeIcon";
 import Link from "next/link";
+import { type DataChatRoom } from "~/services/chat/types";
+import { dateToTime } from "~/utils/format";
+import { useChatReadMessage } from "~/services/chat/hooks";
 
 export default function ChatConversationListItem(props: {
-  id: string;
-  name: string;
-  text: string;
-  unread?: number;
-  time: string;
+  chat: DataChatRoom;
 }) {
+  const mutation = useChatReadMessage();
+
   return (
     <>
-      <ListItem key={props.id} disableGutters disablePadding>
+      <ListItem
+        disableGutters
+        disablePadding
+        onClick={() =>
+          mutation.mutate({ room_id: props.chat.id, requester: "SELLER" })
+        }
+      >
         <Link
-          href={`/seller/obrolan/percakapan/${props.id}`}
+          href={`/seller/obrolan/percakapan/${props.chat.id}`}
           passHref
           legacyBehavior
           style={{ textDecoration: "none" }}
@@ -46,7 +53,7 @@ export default function ChatConversationListItem(props: {
                 }}
                 noWrap
               >
-                {props.name}
+                {props.chat.name}
               </Typography>
               <Typography
                 maxWidth={200}
@@ -56,7 +63,7 @@ export default function ChatConversationListItem(props: {
                 }}
                 noWrap
               >
-                {props.text}
+                {props.chat.thumbnail_message}
               </Typography>
             </Box>
             <Box
@@ -69,14 +76,16 @@ export default function ChatConversationListItem(props: {
                 height: 48,
               }}
             >
-              {props.unread && <BadgeIcon content={props.unread} />}
+              {props.chat.unread_count && (
+                <BadgeIcon content={props.chat.unread_count} />
+              )}
               <Typography
                 sx={{
                   fontSize: 14,
                   color: "common.shade.200",
                 }}
               >
-                {props.time}
+                {dateToTime(props.chat.last_message_date)}
               </Typography>
             </Box>
           </ListItemButton>

@@ -1,27 +1,46 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import { useAtom } from "jotai";
+import Skeleton from "@mui/material/Skeleton";
 import { useTranslation } from "next-i18next";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-import { complainListAtom } from "~/atom/complain";
 import ComplainConversationListItem from "~/components/atomic/ComplainConversationListItem";
 import VGTabChip from "~/components/atomic/VGTabChip";
 import VGTabPanel from "~/components/atomic/VGTabPanel";
 import VGTabsChip from "~/components/atomic/VGTabsChip";
 import BadgeIcon from "~/components/icons/BadgeIcon";
 import EmptyState from "~/components/molecule/EmptyState/complainConversation";
+import { useGetModerationList } from "~/services/moderation/hooks";
 
 export default function ComplainConversationContent() {
   const { t } = useTranslation("complain");
 
-  const [complainList] = useAtom(complainListAtom);
-  const complainInProcessList = complainList?.filter(
-    (complain) => complain.type === "in-process"
+  const {
+    data: inProcessData,
+    hasNextPage: inProcessHasNextPage,
+    fetchNextPage: inProcessFetchNextPage,
+  } = useGetModerationList("1");
+  const {
+    data: completeData,
+    hasNextPage: completeHasNextPage,
+    fetchNextPage: completeFetchNextPage,
+  } = useGetModerationList("2");
+
+  const inProcessUnread = useMemo(
+    () =>
+      inProcessData?.pages
+        .flatMap((page) => page.data)
+        .reduce((acc, data) => acc + (data.is_read ? 0 : 1), 0) ?? 0,
+    [inProcessData?.pages]
   );
-  const complainCompleteList = complainList?.filter(
-    (complain) => complain.type === "completed"
+  const completeUnread = useMemo(
+    () =>
+      completeData?.pages
+        .flatMap((page) => page.data)
+        .reduce((acc, data) => acc + (data.is_read ? 0 : 1), 0) ?? 0,
+    [completeData?.pages]
   );
 
   const [tabPosition, setTabPosition] = useState(0);
@@ -35,57 +54,71 @@ export default function ComplainConversationContent() {
         >
           <VGTabChip
             label={t("tab.inProcess")}
-            icon={
-              <BadgeIcon
-                content={
-                  complainInProcessList?.filter((complain) => complain.unread)
-                    .length
-                }
-              />
-            }
+            icon={<BadgeIcon content={inProcessUnread} />}
             iconPosition="end"
           />
           <VGTabChip
             label={t("tab.complete")}
-            icon={
-              <BadgeIcon
-                content={
-                  complainCompleteList?.filter((complain) => complain.unread)
-                    .length
-                }
-              />
-            }
+            icon={<BadgeIcon content={completeUnread} />}
             iconPosition="end"
           />
         </VGTabsChip>
       </Box>
-      <VGTabPanel value={tabPosition} index={0} style={{ marginTop: "10px" }}>
-        {complainInProcessList && complainInProcessList.length ? (
-          <List disablePadding>
-            {complainInProcessList.map((complain) => (
-              <ComplainConversationListItem
-                key={complain.id}
-                complain={complain}
-              />
-            ))}
-          </List>
-        ) : (
-          <EmptyState />
-        )}
+      <VGTabPanel value={tabPosition} index={0}>
+        <List
+          id="scrollableDiv"
+          disablePadding
+          sx={{ overflow: "auto", height: "64vh" }}
+        >
+          <InfiniteScroll
+            dataLength={inProcessData ? inProcessData.pages.length : 0}
+            hasMore={inProcessHasNextPage ?? false}
+            next={inProcessFetchNextPage}
+            loader={<Skeleton variant="rounded" height={50} width="100%" />}
+            scrollableTarget="scrollableDiv"
+          >
+            {inProcessData && inProcessData.pages.at(0)?.data.length ? (
+              inProcessData.pages
+                .flatMap((page) => page.data)
+                .map((complain) => (
+                  <ComplainConversationListItem
+                    key={complain.id}
+                    complain={complain}
+                  />
+                ))
+            ) : (
+              <EmptyState />
+            )}
+          </InfiniteScroll>
+        </List>
       </VGTabPanel>
-      <VGTabPanel value={tabPosition} index={1} style={{ marginTop: "10px" }}>
-        {complainCompleteList && complainCompleteList.length ? (
-          <List disablePadding>
-            {complainCompleteList.map((complain) => (
-              <ComplainConversationListItem
-                key={complain.id}
-                complain={complain}
-              />
-            ))}
-          </List>
-        ) : (
-          <EmptyState />
-        )}
+      <VGTabPanel value={tabPosition} index={1}>
+        <List
+          id="scrollableDiv"
+          disablePadding
+          sx={{ overflow: "auto", height: "64vh" }}
+        >
+          <InfiniteScroll
+            dataLength={completeData ? completeData.pages.length : 0}
+            hasMore={completeHasNextPage ?? false}
+            next={completeFetchNextPage}
+            loader={<Skeleton variant="rounded" height={100} width="100%" />}
+            scrollableTarget="scrollableDiv"
+          >
+            {completeData && completeData.pages.at(0)?.data.length ? (
+              completeData.pages
+                .flatMap((page) => page.data)
+                .map((complain) => (
+                  <ComplainConversationListItem
+                    key={complain.id}
+                    complain={complain}
+                  />
+                ))
+            ) : (
+              <EmptyState />
+            )}
+          </InfiniteScroll>
+        </List>
       </VGTabPanel>
     </Box>
   );

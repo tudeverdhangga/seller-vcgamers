@@ -1,27 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
 
+import {
+  useGetModerationDetail,
+  usePostModerationInviteAdmin,
+} from "~/services/moderation/hooks";
 import VGButton from "../atomic/VGButton";
 
 export const DRAWER_WIDTH = 250;
 
-export default function ComplainInfoSidebar() {
+export default function ComplainInfoSidebar({
+  complainId,
+}: {
+  complainId: string;
+}) {
   const { t } = useTranslation("complain");
-  const [isAdminInvited, setIsAdminInvited] = useState(false);
-
-  const data = {
-    reasoning:
-      "Caption/deskripsi isi konten popup diletakkan dibagian ini, Usahakan maksimal berisi 3 baris jika memungkinkan.",
-    buyerImage: "/assets/complain-info-buyer-profile.png",
-    buyerName: "Munaroh",
-    sellerImage: "/assets/complain-info-seller-profile.png",
-    sellerName: "Munaroh",
-  };
+  const { data } = useGetModerationDetail(complainId);
+  const mutation = usePostModerationInviteAdmin();
 
   return (
     <Box sx={{ width: DRAWER_WIDTH, p: "20px" }}>
@@ -48,7 +46,7 @@ export default function ComplainInfoSidebar() {
           mt: "10px",
         }}
       >
-        {data.reasoning}
+        {data?.data.reason}
       </Typography>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <Typography
@@ -61,26 +59,32 @@ export default function ComplainInfoSidebar() {
         >
           {t("complainInfo.parties")}
         </Typography>
-        <PartyProfilePicture
-          src={data.buyerImage}
-          name={data.buyerName}
-          position="buyer"
-        />
-        <PartyProfilePicture
-          src={data.sellerImage}
-          name={data.sellerName}
-          position="seller"
-        />
+        {data?.data.participants[0]?.photo && (
+          <PartyProfilePicture
+            src={data.data.participants[0].photo}
+            name={data.data.participants[0].name}
+            position="buyer"
+          />
+        )}
+        {data?.data.participants[1]?.photo && (
+          <PartyProfilePicture
+            src={data.data.participants[1].photo}
+            name={data.data.participants[1].name}
+            position="seller"
+          />
+        )}
       </Box>
-      <VGButton
-        variant={isAdminInvited ? "contained" : "outlined"}
-        color="primary"
-        disabled={isAdminInvited}
-        sx={{ mt: "20px", width: "100%" }}
-        onClick={() => setIsAdminInvited((state) => !state)}
-      >
-        {t("complainInfo.inviteAdmin")}
-      </VGButton>
+      {data?.data.id && (
+        <VGButton
+          variant={data.data.admin_invited ? "contained" : "outlined"}
+          color="primary"
+          disabled={data.data.admin_invited}
+          sx={{ mt: "20px", width: "100%" }}
+          onClick={() => mutation.mutate({ moderation_id: data.data.id })}
+        >
+          {t("complainInfo.inviteAdmin")}
+        </VGButton>
+      )}
     </Box>
   );
 }

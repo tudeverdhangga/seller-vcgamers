@@ -1,59 +1,44 @@
 /* eslint-disable @next/next/no-img-element */
+import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
+import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
+
 import SentIcon from "~/components/icons/chat/SentIcon";
-import ShopRatingIcon from "../icons/chat/ShopRatingIcon";
-import SendingIcon from "../icons/chat/SendingIcon";
+import ComplainAdminMessageListItem from "~/components/atomic/ComplainAdminMessageListItem";
+import type {
+  AttachmentProps,
+  InfoProps,
+  ProductProps,
+  SideProps,
+  TextProps,
+} from "~/services/moderation/types";
 import FailedIcon from "../icons/chat/FailedIcon";
-import { IconButton } from "@mui/material";
 import RetryIcon from "../icons/chat/RetryIcon";
-
-type SideProps =
-  | {
-      side: "left";
-    }
-  | {
-      side: "right";
-      status: "sent" | "sending" | "failed";
-    };
-
-type TextProps = {
-  type: "text";
-  content: string;
-  time: string;
-};
-
-type ProductProps = {
-  type: "product";
-  content: {
-    img: string;
-    title: string;
-    price: string;
-    rating: string;
-    sold: string;
-  };
-};
-
-type AttachmentProps = {
-  type: "attachment";
-  content: string;
-  time: string;
-};
+import SendingIcon from "../icons/chat/SendingIcon";
+import ShopRatingIcon from "../icons/chat/ShopRatingIcon";
 
 export default function ChatMessageListItem(
-  props: (TextProps | ProductProps | AttachmentProps) & SideProps
+  props: InfoProps | ((TextProps | AttachmentProps) & SideProps)
 ) {
   switch (props.type) {
-    case "text":
+    case "TEXT":
+      if (props.side === "admin") {
+        return ComplainAdminMessageListItem({ ...props, side: "left" });
+      }
       return TextChatMessage(props);
-    case "product":
-      return ProductChatMessage(props);
-    case "attachment":
+    // case "product":
+    //   return ProductChatMessage(props);
+    case "VIDEO":
+    case "IMAGE":
+    case "DOCUMENT":
       return AttachmentChatMessage(props);
+    case "INFO":
+      return InfoChatMessage(props);
     default:
       return <></>;
   }
@@ -234,3 +219,20 @@ const statusMap = {
   sending: <SendingIcon sx={{ height: "12px", width: "12px", mb: "4px" }} />,
   failed: <FailedIcon sx={{ height: "12px", width: "12px", mb: "4px" }} />,
 };
+
+function InfoChatMessage(props: InfoProps) {
+  return (
+    <ListSubheader sx={{ backgroundColor: "transparent" }}>
+      <Typography
+        sx={{
+          color: "common.purple.500",
+          fontSize: 12,
+          fontWeight: 500,
+          textAlign: "center",
+        }}
+      >
+        {props.content}
+      </Typography>
+    </ListSubheader>
+  );
+}

@@ -3,24 +3,26 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 import Link from "next/link";
+
+import { usePostModerationReadMessage } from "~/services/moderation/hooks";
+import type { DataModerationList } from "~/services/moderation/types";
 import BadgeIcon from "../icons/BadgeIcon";
 
 export default function ComplainConversationListItem(props: {
-  complain: {
-    id: string;
-    name: string;
-    transactionId: string;
-    transactionName: string;
-    complain: string;
-    unread?: boolean;
-    time: string;
-    type: "completed" | "in-process";
-  };
+  complain: DataModerationList;
 }) {
+  const mutation = usePostModerationReadMessage();
+
   return (
     <>
-      <ListItem key={props.complain.id} disableGutters disablePadding>
+      <ListItem
+        key={props.complain.id}
+        disableGutters
+        disablePadding
+        onClick={() => mutation.mutate({ moderation_id: props.complain.id })}
+      >
         <Link
           href={`/seller/obrolan/komplain/${props.complain.id}`}
           passHref
@@ -63,11 +65,11 @@ export default function ComplainConversationListItem(props: {
                     }}
                     noWrap
                   >
-                    {props.complain.transactionId}
+                    {props.complain.transaction.code}
                   </Typography>
-                  {props.complain.unread && (
+                  {!props.complain.is_read && (
                     <BadgeIcon
-                      content={props.complain.unread}
+                      content={!props.complain.is_read}
                       sx={{ width: 7, height: 7 }}
                     />
                   )}
@@ -81,7 +83,7 @@ export default function ComplainConversationListItem(props: {
                   }}
                   noWrap
                 >
-                  {props.complain.transactionName}
+                  {props.complain.transaction.product.name}
                 </Typography>
               </Box>
               <Box
@@ -99,7 +101,7 @@ export default function ComplainConversationListItem(props: {
                     color: "common.shade.200",
                   }}
                 >
-                  {props.complain.time}
+                  {dayjs(props.complain.date).format("DD MMM YYYY HH:MM")}
                 </Typography>
               </Box>
             </Box>
@@ -120,7 +122,7 @@ export default function ComplainConversationListItem(props: {
                 }}
                 noWrap
               >
-                {props.complain.complain}
+                {props.complain.reason}
               </Typography>
             </Box>
           </ListItemButton>

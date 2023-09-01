@@ -2,21 +2,18 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
+
+import { useGetModerationDetail } from "~/services/moderation/hooks";
 import VGChip from "../atomic/VGChip";
-import { useRouter } from "next/router";
 
-export default function ComplainMessageInfoBanner() {
-  //TODO(rizanafis): change logic with API integration
-  const router = useRouter();
-  const data = {
-    name: "Asphalt 6 Legend Coins",
-    transactionId: "TRX-1234567890-01234",
-    image: "/assets/chat-product-img.png",
-  };
+export default function ComplainMessageInfoBanner({
+  complainId,
+}: {
+  complainId: string;
+}) {
+  const { data } = useGetModerationDetail(complainId);
 
-  const chatId = router.query.chatId as string[] | undefined;
-
-  const completed = chatId && chatId[0] === "234";
+  const completed = data?.data.status !== "ON_GOING";
 
   return (
     <Link href="" style={{ textDecoration: "none" }}>
@@ -30,7 +27,12 @@ export default function ComplainMessageInfoBanner() {
           gap: "5px",
         }}
       >
-        <img src={data.image} width={23} height={23} alt="Attachment" />
+        <img
+          src={data?.data.transaction.product.image}
+          width={23}
+          height={23}
+          alt="Attachment"
+        />
         <Box sx={{ display: "block", flexGrow: 1 }}>
           <Typography
             sx={{
@@ -39,7 +41,7 @@ export default function ComplainMessageInfoBanner() {
               color: { sm: "common.purple.500", xs: "common.shade.700" },
             }}
           >
-            {data.name}
+            {data?.data.transaction.product.name}
           </Typography>
           <Typography
             sx={{
@@ -48,7 +50,7 @@ export default function ComplainMessageInfoBanner() {
               color: { sm: "common.purple.500", xs: "common.shade.200" },
             }}
           >
-            {data.transactionId}
+            {data?.data.transaction.code}
           </Typography>
         </Box>
         {completed ? (

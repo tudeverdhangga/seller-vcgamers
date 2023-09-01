@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -10,118 +10,71 @@ import { messageAttachmentShowAtom } from "~/atom/chat";
 
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
 import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubheader";
-import ChatMessageAttachment from "~/components/molecule/ChatMessageAttachment";
 import ChatMessageInfoBanner from "~/components/molecule/ChatMessageInfoBanner";
-import ChatMessageInput from "~/components/molecule/ChatMessageInput";
-import ChatMessageSuggestion from "~/components/molecule/ChatMessageSuggestion";
 import ChatMessageToolbar from "~/components/molecule/ChatMessageToolbar";
 import ChatRoomEmptyState from "~/components/molecule/EmptyState/chatRoom";
+import { useGetChatMessage } from "~/services/chat/hooks";
+import ChatRoomInput from "../ChatRoomInput";
 
 export default function ChatRoomContent() {
-  const [show] = useAtom(messageAttachmentShowAtom);
   const router = useRouter();
 
-  const scrollRef = useRef<HTMLLIElement | null>(null);
-  const [list] = useState([0, 1, 2, 3, 4]);
+  const chatIds = router.query.chatId as string[] | undefined;
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [list]);
+  if (typeof chatIds === "undefined") return <ChatRoomEmptyState />;
 
-  const chatId = router.query.chatId as string[] | undefined;
-
-  if (typeof chatId === "undefined") return <ChatRoomEmptyState />;
+  const chatId = chatIds[0] as string;
 
   return (
     <Box style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
       <ChatMessageToolbar />
       <Divider />
       <ChatMessageInfoBanner />
-      <List
-        sx={{
-          backgroundImage: `url("/assets/chat-bg.png")`,
-          px: 2,
-          position: "relative",
-          overflow: "auto",
-          maxHeight: show ? "45vh" : "53vh",
-          "& ul": { padding: 0 },
-          "&li": { p: 1 },
-        }}
-        subheader={<li />}
-      >
-        {list.map((sectionId) => (
-          <li
-            key={`section-${sectionId}`}
-            {...(sectionId === 4 && { ref: scrollRef })}
-          >
-            <ul>
-              <ChatMessageListSubheader
-                content={`${sectionId + 1} December 2021`}
-              />
-              <ChatMessageListItem
-                type="product"
-                content={{
-                  img: "/assets/chat-product-img.png",
-                  title: "Asphalt 6 Legend Coins",
-                  price: "Rp 85.000",
-                  rating: "4.8",
-                  sold: "234",
-                }}
-                side="left"
-              />
-              <ChatMessageListItem
-                type="text"
-                content="Bisa dikirim sekarang juga?"
-                time="15:32"
-                side="left"
-              />
-              <ChatMessageListItem
-                type="text"
-                content="Bisa dikirim sekarang juga?"
-                time="15:32"
-                side="left"
-              />
-              <ChatMessageListItem
-                type="text"
-                content="ready kak silakan diorder"
-                time="15:32"
-                side="right"
-                status="sent"
-              />
-              <ChatMessageListItem
-                type="text"
-                content="kami ready kirim setiap hari. Fast Respon di 10:00-22:00. kalau
-              ada orderan diiluar jam 22:00 akan diproses di hari berikutnya"
-                time="15:32"
-                side="right"
-                status="sending"
-              />
-              <ChatMessageListItem
-                type="attachment"
-                content="/assets/default-chat-attachment.png"
-                time="15:32"
-                side="right"
-                status="sent"
-              />
-            </ul>
-          </li>
-        ))}
-      </List>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "common.shade.50",
-          p: 2,
-          gap: 1,
-        }}
-      >
-        <ChatMessageAttachment />
-        <ChatMessageSuggestion />
-        <ChatMessageInput />
-      </Box>
+      <ChatRoomChatList chatId={chatId} />
+      <ChatRoomInput chatId={chatId} />
     </Box>
+  );
+}
+
+function ChatRoomChatList({ chatId }: { chatId: string }) {
+  const { data } = useGetChatMessage(chatId);
+  const [show] = useAtom(messageAttachmentShowAtom);
+
+  const scrollRef = useRef<HTMLLIElement | null>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [data]);
+
+  return (
+    <List
+      sx={{
+        backgroundImage: `url("/assets/chat-bg.png")`,
+        px: 2,
+        position: "relative",
+        overflow: "auto",
+        maxHeight: show ? "45vh" : "53vh",
+        "& ul": { padding: 0 },
+        "&li": { p: 1 },
+      }}
+      subheader={<li />}
+    >
+      {[...data].map(([key, value], index) => (
+        <li key={key} {...(index === data.size - 1 && { ref: scrollRef })}>
+          <ul>
+            <ChatMessageListSubheader content={`${key}`} />
+            {value.map((chat) =>
+              chat.type === "TEXT" ? (
+                <ChatMessageListItem key={chat.type} {...chat} />
+              ) : (
+                <></>
+              )
+            )}
+          </ul>
+        </li>
+      ))}
+    </List>
   );
 }

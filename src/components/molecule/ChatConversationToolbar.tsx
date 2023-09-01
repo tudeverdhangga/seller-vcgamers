@@ -1,17 +1,22 @@
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
+import { useMemo } from "react";
 
-import { messagesAtom } from "~/atom/chat";
+import { useGetChatRoom } from "~/services/chat/hooks";
 import { parenthesesNumber } from "~/utils/format";
 
 export default function ChatConversationToolbar() {
   const { t } = useTranslation("chat");
-  const [messages] = useAtom(messagesAtom);
+  const { data } = useGetChatRoom();
 
-  const unread =
-    messages?.reduce((prev, curr) => prev + (curr?.unread ?? 0), 0) ?? 0;
+  const unread = useMemo(
+    () =>
+      data?.pages
+        .flatMap((page) => page.data)
+        .reduce((acc, data) => acc + data.unread_count, 0) ?? 0,
+    [data]
+  );
 
   return (
     <Toolbar>
