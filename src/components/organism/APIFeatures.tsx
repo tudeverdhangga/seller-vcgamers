@@ -130,6 +130,7 @@ export default function APIFeaturePage() {
     if(getWebhookConfig?.data?.data) {
       setCallbackWebhookConfigs(getWebhookConfig.data.data);
       setUrlWebhook(getWebhookConfig.data.data.callback_url);
+      handleWebhookChecboxesState(getWebhookConfig.data.data);
     }
     if(getApiAccess?.data?.data) {
       setSecretKey(getApiAccess.data.data.secret_key);
@@ -209,6 +210,20 @@ export default function APIFeaturePage() {
     });
   };
 
+  const handleWebhookChecboxesState = (payloads: DataCallbackWebhook) => {
+    const webhookCheckboxesTemp = webhookCheckboxes.map((item, idx) => {
+      if (item.key in payloads) {
+        const itemValue = payloads[item.key as keyof DataCallbackWebhook]
+        if (item.key !== 'callback_url' && typeof itemValue === 'boolean') { // isBooleanObject(itemValue)
+          return { ...item, value: itemValue};
+        }
+      }
+      return item;
+    });
+
+    setWebhookCheckboxes(webhookCheckboxesTemp);
+  };
+
   const handleWebhookCheckbox = (itemKey: string) => {
     const webhookCheckboxesTemp = webhookCheckboxes.map((item, idx) => {
       if (item.key === itemKey) {
@@ -228,6 +243,7 @@ export default function APIFeaturePage() {
         console.log("res: ", res)
         setGeneratedAccessToken(res?.data.access_key);
         setIsOpenGenerateAccessKeyDialog(true);
+        void getApiAccess.refetch();
       },
       onError: (error) => {
         const err = error as CustomErrorResponse
@@ -311,6 +327,7 @@ export default function APIFeaturePage() {
           contentGenerateAlert={generatedAccessToken}
           isOpen={isOpenGenerateAccessKeyDialog}
           handleClose={() => setIsOpenGenerateAccessKeyDialog(false)}
+          handleCopy={() => navigator.clipboard.writeText(generatedAccessToken)}
         />
 
         <Grid container spacing={2} justifyContent={'space-between'} >

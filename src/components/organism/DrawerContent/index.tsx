@@ -16,6 +16,7 @@ export default function DrawerContent() {
   const router = useRouter();
   const getProfile = useGetProfile();
   const [sellerName, setSellerName] = useState("");
+  const [sellerSlug, setSellerSlug] = useState("");
   const [sellerProfile, setSellerProfile] = useState("");
   const [sellerOpen, setSellerOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(router.asPath);
@@ -23,10 +24,12 @@ export default function DrawerContent() {
 
   useEffect(() => {
     setSellerName(getProfile?.data?.data?.seller_name ? getProfile?.data?.data?.seller_name : "Nama Toko")
+    setSellerSlug(getProfile?.data?.data?.seller_url ? getProfile?.data?.data?.seller_url : "seller")
     setSellerProfile(getProfile?.data?.data?.seller_photo ? getProfile?.data?.data?.seller_photo.object_url : "")
     setSellerOpen(!getProfile?.data?.data?.is_closed)
   }, [
     getProfile?.data?.data?.seller_name,
+    getProfile?.data?.data?.seller_url,
     getProfile?.data?.data?.seller_photo,
     getProfile?.data?.data?.is_closed,
   ])
@@ -67,7 +70,7 @@ export default function DrawerContent() {
     <>
       <SellerToolbar />
       <Divider />
-      <ProfileCard name={sellerName} profile_src={sellerProfile} is_closed={!sellerOpen} />
+      <ProfileCard name={sellerName} slug={sellerSlug} profile_src={sellerProfile} is_closed={!sellerOpen} />
       <Divider />
       <List sx={{ bgcolor: "background.paper" }}>
         {menus.map(menu => (

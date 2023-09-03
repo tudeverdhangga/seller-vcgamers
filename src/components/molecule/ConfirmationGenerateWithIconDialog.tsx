@@ -11,6 +11,7 @@ export default function ConfirmationGenerateWithIconDialog(props: {
   desc?: string;
   isOpen: boolean;
   handleClose: () => void;
+  handleCopy?: () => void;
 }) {
   const { t } = useTranslation("vip");
 
@@ -79,7 +80,7 @@ export default function ConfirmationGenerateWithIconDialog(props: {
           color="primary"
           size="large"
           sx={{ width: "100%", mr: 1 }}
-          onClick={props.handleClose}
+          onClick={props.handleCopy ? props.handleCopy : props.handleClose}
         >
           {t("contentApi.accessKey.modalGenerate.copyBtn")}
         </VGButton>

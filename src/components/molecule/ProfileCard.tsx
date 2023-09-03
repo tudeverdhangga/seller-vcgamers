@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import { env } from "~/env.mjs";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -8,8 +9,15 @@ import RedTypography from "../atomic/RedTypography";
 import GreenTypography from "../atomic/GreenTypography";
 import ChatProfilePicture from "../atomic/ChatProfilePicture";
 
-export default function ProfileCard(props: { name: string, profile_src: string, is_closed: boolean }) {
+export default function ProfileCard(props: { name: string, slug: string, profile_src: string, is_closed: boolean }) {
   const { t } = useTranslation("layout");
+
+  const handleRedirectMarketplace = () => {
+    window.open(env.NEXT_PUBLIC_MARKET_URL, '_blank'); 
+  };
+  const handleRedirectStore = () => {
+    window.open(env.NEXT_PUBLIC_VCG_STORE_URL+props.slug, '_blank'); 
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
@@ -43,10 +51,10 @@ export default function ProfileCard(props: { name: string, profile_src: string, 
           </Box>
         </Box>
       </Box>
-      <Button variant="contained" sx={{ mb: "10px", textTransform: "none" }}>
+      <Button onClick={handleRedirectStore} variant="contained" sx={{ mb: "10px", textTransform: "none" }}>
         {t("profileCard.visitShop")}
       </Button>
-      <Button variant="outlined" sx={{ textTransform: "none" }}>
+      <Button onClick={handleRedirectMarketplace} variant="outlined" sx={{ textTransform: "none" }}>
         {t("profileCard.visitMarketplace")}
       </Button>
     </Box>
