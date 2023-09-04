@@ -145,7 +145,11 @@ export default function BalanceInformationCard() {
           <VGButton
             variant="contained"
             fullWidth={isMobile}
-            disabled={data?.data.withdrawal_status_error}
+            // Hardcode
+            disabled={
+              data?.data.withdrawal_status_error ||
+              (data?.data.balance ?? 0) < 20_000
+            }
             sx={{ borderColor: "primary.main" }}
             onClick={() => setConfirmationDialog(true)}
           >

@@ -10,6 +10,8 @@ import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
 import { type Campaign } from "~/services/joinCampaign/types";
+import { useGetCampaignDetail } from "~/services/joinCampaign/hooks";
+import Link from "next/link";
 
 export default function JoinCampaignCard(props: { campaign: Campaign }) {
   const { t } = useTranslation("joinCampaign");
@@ -91,12 +93,28 @@ export default function JoinCampaignCard(props: { campaign: Campaign }) {
             {t("btn.seeDetail")}
           </VGButton>
           {props.campaign.is_expired && (
-            <VGButton variant="outlined">
-              {t("btn.performanceSummary")}
-            </VGButton>
+            <PerformanceSummaryButton campaignId={props.campaign.id} />
           )}
         </Box>
       </Box>
     </VGCard>
+  );
+}
+
+function PerformanceSummaryButton(props: { campaignId: string }) {
+  const { t } = useTranslation("joinCampaign");
+  const { data } = useGetCampaignDetail(props.campaignId);
+
+  return data ? (
+    <Link
+      href={data?.data.performance_link}
+      passHref
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <VGButton variant="outlined">{t("btn.performanceSummary")}</VGButton>
+    </Link>
+  ) : (
+    <></>
   );
 }

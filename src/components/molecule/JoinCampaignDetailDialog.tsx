@@ -14,11 +14,14 @@ import {
   detailDialogAtom,
 } from "~/atom/joinCampaign";
 import VGButton from "../atomic/VGButton";
+import { useGetCampaignDetail } from "~/services/joinCampaign/hooks";
+import Box from "@mui/material/Box";
 
 export default function JoinCampaignDetailDialog() {
   const { t } = useTranslation("joinCampaign");
   const [, setModalOpen] = useAtom(confirmationDialogOpenAtom);
   const [detailDialog, setDetailDialog] = useAtom(detailDialogAtom);
+  const { data } = useGetCampaignDetail(detailDialog.campaign?.id);
 
   const handleClose = () => {
     setDetailDialog((detail) => ({ ...detail, isOpen: false }));
@@ -70,7 +73,7 @@ export default function JoinCampaignDetailDialog() {
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ px: 3, textAlign: "start" }}>
-        <Typography
+        <Box
           sx={{
             color: "common.shade.200",
             fontSize: 14,
@@ -78,23 +81,17 @@ export default function JoinCampaignDetailDialog() {
             whiteSpace: "pre-line",
           }}
         >
-          - Toko dapat exposure
-          <br />
-          - Produk toko akan masuk dalam list produk khusus yang
-          direkomendasikan
-          <br />
-          - Potensi traffic kunjungan ke produk dan toko kamu
-          <br />
-          - Iklan ditampilkan hanya jika toko sedang buka menyesuaikan jam
-          operasional
-          <br />- Durasi tayang fleksibel sesuai kebutuhan kamu
-        </Typography>
+          {data && (
+            <div dangerouslySetInnerHTML={{ __html: data.data.description }} />
+          )}
+        </Box>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
         <VGButton
           variant="contained"
           size="large"
           fullWidth
+          disabled={detailDialog.campaign?.has_joined}
           onClick={() => {
             handleClose();
             setModalOpen(true);

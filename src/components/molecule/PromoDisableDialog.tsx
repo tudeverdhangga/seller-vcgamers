@@ -10,7 +10,7 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 
 import Typography from "@mui/material/Typography";
-import { disableDialogOpenAtom } from "~/atom/managePromo";
+import { disableDialogAtom } from "~/atom/managePromo";
 import { toastOption } from "~/utils/toast";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 
 export default function PromoDisableDialog(props: { promoId: string }) {
   const { t } = useTranslation("managePromo");
-  const [modalOpen, setModalOpen] = useAtom(disableDialogOpenAtom);
+  const [modalOpen, setModalOpen] = useAtom(disableDialogAtom);
   const deactivateMutation = useDeactivatePromo();
   const { data } = useGetPromoDetail(props.promoId, modalOpen);
 

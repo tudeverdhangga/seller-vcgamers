@@ -13,6 +13,8 @@ import VGTabChip from "../atomic/VGTabChip";
 import VGTabPanel from "../atomic/VGTabPanel";
 import VGTabsChip from "../atomic/VGTabsChip";
 import BalanceHistoryCard from "../molecule/BalanceHistoryCard";
+import BalanceRejectedDialog from "../molecule/BalanceRejectedDialog";
+import BalanceHoldDialog from "../molecule/BalanceHoldDialog";
 
 export default function BalanceHistoryList() {
   const { t } = useTranslation("balance");
@@ -65,11 +67,11 @@ export default function BalanceHistoryList() {
         >
           {histories &&
             histories.map((history) => (
-              <div key={history.id}>
-                <BalanceHistoryCard balance={history} />
-              </div>
+              <BalanceHistoryCard key={history.id} balance={history} />
             ))}
         </InfiniteScroll>
+        <BalanceRejectedDialog />
+        <BalanceHoldDialog />
       </VGTabPanel>
     </>
   );

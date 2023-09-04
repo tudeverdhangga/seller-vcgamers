@@ -113,20 +113,30 @@ function LabelChip(props: { type: CampaignHistoryType }) {
       backgroundColor: "#BFE9F6",
       color: "#024357",
     },
-    7: {
-      label: t("chip.rejected"),
-      backgroundColor: "#F3C4EF",
-      color: "#480442",
+    2: {
+      label: t("chip.accepted"),
+      backgroundColor: "#BFE9F6",
+      color: "#024357",
     },
     4: {
       label: t("chip.completed"),
       backgroundColor: "common.green.0",
       color: "common.green.900",
     },
+    5: {
+      label: t("chip.cancelRequest"),
+      backgroundColor: "common.yellow.0",
+      color: "#D17E00",
+    },
     6: {
       label: t("chip.canceled"),
       backgroundColor: "common.red.0",
       color: "common.red.500",
+    },
+    7: {
+      label: t("chip.rejected"),
+      backgroundColor: "#F3C4EF",
+      color: "#480442",
     },
   } as {
     [K in CampaignHistoryType]: {

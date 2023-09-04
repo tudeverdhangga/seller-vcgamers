@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
-import { holdDialogOpenAtom, rejectedDialogOpenAtom } from "~/atom/balance";
+import { holdDialogAtom, rejectedDialogAtom } from "~/atom/balance";
 import type { BalanceHistory, BalanceType } from "~/services/balance/types";
 import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
@@ -12,8 +12,6 @@ import VGChip from "../atomic/VGChip";
 import MoneyIcon from "../icons/MoneyIcon";
 import MoneyMinusIcon from "../icons/MoneyMinusIcon";
 import MoneyPlusIcon from "../icons/MoneyPlusIcon";
-import BalanceHoldDialog from "./BalanceHoldDialog";
-import BalanceRejectedDialog from "./BalanceRejectedDialog";
 
 export default function BalanceHistoryCard(props: { balance: BalanceHistory }) {
   return (
@@ -69,8 +67,8 @@ export default function BalanceHistoryCard(props: { balance: BalanceHistory }) {
 
 function AdditionalComponent(props: { balance: BalanceHistory }) {
   const { t } = useTranslation("balance");
-  const [, setRejectedModal] = useAtom(rejectedDialogOpenAtom);
-  const [, setHoldModal] = useAtom(holdDialogOpenAtom);
+  const [, setRejectedModal] = useAtom(rejectedDialogAtom);
+  const [, setHoldModal] = useAtom(holdDialogAtom);
 
   switch (props.balance.status) {
     case "debit":
@@ -97,29 +95,33 @@ function AdditionalComponent(props: { balance: BalanceHistory }) {
       );
     case "cancel":
       return (
-        <>
-          <VGButton
-            variant="outlined"
-            fullWidth
-            onClick={() => setRejectedModal(true)}
-          >
-            {t("btn.seeDescription")}
-          </VGButton>
-          <BalanceRejectedDialog />
-        </>
+        <VGButton
+          variant="outlined"
+          fullWidth
+          onClick={() =>
+            setRejectedModal({
+              isOpen: true,
+              detail: props.balance.description_reason,
+            })
+          }
+        >
+          {t("btn.seeDescription")}
+        </VGButton>
       );
     case "hold":
       return (
-        <>
-          <VGButton
-            variant="outlined"
-            fullWidth
-            onClick={() => setHoldModal(true)}
-          >
-            {t("btn.seeDescription")}
-          </VGButton>
-          <BalanceHoldDialog />
-        </>
+        <VGButton
+          variant="outlined"
+          fullWidth
+          onClick={() =>
+            setHoldModal({
+              isOpen: true,
+              detail: props.balance.description_reason,
+            })
+          }
+        >
+          {t("btn.seeDescription")}
+        </VGButton>
       );
     default:
       return <></>;

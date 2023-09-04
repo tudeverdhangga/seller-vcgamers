@@ -29,14 +29,15 @@ import {
 } from "react-hook-form";
 
 import {
-  disableDialogOpenAtom,
+  disableDialogAtom,
   managePromoFormAtom,
-  performanceDialogOpenAtom,
+  performanceDialogAtom,
 } from "~/atom/managePromo";
 import {
   type BodyPromo,
   promoSchema,
   promoSchemaMerge,
+  emptyPromo,
 } from "~/services/managePromo/types";
 import {
   useGetBrandsByCategory,
@@ -51,16 +52,22 @@ import {
   useCheckPromoCode,
   useCreatePromo,
   useGetPromoDetailMapped,
+  useUpdatePromo,
 } from "~/services/managePromo/hooks";
+import { queryClient } from "~/services/http";
+import { toast } from "react-toastify";
+import { toastOption } from "~/utils/toast";
+import { AxiosError } from "axios";
 
 export default function ManagePromoForm() {
   const { t } = useTranslation("managePromo");
-  const [, setPerformanceOpen] = useAtom(performanceDialogOpenAtom);
-  const [, setDisableOpen] = useAtom(disableDialogOpenAtom);
+  const [, setPerformanceOpen] = useAtom(performanceDialogAtom);
+  const [, setDisableOpen] = useAtom(disableDialogAtom);
   const [managePromoForm, setManagePromoForm] = useAtom(managePromoFormAtom);
   const [discountType, setDiscountType] = useState<"price" | "percentage">(
     "price"
   );
+  const [codeConfirm, setCodeConfirm] = useState(false);
   const { data: categoriesData } = useGetCategory();
   const { data: promoDetailData } = useGetPromoDetailMapped(
     managePromoForm.promoId,
@@ -69,15 +76,29 @@ export default function ManagePromoForm() {
 
   const checkCodeMutation = useCheckPromoCode();
   const createPromoMutation = useCreatePromo();
+  const updatePromoMutation = useUpdatePromo();
 
   const form = useForm<BodyPromo>({
     resolver: zodResolver(
-      promoSchema.merge(promoSchemaMerge(checkCodeMutation.mutateAsync)),
+      promoSchema.merge(
+        promoSchemaMerge((body) => {
+          if (promoDetailData?.data.promo_code !== body.promo_code) {
+            return checkCodeMutation.mutateAsync(body, {
+              onSuccess: () => {
+                setCodeConfirm(true);
+              },
+            });
+          }
+        })
+      ),
       undefined,
       {
         mode: "async",
       }
     ),
+    defaultValues: emptyPromo,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     values: promoDetailData?.data,
   });
   const productForm = useFieldArray<BodyPromo, "items", "id">({
@@ -86,19 +107,22 @@ export default function ManagePromoForm() {
     rules: { minLength: 1 },
   });
 
+  const isDisabled = managePromoForm.type === "disabled";
+
   useEffect(() => {
     if (!managePromoForm.isOpen) {
-      form.reset();
+      form.reset(emptyPromo);
       productForm.remove();
+      queryClient.removeQueries({
+        queryKey: ["manage-promo-detail-mapped", managePromoForm.promoId],
+      });
     } else {
       if (productForm.fields.length === 0) {
         productForm.append({ category_id: "", brand_id: [] });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [managePromoForm.isOpen]);
-
-  const isDisabled = managePromoForm.type === "disabled";
+  }, [managePromoForm.isOpen, managePromoForm.promoId]);
 
   return (
     <Dialog
@@ -114,11 +138,34 @@ export default function ManagePromoForm() {
     >
       <form
         onSubmit={form.handleSubmit((data) => {
-          createPromoMutation.mutate(data, {
-            onSuccess: () => {
-              setManagePromoForm({ isOpen: false });
-            },
-          });
+          if (["create", "reuse"].includes(managePromoForm.type ?? "")) {
+            createPromoMutation.mutate(data, {
+              onSuccess: () => {
+                setManagePromoForm({ isOpen: false });
+              },
+              onError(error) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+                toast.error((error as any).response.data.message, toastOption);
+              },
+            });
+          }
+          if (managePromoForm.type === "edit" && managePromoForm.promoId) {
+            updatePromoMutation.mutate(
+              { promo_id: managePromoForm.promoId, body: data },
+              {
+                onSuccess: () => {
+                  setManagePromoForm({ isOpen: false });
+                },
+                onError(error) {
+                  toast.error(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+                    (error as any).response.data.message,
+                    toastOption
+                  );
+                },
+              }
+            );
+          }
         })}
       >
         <DialogTitle
@@ -156,6 +203,11 @@ export default function ManagePromoForm() {
                   placeholder: t("form.addPromo.fields.name.placeholder"),
                   fullWidth: true,
                   disabled: isDisabled,
+                  sx: {
+                    "& .MuiInputBase-root.Mui-disabled": {
+                      backgroundColor: "rgba(0, 0, 0, 0.12)",
+                    },
+                  },
                 }}
               />
             </Grid>
@@ -174,6 +226,11 @@ export default function ManagePromoForm() {
                     "form.addPromo.fields.period.start.placeholder"
                   ),
                   disabled: isDisabled,
+                  sx: {
+                    "& .MuiInputBase-root.Mui-disabled": {
+                      backgroundColor: "rgba(0, 0, 0, 0.12)",
+                    },
+                  },
                 }}
               />
             </Grid>
@@ -190,6 +247,11 @@ export default function ManagePromoForm() {
                   fullWidth: true,
                   placeholder: t("form.addPromo.fields.period.end.placeholder"),
                   disabled: isDisabled,
+                  sx: {
+                    "& .MuiInputBase-root.Mui-disabled": {
+                      backgroundColor: "rgba(0, 0, 0, 0.12)",
+                    },
+                  },
                 }}
               />
             </Grid>
@@ -208,9 +270,25 @@ export default function ManagePromoForm() {
                     onChange={onChange}
                     value={value}
                     fullWidth
-                    helperText={error ? error.message : null}
+                    helperText={
+                      error
+                        ? error.message
+                        : codeConfirm
+                        ? t("form.addPromo.fields.code.helperText")
+                        : null
+                    }
                     error={!!error}
                     disabled={isDisabled}
+                    sx={{
+                      "& .MuiInputBase-root.Mui-disabled": {
+                        backgroundColor: "rgba(0, 0, 0, 0.12)",
+                      },
+                      "& .MuiFormHelperText-root": {
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "common.green.900",
+                      },
+                    }}
                     inputProps={{
                       maxLength: 5,
                     }}
@@ -238,6 +316,11 @@ export default function ManagePromoForm() {
                   helperText: "Minimum: 10",
                   fullWidth: true,
                   disabled: isDisabled,
+                  sx: {
+                    "& .MuiInputBase-root.Mui-disabled": {
+                      backgroundColor: "rgba(0, 0, 0, 0.12)",
+                    },
+                  },
                 }}
               />
             </Grid>
@@ -254,6 +337,11 @@ export default function ManagePromoForm() {
                   helperText: "Minimum: 1",
                   fullWidth: true,
                   disabled: isDisabled,
+                  sx: {
+                    "& .MuiInputBase-root.Mui-disabled": {
+                      backgroundColor: "rgba(0, 0, 0, 0.12)",
+                    },
+                  },
                 }}
               />
             </Grid>
@@ -300,6 +388,7 @@ export default function ManagePromoForm() {
                   control={<Radio />}
                   value="price"
                   label={t("form.addPromo.fields.discountType.price.label")}
+                  disabled={isDisabled}
                 />
                 <FormControlLabel
                   control={<Radio />}
@@ -307,6 +396,7 @@ export default function ManagePromoForm() {
                   label={t(
                     "form.addPromo.fields.discountType.percentage.label"
                   )}
+                  disabled={isDisabled}
                 />
               </RadioGroup>
             </Grid>
@@ -326,6 +416,11 @@ export default function ManagePromoForm() {
                       ),
                       fullWidth: true,
                       disabled: isDisabled,
+                      sx: {
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          backgroundColor: "rgba(0, 0, 0, 0.12)",
+                        },
+                      },
                     }}
                   />
                 </Grid>
@@ -347,6 +442,11 @@ export default function ManagePromoForm() {
                       ),
                       fullWidth: true,
                       disabled: isDisabled,
+                      sx: {
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          backgroundColor: "rgba(0, 0, 0, 0.12)",
+                        },
+                      },
                     }}
                   />
                 </Grid>
@@ -368,6 +468,11 @@ export default function ManagePromoForm() {
                       ),
                       fullWidth: true,
                       disabled: isDisabled,
+                      sx: {
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          backgroundColor: "rgba(0, 0, 0, 0.12)",
+                        },
+                      },
                     }}
                   />
                 </Grid>
@@ -386,6 +491,11 @@ export default function ManagePromoForm() {
                       ),
                       fullWidth: true,
                       disabled: isDisabled,
+                      sx: {
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          backgroundColor: "rgba(0, 0, 0, 0.12)",
+                        },
+                      },
                     }}
                   />
                 </Grid>
@@ -404,6 +514,11 @@ export default function ManagePromoForm() {
                       ),
                       fullWidth: true,
                       disabled: isDisabled,
+                      sx: {
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          backgroundColor: "rgba(0, 0, 0, 0.12)",
+                        },
+                      },
                     }}
                   />
                 </Grid>
@@ -437,6 +552,11 @@ export default function ManagePromoForm() {
                       select: true,
                       fullWidth: true,
                       disabled: isDisabled,
+                      sx: {
+                        "& .MuiInputBase-root.Mui-disabled": {
+                          backgroundColor: "rgba(0, 0, 0, 0.12)",
+                        },
+                      },
                     }}
                     addOnChange={() =>
                       form.resetField(`items.${index}.brand_id` as const)
@@ -450,7 +570,12 @@ export default function ManagePromoForm() {
                   </VGInputText>
                 </Grid>
                 <Grid xs={8}>
-                  <BrandInputText field={field} form={form} index={index} />
+                  <BrandInputText
+                    field={field}
+                    form={form}
+                    index={index}
+                    disabled={isDisabled}
+                  />
                 </Grid>
               </>
             ))}
@@ -480,7 +605,12 @@ export default function ManagePromoForm() {
               <VGButton
                 variant="outlined"
                 size="large"
-                onClick={() => setPerformanceOpen(true)}
+                onClick={() =>
+                  setPerformanceOpen({
+                    isOpen: true,
+                    promoId: promoDetailData?.data.id,
+                  })
+                }
                 color="primary"
               >
                 {t("btn.promoPerformance")}
@@ -503,7 +633,12 @@ export default function ManagePromoForm() {
             <VGButton
               variant="outlined"
               size="large"
-              onClick={() => setPerformanceOpen(true)}
+              onClick={() =>
+                setPerformanceOpen({
+                  isOpen: true,
+                  promoId: promoDetailData?.data.id,
+                })
+              }
               color="primary"
             >
               {t("btn.promoPerformance")}
@@ -543,10 +678,12 @@ function BrandInputText({
   field,
   form,
   index,
+  disabled,
 }: {
   field: FieldArrayWithId<BodyPromo, "items", "id">;
   form: UseFormReturn<BodyPromo>;
   index: number;
+  disabled: boolean;
 }) {
   const { t } = useTranslation("managePromo");
   const categoryId = form.watch(`items.${index}.category_id` as const);
@@ -566,6 +703,12 @@ function BrandInputText({
         placeholder: t("form.addPromo.fields.brand.placeholder"),
         select: true,
         fullWidth: true,
+        disabled,
+        sx: {
+          "& .MuiInputBase-root.Mui-disabled": {
+            backgroundColor: "rgba(0, 0, 0, 0.12)",
+          },
+        },
         SelectProps: {
           multiple: true,
           renderValue: (selected) => (

@@ -1,3 +1,4 @@
+import React from "react";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -6,27 +7,20 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
-import { toast } from "react-toastify";
 
 import {
-  deleteDialogOpenAtom,
-  disableDialogOpenAtom,
+  cancelDialogAtom,
+  deleteDialogAtom,
   managePromoFormAtom,
-  performanceDialogOpenAtom,
-  rejectedDialogOpenAtom,
+  performanceDialogAtom,
+  rejectedDialogAtom,
 } from "~/atom/managePromo";
-import { toastOption } from "~/utils/toast";
-import MoreButtonPopover from "../atomic/MoreButtonPopover";
 import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
 import CopyIcon from "../icons/svg/copyIcon.svg";
-import PromoDeleteDialog from "./PromoDeleteDialog";
-import PromoDisableDialog from "./PromoDisableDialog";
-import PromoPerformanceDialog from "./PromoPerformanceDialog";
-import PromoRejectedDialog from "./PromoRejectedDialog";
 import type { Promo, PromoType } from "~/services/managePromo/types";
-import { useDeletePromo } from "~/services/managePromo/hooks";
+import PromoMoreButtonPopover from "./PromoMoreButtonPopover";
 
 export default function PromoCodeCard(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
@@ -35,20 +29,16 @@ export default function PromoCodeCard(props: { promo: Promo }) {
   const clickCopyCode = async (code: string) =>
     await navigator.clipboard.writeText(code);
 
-  const handleCardClick = (type: PromoType) => {
-    let formType: "create" | "edit" | "disabled" = "create";
+  const handleCardClick = (promo: Promo) => {
+    let formType: "create" | "edit" | "disabled" = "disabled";
 
-    switch (type) {
-      case "in-progress":
-        formType = "disabled";
-        break;
-      case "rejected":
-      case "waiting-approval":
+    switch (promo.status) {
+      case 1:
         formType = "edit";
         break;
     }
 
-    setManagePromoForm({ isOpen: true, type: formType });
+    setManagePromoForm({ isOpen: true, type: formType, promoId: promo.id });
   };
 
   return (
@@ -59,8 +49,8 @@ export default function PromoCodeCard(props: { promo: Promo }) {
           color="common.purple.500"
           fontSize={16}
           fontWeight={700}
-          sx={{ flexGrow: 1 }}
-          onClick={() => handleCardClick(props.promo.status_name)}
+          sx={{ flexGrow: 1, cursor: "pointer" }}
+          onClick={() => handleCardClick(props.promo)}
         >
           {props.promo.name}
         </Typography>
@@ -122,6 +112,11 @@ function LabelChip(props: { type: PromoType }) {
       backgroundColor: "#BFE9F6",
       color: "#024357",
     },
+    accepted: {
+      label: t("chip.accepted"),
+      backgroundColor: "#BFE9F6",
+      color: "#024357",
+    },
     rejected: {
       label: t("chip.rejected"),
       backgroundColor: "#F3C4EF",
@@ -152,11 +147,11 @@ function LabelChip(props: { type: PromoType }) {
 
 function ActionButton(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
-  const [, setDeleteOpen] = useAtom(deleteDialogOpenAtom);
-  const [, setRejectedOpen] = useAtom(rejectedDialogOpenAtom);
-  const [, setPerformanceOpen] = useAtom(performanceDialogOpenAtom);
+  const [, setCancel] = useAtom(cancelDialogAtom);
+  const [, setDelete] = useAtom(deleteDialogAtom);
+  const [, setRejected] = useAtom(rejectedDialogAtom);
+  const [, setPerformance] = useAtom(performanceDialogAtom);
   const [, setManagePromoForm] = useAtom(managePromoFormAtom);
-  const deleteMutation = useDeletePromo();
 
   switch (props.promo.status_name) {
     case "waiting-approval":
@@ -165,12 +160,7 @@ function ActionButton(props: { promo: Promo }) {
           variant="contained"
           color="error"
           fullWidth
-          onClick={() => {
-            deleteMutation.mutate(props.promo.id, {
-              onSuccess: () =>
-                toast.success(t("toast.cancelSuccess"), toastOption),
-            });
-          }}
+          onClick={() => setCancel({ isOpen: true, promoId: props.promo.id })}
         >
           {t("btn.cancel")}
         </VGButton>
@@ -181,19 +171,19 @@ function ActionButton(props: { promo: Promo }) {
           <VGButton
             variant="outlined"
             sx={{ fontWeight: 600, flex: 1 }}
-            onClick={() => setRejectedOpen(true)}
+            onClick={() =>
+              setRejected({ isOpen: true, promoId: props.promo.id })
+            }
           >
             {t("btn.seeDetail")}
           </VGButton>
           <VGButton
             variant="outlined"
             color="error"
-            onClick={() => setDeleteOpen(true)}
+            onClick={() => setDelete({ isOpen: true, promoId: props.promo.id })}
           >
             <DeleteOutlineOutlinedIcon />
           </VGButton>
-          <PromoDeleteDialog promo={props.promo} />
-          <PromoRejectedDialog promo={props.promo} />
         </>
       );
     case "in-progress":
@@ -202,12 +192,13 @@ function ActionButton(props: { promo: Promo }) {
           <VGButton
             variant="outlined"
             sx={{ fontWeight: 600, flex: 1 }}
-            onClick={() => setPerformanceOpen(true)}
+            onClick={() =>
+              setPerformance({ isOpen: true, promoId: props.promo.id })
+            }
           >
             {t("btn.promoPerformance")}
           </VGButton>
           <PromoMoreButtonPopover promoId={props.promo.id} />
-          <PromoPerformanceDialog promoId={props.promo.id} />
         </>
       );
     case "completed":
@@ -217,7 +208,9 @@ function ActionButton(props: { promo: Promo }) {
           <VGButton
             variant="outlined"
             sx={{ fontWeight: 600, flex: 1 }}
-            onClick={() => setPerformanceOpen(true)}
+            onClick={() =>
+              setPerformance({ isOpen: true, promoId: props.promo.id })
+            }
           >
             {t("btn.promoPerformance")}
           </VGButton>
@@ -238,30 +231,9 @@ function ActionButton(props: { promo: Promo }) {
           >
             {t("btn.reuse")}
           </VGButton>
-          <PromoPerformanceDialog promoId={props.promo.id} />
         </>
       );
   }
-}
-
-function PromoMoreButtonPopover(props: { promoId: string }) {
-  const { t } = useTranslation("managePromo");
-  const [, setDisableOpen] = useAtom(disableDialogOpenAtom);
-
-  return (
-    <MoreButtonPopover
-      menu={
-        <VGButton
-          variant="text"
-          color="error"
-          onClick={() => setDisableOpen(true)}
-        >
-          {t("btn.disablePromo")}
-        </VGButton>
-      }
-      dialog={<PromoDisableDialog promoId={props.promoId} />}
-    />
-  );
 }
 
 const Title = styled(Typography)(({ theme }) => ({

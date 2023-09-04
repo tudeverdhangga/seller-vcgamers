@@ -16,6 +16,7 @@
   "btn": {
     "addPromo": "Buat Promo",
     "cancel": "Batalkan",
+    "cancelPromo": "Batalkan Promo",
     "seeDetail": "Lihat Keterangan",
     "promoPerformance": "Performa Promo",
     "disablePromo": "Nonaktifkan Promo",
@@ -29,6 +30,7 @@
   },
   "chip": {
     "waitingApproval": "Menunggu Approval",
+    "accepted": "Disetujui",
     "rejected": "Ditolak",
     "completed": "Selesai Ditayangkan",
     "disabled": "Dinonaktifkan"
@@ -81,6 +83,10 @@
       "title": "Hapus Pengajuan",
       "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?"
     },
+    "cancel": {
+      "title": "Konfirmasi Pembatalan Pengajuan Promo",
+      "subtitle": "Admin akan memproses pembatalan maksimal 3x24 jam. Kamu yakin ingin membatalkan promo ini?"
+    },
     "disabled": {
       "title": "Konfirmasi Penonaktifan",
       "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?",
@@ -109,7 +115,7 @@
         "code": {
           "label": "Buat Kode Promo",
           "placeholder": "Tulis kode",
-          "helperText": "Kode promomu:",
+          "helperText": "Kode promo ini dapat digunakan",
           "errorText": "Wajib isi kode promo"
         },
         "qty": {

@@ -22,16 +22,16 @@ import { drawerOpenAtom } from "~/atom";
 import { mobileAppBarAtom } from "~/atom/layout";
 import HelpCenterMenu from "~/components/molecule/HelpCenterMenu/desktop";
 import LanguageSelect from "~/components/molecule/LanguageSelect/desktop";
-import { requestNotificationPermission } from "~/utils/firebase";
+// import { requestNotificationPermission } from "~/utils/firebase";
 import { useResponsive } from "~/utils/mediaQuery";
 import { DRAWER_WIDTH } from "./drawer";
 
 export function AppBar() {
   const { isDesktop } = useResponsive();
 
-  useEffect(() => {
-    void requestNotificationPermission();
-  }, []);
+  // useEffect(() => {
+  //   void requestNotificationPermission();
+  // }, []);
 
   return (
     <MuiAppBar

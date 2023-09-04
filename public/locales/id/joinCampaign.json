@@ -31,7 +31,9 @@
   },
   "chip": {
     "waitingApproval": "Menunggu Approval",
+    "accepted": "Disetujui",
     "rejected": "Ditolak",
+    "cancelRequest": "Permintaan Pembatalan",
     "completed": "Selesai Diikuti",
     "canceled": "Dibatalkan"
   },

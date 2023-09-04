@@ -87,6 +87,7 @@ export type TextProps = {
 };
 
 export type ProductProps = {
+  id: string;
   type: "PRODUCT";
   content: {
     img: string;
@@ -98,6 +99,7 @@ export type ProductProps = {
 };
 
 export type TransactionProps = {
+  id: string;
   type: "TRANSACTION";
   content: {
     status: string;

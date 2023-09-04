@@ -10,6 +10,7 @@ import {
   fetchPromoPerformance,
   checkCodeAvailability,
   fetchPromoDetailMapped,
+  updatePromo,
 } from "./api";
 import { queryTypes, useQueryState } from "next-usequerystate";
 import { queryClient } from "../http";
@@ -60,11 +61,14 @@ export function useGetPromoDetailMapped(
   });
 }
 
-export function useGetPromoPerformance(promo_id: string, enabled: boolean) {
+export function useGetPromoPerformance(
+  promo_id: string | undefined,
+  enabled: boolean
+) {
   return useQuery({
     queryKey: ["manage-promo-performance", promo_id],
-    queryFn: () => fetchPromoPerformance(promo_id),
-    enabled,
+    queryFn: () => fetchPromoPerformance(promo_id ?? ""),
+    enabled: typeof promo_id !== "undefined" && enabled,
   });
 }
 
@@ -112,6 +116,20 @@ export function useCreatePromo() {
 
   return useMutation({
     mutationFn: createPromo,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["manage-promo-list", status, search],
+      });
+    },
+  });
+}
+
+export function useUpdatePromo() {
+  const [status] = useQueryState("status", queryTypes.integer.withDefault(3));
+  const [search] = useQueryState("search", queryTypes.string.withDefault(""));
+
+  return useMutation({
+    mutationFn: updatePromo,
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["manage-promo-list", status, search],

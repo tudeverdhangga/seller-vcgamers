@@ -7,21 +7,18 @@ import Typography from "@mui/material/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
-import { rejectedDialogOpenAtom } from "~/atom/balance";
+import { rejectedDialogAtom } from "~/atom/balance";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 
 export default function BalanceRejectedDialog() {
   const { t } = useTranslation("balance");
-  const [modalOpen, setModalOpen] = useAtom(rejectedDialogOpenAtom);
+  const [modal, setModal] = useAtom(rejectedDialogAtom);
+
+  const handleClose = () => setModal({ isOpen: false });
 
   return (
-    <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-      fullWidth
-      maxWidth="xs"
-    >
+    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle
         sx={{
           fontSize: 16,
@@ -33,7 +30,7 @@ export default function BalanceRejectedDialog() {
       >
         <p style={{ marginBottom: "0px" }}>{t("dialog.rejected.title")}</p>
         <IconButton
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -47,7 +44,7 @@ export default function BalanceRejectedDialog() {
         <Typography
           sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
         >
-          {t("dialog.rejected.subtitle")}
+          {modal?.detail}
         </Typography>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
@@ -55,7 +52,7 @@ export default function BalanceRejectedDialog() {
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           color="primary"
         >
           {t("btn.close")}

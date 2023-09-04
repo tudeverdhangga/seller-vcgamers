@@ -1,18 +1,19 @@
 import Box from "@mui/material/Box";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 
 import { useTranslation } from "next-i18next";
-import { useQueryState } from "next-usequerystate";
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 export default function DashboardTitle() {
   const { t } = useTranslation("dashboard");
-  const [, setPeriodFilter] = useQueryState("periode_filter");
+  const [periodFilter, setPeriodFilter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return (
     <Box
@@ -55,6 +56,7 @@ export default function DashboardTitle() {
           label="Pilih Periode"
           format="MMM-YYYY"
           views={["month", "year"]}
+          value={dayjs(periodFilter)}
           onChange={(e: Dayjs | null) => {
             void setPeriodFilter((e ?? dayjs()).format("YYYY-MM"));
           }}

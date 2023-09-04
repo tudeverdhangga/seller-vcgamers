@@ -16,6 +16,7 @@ export interface BalanceHistory {
   id: string;
   status: BalanceType;
   description: string;
+  description_reason: string;
   amount: string;
   last_amount: string;
   new_amount: string;
@@ -28,6 +29,7 @@ export interface DataBalanceHistory {
   id: string;
   status_name: string;
   description: string;
+  description_reason: string;
   amount: number;
   last_amount: number;
   new_amount: number;

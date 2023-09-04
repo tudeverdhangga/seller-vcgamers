@@ -44,9 +44,8 @@ export function mapBalanceHistory(value: DataBalanceHistory) {
   };
 
   return {
-    id: value.id,
+    ...value,
     status: statusMapping[value.status_name] ?? "debit",
-    description: value.description,
     amount: priceFormat(value.amount),
     last_amount: priceFormat(value.last_amount),
     new_amount: priceFormat(value.new_amount),

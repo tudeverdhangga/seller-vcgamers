@@ -8,25 +8,21 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useAtom } from "jotai";
 import { useTranslation, Trans } from "next-i18next";
 
-import { rejectedDialogOpenAtom } from "~/atom/managePromo";
+import { rejectedDialogAtom } from "~/atom/managePromo";
 import CloseIcon from "../icons/chat/CloseIcon";
 import VGButton from "../atomic/VGButton";
 import Typography from "@mui/material/Typography";
-import { type Promo } from "~/services/managePromo/types";
 import { useGetPromoDetail } from "~/services/managePromo/hooks";
 
-export default function PromoRejectedDialog(props: { promo: Promo }) {
+export default function PromoRejectedDialog() {
   const { t } = useTranslation("managePromo");
-  const [modalOpen, setModalOpen] = useAtom(rejectedDialogOpenAtom);
-  const { data } = useGetPromoDetail(props.promo.id, modalOpen);
+  const [modal, setModal] = useAtom(rejectedDialogAtom);
+  const { data } = useGetPromoDetail(modal.promoId, modal.isOpen);
+
+  const handleClose = () => setModal({ isOpen: false });
 
   return (
-    <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-      fullWidth
-      maxWidth="xs"
-    >
+    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle
         sx={{
           fontSize: 16,
@@ -38,7 +34,7 @@ export default function PromoRejectedDialog(props: { promo: Promo }) {
       >
         <p style={{ marginBottom: "0px" }}>{t("dialog.rejected.title")}</p>
         <IconButton
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -77,7 +73,7 @@ export default function PromoRejectedDialog(props: { promo: Promo }) {
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           color="primary"
         >
           {t("btn.close")}

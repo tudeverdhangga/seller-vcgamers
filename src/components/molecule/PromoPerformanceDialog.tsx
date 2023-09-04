@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
-import { performanceDialogOpenAtom } from "~/atom/managePromo";
+import { performanceDialogAtom } from "~/atom/managePromo";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 import {
@@ -18,13 +18,13 @@ import {
 } from "~/services/managePromo/hooks";
 import { priceFormat } from "~/utils/format";
 
-export default function PromoPerformanceDialog(props: { promoId: string }) {
+export default function PromoPerformanceDialog() {
   const { t } = useTranslation("managePromo");
-  const [modalOpen, setModalOpen] = useAtom(performanceDialogOpenAtom);
-  const { data } = useGetPromoDetail(props.promoId, modalOpen);
+  const [modal, setModal] = useAtom(performanceDialogAtom);
+  const { data } = useGetPromoDetail(modal.promoId, modal.isOpen);
   const { data: performanceData } = useGetPromoPerformance(
-    props.promoId,
-    modalOpen
+    modal.promoId,
+    modal.isOpen
   );
 
   const performanceList = [
@@ -64,13 +64,10 @@ export default function PromoPerformanceDialog(props: { promoId: string }) {
     },
   ];
 
+  const handleClose = () => setModal({ isOpen: false });
+
   return (
-    <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-      fullWidth
-      maxWidth="md"
-    >
+    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="md">
       <DialogTitle
         sx={{
           fontSize: 16,
@@ -82,7 +79,7 @@ export default function PromoPerformanceDialog(props: { promoId: string }) {
       >
         <p style={{ marginBottom: "0px" }}>{t("dialog.performance.title")}</p>
         <IconButton
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -138,7 +135,7 @@ export default function PromoPerformanceDialog(props: { promoId: string }) {
         <VGButton
           variant="contained"
           size="large"
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           color="primary"
           sx={{ width: "30%" }}
         >

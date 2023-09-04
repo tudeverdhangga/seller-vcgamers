@@ -12,6 +12,7 @@ import SentIcon from "~/components/icons/chat/SentIcon";
 import ComplainAdminMessageListItem from "~/components/atomic/ComplainAdminMessageListItem";
 import type {
   AttachmentProps,
+  ChatMessageProps,
   InfoProps,
   ProductProps,
   SideProps,
@@ -22,9 +23,7 @@ import RetryIcon from "../icons/chat/RetryIcon";
 import SendingIcon from "../icons/chat/SendingIcon";
 import ShopRatingIcon from "../icons/chat/ShopRatingIcon";
 
-export default function ChatMessageListItem(
-  props: InfoProps | ((TextProps | AttachmentProps) & SideProps)
-) {
+export default function ChatMessageListItem(props: ChatMessageProps) {
   switch (props.type) {
     case "TEXT":
       if (props.side === "admin") {

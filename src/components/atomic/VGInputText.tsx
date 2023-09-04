@@ -24,7 +24,7 @@ export default function VGInputText<
   return (
     <Controller
       {...ControllerProps}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
+      render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
         <TextField
           helperText={error ? error.message : null}
           error={!!error}
@@ -38,6 +38,7 @@ export default function VGInputText<
           }
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={value}
+          inputRef={ref}
           {...TextFieldProps}
         >
           {children}

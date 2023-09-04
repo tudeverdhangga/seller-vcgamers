@@ -1,8 +1,12 @@
 import { atom } from "jotai";
 
-export const rejectedDialogOpenAtom = atom(false);
+export const rejectedDialogAtom = atom<{ isOpen: boolean; detail?: string }>({
+  isOpen: false,
+});
 
-export const holdDialogOpenAtom = atom(false);
+export const holdDialogAtom = atom<{ isOpen: boolean; detail?: string }>({
+  isOpen: false,
+});
 
 export const confirmationDialogOpenAtom = atom(false);
 

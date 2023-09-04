@@ -7,6 +7,7 @@ import type {
   HistoryCampaignListParam,
   DataCampaignHistory,
   DataCampaignRejectedDetail,
+  DataCampaignDetail,
 } from "./types";
 
 export async function fetchAllCampaign(params: CampaignListParam) {
@@ -17,6 +18,12 @@ export async function fetchAllCampaign(params: CampaignListParam) {
   const data = resData.data.data.map(mapToCampaign);
 
   return { ...resData, data: { ...resData.data, data } };
+}
+
+export async function fetchCampaignDetail(params: { campaign_id: string }) {
+  const res = await HTTP.get("vip/campaign/detail", { params });
+
+  return res.data as APIResponse<DataCampaignDetail>;
 }
 
 export async function fetchHistoryCampaignTabStatus() {

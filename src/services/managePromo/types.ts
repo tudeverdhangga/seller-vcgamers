@@ -1,6 +1,6 @@
 import { z } from "zod";
 import dayjs from "dayjs";
-import { type checkCodeAvailability } from "./api";
+import type { APIResponse } from "../types";
 
 export const promoItemSchema = z.array(
   z.object({
@@ -17,19 +17,38 @@ export const promoSchema = z.object({
   stock: z.number(),
   limit_user: z.number(),
   is_percent: z.boolean().default(false),
-  amount_promo: z.number().optional(),
-  percent_promo: z.number().optional(),
-  minimum_transaction_amount: z.number().optional(),
-  maximum_discount_amount: z.number().optional(),
+  amount_promo: z.number().optional().nullable(),
+  percent_promo: z.number().optional().nullable(),
+  minimum_transaction_amount: z.number().optional().nullable(),
+  maximum_discount_amount: z.number().optional().nullable(),
   items: promoItemSchema,
 });
+
+export const emptyPromo = {
+  name: "",
+  date_start: "",
+  date_end: "",
+  promo_code: "",
+  stock: 1,
+  limit_user: 10,
+  is_percent: false,
+  amount_promo: null,
+  percent_promo: null,
+  minimum_transaction_amount: null,
+  maximum_discount_amount: null,
+  items: [{ category_id: "", brand_id: [] }],
+} satisfies BodyPromo;
 
 const preprocessNumber = z.preprocess(
   (val) => (val ? Number(val) : undefined),
   z.number().optional()
 );
 
-export const promoSchemaMerge = (mutateAsync: typeof checkCodeAvailability) =>
+export const promoSchemaMerge = (
+  mutateAsync: (
+    body: BodyCheckCode
+  ) => Promise<APIResponse<DataCheckCodeAvailability>> | undefined
+) =>
   z.object({
     stock: preprocessNumber,
     limit_user: preprocessNumber,
@@ -40,6 +59,8 @@ export const promoSchemaMerge = (mutateAsync: typeof checkCodeAvailability) =>
     promo_code: z.string().refine(async (promo_code: string) => {
       try {
         const res = await mutateAsync({ promo_code });
+
+        if (typeof res === "undefined") return true;
 
         return res.data.is_available;
       } catch (error) {
@@ -101,6 +122,7 @@ export interface Promo {
 export type PromoType =
   | ""
   | "waiting-approval"
+  | "accepted"
   | "rejected"
   | "in-progress"
   | "completed"

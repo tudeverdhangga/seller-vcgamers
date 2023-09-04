@@ -10,25 +10,25 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 
 import Typography from "@mui/material/Typography";
-import { deleteDialogOpenAtom } from "~/atom/managePromo";
+import { deleteDialogAtom } from "~/atom/managePromo";
 import { toastOption } from "~/utils/toast";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
-import { useDeletePromo } from "~/services/managePromo/hooks";
-import { type Promo } from "~/services/managePromo/types";
+import {
+  useDeletePromo,
+  useGetPromoDetail,
+} from "~/services/managePromo/hooks";
 
-export default function PromoDeleteDialog(props: { promo: Promo }) {
+export default function PromoDeleteDialog() {
   const { t } = useTranslation("managePromo");
-  const [modalOpen, setModalOpen] = useAtom(deleteDialogOpenAtom);
+  const [modal, setModal] = useAtom(deleteDialogAtom);
   const deletePromoMutation = useDeletePromo();
+  const { data } = useGetPromoDetail(modal.promoId, modal.isOpen);
+
+  const handleClose = () => setModal({ isOpen: false });
 
   return (
-    <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-      fullWidth
-      maxWidth="xs"
-    >
+    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
       <DialogTitle
         sx={{
           fontSize: 16,
@@ -47,7 +47,7 @@ export default function PromoDeleteDialog(props: { promo: Promo }) {
         />
         <p style={{ marginBottom: "0px" }}>{t("dialog.delete.title")}</p>
         <IconButton
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -72,12 +72,12 @@ export default function PromoDeleteDialog(props: { promo: Promo }) {
           <Typography
             sx={{ color: "primary.main", fontSize: 14, fontWeight: 700 }}
           >
-            Nama promo disini
+            {data?.data.name}
           </Typography>
           <Typography
             sx={{ color: "common.shade.200", fontSize: 14, fontWeight: 500 }}
           >
-            {props.promo.name}
+            {data?.data.promo_code}
           </Typography>
         </Box>
         <Typography
@@ -96,7 +96,7 @@ export default function PromoDeleteDialog(props: { promo: Promo }) {
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => setModalOpen(false)}
+          onClick={handleClose}
           color="primary"
         >
           {t("btn.back")}
@@ -106,12 +106,13 @@ export default function PromoDeleteDialog(props: { promo: Promo }) {
           size="large"
           fullWidth
           onClick={() => {
-            deletePromoMutation.mutate(props.promo.id, {
-              onSuccess: () => {
-                setModalOpen(false);
-                toast.success(t("toast.deleteSuccess"), toastOption);
-              },
-            });
+            modal.promoId &&
+              deletePromoMutation.mutate(modal.promoId, {
+                onSuccess: () => {
+                  setModal({ isOpen: false });
+                  toast.success(t("toast.deleteSuccess"), toastOption);
+                },
+              });
           }}
           color="primary"
         >

@@ -61,12 +61,18 @@ function TransactionSummaryItem(props: {
         alignSelf: "stretch",
       }}
     >
-      <Typography sx={{ fontSize: 18, fontWeight: 700, color: props.color }}>
+      <Typography
+        sx={{
+          fontSize: { sm: 18, xs: 16 },
+          fontWeight: 700,
+          color: props.color,
+        }}
+      >
         {props.title}
       </Typography>
       <Typography
         sx={{
-          fontSize: 14,
+          fontSize: { sm: 14, xs: 12 },
           fontWeight: 600,
           color: "common.shade.700",
           textAlign: "center",

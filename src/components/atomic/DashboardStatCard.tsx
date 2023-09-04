@@ -26,6 +26,7 @@ export default function DashboardStatCard(props: {
         alignItems: "flex-start",
         gap: "10px",
         borderRadius: "12px",
+        cursor: "pointer",
         ...props.sx,
       }}
       onClick={props.onClick}

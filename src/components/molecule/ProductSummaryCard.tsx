@@ -82,7 +82,7 @@ function ActiveProductSummaryCard(props: {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography
             sx={{
-              fontSize: "14px",
+              fontSize: { sm: 14, xs: 12 },
               fontWeight: 600,
             }}
           >
@@ -92,7 +92,11 @@ function ActiveProductSummaryCard(props: {
         <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
           <CubeIcon />
           <Typography
-            sx={{ color: "primary.main", fontWeight: 700, fontSize: 18 }}
+            sx={{
+              color: "primary.main",
+              fontWeight: 700,
+              fontSize: { sm: 18, xs: 16 },
+            }}
           >
             {props.active.value}
           </Typography>
@@ -139,14 +143,20 @@ function SummaryCard(props: {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+        <Typography sx={{ fontSize: { sm: 14, xs: 12 }, fontWeight: 600 }}>
           {props.title}
         </Typography>
         {props.titleTrailing}
       </Box>
       <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
         <CubeIcon />
-        <Typography sx={{ color: props.color, fontWeight: 700, fontSize: 18 }}>
+        <Typography
+          sx={{
+            color: props.color,
+            fontWeight: 700,
+            fontSize: { sm: 18, xs: 16 },
+          }}
+        >
           {props.subtitle}
         </Typography>
       </Box>

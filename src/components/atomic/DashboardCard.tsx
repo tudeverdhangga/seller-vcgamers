@@ -24,7 +24,11 @@ export default function DashboardCard(props: {
     >
       <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
         <Typography
-          sx={{ color: "primary.main", fontSize: 16, fontWeight: 700 }}
+          sx={{
+            color: "primary.main",
+            fontSize: { sm: 16, xs: 14 },
+            fontWeight: 700,
+          }}
         >
           {props.title}
         </Typography>

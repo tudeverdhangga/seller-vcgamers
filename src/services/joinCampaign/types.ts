@@ -10,6 +10,18 @@ export interface DataCampaign {
   has_joined: boolean;
 }
 
+export interface DataCampaignDetail {
+  id: string;
+  image_url: string;
+  name: string;
+  description: string;
+  date_start: string;
+  date_end: string;
+  status: number;
+  status_name: string;
+  performance_link: string;
+}
+
 export interface Campaign extends DataCampaign {
   deadline: string;
   status: CampaignType;

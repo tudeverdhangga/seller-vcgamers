@@ -1,5 +1,7 @@
+import dayjs from "dayjs";
 import { HTTP } from "../http";
 import type { APIResponse, APIResponsePagination } from "../types";
+import { mapPromo } from "./mapper";
 import type {
   BodyCheckCode,
   BodyPromo,
@@ -14,6 +16,20 @@ import type {
 
 export async function createPromo(body: BodyPromo) {
   const res = await HTTP.post("vip/promo-management/create", body);
+
+  return res.data as APIResponse<string>;
+}
+
+export async function updatePromo({
+  promo_id,
+  body,
+}: {
+  promo_id: string;
+  body: BodyPromo;
+}) {
+  const res = await HTTP.put("vip/promo-management/update", body, {
+    params: { promo_id },
+  });
 
   return res.data as APIResponse<string>;
 }
@@ -60,6 +76,12 @@ export async function fetchPromoDetailMapped(promo_id: string) {
     ...resData,
     data: {
       ...resData.data,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      date_start: dayjs(resData.data.date_start).toDate(),
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      date_end: dayjs(resData.data.date_end).toDate(),
       items: resData.data.items.map((item) => ({
         category_id: item.category.value,
         brand_id: item.brands.map((brand) => brand.value),
@@ -90,18 +112,4 @@ export async function deletePromo(promo_id: string) {
   });
 
   return res.data as APIResponse<null>;
-}
-
-export function mapPromo(data: DataPromo) {
-  const status = [
-    "",
-    "waiting-approval",
-    "",
-    "in-progress",
-    "disabled",
-    "completed",
-    "rejected",
-  ] as const;
-
-  return { ...data, status_name: status.at(data.status) ?? "" } satisfies Promo;
 }

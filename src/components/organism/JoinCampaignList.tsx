@@ -59,9 +59,11 @@ export default function JoinCampaignList() {
             label={t("list.activeOnly")}
             labelPlacement="start"
             sx={{
-              color: "common.shade.200",
-              fontSize: 14,
-              fontWeight: 600,
+              "& .MuiFormControlLabel-label": {
+                color: "common.shade.200",
+                fontSize: 14,
+                fontWeight: 600,
+              },
             }}
           />
         </Box>

@@ -83,7 +83,10 @@ export default function HelpContactCard() {
                 </div>
               }
             >
-              <ListItemText primary={t("card.helpContact.body.phoneNum")} />
+              <ListItemText
+                primary={t("card.helpContact.body.phoneNum")}
+                sx={{ fontSize: { sm: 14, xs: 12 } }}
+              />
             </ListItem>
             <Divider />
             <ListItem
@@ -107,7 +110,10 @@ export default function HelpContactCard() {
                 </div>
               }
             >
-              <ListItemText primary={t("card.helpContact.body.email")} />
+              <ListItemText
+                primary={t("card.helpContact.body.email")}
+                sx={{ fontSize: { sm: 14, xs: 12 } }}
+              />
             </ListItem>
           </List>
         </DashboardCard>

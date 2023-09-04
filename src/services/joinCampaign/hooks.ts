@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   fetchAllCampaign,
+  fetchCampaignDetail,
   fetchCampaignRejectedDetail,
   fetchHistoryCampaign,
   fetchHistoryCampaignTabStatus,
@@ -23,6 +24,14 @@ export function useGetAllCampaign() {
         only_active: active ?? "false",
       }),
     getNextPageParam: paginationNextPageParam,
+  });
+}
+
+export function useGetCampaignDetail(campaignId?: string) {
+  return useQuery({
+    queryKey: ["campaign-detail", campaignId],
+    enabled: typeof campaignId !== "undefined",
+    queryFn: () => fetchCampaignDetail({ campaign_id: campaignId as string }),
   });
 }
 

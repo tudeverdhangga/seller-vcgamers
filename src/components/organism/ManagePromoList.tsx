@@ -15,6 +15,10 @@ import { useGetTabStatus, useGetPromoList } from "~/services/managePromo/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Skeleton from "@mui/material/Skeleton";
 import { queryTypes, useQueryState } from "next-usequerystate";
+import PromoPerformanceDialog from "../molecule/PromoPerformanceDialog";
+import PromoRejectedDialog from "../molecule/PromoRejectedDialog";
+import PromoDeleteDialog from "../molecule/PromoDeleteDialog";
+import PromoCancelDialog from "../molecule/PromoCancelDialog";
 
 const PromoCodeCard = dynamic(() => import("../molecule/PromoCodeCard"), {
   ssr: false,
@@ -52,7 +56,13 @@ export default function ManagePromoList() {
           variant="contained"
           color="success"
           startIcon={<AddIcon />}
-          onClick={() => setManagePromoForm({ isOpen: true, type: "create" })}
+          onClick={() =>
+            setManagePromoForm({
+              isOpen: true,
+              type: "create",
+              promoId: undefined,
+            })
+          }
         >
           {t("btn.addPromo")}
         </VGButton>
@@ -74,6 +84,10 @@ export default function ManagePromoList() {
             ))}
         </InfiniteScroll>
       </VGTabPanel>
+      <PromoCancelDialog />
+      <PromoDeleteDialog />
+      <PromoRejectedDialog />
+      <PromoPerformanceDialog />
     </Box>
   );
 }

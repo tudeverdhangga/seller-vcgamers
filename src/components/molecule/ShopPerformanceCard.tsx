@@ -26,71 +26,64 @@ export default function ShopPerformanceCard() {
       titleTrailing={<DashboardPerformanceHelpToolTip />}
       sx={{ height: "100%", gap: 0 }}
     >
-      <List
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "space-evenly",
           gap: "10px",
           width: "100%",
+          height: "100%",
         }}
-        disablePadding
       >
-        <ListItem disablePadding>
-          {data ? (
-            <PerformanceCard
-              icon={<ShopRatingIcon />}
-              title={t("card.performance.body.shopRating")}
-              subtitle={data.data.rating}
-              tooltip={t("tooltip.shopRating")}
-              stat={data.data.rating_diff}
-            />
-          ) : (
-            <Skeleton variant="rounded" height={24} />
-          )}
-        </ListItem>
+        {data ? (
+          <PerformanceCard
+            icon={<ShopRatingIcon />}
+            title={t("card.performance.body.shopRating")}
+            subtitle={data.data.rating}
+            tooltip={t("tooltip.shopRating")}
+            stat={data.data.rating_diff}
+          />
+        ) : (
+          <Skeleton variant="rounded" height={24} />
+        )}
         <Divider />
-        <ListItem disablePadding>
-          {data ? (
-            <PerformanceCard
-              icon={<TransactionSuccessIcon />}
-              title={t("card.performance.body.transactionSuccess")}
-              subtitle={data.data.transaction_success_rate}
-              tooltip={t("tooltip.transactionSuccess")}
-              stat={data.data.transaction_success_rate_diff}
-            />
-          ) : (
-            <Skeleton variant="rounded" height={24} />
-          )}
-        </ListItem>
+        {data ? (
+          <PerformanceCard
+            icon={<TransactionSuccessIcon />}
+            title={t("card.performance.body.transactionSuccess")}
+            subtitle={data.data.transaction_success_rate}
+            tooltip={t("tooltip.transactionSuccess")}
+            stat={data.data.transaction_success_rate_diff}
+          />
+        ) : (
+          <Skeleton variant="rounded" height={24} />
+        )}
         <Divider />
-        <ListItem disablePadding>
-          {data ? (
-            <PerformanceCard
-              icon={<DeliveryTimeIcon />}
-              title={t("card.performance.body.deliveryTime")}
-              subtitle={data.data.average_sla}
-              tooltip={t("tooltip.deliveryTime")}
-              stat={data.data.average_sla_diff}
-            />
-          ) : (
-            <Skeleton variant="rounded" height={24} />
-          )}
-        </ListItem>
+        {data ? (
+          <PerformanceCard
+            icon={<DeliveryTimeIcon />}
+            title={t("card.performance.body.deliveryTime")}
+            subtitle={data.data.average_sla}
+            tooltip={t("tooltip.deliveryTime")}
+            stat={data.data.average_sla_diff}
+          />
+        ) : (
+          <Skeleton variant="rounded" height={24} />
+        )}
         <Divider />
-        <ListItem disablePadding>
-          {data ? (
-            <PerformanceCard
-              icon={<VisitorCountIcon />}
-              title={t("card.performance.body.visitorCount")}
-              subtitle={data.data.total_visitor}
-              tooltip={t("tooltip.visitorCount")}
-              stat={data.data.total_visitor_diff}
-            />
-          ) : (
-            <Skeleton variant="rounded" height={24} />
-          )}
-        </ListItem>
-      </List>
+        {data ? (
+          <PerformanceCard
+            icon={<VisitorCountIcon />}
+            title={t("card.performance.body.visitorCount")}
+            subtitle={data.data.total_visitor}
+            tooltip={t("tooltip.visitorCount")}
+            stat={data.data.total_visitor_diff}
+          />
+        ) : (
+          <Skeleton variant="rounded" height={24} />
+        )}
+      </Box>
     </DashboardCard>
   );
 }
