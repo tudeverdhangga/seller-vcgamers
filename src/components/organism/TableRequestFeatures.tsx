@@ -52,7 +52,7 @@ export default function CustomizedTables(props: {
   const { isMobile } = useResponsive();
 
   return (
-    <TableContainer component={Paper} sx={{mt: 2, pt: 2, backgroundColor: "#fff", borderRadius: '8px'}}>
+    <TableContainer component={Paper} sx={{mt: 2, pt: 2, backgroundColor: "#fff", borderRadius: '8px', boxShadow: "none"}}>
       <Table sx={{ minWidth: 260 }} aria-label="customized table">
         {
             isMobile ? 

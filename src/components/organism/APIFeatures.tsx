@@ -10,6 +10,8 @@ import ConfirmationDeleteWithIconDialog from "~/components/molecule/Confirmation
 import { AccessKeyApiAccess, BodyPayloadIPWhitelist, BodyPayloadWebhookConfig, CustomErrorResponse, DataCallbackWebhook, useDeleteAccessKey, useGenerateAccessKey, useGetApiAccess, useGetIPWhitelist, useGetWebhookConfig, usePostIPWhitelist, usePostWebhookConfig } from "~/services/api/api-integration";
 import ConfirmationGenerateWithIconDialog from "../molecule/ConfirmationGenerateWithIconDialog";
 import queryString from "query-string";
+import APIFeatureSidebarMenu from "../molecule/APIFeatureSidebarMenu";
+import VGTabPanel from "../atomic/VGTabPanel";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -109,6 +111,7 @@ export default function APIFeaturePage() {
   const [disableAPIWhitelistForm, setDisableAPIWhitelistForm] = useState(true);
   const [callbackWebhookConfigs, setCallbackWebhookConfigs] = useState<DataCallbackWebhook>();
   const [webhookCheckboxes, setWebhookCheckboxes] = useState(CallbackWebhookArr);
+  const [menuPosition, setMenuPosition] = useState(0);
   const getIPWhitelist = useGetIPWhitelist();
   const postIPWhitelist = usePostIPWhitelist();
   const getWebhookConfig = useGetWebhookConfig();
@@ -142,6 +145,10 @@ export default function APIFeaturePage() {
     getWebhookConfig.data,
     getApiAccess.data,
   ])
+
+  const changeMenuPosition = (value: number) => {
+    setMenuPosition(value);
+  };
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
@@ -331,11 +338,10 @@ export default function APIFeaturePage() {
         />
 
         <Grid container spacing={2} justifyContent={'space-between'} >
-          <Grid item xs={12} sm={9} order={{ xs: 2, sm: 1 }}>
+          <Grid item xs={12} sm={10} order={{ xs: 2, sm: 1 }} sx={{mt: {xs:4,sm:0}}}>
             <Grid container spacing={2} justifyContent={'space-between'} >
               {/* Content IP Whitelist */}
-              <Grid item xs={12}>
-                <TabPanel value={valueTab} index={0}>
+                <VGTabPanel value={menuPosition} index={0} sx={{ ml: 2, width: "99%" }}>
                   <VGCard>
                     <Typography
                       component="div"
@@ -391,12 +397,10 @@ export default function APIFeaturePage() {
                       </Grid>
                     </Grid>
                   </VGCard>
-                </TabPanel>
-              </Grid>
+                </VGTabPanel>
 
               {/* Content API Access Key */}
-              <Grid item xs={12}>
-                <TabPanel value={valueTab} index={1}>
+                <VGTabPanel value={menuPosition} index={1} sx={{ ml: 2, width: "99%" }}>
                   <VGCard>
                     <Typography
                       component="div"
@@ -404,7 +408,7 @@ export default function APIFeaturePage() {
                     >
                       {t("contentApi.accessKey.title")}
                     </Typography>
-                    <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
+                    <Grid container spacing={1} rowSpacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
                       <Grid item xs={9} sm={10}>
                         <TextField
                           id="access-key-text"
@@ -414,6 +418,7 @@ export default function APIFeaturePage() {
                           InputProps={{
                             readOnly: true,
                           }}
+                          inputProps={{ style: { lineHeight: '24px' } }}
                           value={secretKey}
                           onChange={handleAccessKey}
                         />
@@ -427,8 +432,8 @@ export default function APIFeaturePage() {
                             <Button 
                               variant="outlined" 
                               startIcon={<ContentCopyIcon />}
-                              color="primary" 
-                              sx={{textTransform: 'none'}}
+                              color="primary"
+                              sx={{textTransform: 'none', lineHeight: '3', borderRadius: '10px'}}
                               onClick={() => void clickCopyAccessKey()}
                             >
                               {t("contentApi.accessKey.copy")}
@@ -478,7 +483,7 @@ export default function APIFeaturePage() {
                                 <Typography
                                   component="span"
                                   color="primary"
-                                  sx={{fontSize: "13px"}}
+                                  sx={{fontSize: "13px", fontWeight: 600}}
                                 >
                                   {t("contentApi.accessKey.tableHeaderTitle")}
                                 </Typography>
@@ -508,7 +513,7 @@ export default function APIFeaturePage() {
                                     <Typography
                                       component="span"
                                       color="error"
-                                      sx={{fontSize: "12px"}}
+                                      sx={{fontSize: "12px", fontWeight: 600}}
                                     >
                                       {t("contentApi.accessKey.deleteBtn")}
                                     </Typography>
@@ -522,12 +527,10 @@ export default function APIFeaturePage() {
                       </Grid>
                     </Grid>
                   </VGCard>
-                </TabPanel>
-              </Grid>
+                </VGTabPanel>
 
               {/* Content Webhook */}
-              <Grid item xs={12}>
-                <TabPanel value={valueTab} index={2}>
+                <VGTabPanel value={menuPosition} index={2} sx={{ ml: 2, width: "99%" }}>
                   <VGCard>
                     <Typography
                       component="div"
@@ -599,27 +602,16 @@ export default function APIFeaturePage() {
                     </Grid>
                     </FormGroup>
                   </VGCard>
-                </TabPanel>
-              </Grid>
+                </VGTabPanel>
 
             </Grid>
           </Grid>
 
-          <Grid item xs={12} sm={3} order={{ xs: 1, sm: 2 }}>
-            <VGCard>
-              <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={valueTab}
-                onChange={handleChangeTab}
-                aria-label="Vertical tabs example"
-                sx={{ borderRight: 1, borderColor: 'divider' }}
-              >
-                <Tab label={t("contentApi.whitelist.tab")} sx={{textTransform: 'none'}} {...a11yProps(0)} />
-                <Tab label={t("contentApi.accessKey.tab")} sx={{textTransform: 'none'}} {...a11yProps(1)} />
-                <Tab label={t("contentApi.webhook.tab")} sx={{textTransform: 'none'}} {...a11yProps(2)} />
-              </Tabs>
-            </VGCard>
+          <Grid item xs={12} sm={2} order={{ xs: 1, sm: 2 }}>
+            <APIFeatureSidebarMenu
+              position={menuPosition}
+              setPosition={changeMenuPosition}
+            />
           </Grid>
         </Grid>
       </div>

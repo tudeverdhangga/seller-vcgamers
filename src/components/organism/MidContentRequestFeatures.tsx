@@ -27,7 +27,7 @@ export default function CustomizedMidContent(props: {
   }
 
   return (
-    <ContentCard title={props.title}>
+    <ContentCard title={props.title} sx={{boxShadow: "none"}}>
       <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{pt: 1}}>
         {
           props.featureChecks && props.featureChecks.map((list, idx) => (

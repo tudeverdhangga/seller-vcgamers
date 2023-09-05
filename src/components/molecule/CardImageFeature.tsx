@@ -22,7 +22,7 @@ export default function CustomizedCardImage(props: {
 
   return (
     <Box>
-      <Image src={`/assets/${props.imageSrc}.png`} width={200} height={200} alt="Profile Picture" />
+      <Image src={`/assets/${props.imageSrc}.png`} width={200} height={200} alt="Profile Picture" style={{marginLeft: "-24px"}} />
       <Card sx={{backgroundColor: "#EFEBFF", boxShadow: 0, textAlign: 'center', marginTop: "-100px"}}>
         <CardContent sx={{pt: 12}}>
             <Typography

@@ -17,7 +17,7 @@ export default function CustomizedCardImage(props: {
         {
           props.featureRequests.length > 0 && props.featureRequests.map((item, idx) => {
             return (
-              <Grid key={idx} item xs={12} sm={6} md={4} lg={3} sx={{textAlign: 'center'}}>
+              <Grid key={idx} item xs={6} md={4} lg={3} sx={{textAlign: 'center'}}>
                 <CardImageFeature imageSrc={item.imageSrc} title={item.title} subtitle={item.subtitle} />
               </Grid>
             )

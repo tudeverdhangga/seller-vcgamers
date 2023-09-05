@@ -24,7 +24,7 @@ export default function CustomizedPermissionAlert(props: {
   }
 
   return (
-    <ContentCard sx={{p: 1}}>
+    <ContentCard sx={{p: 1, boxShadow: "none"}}>
       <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'}>
           <Grid item xs={12}>
             <Alert sx={{backgroundColor: "#fff"}} iconMapping={{

@@ -70,7 +70,7 @@ export default function CustomizedFeatureContentCondition(props: {
   }
 
   return (
-    <Paper sx={{  mt:2, p: 2, backgroundColor: "#fff", borderRadius: '8px' }}>
+    <Paper sx={{  mt:2, p: 2, backgroundColor: "#fff", borderRadius: '8px', boxShadow: "none"}}>
       <Typography
         component="div"
         sx={snkStyle}
@@ -81,7 +81,7 @@ export default function CustomizedFeatureContentCondition(props: {
       {/* Transaction Info */}
       <Grid container spacing={2} justifyContent={'center'} sx={{ mt: .5 }}>
         <Grid item xs={12} sm={6}>
-          <Paper sx={{ px: 2, py: 1, backgroundColor: "#FBFAFF" }}>
+          <Paper sx={{ px: 2, py: 1, backgroundColor: "#FBFAFF", boxShadow: "none" }}>
             {/* Progress Bar */}
             <BorderLinearProgress 
               style={{backgroundColor: props.totalAllTransaction >= props.minimumAllTransaction ? '#17e339' : '#ed3e3e'}} 
@@ -115,7 +115,7 @@ export default function CustomizedFeatureContentCondition(props: {
         </Grid>
         
         <Grid item xs={12} sm={6}>
-          <Paper sx={{ px: 2, py: 1, backgroundColor: "#FBFAFF" }}>
+          <Paper sx={{ px: 2, py: 1, backgroundColor: "#FBFAFF", boxShadow: "none" }}>
             {/* Progress Bar */}
             <BorderLinearProgress 
               style={{backgroundColor: props.successPercentageTransaction >= props.minimumSuccessPercentageTransaction ? '#17e339' : '#ed3e3e'}} 

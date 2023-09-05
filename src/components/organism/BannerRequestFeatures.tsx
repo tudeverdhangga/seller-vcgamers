@@ -16,25 +16,26 @@ export default function CustomizedBanner(props: {
   const bannerVIPTypograhpyStyle = {
     textAlign: {xs: 'center', md: 'left'},
     color: "common.shade.300",
-    fontSize: {xs: "18px", lg: "22px", xl: "28px"},
+    fontSize: {xs: "16px", lg: "18px", xl: "20px"},
     fontWeight: 800
   }
   const bannerSubVIPTypograhpyStyle = {
     textAlign: {xs: 'center', md: 'left'},
     color: "common.shade.300",
-    fontSize: {xs: "12px", lg: "16px", xl: "20px"}, 
+    fontSize: {xs: "12px", lg: "14px", xl: "16px"}, 
     fontWeight: 400
   }
   const bannerImageTypograhpyStyle = {
+    marginBottom: {xs: "6px", sm: "4px"},
     color: "white",
-    fontSize: {xs: "22px", lg: "24px"},
+    fontSize: {xs: "16px", lg: "18px"},
     fontWeight: 600
   }
   const bannerImageSubTypograhpyStyle = {
     px: {xs: 4, sm: 2, md: 1, lg: 0},
     mt: 2,
     color: "white",
-    fontSize: {xs: "14px", md: "16px"}, 
+    fontSize: {xs: "12px", md: "14px"}, 
     fontWeight: 400
   }
 
@@ -113,8 +114,8 @@ export default function CustomizedBanner(props: {
                   <div>
                       <Image
                         src={props.subtitleImageSrc ? props.subtitleImageSrc : ''}
-                        width={80}
-                        height={22}
+                        width={isMobile ? 80 : 72}
+                        height={isMobile ? 22 : 20}
                         alt="Logo Fitur"
                       />
                   </div>

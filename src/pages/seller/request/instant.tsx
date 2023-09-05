@@ -196,9 +196,9 @@ export default function InstantPage() {
       <Grid container spacing={4} justifyContent={'center'} >
         <Grid item xs={12}>
           {/* Permission Request */}
-          <ContentCard sx={{p: 1, display: (statusInstantData && (statusInstantData.request_status === SellerStatusApproved || statusInstantData.seller_has_instant)) ? 'none' : 'flex'}}>
+          <ContentCard sx={{boxShadow: "none", p: 1, px: 2, display: (statusInstantData && (statusInstantData.request_status === SellerStatusApproved || statusInstantData.seller_has_instant)) ? 'none' : 'flex'}}>
             <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'}>
-              <Grid item xs={8} sm={10}>
+              <Grid item xs={12} sm={9}>
                 <Checkbox
                   checked={checkedSnK}
                   onChange={UseHandleChangeCheck}
@@ -212,12 +212,12 @@ export default function InstantPage() {
                   {t("alert.confirmation.msg")}
                 </Typography> 
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={12} sm={3}>
                 <Button
                   variant="contained"
                   fullWidth
                   color={checkedSnK ? "success" : "secondary"}
-                  sx={{ textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
+                  sx={{ borderRadius: "10px", textTransform: 'none', display: { sm: 'block' }, color: 'white' }}
                   disabled={!checkedSnK}
                   onClick={UseClickRequest} >
                   {t("alert.confirmation.btn")}
