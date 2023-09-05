@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import VGDialog from "~/components/atomic/VGDialog";
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
-import { useDeactiveKilat } from "~/services/api/product";
+import { useBulkKilat, useDeactiveKilat } from "~/services/api/product";
 import { toastOption } from "~/utils/toast";
 
 interface ErrorResponse {
@@ -19,31 +19,52 @@ interface ErrorResponse {
   };
 }
 
-export default function DeactivateKilatDialog (props: {
-  id: string;
+export default function DeactivateKilatDialog(props: {
+  id?: string;
   isBulk: boolean | false;
-  name?: string | "undefined";
+  name: string | number;
   isOpen: boolean;
-  nextUpdatePrice?: string | null;
   handleClose: () => void;
-  refetchProduct: () => void;
+  refetchProduct?: () => void;
 }) {
   const { t } = useTranslation("listProduct");
-  const kilat = useDeactiveKilat(queryString.stringify({variation_id: props.id}))
+  const bulkKilat = useBulkKilat()
+  const kilat = useDeactiveKilat(queryString.stringify({ variation_id: props.id }))
 
   const onDeactiveKilat = () => {
-    kilat.mutate(undefined, {
-      onSuccess: () => {
-        props.handleClose()
-        toast.success(t("table.dialog.nonActive.onSuccess"), toastOption);
-        props.refetchProduct()
-      },
-      onError: (error) => {
-        const err = error as ErrorResponse
-        const errorMessage = `${t("table.dialog.nonActive.onError")}: ${err?.response?.data?.message}`
-        toast.error(errorMessage, toastOption)
-      }
-    })
+    if (props.isBulk) {
+      bulkKilat.mutate({
+        value: false
+      }, {
+        onSuccess: () => {
+          props.handleClose()
+          toast.success(t("table.dialog.nonActive.onSuccess"), toastOption);
+          if (props.refetchProduct) {
+            props.refetchProduct()
+          }
+        },
+        onError: (error) => {
+          const err = error as ErrorResponse
+          const errorMessage = `${t("table.dialog.nonActive.onError")}: ${err?.response?.data?.message}`
+          toast.error(errorMessage, toastOption)
+        }
+      })
+    } else {
+      kilat.mutate(undefined, {
+        onSuccess: () => {
+          props.handleClose()
+          toast.success(t("table.dialog.nonActive.onSuccess"), toastOption);
+          if (props.refetchProduct) {
+            props.refetchProduct()
+          }
+        },
+        onError: (error) => {
+          const err = error as ErrorResponse
+          const errorMessage = `${t("table.dialog.nonActive.onError")}: ${err?.response?.data?.message}`
+          toast.error(errorMessage, toastOption)
+        }
+      })
+    }
   }
 
   return (
@@ -118,7 +139,11 @@ export default function DeactivateKilatDialog (props: {
           color="common.shade.200"
           my={1}
         >
-          {t("table.dialog.nonActive.alert")}
+          {
+            props.name === 0
+              ? t("table.dialog.nonActive.bulk")
+              : t("table.dialog.nonActive.alert")
+          }
         </Typography>
       </Box>
       <Box
@@ -142,6 +167,7 @@ export default function DeactivateKilatDialog (props: {
           color="secondary"
           size="large"
           sx={{ width: "100%", ml: 1 }}
+          disabled={props.name === 0}
           onClick={onDeactiveKilat}
         >
           {t("table.dialog.nonActive.actions.ok")}

@@ -12,7 +12,9 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
+import { env } from "~/env.mjs";
 import VGCard from "~/components/atomic/VGCard";
 import VGChip from "~/components/atomic/VGChip";
 import VGButton from "~/components/atomic/VGButton";
@@ -26,7 +28,6 @@ import ConfirmationDeleteDialog from "~/components/molecule/ConfirmationDeleteDi
 import { priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
 import PinVoucherDialog from "~/components/molecule/PinVoucherDialog";
-import { useRouter } from "next/router";
 
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
@@ -68,6 +69,10 @@ export default function ListProductItem(props: {
       : setIsOpenDeactiveKilatDialog(true)
   };
   const moveToDetail = () => {
+    window.open(`${env.NEXT_PUBLIC_MARKET_URL}/dagangan/product-${props.productId}`);
+    handleCloseOptions()
+  }
+  const moveToEdit = () => {
     void router.push(`/seller/produk/edit-produk?product_id=${props.productId}`);
     handleCloseOptions()
   }
@@ -280,7 +285,7 @@ export default function ListProductItem(props: {
         <MenuItem onClick={moveToDetail}>
           <VisibilityOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.detailProduct")}
         </MenuItem>
-        <MenuItem onClick={moveToDetail}>
+        <MenuItem onClick={moveToEdit}>
           <EditOutlinedIcon sx={{ pr: 1 }} /> {t("table.tBody.editProduct")}
         </MenuItem>
         {

@@ -1,6 +1,7 @@
 {
   "title": "Tambah Produk",
   "titleEdit": "Edit Produk",
+  "titleDetail": "Lihat Produk",
   "subTitle": "Kembali",
   "updateImageSizeError": "Gambar melebihi 1MB",
   "cropImage": {

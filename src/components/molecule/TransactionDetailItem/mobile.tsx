@@ -100,12 +100,6 @@ export default function TransactionDetailItemMobile(props: {
         break;
     }
   }
-  const copyNotes = async () => {
-    if (typeof props.notes !== 'undefined') {
-      await navigator.clipboard.writeText(props.notes);
-    }
-    return;
-  }
   const handleProcessTransaction = () => {
     props.isAccount ?
       setIsOpenProcessAccountDialog(true) :

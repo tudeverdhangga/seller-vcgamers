@@ -32,7 +32,7 @@ export default function ChangePriceDialog(props: {
   refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
-  const updatePrice = useUpdatePrice(queryString.stringify({variation_id: props.id}))
+  const updatePrice = useUpdatePrice(queryString.stringify({ variation_id: props.id }))
   const [income, setIncome] = useState(98 * props.price / 100)
   const [price, setPrice] = useState(props.price)
   const [isUnder100, setIsUnder100] = useState(false)
@@ -61,12 +61,12 @@ export default function ChangePriceDialog(props: {
   }
   const onChangePrice = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const price = e.target.value
+    setPrice(parseInt(price))
 
     if (parseInt(price) < 100) {
       setIsUnder100(true)
     } else {
       setIsUnder100(false)
-      setPrice(parseInt(price))
     }
   }
 
@@ -74,7 +74,7 @@ export default function ChangePriceDialog(props: {
     <VGDialog
       isOpen={props.isOpen}
       width="400px"
-      onClose={props.handleClose}
+      onClose={onClose}
     >
       <Box>
         <Typography
@@ -96,7 +96,7 @@ export default function ChangePriceDialog(props: {
           sx={{
             width: "100%",
             my: 1,
-            "& .MuiAlert-message" : {
+            "& .MuiAlert-message": {
               width: "100%",
               display: "flex",
               alignItems: "center"
@@ -123,12 +123,13 @@ export default function ChangePriceDialog(props: {
         <TextField
           variant="outlined"
           label={t("table.dialog.changePrice.field")}
-          defaultValue={price}
+          value={price}
           fullWidth
           type="number"
           inputProps={{
             inputMode: "numeric",
             pattern: "[0-9]*",
+            min: "100"
           }}
           sx={{ my: 1 }}
           disabled={props.nextUpdatePrice !== null}
@@ -168,12 +169,9 @@ export default function ChangePriceDialog(props: {
             my: 1
           }}
         >
-          <Typography
-            color="primary"
-            display="flex"
-          >
-            <ErrorOutlineOutlinedIcon />
-            <Typography ml={1} fontSize={12}>
+          <Box display="flex">
+            <ErrorOutlineOutlinedIcon color="primary" />
+            <Typography ml={1} fontSize={12} color="primary">
               <Trans
                 ns="listProduct"
                 i18nKey={"table.dialog.changePrice.alert"}
@@ -188,7 +186,7 @@ export default function ChangePriceDialog(props: {
                 values={{ income: priceFormat(income) }}
               />
             </Typography>
-          </Typography>
+          </Box>
         </VGAlert>
       </Box>
       <Box
@@ -205,7 +203,7 @@ export default function ChangePriceDialog(props: {
           sx={{ width: "100%", mr: 1 }}
           onClick={onClose}
         >
-        {t("table.dialog.changePrice.actions.cancel")}
+          {t("table.dialog.changePrice.actions.cancel")}
         </VGButton>
         <VGButton
           variant="contained"

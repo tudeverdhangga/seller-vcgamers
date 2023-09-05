@@ -103,11 +103,6 @@ export const menus = [
         label: "drawer.feature.vip",
         href: "/seller/request/vip-seller"
       }
-      // {
-      //   name: "host",
-      //   label: "drawer.feature.host",
-      //   href: "/seller/request/host-to-host"
-      // }
     ]
   }
 ]

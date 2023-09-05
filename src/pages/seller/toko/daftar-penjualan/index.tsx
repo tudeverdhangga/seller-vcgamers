@@ -31,7 +31,7 @@ export default function DaftarPenjualanPage() {
     search: "",
     date_start: "2022-07-30",
     date_end: "2023-10-30",
-    status: ""
+    status: "2"
   })
   const transactions = useGetTransaction(queryString.stringify(params))
   const download = useDownloadReport()

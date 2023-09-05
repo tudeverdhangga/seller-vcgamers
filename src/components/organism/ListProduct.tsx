@@ -9,6 +9,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useResponsive } from "~/utils/mediaQuery";
 import ListProductItem from "~/components/molecule/ListProductItem";
 import VGButton from "~/components/atomic/VGButton";
+import { useRouter } from "next/router";
 
 interface ResponseProduct {
   code: number
@@ -47,6 +48,7 @@ export default function ListProduct({ products, refetchProduct }: {
   const { t } = useTranslation("listProduct");
   const { isDesktop } = useResponsive();
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const router = useRouter();
 
   const getFeature = (product: Item) => {
     let status = ""
@@ -206,6 +208,7 @@ export default function ListProduct({ products, refetchProduct }: {
                         variant="contained"
                         color="success"
                         sx={{ width: "fit-content" }}
+                        onClick={() => void router.push('/seller/produk/tambah-produk')}
                       >
                         <AddIcon /> {t("table.empty.button")}
                       </VGButton>

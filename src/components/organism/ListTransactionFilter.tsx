@@ -16,6 +16,7 @@ import VGButton from "~/components/atomic/VGButton";
 import { useDebounce } from '~/utils/debounce';
 import { useGetTransactionStatus } from '~/services/api/transaction';
 import { useGetFeature } from '~/services/api/masterData';
+import Typography from '@mui/material/Typography';
 
 interface TabsStatus {
   label: string;
@@ -36,7 +37,7 @@ export default function ListTransactionFilter({ handleFilter }: {
     label: "Semua Layanan",
     value: ""
   })
-  const [selectedStatus, setSelectedStatus] = useState("")
+  const [selectedStatus, setSelectedStatus] = useState("2")
   const [transactionStatus, setTransactionStatus] = useState<TabsStatus[]>([])
   const getTransactionStatus = useGetTransactionStatus()
   const getFeature = useGetFeature()
@@ -181,7 +182,7 @@ export default function ListTransactionFilter({ handleFilter }: {
         {
           getTransactionStatus.isLoading
             ? (
-              [0, 1, 2, 3, 4, 5].map((index) => (
+              [0, 1, 2, 3, 4].map((index) => (
                 <Skeleton
                   key={index}
                   variant="rounded"
@@ -192,15 +193,6 @@ export default function ListTransactionFilter({ handleFilter }: {
               ))
             ) : (
               <>
-                <VGButton
-                  sx={{ m: 1, minWidth: "fit-content" }}
-                  color={selectedStatus === "" ? "primary" : "secondary"}
-                  variant="outlined"
-                  size="small"
-                  onClick={() => handleFilterTabs("")}
-                >
-                  {t("filter.all")}
-                </VGButton>
                 {
                   transactionStatus.map((item, index) => (
                     <VGButton
@@ -211,9 +203,14 @@ export default function ListTransactionFilter({ handleFilter }: {
                       size="small"
                       onClick={() => handleFilterTabs(item.value)}
                     >
-                      {item.label}
+                      <Typography
+                        fontSize={14}
+                        fontWeight={600}
+                      >
+                        {item.label}
+                      </Typography>
                       {
-                        item.value !== "4" && item.value !== "5" && (
+                        item.value !== "4" && item.value !== "5" && item.counter !== "0" && (
                           <Box
                             sx={{
                               backgroundColor: "error.main",

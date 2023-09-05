@@ -2,11 +2,14 @@ import { ListItem, Switch, type TypographyProps } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useRouter } from "next/router";
-import { type MouseEventHandler } from "react";
+import { useState, type MouseEventHandler, useEffect } from "react";
 
 import InstantMenu from "~/components/icons/feature/InstantMenu";
 import KilatMenu from "~/components/icons/feature/KilatMenu";
 import VIPMenu from "~/components/icons/feature/VIPMenu";
+import DeactivateKilatDialog from "~/components/molecule/DeactivateKilatDialog";
+import ActivateKilatDialog from "~/components/molecule/ActivateKilatDialog";
+import { useGetBulkKilatValue } from "~/services/api/product";
 
 const activeProps: TypographyProps = {
   fontSize: 14,
@@ -36,6 +39,37 @@ export default function DrawerListSubItem({
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 }) {
   const router = useRouter()
+  const bulkKilatValue = useGetBulkKilatValue()
+  const [isOpenDeactiveKilatDialog, setIsOpenDeactiveKilatDialog] = useState(false)
+  const [isOpenActiveKilatDialog, setIsOpenActiveKilatDialog] = useState(false)
+  const [totalProduct, setTotalProduct] = useState<number>(0)
+  const [isCheckBulk, setIsCheckBulk] = useState(false)
+
+  useEffect(() => {
+    if (name === "kilat") {
+      bulkKilatValue.mutate(undefined, {
+        onSuccess: (res) => {
+          setTotalProduct(res.data.total_item)
+          setIsCheckBulk(res.data.toggle_value)
+        }
+      })
+    }
+  }, [name])
+
+  const handleChangeKilat = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.checked === true
+      ? setIsOpenActiveKilatDialog(true)
+      : setIsOpenDeactiveKilatDialog(true)
+  };
+
+  const refetchBulkKilat = () => {
+    bulkKilatValue.mutate(undefined, {
+      onSuccess: (res) => {
+        setTotalProduct(res.data.total_item)
+        setIsCheckBulk(res.data.toggle_value)
+      }
+    })
+  }
 
   const listSubItem = (
     <ListItemButton
@@ -72,21 +106,40 @@ export default function DrawerListSubItem({
 
   if (href) {
     return (
-      <ListItem
-        secondaryAction={
-          name === "kilat"
-           ? (
-            <Switch
-              onClick={() => console.log('asd')}
-            />
-           )
-           : trailing
-        }
-        onClick={() => void router.push(href)}
-        sx={{ p: 0 }}
-      >
-        {listSubItem}
-      </ListItem>
+      <>
+        <ListItem
+          secondaryAction={
+            name === "kilat"
+              ? (
+                <Switch
+                  checked={isCheckBulk}
+                  onChange={(e) => handleChangeKilat(e)}
+                />
+              )
+              : trailing
+          }
+          onClick={() => void router.push(href)}
+          sx={{ p: 0 }}
+        >
+          {listSubItem}
+        </ListItem>
+
+        <ActivateKilatDialog
+          isBulk={true}
+          name={totalProduct}
+          isOpen={isOpenActiveKilatDialog}
+          nextActiveKilat={""}
+          handleClose={() => setIsOpenActiveKilatDialog(false)}
+          refetchProduct={refetchBulkKilat}
+        />
+        <DeactivateKilatDialog
+          isBulk={true}
+          name={totalProduct}
+          isOpen={isOpenDeactiveKilatDialog}
+          handleClose={() => setIsOpenDeactiveKilatDialog(false)}
+          refetchProduct={refetchBulkKilat}
+        />
+      </>
     );
   }
 

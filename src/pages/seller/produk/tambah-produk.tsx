@@ -265,7 +265,7 @@ export default function TambahProdukPage() {
           variant="contained"
           color="success"
           size="large"
-          disabled={error}
+          disabled={error || params.variations.length === 0}
           onClick={onSubmit}
         >
           {t("save")}

@@ -10,7 +10,13 @@ import Ordered from '@mui/icons-material/FormatListNumberedRounded';
 import Unordered from '@mui/icons-material/FormatListBulletedOutlined';
 import Quote from '@mui/icons-material/FormatQuoteRounded';
 
-const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
+const EditorToolbar = (
+  { editor, enable }:
+    {
+      editor: Editor | null,
+      enable: boolean
+    }
+) => {
   if (!editor) {
     return null;
   }
@@ -18,10 +24,18 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
   return (
     <div className="menuBar">
       <div className="menuBar-category">
-        <button onClick={() => editor.chain().focus().undo().run()}>
+        <button
+          onClick={() => editor.chain().focus().undo().run()}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
+        >
           <Undo />
         </button>
-        <button onClick={() => editor.chain().focus().redo().run()}>
+        <button
+          onClick={() => editor.chain().focus().redo().run()}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
+        >
           <Redo />
         </button>
       </div>
@@ -29,18 +43,24 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive("bold") ? "is_active" : ""}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <Bold />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive("italic") ? "is_active" : ""}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <Italic />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={editor.isActive("strike") ? "is_active" : ""}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <Strikethrough />
         </button>
@@ -48,6 +68,8 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
       <div className="menuBar-category">
         <button
           onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <FormatClear />
         </button>
@@ -56,12 +78,16 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editor.isActive("orderedList") ? "is_active" : ""}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <Ordered />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive("bulletList") ? "is_active" : ""}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <Unordered />
         </button>
@@ -70,6 +96,8 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={editor.isActive("blockquote") ? "is_active" : ""}
+          disabled={!enable}
+          style={{ cursor: enable ? "pointer" : "default" }}
         >
           <Quote />
         </button>
@@ -102,7 +130,7 @@ export default function VGRichEditor({
     <div className='vg-rich-editor'>
       {
         isToolbar && (
-          <EditorToolbar editor={editor} />
+          <EditorToolbar editor={editor} enable={enable} />
         )
       }
       <EditorContent

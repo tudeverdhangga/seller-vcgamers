@@ -312,7 +312,7 @@ export default function AddVariantDialog({
   )
   const deliveryContainer = (
     <Box>
-      <Typography sx={titleMediumStyle}>
+      <Typography sx={{ ...titleMediumStyle, mt: 2 }}>
         {t("variant.dialog.delivery.label")}
       </Typography>
       <Typography sx={{
@@ -436,6 +436,9 @@ export default function AddVariantDialog({
         item
         xs={12}
       >
+        <Typography sx={{ ...titleMediumStyle, mt: 2 }}>
+          {t("variant.dialog.setting.title")}
+        </Typography>
         <VGAlert
           color="info"
           sx={{
@@ -486,6 +489,11 @@ export default function AddVariantDialog({
               return t("variant.dialog.setting.error.noMinus", { field: "Stock" });
             }
           })}
+          inputProps={{
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+            min: "0"
+          }}
           error={Boolean(errors.stock)}
           helperText={errors.stock?.message}
           fullWidth
@@ -518,6 +526,11 @@ export default function AddVariantDialog({
               return true;
             },
           })}
+          inputProps={{
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+            min: "100"
+          }}
           error={Boolean(errors.price)}
           helperText={errors.price?.message}
           fullWidth
@@ -530,7 +543,7 @@ export default function AddVariantDialog({
   )
   const footerContainer = (
     <>
-      <Box>
+      <Box mt={2}>
         <FormControlLabel
           control={
             <Switch
@@ -604,7 +617,7 @@ export default function AddVariantDialog({
       onClose={onCloseDialog}
     >
       <Box p={2}>
-        <Typography sx={titleLargeStyle}>
+        <Typography sx={{ ...titleLargeStyle, mb: 2 }}>
           {
             typeof variant !== "undefined"
               ? t("variant.dialog.title.edit")

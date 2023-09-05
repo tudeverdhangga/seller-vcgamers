@@ -374,7 +374,11 @@ export default function AddProductDetail({
                   value={selectedBrand}
                   disablePortal
                   options={brand}
-                  disabled={selectedCategory && selectedCategory.value !== undefined && productDetail !== undefined}
+                  disabled={
+                    selectedCategory &&
+                    selectedCategory.value !== undefined &&
+                    productDetail !== undefined
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}

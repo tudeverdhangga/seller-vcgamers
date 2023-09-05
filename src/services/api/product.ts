@@ -132,6 +132,16 @@ interface ResponseValidateVoucher {
   message: string
 }
 
+interface ResponseBulkKilatValue {
+  code: number,
+  status: string,
+  data: {
+    toggle_value: boolean,
+    total_item: number
+  },
+  message: string
+}
+
 export const useGetProduct = (params: string) => {
   return useInfiniteQuery<ResponseProduct, string>({
     queryKey: ["product-list", params],
@@ -229,6 +239,26 @@ export const useActiveKilat = (params: string) => {
     mutationFn: async () => {
       const res = await HTTP.put(`/product/product/kilat/activate?${params}`);
       return res.data as ResponseProduct;
+    }
+  })
+}
+
+export const useBulkKilat = () => {
+  return useMutation({
+    mutationKey: ["bulk-kilat"],
+    mutationFn: async (payload: object) => {
+      const res = await HTTP.post("/product/product/mass-kilat-update", payload);
+      return res.data as ResponseProduct;
+    }
+  })
+}
+
+export const useGetBulkKilatValue = () => {
+  return useMutation({
+    mutationKey: ["bulk-kilat-value"],
+    mutationFn: async () => {
+      const res = await HTTP.get("/product/product/mass-kilat-value");
+      return res.data as ResponseBulkKilatValue;
     }
   })
 }

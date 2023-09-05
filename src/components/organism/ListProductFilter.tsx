@@ -4,7 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import { Box, Skeleton } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 
 import VGCard from "~/components/atomic/VGCard";
@@ -229,7 +229,12 @@ export default function ListProductFilter({
                   size="small"
                   onClick={() => handleFilterStatus(item.value)}
                 >
-                  {getProductStatusLabel(item.value)}
+                  <Typography
+                    fontSize={14}
+                    fontWeight={600}
+                  >
+                    {getProductStatusLabel(item.value)}
+                  </Typography>
                 </VGButton>
               ))
             )

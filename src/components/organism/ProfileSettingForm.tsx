@@ -205,9 +205,13 @@ export default function ProfileSettingForm() {
         fontSize={12}
         fontWeight={600}
       >
-        <Link href={whatsappLink} style={{ color: "#7750F8" }}>
+        <a
+          href={whatsappLink}
+          target="_blank"
+          style={{ color: "#7750F8" }}
+        >
           {t("tab.profile.form.alert.subLabel")}
-        </Link>
+        </a>
       </Typography>
     </>
   );

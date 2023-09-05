@@ -32,7 +32,7 @@ export function getStaticPropsWithTransNamespace(namespaces: string[]) {
       props: {
         ...(await serverSideTranslations(
           props.locale,
-          ["common", "layout", ...namespaces],
+          ["common", "layout", "listProduct", ...namespaces],
           nextI18nConfig
         )),
       },

@@ -1,7 +1,6 @@
 import queryString from "query-string";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
@@ -9,7 +8,7 @@ import { toast } from "react-toastify";
 import VGDialog from "~/components/atomic/VGDialog";
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
-import { useActiveKilat } from "~/services/api/product";
+import { useActiveKilat, useBulkKilat } from "~/services/api/product";
 import { toastOption } from "~/utils/toast";
 import { dateToTime } from "~/utils/format";
 
@@ -22,30 +21,52 @@ interface ErrorResponse {
 }
 
 export default function ActivateKilatDialog(props: {
-  id: string;
+  id?: string;
   isBulk: boolean | false;
-  name?: string | "undefined";
+  name: string | number;
   isOpen: boolean;
   nextActiveKilat: string;
   handleClose: () => void;
-  refetchProduct: () => void;
+  refetchProduct?: () => void;
 }) {
   const { t } = useTranslation("listProduct");
+  const bulkKilat = useBulkKilat()
   const kilat = useActiveKilat(queryString.stringify({ variation_id: props.id }))
 
   const onActiveKilat = () => {
-    kilat.mutate(undefined, {
-      onSuccess: () => {
-        props.handleClose()
-        toast.success(t("table.dialog.active.onSuccess"), toastOption);
-        props.refetchProduct()
-      },
-      onError: (error) => {
-        const err = error as ErrorResponse
-        const errorMessage = `${t("table.dialog.active.onError")}: ${err?.response?.data?.message}`
-        toast.error(errorMessage, toastOption)
-      }
-    })
+    if (props.isBulk) {
+      bulkKilat.mutate({
+        value: true
+      }, {
+        onSuccess: () => {
+          props.handleClose()
+          toast.success(t("table.dialog.active.onSuccess"), toastOption);
+          if (props.refetchProduct) {
+            props.refetchProduct()
+          }
+        },
+        onError: (error) => {
+          const err = error as ErrorResponse
+          const errorMessage = `${t("table.dialog.active.onError")}: ${err?.response?.data?.message}`
+          toast.error(errorMessage, toastOption)
+        }
+      })
+    } else {
+      kilat.mutate(undefined, {
+        onSuccess: () => {
+          props.handleClose()
+          toast.success(t("table.dialog.active.onSuccess"), toastOption);
+          if (props.refetchProduct) {
+            props.refetchProduct()
+          }
+        },
+        onError: (error) => {
+          const err = error as ErrorResponse
+          const errorMessage = `${t("table.dialog.active.onError")}: ${err?.response?.data?.message}`
+          toast.error(errorMessage, toastOption)
+        }
+      })
+    }
   }
 
   return (
@@ -121,18 +142,29 @@ export default function ActivateKilatDialog(props: {
           my={1}
         >
           {
-            props.nextActiveKilat !== ""
-              ? t("table.dialog.active.alert.active", { time: dateToTime(props.nextActiveKilat) })
-              : props.isBulk
-                ? (
-                  <>
-                    <Typography color="success">
+            !props.isBulk
+              ? props.nextActiveKilat !== ""
+                ? t("table.dialog.active.alert.active", { time: dateToTime(props.nextActiveKilat) })
+                : ""
+              : props.name === 0
+                ? t("table.dialog.active.alert.bulk")
+                : (
+                  <Typography
+                    textAlign="center"
+                    fontSize={14}
+                    fontWeight={500}
+                  >
+                    <Typography
+                      component="span"
+                      color="success.main"
+                      fontSize={14}
+                      fontWeight={500}
+                    >
                       {t("table.dialog.active.alert.nonActive.title")}
                     </Typography>
                     {t("table.dialog.active.alert.nonActive.subTitle")}
-                  </>
+                  </Typography>
                 )
-                : ""
           }
         </Typography>
       </Box>
@@ -157,7 +189,7 @@ export default function ActivateKilatDialog(props: {
           color="success"
           size="large"
           sx={{ width: "100%", ml: 1 }}
-          disabled={props.nextActiveKilat !== ""}
+          disabled={props.nextActiveKilat !== "" || props.name === 0}
           onClick={onActiveKilat}
         >
           {t("table.dialog.active.actions.ok")}

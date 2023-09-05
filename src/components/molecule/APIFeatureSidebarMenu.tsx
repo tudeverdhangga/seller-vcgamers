@@ -13,7 +13,6 @@ export default function APIFeatureSidebarMenu(props: {
   return (
     <Box
       sx={{
-        height: "100px",
         bgcolor: "background.paper",
         borderRadius: "10px",
       }}

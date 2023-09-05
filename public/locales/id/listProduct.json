@@ -48,7 +48,8 @@
           "nonActive": {
             "title": "Perhatian: ",
             "subTitle": "Bagi produk yang sebelum penonaktifan massal sudah lebih dulu dalam keadaan nonaktif, tidak akan terpengaruh oleh pengaktifan massal ini."
-          }
+          },
+          "bulk": "Tidak ada produk yang dapat diaktifkan"
         },
         "actions": {
           "cancel": "Kembali",
@@ -68,7 +69,8 @@
           "ok": "Nonaktifkan"
         },
         "onSuccess": "Nonaktifkan proses kilat berhasil",
-        "onError": "Nonaktifkan proses kilat gagal"
+        "onError": "Nonaktifkan proses kilat gagal",
+        "bulk": "Tidak ada produk yang dapat dinonaktifkan"
       },
       "changePrice": {
         "title": "Ubah Harga Produk",

@@ -140,7 +140,7 @@ export default function AddProductVariant({
   const { t } = useTranslation("addProduct");
   const mediaUpload = useMediaUpload();
   const [isShowAddVariantDialog, setIsShowAddVariantDialog] = useState(false);
-  const [variantImage, setVariantImage] = useState<string[][]>([]);
+  const [variantImage, setVariantImage] = useState<string[][]>([['']]);
   const [variantData, setVariantData] = useState<Variation>();
   const [indexRow, setIndexRow] = useState<number>();
   const [multiple100, setMultiple100] = useState<string[]>([]);
@@ -155,16 +155,16 @@ export default function AddProductVariant({
     }
   }, [variantData, indexRow])
   useEffect(() => {
-    const imageUrl: string[][] = []
-
     if (productDetail) {
+      const imageUrl: string[][] = []
+
       productDetail.variations.map((item) => {
         const images = item?.images_url?.map((image) => image?.object_url) ?? []
         imageUrl.push(images)
       })
-    }
 
-    setVariantImage(imageUrl)
+      setVariantImage(imageUrl)
+    }
   }, [productDetail])
   useEffect(() => {
     onError(multiple100.some(item => typeof item === "string" && item !== ""))
@@ -211,9 +211,7 @@ export default function AddProductVariant({
         onSuccess: (res) => {
           handleChangeVariantField("images_url", [res?.data.object_key], index, indexImage)
           const array = variantImage;
-          if (array && array[index]) {
-            (array[index] as string[])[indexImage] = res?.data.object_url;
-          }
+          (array[index] as string[])[indexImage] = res?.data.object_url;
           setVariantImage(array);
           setIsShowCropImage(false)
         }

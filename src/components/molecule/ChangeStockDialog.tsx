@@ -31,7 +31,7 @@ export default function ChangeStockDialog(props: {
   refetchProduct: () => void;
 }) {
   const { t } = useTranslation("listProduct");
-  const updateStock = useUpdateStock(queryString.stringify({variation_id: props.id}))
+  const updateStock = useUpdateStock(queryString.stringify({ variation_id: props.id }))
   const [stock, setStock] = useState(props.stock)
 
   const onUpdateStock = () => {
@@ -57,7 +57,7 @@ export default function ChangeStockDialog(props: {
     <VGDialog
       isOpen={props.isOpen}
       width="400px"
-      onClose={props.handleClose}
+      onClose={onClose}
     >
       <Box>
         <Typography
@@ -79,7 +79,7 @@ export default function ChangeStockDialog(props: {
           sx={{
             width: "100%",
             my: 1,
-            "& .MuiAlert-message" : {
+            "& .MuiAlert-message": {
               width: "100%",
               display: "flex",
               alignItems: "center"
@@ -106,12 +106,13 @@ export default function ChangeStockDialog(props: {
         <TextField
           variant="outlined"
           label={t("table.dialog.changeStock.field")}
-          defaultValue={props.stock}
+          value={stock}
           fullWidth
           type="number"
           inputProps={{
             inputMode: "numeric",
             pattern: "[0-9]*",
+            min: "0"
           }}
           sx={{ my: 1 }}
           onChange={(e) => setStock(parseInt(e.target.value))}
