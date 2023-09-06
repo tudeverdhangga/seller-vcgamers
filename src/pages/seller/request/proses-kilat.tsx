@@ -37,10 +37,7 @@ export default function ProsesKilatPage() {
     if(getStatusKilat?.data?.data?.total_transaction !== undefined && 
       getStatusKilat?.data?.data?.total_success_transaction !== undefined && 
       getStatusKilat?.data?.data?.total_rate_transaction !== undefined) {
-      setTotalTransaction(getStatusKilat.data?.data.total_transaction)
-      setSuccessTransaction(getStatusKilat.data?.data.total_success_transaction)
-      setSuccessPercentageTransaction(getStatusKilat.data?.data.total_rate_transaction)
-      setStatusKilatData(getStatusKilat.data?.data);
+      assignGetStatusKilat();
       // let numberSuccessTransactionPercentage = getStatusKilat.data?.data.total_transaction > 0 ? Math.ceil(getStatusKilat.data?.data.total_success_transaction/getStatusKilat.data?.data.total_transaction*100) : 0
       // setSuccessPercentageTransaction(numberSuccessTransactionPercentage)
     }
@@ -50,22 +47,20 @@ export default function ProsesKilatPage() {
     getStatusKilat?.data?.data?.total_rate_transaction,
   ])
 
-  const UseHandleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const getStatusKilat = useGetStatusKilat();
-    if (getStatusKilat.data) {
-      if (getStatusKilat.data?.data.total_transaction >= minimumAllTransaction && 
-        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
-        (getStatusKilat.data?.data.seller_has_kilat === false && getStatusKilat.data?.data.request_status === "")
-        ) {
-          setCheckedSnK(event.target.checked);
-      }
+  const assignGetStatusKilat = () => {
+    if(getStatusKilat?.data?.data?.total_transaction !== undefined && getStatusKilat?.data?.data?.total_success_transaction !== undefined && getStatusKilat?.data?.data?.total_rate_transaction !== undefined) {
+      setTotalTransaction(getStatusKilat.data?.data.total_transaction)
+      setSuccessTransaction(getStatusKilat.data?.data.total_success_transaction)
+      setSuccessPercentageTransaction(getStatusKilat.data?.data.total_rate_transaction)
+      setStatusKilatData(getStatusKilat.data?.data);
     }
   };
+
   const UseHandleChangeCheck = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-		void getStatusKilat.refetch()
     if (getStatusKilat.data) {
+      void getStatusKilat.refetch();
       if (getStatusKilat.data?.data.total_transaction >= minimumAllTransaction && 
-        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
+        getStatusKilat.data?.data.total_success_transaction >= minimumSuccessPercentageTransaction &&
         (getStatusKilat.data?.data.seller_has_kilat === false && getStatusKilat.data?.data.request_status === "")
         ) {
           setCheckedSnK(event.target.checked);
@@ -184,7 +179,7 @@ export default function ProsesKilatPage() {
         totalSuccessTransaction={successTransaction} 
         minimumAllTransaction={minimumAllTransaction}
         minimumSuccessPercentageTransaction={minimumSuccessPercentageTransaction}
-        successPercentageTransaction={successPercentageTransaction}
+        successPercentageTransaction={getStatusKilat.data?.data?.total_success_transaction ? getStatusKilat.data?.data.total_success_transaction : successPercentageTransaction} 
       />
 
       <Grid container spacing={4} justifyContent={'center'} >

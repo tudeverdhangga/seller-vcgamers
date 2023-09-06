@@ -35,34 +35,27 @@ export default function InstantPage() {
 
   React.useEffect(() => {
     void getStatusInstant.refetch()
-    if(getStatusInstant?.data?.data?.total_transaction !== undefined && getStatusInstant?.data?.data?.total_success_transaction !== undefined && getStatusInstant?.data?.data?.total_rate_transaction !== undefined) {
-      setTotalTransaction(getStatusInstant.data?.data.total_transaction)
-      setSuccessTransaction(getStatusInstant.data?.data.total_success_transaction)
-      setSuccessPercentageTransaction(getStatusInstant.data?.data.total_rate_transaction)
-      setStatusInstantData(getStatusInstant.data?.data);
-    }
+    assignGetStatusInstant();
   }, [
     getStatusInstant?.data?.data?.total_transaction,
     getStatusInstant?.data?.data?.total_success_transaction,
     getStatusInstant?.data?.data?.total_rate_transaction,
   ])
 
-  const UseHandleChangeSnK = (event: React.ChangeEvent<HTMLInputElement>) => {
-    void getStatusInstant.refetch()
-    if (getStatusInstant.data) {
-      if (getStatusInstant.data?.data.total_transaction >= minimumAllTransaction && 
-        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
-        (getStatusInstant.data?.data.seller_has_instant === false && getStatusInstant.data?.data.request_status === "")
-        ) {
-          setCheckedSnK(event.target.checked);
-      }
+  const assignGetStatusInstant = () => {
+    if(getStatusInstant?.data?.data?.total_transaction !== undefined && getStatusInstant?.data?.data?.total_success_transaction !== undefined && getStatusInstant?.data?.data?.total_rate_transaction !== undefined) {
+      setTotalTransaction(getStatusInstant.data?.data.total_transaction)
+      setSuccessTransaction(getStatusInstant.data?.data.total_success_transaction)
+      setSuccessPercentageTransaction(getStatusInstant.data?.data.total_rate_transaction)
+      setStatusInstantData(getStatusInstant.data?.data);
     }
   };
+
   const UseHandleChangeCheck = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-		void getStatusInstant.refetch()
     if (getStatusInstant.data) {
+      void getStatusInstant.refetch();
       if (getStatusInstant.data?.data.total_transaction >= minimumAllTransaction && 
-        successPercentageTransaction >= minimumSuccessPercentageTransaction &&
+        getStatusInstant.data?.data.total_success_transaction >= minimumSuccessPercentageTransaction &&
         (getStatusInstant.data?.data.seller_has_instant === false && getStatusInstant.data?.data.request_status === "")
         ) {
           setCheckedSnK(event.target.checked);
@@ -190,7 +183,7 @@ export default function InstantPage() {
         totalSuccessTransaction={successTransaction} 
         minimumAllTransaction={minimumAllTransaction}
         minimumSuccessPercentageTransaction={minimumSuccessPercentageTransaction}
-        successPercentageTransaction={successPercentageTransaction} 
+        successPercentageTransaction={getStatusInstant.data?.data?.total_success_transaction ? getStatusInstant.data?.data.total_success_transaction : successPercentageTransaction} 
       />
 
       <Grid container spacing={4} justifyContent={'center'} >
