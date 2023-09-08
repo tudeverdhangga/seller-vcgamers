@@ -38,6 +38,7 @@ interface Variation {
   is_active: boolean
   images_url?: string[]
   next_update_price?: string
+  next_activate_kilat?: string
 }
 interface ProductDetail {
   id: string
@@ -367,15 +368,29 @@ export default function AddProductVariant({
       {
         row.delivery_type === 1
           ? (
-            <Box display="flex" alignItems="center">
-              <Image
-                src="/assets/badge-kilat.svg"
-                alt="Badge Kilat"
-                width={53}
-                height={11}
-              />
-              <Switch defaultChecked disabled={!row.is_active} />
-            </Box>
+            <>
+              <Box display="flex" alignItems="center">
+                <Image
+                  src="/assets/badge-kilat.svg"
+                  alt="Badge Kilat"
+                  width={53}
+                  height={11}
+                />
+                <Switch defaultChecked disabled={!row.is_active || row.next_activate_kilat !== ''} />
+              </Box>
+              {
+                Boolean(row.next_activate_kilat) && (
+                  <Typography
+                    color="success.dark"
+                    fontSize={12}
+                    fontWeight={600}
+                    mt={1}
+                  >
+                    {t("variant.error.updateKilatTime", { time: dateToTime(row.next_activate_kilat as string) })}
+                  </Typography>
+                )
+              }
+            </>
           ) : row.delivery_type === 2
             ? (
               <Box display="flex">
@@ -432,7 +447,7 @@ export default function AddProductVariant({
             fontWeight={600}
             mt={1}
           >
-            {t("variant.dialog.setting.error.updatePriceTime", { time: dateToTime(row.next_update_price as string) })}
+            {t("variant.error.updatePriceTime", { time: dateToTime(row.next_update_price as string) })}
           </Typography>
         )
       }

@@ -119,8 +119,7 @@
             "price": "Harga tidak boleh kosong."
           },
           "multiple100": "Harap isi nominal dengan kelipatan 100",
-          "noMinus": "{{field}} tidak boleh minus",
-          "updatePriceTime": "Kamu dapat merubah harga lagi di jam {{time}}"
+          "noMinus": "{{field}} tidak boleh minus"
         }
       },
       "image": {
@@ -136,6 +135,10 @@
       "cancel": "Batal",
       "save": "Simpan Varian",
       "delete": "Hapus Variant"
+    },
+    "error": {
+      "updatePriceTime": "Kamu dapat merubah harga lagi di jam {{time}}",
+      "updateKilatTime": "Fitur ini bisa diaktifkan kembali pada {{time}} WIB"
     }
   },
   "cancel": "Batal",

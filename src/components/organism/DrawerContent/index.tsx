@@ -81,11 +81,20 @@ export default function DrawerContent() {
             leading={<menu.leading />}
             subList={menu.subList}
             activeMenu={activeMenu}
+            hasKilat={getProfile?.data?.data?.seller_has_kilat ?? false}
           />
         ))}
         <List component="div" disablePadding sx={{ display: { sm: "none" } }}>
-          <DrawerListSubItem name="navbar" label={t("drawer.other.helpCenter")} />
-          <DrawerListSubItem name="navbar" label={t("drawer.other.language")} />
+          <DrawerListSubItem
+            name="navbar"
+            label={t("drawer.other.helpCenter")}
+            hasKilat={false}
+          />
+          <DrawerListSubItem
+            name="navbar"
+            label={t("drawer.other.language")}
+            hasKilat={false}
+          />
         </List>
       </List>
     </>

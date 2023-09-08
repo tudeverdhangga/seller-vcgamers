@@ -103,6 +103,7 @@ interface Variation {
   created_at: string
   updated_at: string
   next_update_price: string
+  next_activate_kilat: string
 }
 interface ResponseVoucher {
   code: number

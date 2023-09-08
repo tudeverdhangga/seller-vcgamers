@@ -29,6 +29,7 @@ export default function DrawerListSubItem({
   isActive = false,
   trailing,
   href,
+  hasKilat,
   onClick
 }: {
   name?: string;
@@ -36,6 +37,7 @@ export default function DrawerListSubItem({
   isActive?: boolean;
   trailing?: React.ReactNode;
   href?: string;
+  hasKilat: boolean;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 }) {
   const router = useRouter()
@@ -46,7 +48,7 @@ export default function DrawerListSubItem({
   const [isCheckBulk, setIsCheckBulk] = useState(false)
 
   useEffect(() => {
-    if (name === "kilat") {
+    if (name === "kilat" && hasKilat) {
       bulkKilatValue.mutate(undefined, {
         onSuccess: (res) => {
           setTotalProduct(res.data.total_item)
@@ -113,6 +115,7 @@ export default function DrawerListSubItem({
               ? (
                 <Switch
                   checked={isCheckBulk}
+                  disabled={!hasKilat}
                   onChange={(e) => handleChangeKilat(e)}
                 />
               )

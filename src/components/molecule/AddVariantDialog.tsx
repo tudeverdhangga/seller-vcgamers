@@ -140,7 +140,7 @@ export default function AddVariantDialog({
   }, [name])
   useEffect(() => {
     onChangeField("delivery_type", feature);
-    if (feature === 2) {
+    if (feature === 2 && typeof variant === "undefined") {
       setStock(0)
     }
   }, [feature])

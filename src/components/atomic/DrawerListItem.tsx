@@ -20,6 +20,7 @@ export default function DrawerListItem(props: {
     href: string;
   }[];
   activeMenu: string;
+  hasKilat: boolean;
 }) {
   const { t } = useTranslation("layout");
 
@@ -65,6 +66,7 @@ export default function DrawerListItem(props: {
             label={t(list.label as "drawer.myShop.dashboard")}
             href={list.href}
             isActive={list.href === props.activeMenu}
+            hasKilat={props.hasKilat}
           />
         ))}
       </List>

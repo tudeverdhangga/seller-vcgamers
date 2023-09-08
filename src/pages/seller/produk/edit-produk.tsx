@@ -25,6 +25,7 @@ interface Response {
   images_url: string[]
   variations: Variation[]
   next_update_price?: string
+  next_activate_kilat?: string
 }
 interface Variation {
   id?: string
@@ -40,6 +41,7 @@ interface Variation {
   favorite?: number;
   sold?: number;
   next_update_price?: string
+  next_activate_kilat?: string
 }
 interface ErrorResponse {
   response: {
@@ -64,7 +66,8 @@ export default function TambahProdukPage() {
     description: "",
     images_url: [],
     variations: [],
-    next_update_price: ""
+    next_update_price: "",
+    next_activate_kilat: ""
   })
   const [isVoucherInstant, setIsVoucherInstant] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,6 +97,7 @@ export default function TambahProdukPage() {
                 is_custom_image: item.is_custom_image,
                 images_url: item.images_url.map((image) => image.object_key),
                 next_update_price: item.next_update_price,
+                next_activate_kilat: item.next_activate_kilat,
               }
             })
           })
