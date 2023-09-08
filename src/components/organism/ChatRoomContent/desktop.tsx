@@ -27,7 +27,7 @@ export default function ChatRoomContent() {
 
   return (
     <Box style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-      <ChatMessageToolbar />
+      <ChatMessageToolbar chatId={chatId} />
       <Divider />
       <ChatMessageInfoBanner />
       <ChatRoomChatList chatId={chatId} />

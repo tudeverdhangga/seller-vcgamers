@@ -26,6 +26,13 @@ export interface DataChatMessage {
   sender_id: string;
   is_read: boolean;
   attachment: string;
+  product?: {
+    name: string;
+    price: number;
+    slug: string;
+    image: string;
+  };
+  transaction?: { code: string; status: string; thumbnail: string };
 }
 
 export interface BodyChatReadMessage {

@@ -48,7 +48,7 @@ export interface DataModerationDetailParticipant {
 export interface DataModerationMessage {
   id: string;
   message: string;
-  type: "TEXT";
+  type: "TEXT" | "VIDEO" | "IMAGE" | "DOCUMENT";
   sent_at: string;
   sender_id: string;
   is_read: boolean;
@@ -90,8 +90,9 @@ export type ProductProps = {
   id: string;
   type: "PRODUCT";
   content: {
-    img: string;
-    title: string;
+    image: string;
+    name: string;
+    slug: string;
     price: string;
     rating: string;
     sold: string;

@@ -112,8 +112,8 @@ function ProductChatMessage(props: ProductProps & SideProps) {
         }}
       >
         <Image
-          src={props.content.img}
-          alt={props.content.title}
+          src={props.content.image}
+          alt={props.content.name}
           width={60}
           height={60}
         />
@@ -126,7 +126,7 @@ function ProductChatMessage(props: ProductProps & SideProps) {
               mb: "2px",
             }}
           >
-            {props.content.title}
+            {props.content.name}
           </Typography>
           <Typography
             sx={{

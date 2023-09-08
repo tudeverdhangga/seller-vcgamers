@@ -1,37 +1,35 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
-import MuiAppBar from "@mui/material/AppBar";
-import Badge, { type BadgeProps } from "@mui/material/Badge";
+import ChevronLeftIcon from "~/components/icons/ChevronLeftIcon";
+import { DRAWER_WIDTH } from "./drawer";
+import HelpCenterMenu from "~/components/molecule/HelpCenterMenu/desktop";
 import IconButton from "@mui/material/IconButton";
+import LanguageSelect from "~/components/molecule/LanguageSelect/desktop";
+import MenuDotsIcon from "../components/icons/MenuDotsIcon";
+import MenuIcon from "../components/icons/MenuIcon";
+import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-
-import { useAtom } from "jotai";
-
-import ChevronLeftIcon from "~/components/icons/ChevronLeftIcon";
-import BellIcon from "../components/icons/BellIcon";
-import MenuIcon from "../components/icons/MenuIcon";
-import MenuDotsIcon from "../components/icons/MenuDotsIcon";
-
 import { drawerOpenAtom } from "~/atom";
-
+import dynamic from "next/dynamic";
 import { mobileAppBarAtom } from "~/atom/layout";
-import HelpCenterMenu from "~/components/molecule/HelpCenterMenu/desktop";
-import LanguageSelect from "~/components/molecule/LanguageSelect/desktop";
-// import { requestNotificationPermission } from "~/utils/firebase";
+import { useFCMToken, useOnMessage } from "~/utils/firebase";
+import { useAtom } from "jotai";
 import { useResponsive } from "~/utils/mediaQuery";
-import { DRAWER_WIDTH } from "./drawer";
+import { useRouter } from "next/router";
+import { useSetOnlineIndicator } from "~/utils/socket";
+
+const NotificationIcon = dynamic(
+  () => import("~/components/molecule/AppBarNotificationIcon"),
+  {
+    ssr: false,
+  }
+);
 
 export function AppBar() {
-  const { isDesktop } = useResponsive();
-
-  // useEffect(() => {
-  //   void requestNotificationPermission();
-  // }, []);
+  const { isDesktop, isMobile } = useResponsive();
+  useFCMToken();
+  useOnMessage();
+  useSetOnlineIndicator();
 
   return (
     <MuiAppBar
@@ -43,21 +41,11 @@ export function AppBar() {
     >
       <Toolbar>
         {isDesktop && <DesktopAppBar />}
-        <MobileAppBar />
+        {isMobile && <MobileAppBar />}
       </Toolbar>
     </MuiAppBar>
   );
 }
-
-const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    right: -10,
-    top: 13,
-    padding: "0 4px",
-    backgroundColor: theme.palette.common.red[500],
-    color: theme.palette.common.white,
-  },
-}));
 
 function DesktopAppBar() {
   return (
@@ -65,18 +53,7 @@ function DesktopAppBar() {
       <HelpCenterMenu />
       <LanguageSelect />
       <Box component="div" sx={{ flexGrow: 1 }} />
-      <Link
-        href={"/seller/notifikasi"}
-        passHref
-        legacyBehavior
-        style={{ textDecoration: "none" }}
-      >
-        <IconButton>
-          <StyledBadge badgeContent={1}>
-            <BellIcon color="action" />
-          </StyledBadge>
-        </IconButton>
-      </Link>
+      <NotificationIcon />
     </>
   );
 }

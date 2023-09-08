@@ -27,23 +27,35 @@ export function mapModerationMessageToChatMessageListItemProps(
 ) {
   if (!data) return undefined;
 
-  // TODO: should be seller checking for handling admin too
-  if (data.sender_type !== "SELLER") {
-    return {
-      id: data.id,
-      type: data.type,
-      content: data.message,
-      time: dayjs(data.sent_at).format("HH:MM"),
-      side: data.sender_type === "BUYER" ? "left" : "admin",
-    } satisfies ChatMessageProps;
-  } else {
-    return {
-      id: data.id,
-      type: data.type,
-      content: data.message,
-      time: dayjs(data.sent_at).format("HH:MM"),
-      side: "right",
-      status: "sent",
-    } satisfies ChatMessageProps;
+  const userId = localStorage.getItem("user_id");
+
+  const side =
+    userId === data.sender_id
+      ? "right"
+      : data.sender_type === "BUYER"
+      ? "left"
+      : "admin";
+
+  switch (data.type) {
+    case "TEXT":
+      return {
+        id: data.id,
+        type: data.type,
+        content: data.message,
+        time: dayjs(data.sent_at).format("HH:MM"),
+        side: side,
+        status: "sent",
+      } satisfies ChatMessageProps;
+    case "IMAGE":
+    case "VIDEO":
+    case "DOCUMENT":
+      return {
+        id: data.id,
+        type: data.type,
+        content: data.attachment ?? "",
+        time: dayjs(data.sent_at).format("HH:MM"),
+        side: side,
+        status: "sent",
+      } satisfies ChatMessageProps;
   }
 }

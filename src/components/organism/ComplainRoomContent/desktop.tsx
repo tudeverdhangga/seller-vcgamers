@@ -8,7 +8,6 @@ import { messageAttachmentShowAtom } from "~/atom/chat";
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
 import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubheader";
 import ComplainMessageInfoBanner from "~/components/molecule/ComplainMessageInfoBanner";
-import ChatMessageToolbar from "~/components/molecule/ChatMessageToolbar";
 import EmptyState from "~/components/molecule/EmptyState/complainRoom";
 import ComplainInfoSidebar, {
   DRAWER_WIDTH,
@@ -19,6 +18,7 @@ import {
 } from "~/services/moderation/hooks";
 import { useEffect, useRef } from "react";
 import ComplainRoomInput from "../ComplainRoomInput";
+import ComplainMessageToolbar from "~/components/molecule/ComplainMessageToolbar";
 
 export default function ComplainRoomContent() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function ComplainRoomContent() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-      <ChatMessageToolbar />
+      <ComplainMessageToolbar complainId={complainId} />
       <ComplainMessageInfoBanner complainId={complainId} />
       <Box sx={{ display: "flex", flexGrow: 1 }}>
         <Box

@@ -1,9 +1,12 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
+import { messageTextAtom } from "~/atom/chat";
 
 export default function ChatMessageSuggestion() {
   const { t } = useTranslation("chat");
+  const [, setMessageText] = useAtom(messageTextAtom);
 
   const suggestions = [
     "suggestion.welcome",
@@ -33,6 +36,7 @@ export default function ChatMessageSuggestion() {
             textTransform: "none",
             fontSize: 14,
           }}
+          onClick={() => setMessageText(t(suggestion))}
         >
           {t(suggestion)}
         </Button>

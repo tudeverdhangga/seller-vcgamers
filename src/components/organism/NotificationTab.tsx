@@ -41,7 +41,7 @@ export default function NotificationTab() {
                 />
               );
             }
-            return <></>;
+            return null;
           })}
         </VGTabsChip>
         <Button sx={{ textTransform: "none", fontWeight: 600 }}>

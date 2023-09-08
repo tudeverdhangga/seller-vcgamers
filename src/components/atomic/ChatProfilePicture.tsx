@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 
 export default function ChatProfilePicture({
@@ -16,7 +17,7 @@ export default function ChatProfilePicture({
           left: 0,
         }}
       />
-      <Image
+      <img
         src={src}
         width={29.47}
         height={29.47}

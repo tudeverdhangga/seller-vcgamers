@@ -46,7 +46,7 @@ export default function ChatRoomContent() {
         m: -3,
       }}
     >
-      <ChatMessageToolbar />
+      <ChatMessageToolbar chatId={chatId} />
       <Divider />
       <ChatMessageInfoBanner />
       <ChatRoomChatList chatId={chatId} />

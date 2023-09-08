@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -23,6 +23,8 @@ import AttachmentIcon from "../icons/chat/AttachmentIcon";
 import CloseIcon from "../icons/chat/CloseIcon";
 import SendIcon from "../icons/chat/SendIcon";
 import { uploadFile, type BodyUploadFile } from "~/services/upload";
+import { messageTextAtom } from "~/atom/chat";
+import { useAtom } from "jotai";
 
 export default function ChatMessageInput(props: {
   roomId: string;
@@ -31,6 +33,7 @@ export default function ChatMessageInput(props: {
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { t } = useTranslation("chat");
+  const [messageText] = useAtom(messageTextAtom);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const uploadForm = useForm<BodyUploadFile>({
@@ -53,6 +56,12 @@ export default function ChatMessageInput(props: {
       setModalOpen(true);
     },
   });
+
+  useEffect(() => {
+    if (messageText) {
+      inputForm.setValue("message", messageText);
+    }
+  }, [messageText, inputForm]);
 
   const onClickPickFile = () => {
     fileInputRef.current?.click();
@@ -114,7 +123,10 @@ export default function ChatMessageInput(props: {
         <Controller
           control={inputForm.control}
           name="message"
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({
+            field: { onChange, value, ref },
+            fieldState: { error },
+          }) => (
             <TextField
               variant="standard"
               helperText={error ? error.message : null}
@@ -125,6 +137,7 @@ export default function ChatMessageInput(props: {
               autoComplete="off"
               onChange={onChange}
               value={value}
+              inputRef={ref}
             />
           )}
         />

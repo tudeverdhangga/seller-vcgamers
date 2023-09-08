@@ -1,0 +1,200 @@
+import { useMutation } from "@tanstack/react-query";
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { collection, getFirestore, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { HTTPApi, queryClient } from "~/services/http";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_5C4O8Y8mce2YI7RjDVUcsWKi3zm8JRQ",
+  authDomain: "vc-gamers.firebaseapp.com",
+  projectId: "vc-gamers",
+  storageBucket: "vc-gamers.appspot.com",
+  messagingSenderId: "327843531831",
+  appId: "1:327843531831:web:ecbabf499b1934de8c43b2",
+  measurementId: "G-XBZLDKLH97",
+};
+
+const app = initializeApp(firebaseConfig);
+const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
+const db = typeof window !== "undefined" ? getFirestore(app) : null;
+
+const VAPID_KEY =
+  "BPMeVbGVjZuUXOZPGxikleNhiz7IPmNuGaT85uQAr8VYDM2GZQ2Z0RzpqKr9ijR7HGoPoJp5zQG7aPf9e4HrijI";
+
+export function useFCMToken() {
+  const { mutate } = useMutation({
+    mutationFn: async (body: { fcm_id: string }) => {
+      const res = await HTTPApi.post("user/fcm", body);
+
+      return res.data as unknown;
+    },
+  });
+
+  useEffect(() => {
+    requestNotificationPermission((fcm_id: string) => mutate({ fcm_id })).catch(
+      (e) => console.error(e)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
+
+export function useChatOnlineIndicator(userId?: string) {
+  dayjs.extend(duration);
+  dayjs.extend(relativeTime);
+  const [online, setOnline] = useState({ status: "offline", time: "" });
+
+  useEffect(() => {
+    if (db && userId) {
+      try {
+        const unsubscribe = onSnapshot(
+          collection(db, "online-status", userId),
+          (snapshot) => {
+            const onlineStatus = snapshot.docs.map((docSnapshot) =>
+              docSnapshot.data()
+            );
+            console.log(onlineStatus);
+            // const time = onlineStatus.last_online
+            //   ? dayjs
+            //       .duration(dayjs().diff(dayjs(onlineStatus.last_online)))
+            //       .humanize()
+            //   : undefined;
+            // setOnline({
+            //   status: onlineStatus.online ? "online" : "offline",
+            //   time: time ? "Active " + time : "",
+            // });
+          }
+        );
+
+        return unsubscribe;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [userId]);
+
+  return { online };
+}
+
+export function useOnMessage() {
+  useEffect(() => {
+    if (messaging) {
+      console.log("Foreground push notification started");
+      const unsubscribe = onMessage(messaging, (payload) => {
+        console.log("Foreground push notification received:", payload);
+        // Handle the received push notification while the app is in the foreground
+        // You can display a notification or update the UI based on the payload
+        if (payload.data) {
+          switch (payload.data?.module) {
+            case "MODERATION":
+              void queryClient.invalidateQueries({
+                queryKey: ["moderation-list", "1"],
+              });
+              void queryClient.invalidateQueries({
+                queryKey: ["moderation-messages", payload.data?.room_id],
+              });
+              break;
+            case "CHAT":
+              void queryClient.invalidateQueries({
+                queryKey: ["chat-room"],
+              });
+              void queryClient.invalidateQueries({
+                queryKey: ["chat-messages", payload.data?.room_id],
+              });
+              break;
+            case "TRANSACTION":
+              void queryClient.invalidateQueries({
+                queryKey: ["notification-count"],
+              });
+              void queryClient.invalidateQueries({
+                queryKey: ["notification-list", "store"],
+              });
+              break;
+            case "EVENT":
+              void queryClient.invalidateQueries({
+                queryKey: ["notification-count"],
+              });
+              void queryClient.invalidateQueries({
+                queryKey: ["notification-list", "update"],
+              });
+              break;
+          }
+        }
+      });
+
+      return () => {
+        unsubscribe(); // Unsubscribe from the onMessage event
+      };
+    }
+  }, []);
+}
+
+export const requestNotificationPermission = async (
+  callback: (data: string) => void
+) => {
+  if (typeof window !== "undefined" && "Notification" in window) {
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      console.log("Notification permission granted.");
+
+      if (messaging) {
+        const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+
+        if (token) {
+          localStorage.setItem("fcm_token", token);
+          callback(token);
+        }
+      }
+    }
+  }
+};
+
+// function mapFirebaseNotificationToModerationChatProps(data: {
+//   [key: string]: string;
+// }) {
+//   queryClient.setQueryData(
+//     ["moderation-list", "1"],
+//     (old: {
+//       pageParams: unknown[];
+//       pages: any;
+//     }): { pageParams: unknown[]; pages: any } => ({
+//       pageParams: old?.pageParams as unknown[],
+//       pages: old?.pages.map((page) => ({
+//         ...page,
+//         data: page.data.map((room) =>
+//           room.id === data.room_id ? { ...room, is_read: false } : room
+//         ),
+//       })),
+//     })
+//   );
+// }
+
+// useEffect(() => {
+//   onMessageListener()
+//     .then((payload: any) => {
+//       if (chatId?.at(0) !== payload.room_id) {
+//         queryClient.setQueryData(["moderation-list"], (old: any) =>
+//           old.map((r: any) =>
+//             r.id === payload.room_id ? { ...r, is_read: false } : r
+//           )
+//         );
+//       } else {
+//         queryClient.setQueryData(
+//           ["moderation-messages", chatId?.at(0)],
+//           (old: any) => {
+//             const record = Array.from(old)[old.size - 1] as [string, any];
+//             old.set(record[0], [
+//               ...record[1],
+//               mapModerationMessageToChatMessageListItemProps(payload),
+//             ]);
+//             return old;
+//           }
+//         );
+//       }
+//     })
+//     .catch((e) => console.error(e));
+// }, [chatId]);
