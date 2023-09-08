@@ -38,6 +38,7 @@ interface Variation {
   favorite?: number;
   sold?: number;
   next_update_price?: string
+  next_activate_kilat?: string
 }
 interface ErrorResponse {
   response: {
