@@ -29,8 +29,8 @@ export default function KelolaVoucherPage() {
   const [id, setId] = useState("");
   const router = useRouter()
   const [withdrawData] = useAtom(withdrawReason);
-  const [vouchers] = useAtom(voucherCode);
-  const [, setCheckVoucher] = useAtom(checkVoucher);
+  const [vouchers, setVouchers] = useAtom(voucherCode);
+  const [checkVoucherData, setCheckVoucher] = useAtom(checkVoucher);
   const [, setSuccessCreateVoucher] = useAtom(isSuccessCreateVoucher);
   const getVoucher = useGetVoucher()
   const updateVoucher = useUpdateVoucher(queryString.stringify({ voucher_id: withdrawData.voucher_id }))
@@ -81,13 +81,18 @@ export default function KelolaVoucherPage() {
       pin: localStorage.getItem("pin")
     }, {
       onSuccess: (res) => {
-        setCheckVoucher({
-          isDisable: true,
-          isValidate: true,
-          isDuplicate: res.data.is_duplicate,
-          vouchers: res.data.vouchers,
-          total: res.data.total
-        })
+        if (res.data.total !== 0) {
+          setCheckVoucher({
+            isDisable: true,
+            isValidate: true,
+            isDuplicate: res.data.is_duplicate,
+            vouchers: res.data.vouchers,
+            total: res.data.total
+          })
+          setVouchers(res.data.vouchers)
+        } else {
+          setSuccessCreateVoucher(false)
+        }
       },
       onError: (error) => {
         const err = error as ErrorResponse
@@ -104,12 +109,13 @@ export default function KelolaVoucherPage() {
     }, {
       onSuccess: () => {
         setCheckVoucher({
+          ...checkVoucherData,
           isDisable: false,
           isValidate: false,
           isDuplicate: false,
-          vouchers: "",
-          total: 0
+          vouchers: ""
         })
+        setVouchers("")
         setSuccessCreateVoucher(true)
         getVoucher.mutate(queryString.stringify(params))
       },

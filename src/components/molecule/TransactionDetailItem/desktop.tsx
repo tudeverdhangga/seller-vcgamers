@@ -423,7 +423,7 @@ export default function TransactionDetailItemDesktop(props: {
               </Typography>
               <Box
                 display="flex"
-                alignItems="start"
+                alignItems="center"
               >
                 <NotesIcon />
                 <Box width="100%" ml={1}>
@@ -591,7 +591,7 @@ export default function TransactionDetailItemDesktop(props: {
               {priceFormat(props.price)}
             </Typography>
             <Typography sx={qtyStyle}>
-              Qty: {props.qty}
+              {t("label.qty")}: {props.qty}
             </Typography>
             <Typography sx={subTotalLabelStyle}>
               {"Subtotal: "}

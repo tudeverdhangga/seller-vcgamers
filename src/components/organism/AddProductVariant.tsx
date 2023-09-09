@@ -548,7 +548,14 @@ export default function AddProductVariant({
                     key={row.name}
                     sx={{ borderBottom: "1.5px solid #DEDEDE" }}
                   >
-                    <TableCell sx={{ borderRight: "1px solid #DEDEDE" }} align="center">
+                    <TableCell
+                      sx={{
+                        borderRight: "1px solid #DEDEDE",
+                        maxWidth: "53px",
+                        width: "53px"
+                      }}
+                      align="center"
+                    >
                       {index + 1}
                     </TableCell>
                     {imageContainer(row, index)}

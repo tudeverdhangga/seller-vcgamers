@@ -475,10 +475,10 @@ export default function TransactionDetailItemMobile(props: {
               {priceFormat(props.price)}
             </Typography>
             <Typography sx={qtyStyle}>
-              Qty: {props.qty}
+              {t("label.qty")}: {props.qty}
             </Typography>
             <Typography sx={subTotalLabelStyle}>
-              {"Jml Beli: "}
+              {t("label.qty")}
               <Typography
                 component="span"
                 sx={subTotalValueStyle}

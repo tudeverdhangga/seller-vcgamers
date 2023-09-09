@@ -62,7 +62,7 @@ export default function TransactionProcessVoucherDialog(props: {
         placeholder={t("detail.list.voucher.placeholder", { counter: index + 1 })}
         fullWidth
         size="small"
-        sx={{ my: 2 }}
+        sx={{ my: "10px" }}
         onChange={(event) => handleVoucherChange(index, event.target.value)}
       />
     );
@@ -89,6 +89,7 @@ export default function TransactionProcessVoucherDialog(props: {
         </Typography>
         <Box
           maxHeight={360}
+          width="100%"
           overflow="auto"
         >
           {textFields}
@@ -98,6 +99,7 @@ export default function TransactionProcessVoucherDialog(props: {
           color="success"
           size="large"
           fullWidth
+          sx={{ mt: 1 }}
           onClick={onProcess}
         >
           {t("detail.list.voucher.submit")}

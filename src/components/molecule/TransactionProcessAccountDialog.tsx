@@ -63,7 +63,7 @@ export default function TransactionProcessAccountDialog(props: {
         fullWidth
         multiline
         size="small"
-        sx={{ my: 2 }}
+        sx={{ my: "10px" }}
         onChange={(event) => handleAccountChange(index, event.target.value)}
       />
     );
@@ -109,6 +109,7 @@ export default function TransactionProcessAccountDialog(props: {
           color="success"
           size="large"
           fullWidth
+          sx={{ mt: 1 }}
           onClick={onProcess}
         >
           {t("detail.list.account.submit")}
