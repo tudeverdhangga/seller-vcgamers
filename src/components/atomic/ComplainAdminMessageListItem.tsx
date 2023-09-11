@@ -30,7 +30,7 @@ export default function AdminTextMessage({
           maxWidth: { xs: "100%", sm: "50%" },
           p: "10px",
           gap: "5px",
-          alignItems: "flex-end",
+          alignItems: "flex-start",
         }}
       >
         <Typography sx={{ color: fontColor, fontSize: 14, fontWeight: 500 }}>

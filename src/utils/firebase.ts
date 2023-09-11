@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { collection, getFirestore, onSnapshot } from "firebase/firestore";
+import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { HTTPApi, queryClient } from "~/services/http";
 import dayjs from "dayjs";
@@ -51,21 +51,20 @@ export function useChatOnlineIndicator(userId?: string) {
     if (db && userId) {
       try {
         const unsubscribe = onSnapshot(
-          collection(db, "online-status", userId),
+          doc(db, "online-status", userId),
           (snapshot) => {
-            const onlineStatus = snapshot.docs.map((docSnapshot) =>
-              docSnapshot.data()
-            );
-            console.log(onlineStatus);
-            // const time = onlineStatus.last_online
-            //   ? dayjs
-            //       .duration(dayjs().diff(dayjs(onlineStatus.last_online)))
-            //       .humanize()
-            //   : undefined;
-            // setOnline({
-            //   status: onlineStatus.online ? "online" : "offline",
-            //   time: time ? "Active " + time : "",
-            // });
+            const onlineStatus = snapshot.data() as
+              | { last_online: string; online: true }
+              | undefined;
+            const time = onlineStatus?.last_online
+              ? dayjs
+                  .duration(dayjs(onlineStatus.last_online).diff(dayjs()))
+                  .humanize(true)
+              : undefined;
+            setOnline({
+              status: onlineStatus?.online ? "online" : "offline",
+              time: time ? "Active " + time : "",
+            });
           }
         );
 

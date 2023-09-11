@@ -26,6 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_MARKET_URL: z.string().min(1),
     NEXT_PUBLIC_VCG_STORE_URL: z.string().min(1),
     NEXT_PUBLIC_API_MOCKING: z.string().optional(),
+    NEXT_PUBLIC_WS_URL: z.string().min(1),
   },
 
   /**
@@ -45,6 +46,7 @@ export const env = createEnv({
     NEXT_PUBLIC_MARKET_URL: process.env.NEXT_PUBLIC_MARKET_URL,
     NEXT_PUBLIC_VCG_STORE_URL: process.env.NEXT_PUBLIC_VCG_STORE_URL,
     NEXT_PUBLIC_API_MOCKING: process.env.NEXT_PUBLIC_API_MOCKING,
+    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
