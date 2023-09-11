@@ -191,7 +191,8 @@
     },
     "inactive": {
       "title": "Fitur {{featurename}} di toko kamu saat ini dinonaktifkan oleh admin. Mohon hubungi admin VCGamers untuk detail penonaktifan fitur dan pengajuan pengaktifan kembali.",
-      "subtitle": "Alasan: Berdasarkan data yang dikumpulkan tim admin VCGamers. Toko kamu melebihi limitasi penyelesaian transaksi lebih dari 10 menit sebanyak 3x. Kami mohon maaf atas ketidaknyamanan Seller. Untuk pengajuan pengaktifan kembali silahkan hubungi admin."
+      "subtitle": "Alasan: Berdasarkan data yang dikumpulkan tim admin VCGamers. Toko kamu melebihi limitasi penyelesaian transaksi lebih dari 10 menit sebanyak 3x. Kami mohon maaf atas ketidaknyamanan Seller. Untuk pengajuan pengaktifan kembali silahkan hubungi admin.",
+      "subhead": "Alasan: "
     },
     "already": {
       "msg": "Toko kamu saat ini sudah dapat menggunakan fitur {{featurename}}. Penggunaan fitur ini bisa diaktifkan pada pengaturan variasi produk di halaman tambah/ubah produk."

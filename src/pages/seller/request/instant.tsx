@@ -1,6 +1,6 @@
-
+import React from "react";
 import { useTranslation } from "next-i18next";
-import { getStaticPropsWithTransNamespace } from "~/utils/translation";
+import { toast } from "react-toastify";
 import { Button, Checkbox, Grid, Snackbar, Typography, Alert } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -12,7 +12,8 @@ import CardImageRequestFeatures from "~/components/organism/CardImageRequestFeat
 import RequestFeatureCondition from "~/components/organism/RequestFeatureCondition";
 import CustomizedMidContent from "~/components/organism/MidContentRequestFeatures";
 import CustomizedPermissionAlert from "~/components/organism/PermissionAlertRequestFeature";
-import React from "react";
+import { toastOption } from "~/utils/toast";
+import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import ContentCard from "~/components/molecule/ContentCard";
 import { DataInstant, ErrorResponse, SeverityType, useGetStatusInstant, useRequestInstant } from "~/services/api/request-fitur";
 import { SellerStatusApproved, SellerStatusPending, SellerStatusRejected } from "~/utils/dummy/seller-status";
@@ -65,9 +66,10 @@ export default function InstantPage() {
 
   const UseClickRequest = () => {
     postRequestInstant.mutate(undefined, {
-      onSuccess: () => {
-        void getStatusInstant.refetch()
+      onSuccess: (res) => {
+        void getStatusInstant.refetch();
         setStatusInstantData(getStatusInstant?.data?.data);
+        toast.success(res?.message, toastOption);
       },
       onError: (error) => {
         const err = error as ErrorResponse
@@ -189,7 +191,7 @@ export default function InstantPage() {
       <Grid container spacing={4} justifyContent={'center'} >
         <Grid item xs={12}>
           {/* Permission Request */}
-          <ContentCard sx={{boxShadow: "none", p: 1, px: 2, display: (statusInstantData && (statusInstantData.request_status === SellerStatusApproved || statusInstantData.seller_has_instant)) ? 'none' : 'flex'}}>
+          <ContentCard sx={{boxShadow: "none", p: 1, px: 2, display: (statusInstantData && (statusInstantData.request_status === SellerStatusApproved || statusInstantData.request_status === SellerStatusRejected || statusInstantData.seller_has_instant === true)) ? 'none' : 'flex'}}>
             <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'}>
               <Grid item xs={12} sm={9}>
                 <Checkbox
@@ -225,7 +227,7 @@ export default function InstantPage() {
             <CustomizedPermissionAlert
               alertSeverity="error" 
               alertIcon={<CancelIcon fontSize="inherit" />} 
-              alertMessage={t("alert.inactive.subtitle")} alertTitle={t("alert.inactive.title", { featurename: "Proses Instantt" })} 
+              alertMessage={t("alert.inactive.subhead") + statusInstantData.reject_reason} alertTitle={t("alert.inactive.title", { featurename: "Proses Instant" })} 
             />
           }
           
@@ -235,7 +237,7 @@ export default function InstantPage() {
             <CustomizedPermissionAlert
               alertSeverity="success" 
               alertIcon={<CheckCircleIcon fontSize="inherit" />} 
-              alertMessage={t("alert.already.msg", { featurename: "Proses Instantt" })} 
+              alertMessage={t("alert.already.msg", { featurename: "Proses Instant" })} 
             />
           }
           
@@ -245,7 +247,7 @@ export default function InstantPage() {
             <CustomizedPermissionAlert
               alertSeverity="info" 
               alertIcon={<PageviewIcon fontSize="inherit" />} 
-              alertMessage={t("alert.requested.msg", { featurename: "Proses Instantt" })} 
+              alertMessage={t("alert.requested.msg", { featurename: "Proses Instant" })} 
             />
           }
         </Grid>

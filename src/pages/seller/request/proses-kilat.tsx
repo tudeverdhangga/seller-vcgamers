@@ -1,6 +1,6 @@
-
+import React from "react";
 import { useTranslation } from "next-i18next";
-import { getStaticPropsWithTransNamespace } from "~/utils/translation";
+import { toast } from "react-toastify";
 import { Button, Checkbox, Grid, Typography, Snackbar, Alert } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -12,7 +12,8 @@ import CardImageRequestFeatures from "~/components/organism/CardImageRequestFeat
 import RequestFeatureCondition from "~/components/organism/RequestFeatureCondition";
 import CustomizedMidContent from "~/components/organism/MidContentRequestFeatures";
 import CustomizedPermissionAlert from "~/components/organism/PermissionAlertRequestFeature";
-import React from "react";
+import { toastOption } from "~/utils/toast";
+import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import ContentCard from "~/components/molecule/ContentCard";
 import { DataKilat, ErrorResponse, SeverityType, useGetStatusKilat, useRequestKilat } from "~/services/api/request-fitur";
 import { SellerStatusApproved, SellerStatusPending, SellerStatusRejected } from "~/utils/dummy/seller-status";
@@ -70,13 +71,14 @@ export default function ProsesKilatPage() {
 
   const UseClickRequest = () => {
     postRequestKilat.mutate(undefined, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         void getStatusKilat.refetch()
         setStatusKilatData(getStatusKilat?.data?.data);
+        toast.success(res?.message, toastOption);
       },
       onError: (error) => {
         const err = error as ErrorResponse
-        setAlertMessage(err?.response?.data?.message)
+        setAlertMessage(err?.response?.data?.message);
         setSeverityAlert("error");
         setOpenSnackbar(true);
       }
@@ -185,7 +187,7 @@ export default function ProsesKilatPage() {
       <Grid container spacing={4} justifyContent={'center'} >
         <Grid item xs={12}>
           {/* Permission Request */}
-          <ContentCard sx={{boxShadow: "none", p: 1, px: 2, display: (statusKilatData && (statusKilatData.request_status === SellerStatusApproved || statusKilatData.seller_has_kilat)) ? 'none' : 'flex'}}>
+          <ContentCard sx={{boxShadow: "none", p: 1, px: 2, display: (statusKilatData && (statusKilatData.request_status === SellerStatusApproved ||  statusKilatData.request_status === SellerStatusRejected || statusKilatData.seller_has_kilat)) ? 'none' : 'flex'}}>
             <Grid container spacing={1} justifyContent={'space-between'} alignItems={'center'}>
               <Grid item xs={12} sm={9}>
                 <Checkbox
@@ -221,7 +223,7 @@ export default function ProsesKilatPage() {
             <CustomizedPermissionAlert
               alertSeverity="error" 
               alertIcon={<CancelIcon fontSize="inherit" />} 
-              alertMessage={t("alert.inactive.subtitle")} alertTitle={t("alert.inactive.title", { featurename: "Proses Kilat" })} 
+              alertMessage={t("alert.inactive.subhead") + statusKilatData.reject_reason} alertTitle={t("alert.inactive.title", { featurename: "Proses Kilat" })} 
             />
           }
           
