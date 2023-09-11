@@ -13,6 +13,7 @@ import VGButton from "~/components/atomic/VGButton";
 import { useResponsive } from "~/utils/mediaQuery";
 import { useGetProduct } from "~/services/api/product";
 import Skeleton from "@mui/material/Skeleton";
+import NoAccessMobileModal from "~/components/atomic/NoAccessMobileModal";
 
 interface ListProductParams {
   brand_id?: string,
@@ -35,6 +36,8 @@ export default function KelolaProdukPage() {
     product_status: "",
     search: ""
   })
+  const [accessOnPc, setAccessOnPc] = useState(false)
+  const [accessOnPcTitle, setAccessOnPcTitle] = useState("")
   const products = useGetProduct(queryString.stringify(params))
 
   const handleFilter = (key: string, param: string | number) => {
@@ -45,6 +48,22 @@ export default function KelolaProdukPage() {
   }
   const refetchProduct = () => {
     void products.refetch()
+  }
+  const moveToAdd = () => {
+    if (!isMobile) {
+      void router.push('/seller/produk/tambah-produk')
+    } else {
+      setAccessOnPcTitle(t("noAccessMobile.add"))
+      setAccessOnPc(true)
+    }
+  }
+  const moveToBulkUpdate = () => {
+    if (!isMobile) {
+      void router.push('/seller/produk/edit-produk-massal')
+    } else {
+      setAccessOnPcTitle(t("noAccessMobile.bulk"))
+      setAccessOnPc(true)
+    }
   }
 
   return (
@@ -65,7 +84,7 @@ export default function KelolaProdukPage() {
             color="secondary"
             size="large"
             sx={{ mr: 2, width: isMobile ? "100%" : "auto" }}
-            onClick={() => void router.push('/seller/produk/edit-produk-massal')}
+            onClick={moveToBulkUpdate}
           >
             {t("bulkUpdate")}
           </VGButton>
@@ -74,7 +93,7 @@ export default function KelolaProdukPage() {
             color="success"
             size="large"
             sx={{ width: isMobile ? "100%" : "auto" }}
-            onClick={() => void router.push('/seller/produk/tambah-produk')}
+            onClick={moveToAdd}
           >
             <AddOutlinedIcon /> {t("addProduct")}
           </VGButton>
@@ -101,6 +120,11 @@ export default function KelolaProdukPage() {
             />
           )
       }
+      <NoAccessMobileModal
+        title={accessOnPcTitle}
+        isOpen={accessOnPc}
+        handleClose={() => setAccessOnPc(false)}
+      />
     </>
   );
 }

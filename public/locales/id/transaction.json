@@ -38,6 +38,7 @@
         "complain": "Komplain"
       },
       "cancelTime": "Batal Otomatis",
+      "finishTime": "Selesai Otomatis",
       "processTime": "Waktu Proses",
       "minutes": "Menit",
       "seconds": "Detik",

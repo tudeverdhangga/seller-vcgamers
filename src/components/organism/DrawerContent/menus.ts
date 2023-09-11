@@ -38,7 +38,7 @@ export const menus = [
         href: "/seller/produk/kelola-produk"
       },
       {
-        name: "add",
+        name: "addProduct",
         label: "drawer.myProduct.add",
         href: "/seller/produk/tambah-produk"
       },

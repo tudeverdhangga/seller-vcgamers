@@ -28,6 +28,7 @@ import ConfirmationDeleteDialog from "~/components/molecule/ConfirmationDeleteDi
 import { priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
 import PinVoucherDialog from "~/components/molecule/PinVoucherDialog";
+import NoAccessMobileModal from "~/components/atomic/NoAccessMobileModal";
 
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
@@ -56,6 +57,8 @@ export default function ListProductItem(props: {
   const [isOpenActiveProductDialog, setIsOpenActiveProductDialog] = useState(false)
   const [isOpenDeleteProductDialog, setIsOpenDeleteProductDialog] = useState(false)
   const [isOpenPinVoucherDialog, setIsOpenPinVoucherDialog] = useState(false)
+  const [accessOnPc, setAccessOnPc] = useState(false)
+  const [accessOnPcTitle, setAccessOnPcTitle] = useState("")
 
   const handleClickOptions = (e: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(e.currentTarget);
@@ -73,8 +76,13 @@ export default function ListProductItem(props: {
     handleCloseOptions()
   }
   const moveToEdit = () => {
-    void router.push(`/seller/produk/edit-produk?product_id=${props.productId}`);
-    handleCloseOptions()
+    if (!isMobile) {
+      void router.push(`/seller/produk/edit-produk?product_id=${props.productId}`);
+      handleCloseOptions()
+    } else {
+      setAccessOnPcTitle(t("noAccessMobile.edit"))
+      setAccessOnPc(true)
+    }
   }
 
   const middleStyle = {
@@ -426,6 +434,11 @@ export default function ListProductItem(props: {
         productId={props.productId}
         isOpen={isOpenPinVoucherDialog}
         handleClose={() => setIsOpenPinVoucherDialog(false)}
+      />
+      <NoAccessMobileModal
+        title={accessOnPcTitle}
+        isOpen={accessOnPc}
+        handleClose={() => setAccessOnPc(false)}
       />
     </>
   )

@@ -15,6 +15,13 @@
       "runningLow": "Akan Habis"
     }
   },
+  "noAccessMobile": {
+    "title": "Silahkan akses melalui PC/Komputer desktop untuk pengalaman yang lebih baik mengakses fitur ini",
+    "confirm": "Mengerti",
+    "edit": "Edit Info Produk",
+    "bulk": "Edit Massal Produk",
+    "add": "Atur Voucher"
+  },
   "table": {
     "th": {
       "sku": "SKU PRODUK",

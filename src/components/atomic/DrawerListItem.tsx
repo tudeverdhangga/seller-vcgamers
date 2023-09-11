@@ -6,6 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import type { SxProps, Theme } from "@mui/material/styles";
 
 import DrawerListSubItem from "~/components/molecule/DrawerListSubItem";
+import { useResponsive } from "~/utils/mediaQuery";
 
 export default function DrawerListItem(props: {
   leading?: React.ReactNode;
@@ -23,6 +24,7 @@ export default function DrawerListItem(props: {
   hasKilat: boolean;
 }) {
   const { t } = useTranslation("layout");
+  const { isMobile } = useResponsive();
 
   return (
     <ListItem
@@ -59,16 +61,21 @@ export default function DrawerListItem(props: {
       </List>
 
       <List component="div" disablePadding>
-        {props.subList.map(list => (
-          <DrawerListSubItem
-            key={`menu-${list.name}`}
-            name={list.name}
-            label={t(list.label as "drawer.myShop.dashboard")}
-            href={list.href}
-            isActive={list.href === props.activeMenu}
-            hasKilat={props.hasKilat}
-          />
-        ))}
+        {props.subList.map(list => {
+          if (isMobile && (list.name === "addProduct" || list.name === "bulkEdit")) {
+            return null;
+          }
+          return (
+            <DrawerListSubItem
+              key={`menu-${list.name}`}
+              name={list.name}
+              label={t(list.label as "drawer.myShop.dashboard")}
+              href={list.href}
+              isActive={list.href === props.activeMenu}
+              hasKilat={props.hasKilat}
+            />
+          );
+        })}
       </List>
     </ListItem>
   );

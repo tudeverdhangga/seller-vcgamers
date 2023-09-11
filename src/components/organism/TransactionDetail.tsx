@@ -79,6 +79,7 @@ export default function TransactionDetail({
                         brandName={item.brand_name}
                         deliveryData={item.delivery_data}
                         cancelTime={diffDateInTime(item.transaction_expired_time)}
+                        finishTime={diffDateInTime(item.auto_finish_time)}
                         kilatTime={item.kilat_expired_time}
                         price={item.price}
                         qty={item.qty}
@@ -107,6 +108,7 @@ export default function TransactionDetail({
                         brandName={item.brand_name}
                         deliveryData={item.delivery_data}
                         cancelTime={diffDateInTime(item.transaction_expired_time)}
+                        finishTime={diffDateInTime(item.auto_finish_time)}
                         kilatTime={item.kilat_expired_time}
                         price={item.price}
                         qty={item.qty}

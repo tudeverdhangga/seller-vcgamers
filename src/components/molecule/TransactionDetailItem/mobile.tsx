@@ -34,6 +34,7 @@ export default function TransactionDetailItemMobile(props: {
   notes?: string;
   cancelNote?: string;
   cancelTime: string;
+  finishTime: string;
   kilatTime?: string;
   price: number;
   qty: number;
@@ -500,96 +501,84 @@ export default function TransactionDetailItemMobile(props: {
             height="100%"
           >
             {
-              props.status === 2 && (
-                props.isKilat
-                  ? (
-                    countDown !== undefined
-                      ? (
-                        <Box textAlign="center">
-                          <Typography sx={cancelTimeStyle}>
-                            {t("detail.list.processTime")}
-                          </Typography>
-                          <Box display="flex">
-                            <Box px={2} borderRight="1px solid #DEDEDE">
-                              <Typography
-                                color="error"
-                                fontSize={16}
-                                fontWeight={700}
-                              >
-                                {countDown?.minutes}
-                              </Typography>
-                              <Typography
-                                fontSize={12}
-                                fontWeight={600}
-                                color="common.shade.200"
-                              >
-                                {t("detail.list.minutes")}
-                              </Typography>
-                            </Box>
-                            <Box px={2}>
-                              <Typography
-                                color="error"
-                                fontSize={16}
-                                fontWeight={700}
-                              >
-                                {countDown?.seconds}
-                              </Typography>
-                              <Typography
-                                fontSize={12}
-                                fontWeight={600}
-                                color="common.shade.200"
-                              >
-                                {t("detail.list.seconds")}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Box>
-                      ) : (
-                        <Box textAlign="center" width={106} mb={1}>
-                          <Typography sx={cancelTimeStyle}>
-                            {t("detail.list.cancelTime")}
-                          </Typography>
-                          <VGChip
-                            label={(
-                              <Typography sx={timeStyle}>
-                                <TimeIcon
-                                  fontSize="small"
-                                  sx={{ mr: 1 }}
-                                />
-                                {props.cancelTime}
-                              </Typography>
-                            )}
-                            size="small"
-                          />
-                          <Typography
-                            fontSize={12}
-                            fontWeight={700}
-                            color="error"
-                            mt={0.5}
-                          >
-                            {t("detail.list.warning")}
-                          </Typography>
-                        </Box>
-                      )
-                  ) : (
-                    <Box>
-                      <Typography sx={cancelTimeStyle}>
-                        {t("detail.list.cancelTime")}
-                      </Typography>
-                      <VGChip
-                        label={(
-                          <Typography sx={timeStyle}>
-                            <TimeIcon
-                              fontSize="small"
-                              sx={{ mr: 1 }}
-                            />
-                            {props.cancelTime}
-                          </Typography>
-                        )}
-                        size="small"
-                      />
+              props.status === 2 ? (
+                props.isKilat && countDown !== undefined ? (
+                  <Box textAlign="center">
+                    <Typography sx={cancelTimeStyle}>
+                      {t("detail.list.processTime")}
+                    </Typography>
+                    <Box display="flex">
+                      <Box px={2} borderRight="1px solid #DEDEDE">
+                        <Typography
+                          color="error"
+                          fontSize={16}
+                          fontWeight={700}
+                        >
+                          {countDown?.minutes}
+                        </Typography>
+                        <Typography
+                          fontSize={12}
+                          fontWeight={600}
+                          color="common.shade.200"
+                        >
+                          {t("detail.list.minutes")}
+                        </Typography>
+                      </Box>
+                      <Box px={2}>
+                        <Typography
+                          color="error"
+                          fontSize={16}
+                          fontWeight={700}
+                        >
+                          {countDown?.seconds}
+                        </Typography>
+                        <Typography
+                          fontSize={12}
+                          fontWeight={600}
+                          color="common.shade.200"
+                        >
+                          {t("detail.list.seconds")}
+                        </Typography>
+                      </Box>
                     </Box>
-                  )
+                  </Box>
+                ) : (
+                  <Box>
+                    <Typography sx={cancelTimeStyle}>
+                      {t("detail.list.cancelTime")}
+                    </Typography>
+                    <VGChip
+                      label={(
+                        <Typography sx={timeStyle}>
+                          <TimeIcon
+                            fontSize="small"
+                            sx={{ mr: 1 }}
+                          />
+                          {props.cancelTime}
+                        </Typography>
+                      )}
+                      size="small"
+                    />
+                  </Box>
+                )
+              ) : props.status === 3 && (
+                <Box>
+                  <Typography sx={cancelTimeStyle}>
+                    {t("detail.list.finishTime")}
+                  </Typography>
+                  <VGChip
+                    label={(
+                      <Typography sx={timeStyle}>
+                        <TimeIcon
+                          fontSize="small"
+                          sx={{ mr: 1 }}
+                        />
+                        {props.finishTime}
+                      </Typography>
+                    )}
+                    size="small"
+                  />
+                </Box>
               )
             }
           </Box>
