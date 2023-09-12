@@ -12,11 +12,13 @@ import { useMediaUpload } from "~/services/api/media";
 import {
   useGetProfile,
   useUpdateProfile,
-  useCheckUrlAvailability
+  useCheckUrlAvailability,
+  useCheckNameAvailability
 } from "~/services/api/auth";
 import { toastOption } from "~/utils/toast";
 import { env } from "~/env.mjs";
 import VGInputImage from "~/components/atomic/VGInputImage";
+import { useDebounce } from "~/utils/debounce";
 
 interface ProfileForm {
   seller_name: string;
@@ -59,10 +61,12 @@ export default function ProfileSettingForm() {
   const getProfile = useGetProfile();
   const updateProfile = useUpdateProfile();
   const checkUrl = useCheckUrlAvailability();
+  const checkName = useCheckNameAvailability();
   const [profileImage, setProfileImage] = useState<SellerPhoto | undefined>();
   const [bannerImage, setBannerImage] = useState<SellerPhoto | undefined>();
   const [shopUrl, setShopUrl] = useState<string | undefined>("");
   const [urlMessage, setUrlMessage] = useState<string | undefined>("");
+  const [nameMessage, setNameMessage] = useState<string | undefined>("");
   const [phone, setPhone] = useState<string | undefined>("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isChangeImage, setIsChangeImage] = useState(false);
@@ -159,21 +163,39 @@ export default function ProfileSettingForm() {
     })
   };
   const onChangeUrl = (url: string) => {
-    setTimeout(() => {
+    handleCheckUrl(url)
+    setShopUrl(url)
+  };
+  const handleCheckUrl = useDebounce((url: string) => {
+    if (url) {
       checkUrl.mutate(url, {
         onSuccess: (res) => {
           const isAvailable = res?.data?.available
 
           if (!isAvailable) {
-            setUrlMessage("URL sudah terpakai")
+            setUrlMessage(t("tab.profile.form.error.duplicate.url"))
           } else {
             setUrlMessage(undefined)
           }
         }
       })
-    }, 1000)
-    setShopUrl(url)
-  };
+    }
+  }, 1000)
+  const onChangeName = useDebounce((name: string) => {
+    if (name) {
+      checkName.mutate(name, {
+        onSuccess: (res) => {
+          const isAvailable = res?.data?.available
+
+          if (!isAvailable) {
+            setNameMessage(t("tab.profile.form.error.duplicate.name"))
+          } else {
+            setNameMessage(undefined)
+          }
+        }
+      })
+    }
+  }, 1000)
 
   // Container
   const shopNameContainer = (
@@ -185,12 +207,14 @@ export default function ProfileSettingForm() {
         fullWidth
         {
         ...register("seller_name", {
-          required: t("tab.profile.form.error.required.name")
+          required: t("tab.profile.form.error.required.name"),
+          validate: () => !nameMessage
         })
         }
-        error={Boolean(errors.seller_name)}
-        helperText={errors.seller_name?.message}
+        error={Boolean(errors.seller_name) || Boolean(nameMessage)}
+        helperText={errors.seller_name?.message || nameMessage}
         defaultValue={getProfile?.data?.data?.seller_name}
+        onChange={(e) => onChangeName(e.target.value)}
       />
       <Typography
         component="span"

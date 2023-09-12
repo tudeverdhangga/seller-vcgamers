@@ -97,6 +97,15 @@ export const useCheckUrlAvailability = () => {
   });
 };
 
+export const useCheckNameAvailability = () => {
+  return useMutation({
+    mutationFn: async (name: string) => {
+      const res = await HTTP.post("/check-name-availability", { seller_name: name });
+      return res.data as ResponseCheckUrl;
+    },
+  });
+};
+
 export const useUpdateOperational = () => {
   return useMutation({
     mutationKey: ["update-operational-hour"],

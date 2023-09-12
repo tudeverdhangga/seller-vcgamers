@@ -35,6 +35,10 @@
             "name": "Nama Toko tidak boleh kosong.",
             "url": "URL Toko tidak boleh kosong.",
             "desc": "Deskripsi Toko tidak boleh kosong."
+          },
+          "duplicate": {
+            "name": "Nama Toko sudah terpakai",
+            "url": "URL sudah terpakai"
           }
         }
       },
