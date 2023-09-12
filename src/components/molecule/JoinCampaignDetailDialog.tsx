@@ -27,6 +27,8 @@ export default function JoinCampaignDetailDialog() {
     setDetailDialog((detail) => ({ ...detail, isOpen: false }));
   };
 
+  const isCampaignExpired = detailDialog.campaign?.is_expired;
+
   return (
     <Dialog
       open={detailDialog.isOpen}
@@ -91,7 +93,7 @@ export default function JoinCampaignDetailDialog() {
           variant="contained"
           size="large"
           fullWidth
-          disabled={detailDialog.campaign?.has_joined}
+          disabled={detailDialog.campaign?.has_joined || isCampaignExpired}
           onClick={() => {
             handleClose();
             setModalOpen(true);

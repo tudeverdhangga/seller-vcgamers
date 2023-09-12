@@ -36,6 +36,9 @@ export interface DataCampaignHistory {
   date_end: string;
   status: number;
   status_name: string;
+  approved_date: string;
+  can_request_cancel_date: string;
+  can_request_cancel: boolean;
 }
 
 export interface CampaignHistory extends DataCampaignHistory {

@@ -13,11 +13,14 @@ import { cancelDialogOpenAtom } from "~/atom/joinCampaign";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 import { useRequestCancelCampaign } from "~/services/joinCampaign/hooks";
+import dayjs from "dayjs";
 
 export default function JoinCampaignCancelDialog() {
   const { t } = useTranslation("joinCampaign");
   const [modal, setModal] = useAtom(cancelDialogOpenAtom);
   const mutation = useRequestCancelCampaign();
+
+  const enabled = modal.campaign?.can_request_cancel;
 
   return (
     <Dialog
@@ -77,16 +80,42 @@ export default function JoinCampaignCancelDialog() {
             {modal.campaign?.name}
           </Typography>
         </Box>
-        <Typography
-          sx={{
-            mt: "10px",
-            color: "common.shade.200",
-            fontSize: 14,
-            fontWeight: 500,
-          }}
-        >
-          {t("dialog.abort.subtitle")}
-        </Typography>
+        {enabled ? (
+          <Typography
+            sx={{
+              mt: "10px",
+              color: "common.shade.200",
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            {t("dialog.abort.subtitle")}
+          </Typography>
+        ) : (
+          <Box>
+            <Typography
+              sx={{
+                mt: "10px",
+                color: "common.red.500",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              {t("dialog.abort.error")}
+            </Typography>
+            <Typography
+              sx={{
+                color: "common.shade.200",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              {t("dialog.abort.errorHint", {
+                date: dayjs(modal.campaign?.can_request_cancel_date),
+              })}
+            </Typography>
+          </Box>
+        )}
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
         <VGButton
@@ -102,6 +131,7 @@ export default function JoinCampaignCancelDialog() {
           variant="outlined"
           size="large"
           fullWidth
+          disabled={!enabled}
           onClick={() =>
             modal.campaign?.id &&
             mutation.mutate(modal.campaign.id, {

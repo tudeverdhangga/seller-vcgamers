@@ -30,3 +30,5 @@ export const managePromoFormAtom = atom<
     }
   | { isOpen: boolean; type?: "reuse" | "edit" | "disabled"; promoId: string }
 >({ isOpen: false, type: "create" });
+
+export const codeConfirmAtom = atom(false);

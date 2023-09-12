@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
@@ -21,24 +20,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import {
-  useForm,
+  type useForm,
   Controller,
-  useFieldArray,
+  type useFieldArray,
   type FieldArrayWithId,
   type UseFormReturn,
 } from "react-hook-form";
 
 import {
+  codeConfirmAtom,
   disableDialogAtom,
   managePromoFormAtom,
   performanceDialogAtom,
 } from "~/atom/managePromo";
-import {
-  type BodyPromo,
-  promoSchema,
-  promoSchemaMerge,
-  emptyPromo,
-} from "~/services/managePromo/types";
+import { type BodyPromo } from "~/services/managePromo/types";
 import {
   useGetBrandsByCategory,
   useGetCategory,
@@ -49,91 +44,60 @@ import VGInputText from "../atomic/VGInputText";
 import VGInputDate from "../atomic/VGInputDate";
 import VGInputNumber from "../atomic/VGInputNumber";
 import {
-  useCheckPromoCode,
   useCreatePromo,
-  useGetPromoDetailMapped,
+  type useGetPromoDetailMapped,
   useUpdatePromo,
 } from "~/services/managePromo/hooks";
-import { queryClient } from "~/services/http";
 import { toast } from "react-toastify";
 import { toastOption } from "~/utils/toast";
-import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
-export default function ManagePromoForm() {
+function handleError(error: any) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+  const message = error.response.data.message as string;
+
+  if (message === "Validation Error") {
+    toast.error("Terdapat kesalahan dalam penginputan data.", toastOption);
+  } else {
+    toast.error(message, toastOption);
+  }
+}
+
+export default function ManagePromoForm({
+  form,
+  productForm,
+  promoDetailData,
+}: {
+  form: ReturnType<typeof useForm<BodyPromo>>;
+  productForm: ReturnType<typeof useFieldArray<BodyPromo, "items", "id">>;
+  promoDetailData?: ReturnType<typeof useGetPromoDetailMapped>["data"];
+}) {
   const { t } = useTranslation("managePromo");
   const [, setPerformanceOpen] = useAtom(performanceDialogAtom);
   const [, setDisableOpen] = useAtom(disableDialogAtom);
   const [managePromoForm, setManagePromoForm] = useAtom(managePromoFormAtom);
-  const [discountType, setDiscountType] = useState<"price" | "percentage">(
-    "price"
-  );
-  const [codeConfirm, setCodeConfirm] = useState(false);
+  const [codeConfirm, setCodeConfirm] = useAtom(codeConfirmAtom);
   const { data: categoriesData } = useGetCategory();
-  const { data: promoDetailData } = useGetPromoDetailMapped(
-    managePromoForm.promoId,
-    managePromoForm.isOpen
+  const [discountType, setDiscountType] = useState<"price" | "percentage">(
+    promoDetailData?.data.is_percent ? "percentage" : "price"
   );
 
-  const checkCodeMutation = useCheckPromoCode();
   const createPromoMutation = useCreatePromo();
   const updatePromoMutation = useUpdatePromo();
 
-  const form = useForm<BodyPromo>({
-    resolver: zodResolver(
-      promoSchema.merge(
-        promoSchemaMerge((body) => {
-          if (promoDetailData?.data.promo_code !== body.promo_code) {
-            return checkCodeMutation.mutateAsync(body, {
-              onSuccess: () => {
-                setCodeConfirm(true);
-              },
-            });
-          }
-        })
-      ),
-      undefined,
-      {
-        mode: "async",
-      }
-    ),
-    defaultValues: emptyPromo,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    values: promoDetailData?.data,
-  });
-  const productForm = useFieldArray<BodyPromo, "items", "id">({
-    control: form.control,
-    name: "items",
-    rules: { minLength: 1 },
-  });
-
   const isDisabled = managePromoForm.type === "disabled";
 
-  useEffect(() => {
-    if (!managePromoForm.isOpen) {
-      form.reset(emptyPromo);
-      productForm.remove();
-      queryClient.removeQueries({
-        queryKey: ["manage-promo-detail-mapped", managePromoForm.promoId],
-      });
-    } else {
-      if (productForm.fields.length === 0) {
-        productForm.append({ category_id: "", brand_id: [] });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [managePromoForm.isOpen, managePromoForm.promoId]);
+  const handleClose = () => {
+    setCodeConfirm(false);
+    setManagePromoForm({ isOpen: false });
+  };
 
   return (
     <Dialog
       open={managePromoForm.isOpen}
-      onClose={() => setManagePromoForm({ isOpen: false })}
+      onClose={handleClose}
       fullWidth
-      PaperProps={{
-        sx: {
-          maxHeight: "100vh",
-        },
-      }}
+      PaperProps={{ sx: { maxHeight: "100vh" } }}
       maxWidth="md"
     >
       <form
@@ -141,11 +105,10 @@ export default function ManagePromoForm() {
           if (["create", "reuse"].includes(managePromoForm.type ?? "")) {
             createPromoMutation.mutate(data, {
               onSuccess: () => {
-                setManagePromoForm({ isOpen: false });
+                handleClose();
               },
               onError(error) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-                toast.error((error as any).response.data.message, toastOption);
+                handleError(error);
               },
             });
           }
@@ -154,14 +117,10 @@ export default function ManagePromoForm() {
               { promo_id: managePromoForm.promoId, body: data },
               {
                 onSuccess: () => {
-                  setManagePromoForm({ isOpen: false });
+                  handleClose();
                 },
                 onError(error) {
-                  toast.error(
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-                    (error as any).response.data.message,
-                    toastOption
-                  );
+                  handleError(error);
                 },
               }
             );
@@ -180,7 +139,7 @@ export default function ManagePromoForm() {
             {t(isDisabled ? "form.detailPromo.title" : "form.addPromo.title")}
           </p>
           <IconButton
-            onClick={() => setManagePromoForm({ isOpen: false })}
+            onClick={handleClose}
             sx={{
               position: "absolute",
               right: 8,
@@ -219,6 +178,7 @@ export default function ManagePromoForm() {
                 }}
                 DatePickerProps={{
                   label: t("form.addPromo.fields.period.start.label"),
+                  minDate: dayjs().add(3, "day"),
                 }}
                 TextFieldProps={{
                   fullWidth: true,
@@ -242,6 +202,8 @@ export default function ManagePromoForm() {
                 }}
                 DatePickerProps={{
                   label: t("form.addPromo.fields.period.end.label"),
+                  disablePast: true,
+                  minDate: dayjs().add(3, "day"),
                 }}
                 TextFieldProps={{
                   fullWidth: true,
@@ -267,7 +229,10 @@ export default function ManagePromoForm() {
                     label={t("form.addPromo.fields.code.label")}
                     placeholder={t("form.addPromo.fields.code.placeholder")}
                     FormHelperTextProps={{ sx: { m: 0 } }}
-                    onChange={onChange}
+                    onChange={(e) => {
+                      setCodeConfirm(false);
+                      return onChange(e);
+                    }}
                     value={value}
                     fullWidth
                     helperText={
@@ -290,12 +255,12 @@ export default function ManagePromoForm() {
                       },
                     }}
                     inputProps={{
-                      maxLength: 5,
+                      maxLength: 20,
                     }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          {value?.length ?? 0}/5
+                          {value?.length ?? 0}/20
                         </InputAdornment>
                       ),
                     }}
@@ -462,9 +427,9 @@ export default function ManagePromoForm() {
                       name: "percent_promo",
                     }}
                     TextFieldProps={{
-                      label: t("form.addPromo.fields.discountNominal.label"),
+                      label: t("form.addPromo.fields.discountPercentage.label"),
                       placeholder: t(
-                        "form.addPromo.fields.discountNominal.placeholder"
+                        "form.addPromo.fields.discountPercentage.placeholder"
                       ),
                       fullWidth: true,
                       disabled: isDisabled,
@@ -588,6 +553,12 @@ export default function ManagePromoForm() {
               >
                 {t("form.addPromo.fields.addCategory.title")}
               </VGButton>
+              <VGButton
+                disabled={isDisabled || productForm.fields.length === 1}
+                onClick={() => productForm.remove(-1)}
+              >
+                {t("form.addPromo.fields.deleteCategory.title")}
+              </VGButton>
             </Grid>
           </Grid>
         </DialogContent>
@@ -618,7 +589,7 @@ export default function ManagePromoForm() {
               <VGButton
                 variant="contained"
                 size="large"
-                onClick={() => setManagePromoForm({ isOpen: false })}
+                onClick={handleClose}
                 color="primary"
               >
                 {t("btn.close")}

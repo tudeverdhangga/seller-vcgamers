@@ -4,15 +4,29 @@ import type { APIResponse } from "../types";
 
 export const promoItemSchema = z.array(
   z.object({
-    category_id: z.string(),
-    brand_id: z.array(z.string()),
+    category_id: z
+      .string()
+      .refine((val) => val.length > 0, { message: "Wajib isi data kategori" }),
+    brand_id: z
+      .array(
+        z
+          .string()
+          .refine((val) => val.length > 0, { message: "Wajib isi data brand" })
+      )
+      .refine((val) => val.length > 0, { message: "Wajib isi data brand" }),
   })
 );
 
 export const promoSchema = z.object({
-  name: z.string(),
-  date_start: z.date().transform((val) => dayjs(val).format("YYYY-MM-DD")),
-  date_end: z.date().transform((val) => dayjs(val).format("YYYY-MM-DD")),
+  name: z
+    .string()
+    .refine((val) => val.length > 0, { message: "Wajib isi nama promo" }),
+  date_start: z
+    .date({ invalid_type_error: "Wajib isi durasi promo" })
+    .transform((val) => dayjs(val).format("YYYY-MM-DD")),
+  date_end: z
+    .date({ invalid_type_error: "Wajib isi durasi promo" })
+    .transform((val) => dayjs(val).format("YYYY-MM-DD")),
   promo_code: z.string(),
   stock: z.number(),
   limit_user: z.number(),
@@ -29,8 +43,8 @@ export const emptyPromo = {
   date_start: "",
   date_end: "",
   promo_code: "",
-  stock: 1,
-  limit_user: 10,
+  stock: 10,
+  limit_user: 1,
   is_percent: false,
   amount_promo: null,
   percent_promo: null,
@@ -53,20 +67,30 @@ export const promoSchemaMerge = (
     stock: preprocessNumber,
     limit_user: preprocessNumber,
     amount_promo: preprocessNumber,
-    percent_promo: preprocessNumber,
-    minimum_transaction_amount: preprocessNumber,
-    maximum_discount_amount: preprocessNumber,
-    promo_code: z.string().refine(async (promo_code: string) => {
-      try {
-        const res = await mutateAsync({ promo_code });
-
-        if (typeof res === "undefined") return true;
-
-        return res.data.is_available;
-      } catch (error) {
-        return false;
-      }
+    percent_promo: preprocessNumber.refine((val) => val !== 0, {
+      message: "Tidak dapat mengisi persentase dengan 0",
     }),
+    minimum_transaction_amount: preprocessNumber,
+    maximum_discount_amount: preprocessNumber.refine((val) => val !== 0, {
+      message: "Tidak dapat mengisi nominal dengan 0",
+    }),
+    promo_code: z.string().refine(
+      async (promo_code: string) => {
+        try {
+          const res = await mutateAsync({ promo_code });
+
+          if (typeof res === "undefined") return true;
+
+          return res.data.is_available;
+        } catch (error) {
+          return false;
+        }
+      },
+      (val) => ({
+        message:
+          val === "" ? "Wajib isi kode promo" : "Kode promo ini sudah terpakai",
+      })
+    ),
   });
 
 export type BodyPromo = z.infer<typeof promoSchema>;

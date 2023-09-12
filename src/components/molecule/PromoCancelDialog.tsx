@@ -18,6 +18,7 @@ import {
   useDeletePromo,
   useGetPromoDetail,
 } from "~/services/managePromo/hooks";
+import dayjs from "dayjs";
 
 export default function PromoCancelDialog() {
   const { t } = useTranslation("managePromo");
@@ -26,6 +27,8 @@ export default function PromoCancelDialog() {
   const { data } = useGetPromoDetail(modal.promoId, modal.isOpen);
 
   const handleClose = () => setModal({ isOpen: false });
+  const disabled =
+    dayjs() < dayjs(data?.data.request_date).add(3 * 24, "hours");
 
   return (
     <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
@@ -80,16 +83,43 @@ export default function PromoCancelDialog() {
             {data?.data.promo_code}
           </Typography>
         </Box>
-        <Typography
-          sx={{
-            mt: "10px",
-            color: "common.shade.200",
-            fontSize: 14,
-            fontWeight: 500,
-          }}
-        >
-          {t("dialog.cancel.subtitle")}
-        </Typography>
+        {disabled ? (
+          <Box>
+            <Typography
+              sx={{
+                mt: "10px",
+                color: "common.red.500",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              {t("dialog.cancel.error")}
+            </Typography>
+            <Typography
+              sx={{
+                color: "common.shade.200",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              {t("dialog.disabled.errorHint", {
+                date: dayjs(data?.data.request_date)
+                  .add(3, "days")
+                  .format("DD MMM YYYY HH:mm"),
+              })}
+            </Typography>
+          </Box>
+        ) : (
+          <Typography
+            sx={{
+              color: "common.shade.200",
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            {t("dialog.cancel.subtitle")}
+          </Typography>
+        )}
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
         <VGButton
@@ -105,6 +135,7 @@ export default function PromoCancelDialog() {
           variant="outlined"
           size="large"
           fullWidth
+          disabled={disabled}
           onClick={() => {
             modal.promoId &&
               deletePromoMutation.mutate(modal.promoId, {

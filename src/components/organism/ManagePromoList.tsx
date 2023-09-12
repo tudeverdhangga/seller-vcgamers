@@ -10,7 +10,6 @@ import VGTabChip from "../atomic/VGTabChip";
 import VGTabPanel from "../atomic/VGTabPanel";
 import VGTabsChip from "../atomic/VGTabsChip";
 import BadgeIcon from "../icons/BadgeIcon";
-import ManagePromoForm from "./ManagePromoForm";
 import { useGetTabStatus, useGetPromoList } from "~/services/managePromo/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Skeleton from "@mui/material/Skeleton";
@@ -19,6 +18,9 @@ import PromoPerformanceDialog from "../molecule/PromoPerformanceDialog";
 import PromoRejectedDialog from "../molecule/PromoRejectedDialog";
 import PromoDeleteDialog from "../molecule/PromoDeleteDialog";
 import PromoCancelDialog from "../molecule/PromoCancelDialog";
+import EmptyState from "../molecule/EmptyState/promo";
+import CreatePromoForm from "./CreatePromoForm";
+import ReusePromoForm from "./ReusePromoForm";
 
 const PromoCodeCard = dynamic(() => import("../molecule/PromoCodeCard"), {
   ssr: false,
@@ -67,9 +69,12 @@ export default function ManagePromoList() {
           {t("btn.addPromo")}
         </VGButton>
       </Box>
-      <ManagePromoForm />
+
+      <CreatePromoForm />
+      <ReusePromoForm />
 
       <VGTabPanel value={tabPosition} index={tabPosition}>
+        {!promoData?.pages.length && <EmptyState />}
         <InfiniteScroll
           dataLength={promoData?.pages ? promoData.pages.length : 0}
           hasMore={hasNextPage ?? false}

@@ -85,13 +85,15 @@
     },
     "cancel": {
       "title": "Konfirmasi Pembatalan Pengajuan Promo",
-      "subtitle": "Admin akan memproses pembatalan maksimal 3x24 jam. Kamu yakin ingin membatalkan promo ini?"
+      "subtitle": "Admin akan memproses pembatalan maksimal 3x24 jam. Kamu yakin ingin membatalkan promo ini?",
+      "error": "Minimum pembatalan: 3x24 jam setelah melakukan request.",
+      "errorHint": "Promo ini bisa dibatalkan mulai pada {{date}}"
     },
     "disabled": {
       "title": "Konfirmasi Penonaktifan",
       "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?",
       "error": "Minimum penonaktifan: 3x24 jam setelah approval admin.",
-      "errorHint": "Promo ini bisa bisa dinonaktifkan mulai pada {{date}}"
+      "errorHint": "Promo ini bisa dinonaktifkan mulai pada {{date}}"
     }
   },
   "form": {
@@ -142,6 +144,10 @@
           "label": "Nominal Promo (Rp)",
           "placeholder": "Contoh: 20.000"
         },
+        "discountPercentage": {
+          "label": "Persentase Promo (%)",
+          "placeholder": "Contoh: 20%"
+        },
         "discountMinimumTransaction": {
           "label": "Minimum Transaksi (Rp)",
           "placeholder": "Contoh: 20.000",
@@ -167,6 +173,9 @@
         },
         "addCategory": {
           "title": "+ Kategori"
+        },
+        "deleteCategory": {
+          "title": "- Kategori"
         }
       }
     },
@@ -179,5 +188,8 @@
     "cancelSuccess": "Pengajuan kode promo dibatalkan",
     "deleteSuccess": "Pengajuan kode promo dihapus",
     "disableSuccess": "Kode promo dinonaktifkan"
+  },
+  "emptyState": {
+    "promo": "Tidak ada promo"
   }
 }
