@@ -17,11 +17,12 @@ export default function DrawerListItem(props: {
   href?: string;
   subList: {
     name: string;
-    label: string | JSX.Element;
+    label?: string;
     href: string;
+    leading?: (props: any) => React.ReactNode;
+    trailing?: (props: any) => React.ReactNode;
   }[];
   activeMenu: string;
-  hasKilat: boolean;
 }) {
   const { t } = useTranslation("layout");
   const { isMobile } = useResponsive();
@@ -33,14 +34,14 @@ export default function DrawerListItem(props: {
         minHeight: 56,
         display: "block",
         padding: 0,
-        ...props.sx
+        ...props.sx,
       }}
     >
       <List
         sx={{
           display: "flex",
           alignItems: "center",
-          pl: 2
+          pl: 2,
         }}
       >
         {props.leading}

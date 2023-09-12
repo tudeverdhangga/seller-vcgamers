@@ -15,3 +15,5 @@ export const mobileAppBarAtom = atom<{
   menuIcon: "default",
   onClick: undefined,
 });
+
+export const kilatDialogAtom = atom(false);

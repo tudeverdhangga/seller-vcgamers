@@ -50,5 +50,9 @@
       "helpCenter": "Pusat Bantuan",
       "language": "Bahasa"
     }
+  },
+  "badge": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
   }
 }

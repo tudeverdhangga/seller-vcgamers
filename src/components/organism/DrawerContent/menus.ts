@@ -3,8 +3,33 @@ import ProductIcon from "~/components/icons/ProductIcon";
 import SettingIcon from "~/components/icons/SettingIcon";
 import MessageIcon from "~/components/icons/MessageIcon";
 import RequestIcon from "~/components/icons/RequestIcon";
+import InstantMenu from "~/components/icons/feature/InstantMenu";
+import KilatMenu from "~/components/icons/feature/KilatMenu";
+import VIPMenu from "~/components/icons/feature/VIPMenu";
+import KilatSwitch from "~/components/molecule/KilatSwitch";
+import SalesBadge from "~/components/molecule/SalesBadge";
+import BalanceBadge from "~/components/molecule/BalanceBadge";
+import InstantBadge from "~/components/molecule/InstantBadge";
+import VIPBadge from "~/components/molecule/VIPBadge";
+import ComplainBadge from "~/components/molecule/ComplainBadge";
+import ChatBadge from "~/components/molecule/ChatBadge";
 
-export const menus = [
+export type MenuType = {
+  name: string;
+  translationKey: string;
+  leading?: (props: any) => React.ReactNode;
+  trailing?: (props: any) => React.ReactNode;
+  href?: string;
+  subList: {
+    name: string;
+    label?: string;
+    href: string;
+    leading?: (props: any) => React.ReactNode;
+    trailing?: (props: any) => React.ReactNode;
+  }[];
+}[];
+
+export const menus: MenuType = [
   {
     name: "shop",
     translationKey: "drawer.myShop.head",
@@ -13,19 +38,21 @@ export const menus = [
       {
         name: "dashboard",
         label: "drawer.myShop.dashboard",
-        href: "/seller/toko"
+        href: "/seller/toko",
       },
       {
         name: "orders",
         label: "drawer.myShop.orders",
-        href: "/seller/toko/daftar-penjualan"
+        trailing: SalesBadge,
+        href: "/seller/toko/daftar-penjualan",
       },
       {
         name: "balance",
         label: "drawer.myShop.balance",
-        href: "/seller/toko/saldo-toko"
-      }
-    ]
+        trailing: BalanceBadge,
+        href: "/seller/toko/saldo-toko",
+      },
+    ],
   },
   {
     name: "product",
@@ -35,19 +62,19 @@ export const menus = [
       {
         name: "manage",
         label: "drawer.myProduct.manage",
-        href: "/seller/produk/kelola-produk"
+        href: "/seller/produk/kelola-produk",
       },
       {
         name: "addProduct",
         label: "drawer.myProduct.add",
-        href: "/seller/produk/tambah-produk"
+        href: "/seller/produk/tambah-produk",
       },
       {
         name: "bulkEdit",
         label: "drawer.myProduct.bulkEdit",
-        href: "/seller/produk/edit-produk-massal"
-      }
-    ]
+        href: "/seller/produk/edit-produk-massal",
+      },
+    ],
   },
   {
     name: "setting",
@@ -57,14 +84,14 @@ export const menus = [
       {
         name: "profile",
         label: "drawer.config.profile",
-        href: "/seller/pengaturan/profil-toko"
+        href: "/seller/pengaturan/profil-toko",
       },
       {
         name: "schedule",
         label: "drawer.config.schedule",
-        href: "/seller/pengaturan/jadwal-toko"
-      }
-    ]
+        href: "/seller/pengaturan/jadwal-toko",
+      },
+    ],
   },
   {
     name: "chat",
@@ -74,14 +101,16 @@ export const menus = [
       {
         name: "complain",
         label: "drawer.chat.complain",
-        href: "/seller/obrolan/komplain"
+        trailing: ComplainBadge,
+        href: "/seller/obrolan/komplain",
       },
       {
         name: "chat",
         label: "drawer.chat.chat",
-        href: "/seller/obrolan/percakapan"
-      }
-    ]
+        trailing: ChatBadge,
+        href: "/seller/obrolan/percakapan",
+      },
+    ],
   },
   {
     name: "feature",
@@ -90,19 +119,22 @@ export const menus = [
     subList: [
       {
         name: "instant",
-        label: "drawer.feature.instant",
-        href: "/seller/request/instant"
+        leading: InstantMenu,
+        trailing: InstantBadge,
+        href: "/seller/request/instant",
       },
       {
         name: "kilat",
-        label: "drawer.feature.kilat",
-        href: "/seller/request/proses-kilat"
+        leading: KilatMenu,
+        trailing: KilatSwitch,
+        href: "/seller/request/proses-kilat",
       },
       {
         name: "vip",
-        label: "drawer.feature.vip",
-        href: "/seller/request/vip-seller"
-      }
-    ]
-  }
-]
+        leading: VIPMenu,
+        trailing: VIPBadge,
+        href: "/seller/request/vip-seller",
+      },
+    ],
+  },
+];

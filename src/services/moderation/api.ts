@@ -46,3 +46,9 @@ export async function moderationReadMessage(body: BodyModeration) {
 
   return res.data as APIApiResponse<boolean>;
 }
+
+export async function fetchNotificationCount() {
+  const res = await HTTPApi.get("auth/notif/counter");
+
+  return res.data as APIApiResponse<{ key: string; value: number }[]>;
+}

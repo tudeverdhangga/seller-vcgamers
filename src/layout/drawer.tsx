@@ -8,6 +8,7 @@ import { drawerOpenAtom } from "~/atom";
 import { useResponsive } from "~/utils/mediaQuery";
 
 import DrawerContent from "~/components/organism/DrawerContent/index";
+import KilatDrawerDialog from "~/components/molecule/KilatDrawerDialog";
 
 export const DRAWER_WIDTH = 270;
 
@@ -63,6 +64,7 @@ export function Drawer() {
           <DrawerContent />
         </MuiDrawer>
       )}
+      <KilatDrawerDialog />
     </Box>
   );
 }

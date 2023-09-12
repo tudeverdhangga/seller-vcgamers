@@ -7,6 +7,7 @@ import {
   moderationSendMessage,
   moderationInviteAdmin,
   moderationReadMessage,
+  fetchNotificationCount,
 } from "./api";
 import { apiPaginationNextPageParam } from "../utils";
 import type { BodyModeration, BodySendMessage } from "./types";
@@ -75,5 +76,12 @@ export function usePostModerationInviteAdmin() {
 export function usePostModerationReadMessage() {
   return useMutation({
     mutationFn: (body: BodyModeration) => moderationReadMessage(body),
+  });
+}
+
+export function useGetNotificationCount() {
+  return useQuery({
+    queryKey: ["notification-count"],
+    queryFn: fetchNotificationCount,
   });
 }
