@@ -1,5 +1,5 @@
 import { useTranslation } from "next-i18next";
-import ArrowBackIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
@@ -12,36 +12,41 @@ import VGPageTitle from "~/components/atomic/VGPageTitle";
 import AddProductDetail from "~/components/organism/AddProductDetail";
 import AddProductVariant from "~/components/organism/AddProductVariant";
 import VGButton from "~/components/atomic/VGButton";
-import { useCreateProduct, useEditProduct, useGetProductDetail } from "~/services/api/product";
+import {
+  useCreateProduct,
+  useEditProduct,
+  useGetProductDetail,
+} from "~/services/api/product";
 import { toastOption } from "~/utils/toast";
 import AddProductDetailLoading from "~/components/atomic/AddProductDetailLoading";
+import VGHead from "~/components/atomic/VGHead";
 
 interface Response {
-  product_category_id: string
-  product_brand_id: string
-  product_group_id: string
-  name: string
-  description: string
-  images_url: string[]
-  variations: Variation[]
-  next_update_price?: string
-  next_activate_kilat?: string
+  product_category_id: string;
+  product_brand_id: string;
+  product_group_id: string;
+  name: string;
+  description: string;
+  images_url: string[];
+  variations: Variation[];
+  next_update_price?: string;
+  next_activate_kilat?: string;
 }
 interface Variation {
-  id?: string
-  name: string
-  product_variation_master_id?: string
-  delivery_type: number
-  stock: number
-  price: number
-  is_custom_image: boolean
-  is_active: boolean
-  images_url?: string[]
+  id?: string;
+  name: string;
+  product_variation_master_id?: string;
+  delivery_type: number;
+  stock: number;
+  price: number;
+  is_custom_image: boolean;
+  is_active: boolean;
+  images_url?: string[];
   visit?: number;
   favorite?: number;
   sold?: number;
-  next_update_price?: string
-  next_activate_kilat?: string
+  next_update_price?: string;
+  next_activate_kilat?: string;
 }
 interface ErrorResponse {
   response: {
@@ -54,10 +59,10 @@ interface ErrorResponse {
 export default function TambahProdukPage() {
   const { t } = useTranslation("addProduct");
   const [id, setId] = useState("");
-  const createProduct = useCreateProduct()
-  const editProduct = useEditProduct(queryString.stringify({ product_id: id }))
-  const productDetail = useGetProductDetail()
-  const router = useRouter()
+  const createProduct = useCreateProduct();
+  const editProduct = useEditProduct(queryString.stringify({ product_id: id }));
+  const productDetail = useGetProductDetail();
+  const router = useRouter();
   const [params, setParams] = useState<Response>({
     product_category_id: "",
     product_brand_id: "",
@@ -67,80 +72,85 @@ export default function TambahProdukPage() {
     images_url: [],
     variations: [],
     next_update_price: "",
-    next_activate_kilat: ""
-  })
+    next_activate_kilat: "",
+  });
   const [isVoucherInstant, setIsVoucherInstant] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     if (typeof router.query.product_id === "string") {
-      setId(router.query.product_id)
-      productDetail.mutate(queryString.stringify({ product_id: router.query.product_id }), {
-        onSuccess: (res) => {
-          setParams({
-            product_category_id: res.data.product_category.value,
-            product_brand_id: res.data.product_brand.value,
-            product_group_id: res.data.product_group.value,
-            name: res.data.name,
-            description: res.data.description,
-            images_url: res.data.images_url.map((image) => image.object_key),
-            variations: res.data.variations.map((item) => {
-              return {
-                id: item.id,
-                name: item.name,
-                product_variation_master_id: item.product_variation_master ? item.product_variation_master.value : undefined,
-                delivery_type: item.delivery_type,
-                stock: item.stock,
-                price: item.price,
-                is_active: item.is_active,
-                is_custom_image: item.is_custom_image,
-                images_url: item.images_url.map((image) => image.object_key),
-                next_update_price: item.next_update_price,
-                next_activate_kilat: item.next_activate_kilat,
-              }
-            })
-          })
+      setId(router.query.product_id);
+      productDetail.mutate(
+        queryString.stringify({ product_id: router.query.product_id }),
+        {
+          onSuccess: (res) => {
+            setParams({
+              product_category_id: res.data.product_category.value,
+              product_brand_id: res.data.product_brand.value,
+              product_group_id: res.data.product_group.value,
+              name: res.data.name,
+              description: res.data.description,
+              images_url: res.data.images_url.map((image) => image.object_key),
+              variations: res.data.variations.map((item) => {
+                return {
+                  id: item.id,
+                  name: item.name,
+                  product_variation_master_id: item.product_variation_master
+                    ? item.product_variation_master.value
+                    : undefined,
+                  delivery_type: item.delivery_type,
+                  stock: item.stock,
+                  price: item.price,
+                  is_active: item.is_active,
+                  is_custom_image: item.is_custom_image,
+                  images_url: item.images_url.map((image) => image.object_key),
+                  next_update_price: item.next_update_price,
+                  next_activate_kilat: item.next_activate_kilat,
+                };
+              }),
+            });
+          },
         }
-      })
+      );
     }
-  }, [router.query.product_id])
+  }, [router.query.product_id]);
   useEffect(() => {
-    setIsLoading(productDetail.isLoading)
-  }, [productDetail.isLoading])
+    setIsLoading(productDetail.isLoading);
+  }, [productDetail.isLoading]);
 
   const handleFilter = (
     key: string,
     value: string | number | boolean | Variation,
     index?: number
   ) => {
-    if (key === 'variations') {
+    if (key === "variations") {
       const updatedArray = params.variations;
-      if (typeof value === 'object') {
-        updatedArray.push(value)
+      if (typeof value === "object") {
+        updatedArray.push(value);
       }
 
       setParams({
         ...params,
-        variations: updatedArray
+        variations: updatedArray,
       });
-    } else if (key === 'images_url') {
+    } else if (key === "images_url") {
       const updatedArray = params.images_url;
-      if (typeof value === 'string' && typeof index === 'number') {
-        updatedArray[index] = value
+      if (typeof value === "string" && typeof index === "number") {
+        updatedArray[index] = value;
       }
 
       setParams({
         ...params,
-        images_url: updatedArray
+        images_url: updatedArray,
       });
     } else {
       setParams({
         ...params,
-        [key]: value
+        [key]: value,
       });
     }
-  }
+  };
   const handleChangeVariantField = <K extends keyof Variation>(
     key: K,
     value: Variation[K],
@@ -153,7 +163,7 @@ export default function TambahProdukPage() {
     if (typeof indexImage === "undefined") {
       updatedVariation[key] = value;
     } else {
-      if (typeof updatedVariation.images_url === 'undefined') {
+      if (typeof updatedVariation.images_url === "undefined") {
         updatedVariation.images_url = [];
       }
       if (typeof value === "object") {
@@ -175,7 +185,7 @@ export default function TambahProdukPage() {
       ...params,
       variations: updatedVariations,
     });
-  }
+  };
   const onDeleteVariant = (index: number) => {
     const updatedArray = params.variations;
     updatedArray.splice(index, 1);
@@ -183,7 +193,7 @@ export default function TambahProdukPage() {
       ...params,
       variations: updatedArray,
     });
-  }
+  };
   const onSubmit = () => {
     if (id) {
       editProduct.mutate(params, {
@@ -197,15 +207,17 @@ export default function TambahProdukPage() {
             description: "",
             images_url: [],
             variations: [],
-          })
-          void router.push('/seller/produk/kelola-produk');
+          });
+          void router.push("/seller/produk/kelola-produk");
         },
         onError: (error) => {
-          const err = error as ErrorResponse
-          const errorMessage = `${t("detail.edit.onError")}: ${err?.response?.data?.message}`
+          const err = error as ErrorResponse;
+          const errorMessage = `${t("detail.edit.onError")}: ${
+            err?.response?.data?.message
+          }`;
           toast.error(errorMessage, toastOption);
-        }
-      })
+        },
+      });
     } else {
       createProduct.mutate(params, {
         onSuccess: () => {
@@ -218,28 +230,31 @@ export default function TambahProdukPage() {
             description: "",
             images_url: [],
             variations: [],
-          })
-          void router.push('/seller/produk/kelola-produk');
+          });
+          void router.push("/seller/produk/kelola-produk");
         },
         onError: (error) => {
-          const err = error as ErrorResponse
-          const errorMessage = `${t("detail.create.onError")}: ${err?.response?.data?.message}`
+          const err = error as ErrorResponse;
+          const errorMessage = `${t("detail.create.onError")}: ${
+            err?.response?.data?.message
+          }`;
           toast.error(errorMessage, toastOption);
-        }
-      })
+        },
+      });
     }
-  }
+  };
   const handleVoucherInstant = (isVoucher: boolean) => {
-    setIsVoucherInstant(isVoucher)
-  }
+    setIsVoucherInstant(isVoucher);
+  };
   const onError = (error: boolean) => {
-    setError(error)
-  }
+    setError(error);
+  };
 
   return (
     <>
+      <VGHead>{t("head")}</VGHead>
       <VGPageTitle
-        subTitle={(
+        subTitle={
           <>
             <Link
               href="#"
@@ -249,56 +264,47 @@ export default function TambahProdukPage() {
                 fontWeight: 600,
                 display: "flex",
                 color: "common.shade.200",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
-              onClick={() => void router.push('/seller/produk/kelola-produk')}
+              onClick={() => void router.push("/seller/produk/kelola-produk")}
             >
-              <ArrowBackIcon
-                fontSize="small"
-                sx={{ mr: 1 }}
-              />
+              <ArrowBackIcon fontSize="small" sx={{ mr: 1 }} />
               {t("subTitle")}
             </Link>
           </>
-        )}
+        }
         title={t("titleEdit")}
         sx={{ width: "100%" }}
       />
-      {
-        isLoading
-          ? (
-            <AddProductDetailLoading />
-          ) : (
-            <>
-              <AddProductDetail
-                handleVoucherInstant={handleVoucherInstant}
-                handleChangeFilter={handleFilter}
-                productDetail={productDetail.data?.data}
-              />
-              <AddProductVariant
-                productDetail={productDetail.data?.data}
-                variant={params.variations}
-                groupId={params.product_group_id}
-                isVoucherInstant={isVoucherInstant}
-                onEditVariation={onEditVariation}
-                onDeleteVariant={onDeleteVariant}
-                handleChangeVariantField={handleChangeVariantField}
-                handleChangeFilter={handleFilter}
-                onError={onError}
-              />
-            </>
-          )
-      }
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-      >
+      {isLoading ? (
+        <AddProductDetailLoading />
+      ) : (
+        <>
+          <AddProductDetail
+            handleVoucherInstant={handleVoucherInstant}
+            handleChangeFilter={handleFilter}
+            productDetail={productDetail.data?.data}
+          />
+          <AddProductVariant
+            productDetail={productDetail.data?.data}
+            variant={params.variations}
+            groupId={params.product_group_id}
+            isVoucherInstant={isVoucherInstant}
+            onEditVariation={onEditVariation}
+            onDeleteVariant={onDeleteVariant}
+            handleChangeVariantField={handleChangeVariantField}
+            handleChangeFilter={handleFilter}
+            onError={onError}
+          />
+        </>
+      )}
+      <Box display="flex" justifyContent="flex-end">
         <VGButton
           variant="outlined"
           color="secondary"
           sx={{ mr: 2 }}
           size="large"
-          onClick={() => void router.push('/seller/produk/kelola-produk')}
+          onClick={() => void router.push("/seller/produk/kelola-produk")}
         >
           {t("cancel")}
         </VGButton>

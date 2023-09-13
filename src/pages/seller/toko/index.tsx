@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { mobileAppBarAtom } from "~/atom/layout";
 import DashboardStatCard from "~/components/atomic/DashboardStatCard";
+import VGHead from "~/components/atomic/VGHead";
 import EarningIcon from "~/components/icons/svg/earningIcon.svg";
 import MarketIcon from "~/components/icons/svg/marketPlaceIcon.svg";
 import DashboardCarousel from "~/components/molecule/DashboardCarousel";
@@ -43,6 +44,7 @@ export default function DashboardSellerPage() {
 
   return (
     <>
+      <VGHead>{t("head")}</VGHead>
       <DashboardTitle />
       <Box
         sx={{

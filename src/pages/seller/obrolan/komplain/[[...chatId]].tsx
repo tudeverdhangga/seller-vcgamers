@@ -1,4 +1,6 @@
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import VGHead from "~/components/atomic/VGHead";
 import ComplainTitle from "~/components/molecule/ComplainTitle";
 import DesktopComplainContent from "~/components/organism/ComplainContent/desktop";
 import MobileComplainContent from "~/components/organism/ComplainContent/mobile";
@@ -7,6 +9,7 @@ import { useResponsive } from "~/utils/mediaQuery";
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 
 export default function KomplainPage() {
+  const { t } = useTranslation("complain");
   const { isMobile } = useResponsive();
   const router = useRouter();
 
@@ -16,6 +19,7 @@ export default function KomplainPage() {
     if (chatId) {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
+          <VGHead>{t("head")}</VGHead>
           <MobileComplainRoomContent />
         </div>
       );
@@ -23,6 +27,7 @@ export default function KomplainPage() {
 
     return (
       <div style={{ display: "flex", flexDirection: "column" }}>
+        <VGHead>{t("head")}</VGHead>
         <MobileComplainContent />
       </div>
     );
@@ -30,6 +35,7 @@ export default function KomplainPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "85vh" }}>
+      <VGHead>{t("head")}</VGHead>
       <ComplainTitle />
       <DesktopComplainContent />
     </div>

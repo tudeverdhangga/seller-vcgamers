@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import VGHead from "~/components/atomic/VGHead";
 
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import VipSellerTab from "~/components/molecule/VipSellerTab";
@@ -11,6 +12,7 @@ export default function ManagePromoCodePage() {
 
   return (
     <>
+      <VGHead>{t("head")}</VGHead>
       <VGPageTitle
         title={t("title")}
         subTitle={t("subtitle")}

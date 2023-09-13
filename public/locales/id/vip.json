@@ -1,42 +1,43 @@
 {
-    "title": "Fitur Seller",
-    "subtitle": "VIP Seller",
-    "tab": {
-      "program": "Program Seller",
-      "promo": "Manage Promo",
-      "api": "Integrasi API"
+  "head": "VIP Seller",
+  "title": "Fitur Seller",
+  "subtitle": "VIP Seller",
+  "tab": {
+    "program": "Program Seller",
+    "promo": "Manage Promo",
+    "api": "Integrasi API"
+  },
+  "contentApi": {
+    "whitelist": {
+      "tab": "IP Whitelist",
+      "title": "IP Whitelist",
+      "desc": "Masukkan IP Whitelist dan pisahkan dengan simbol koma (,)",
+      "button": "Edit"
     },
-    "contentApi": {
-      "whitelist":  {
-        "tab": "IP Whitelist",
-        "title": "IP Whitelist",
-        "desc": "Masukkan IP Whitelist dan pisahkan dengan simbol koma (,)",
-        "button": "Edit"
+    "accessKey": {
+      "tab": "API Access Key",
+      "title": "Secret Key",
+      "copy": "Salin",
+      "generateTokenBtn": "Generate Access Token Baru",
+      "deleteBtn": "Hapus",
+      "tableHeaderTitle": "Access Token",
+      "modalDelete": {
+        "title": "Hapus Akses Token",
+        "subtitle": "Kamu ingin menghapus akses token ini. Lanjutkan?",
+        "backBtn": "Kembali",
+        "deleteBtn": "Hapus"
       },
-      "accessKey": {
-        "tab": "API Access Key",
-        "title": "Secret Key",
-        "copy": "Salin",
-        "generateTokenBtn": "Generate Access Token Baru",
-        "deleteBtn": "Hapus",
-        "tableHeaderTitle": "Access Token",
-        "modalDelete": {
-          "title" : "Hapus Akses Token",
-          "subtitle" : "Kamu ingin menghapus akses token ini. Lanjutkan?",
-          "backBtn" : "Kembali",
-          "deleteBtn" : "Hapus"
-        },
-        "modalGenerate": {
-          "title" : "API Access Key",
-          "copyBtn" : "Salin"
-        }
-      },
-      "webhook": {
-        "tab": "Webhook",
-        "title": "URL",
-        "checkTitle": "Tipe Callback"
-      },
-      "saveBtn": "Simpan",
-      "cancelBtn": "Batal"
-    }
+      "modalGenerate": {
+        "title": "API Access Key",
+        "copyBtn": "Salin"
+      }
+    },
+    "webhook": {
+      "tab": "Webhook",
+      "title": "URL",
+      "checkTitle": "Tipe Callback"
+    },
+    "saveBtn": "Simpan",
+    "cancelBtn": "Batal"
+  }
 }

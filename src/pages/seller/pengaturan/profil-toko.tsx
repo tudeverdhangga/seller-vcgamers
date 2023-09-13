@@ -1,29 +1,28 @@
-import { useState } from "react"
-import { useRouter } from "next/router"
+import { useState } from "react";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
-import VGCard from "~/components/atomic/VGCard"
-import VGPageTitle from "~/components/atomic/VGPageTitle"
-import ProfileSettingForm from "~/components/organism/ProfileSettingForm"
+import VGCard from "~/components/atomic/VGCard";
+import VGPageTitle from "~/components/atomic/VGPageTitle";
+import ProfileSettingForm from "~/components/organism/ProfileSettingForm";
 
-import { Tabs, Tab } from "@mui/material"
+import { Tabs, Tab } from "@mui/material";
+import VGHead from "~/components/atomic/VGHead";
 
 export default function ProfilTokoPage() {
-  const router = useRouter()
-  const [value] = useState(0)
+  const router = useRouter();
+  const [value] = useState(0);
   const { t } = useTranslation("setting");
 
   const handleChangePage = () => {
-    void router.push("/seller/pengaturan/jadwal-toko")
-  }
+    void router.push("/seller/pengaturan/jadwal-toko");
+  };
 
   return (
     <>
-      <VGPageTitle
-        subTitle={t("subTitle")}
-        title={t("title")}
-      />
+      <VGHead>{t("head")}</VGHead>
+      <VGPageTitle subTitle={t("subTitle")} title={t("title")} />
 
       {/* Tabs */}
       <VGCard sx={{ p: 0, pl: 3 }}>
@@ -32,14 +31,14 @@ export default function ProfilTokoPage() {
             label={t("tab.profile.label")}
             sx={{
               fontWeight: 700,
-              textTransform: 'capitalize'
+              textTransform: "capitalize",
             }}
           />
           <Tab
             label={t("tab.operational.label")}
             sx={{
               fontWeight: 700,
-              textTransform: 'capitalize'
+              textTransform: "capitalize",
             }}
             onClick={handleChangePage}
           />
@@ -50,7 +49,7 @@ export default function ProfilTokoPage() {
         <ProfileSettingForm />
       </VGCard>
     </>
-  )
+  );
 }
 
 export const getStaticProps = getStaticPropsWithTransNamespace(["setting"]);

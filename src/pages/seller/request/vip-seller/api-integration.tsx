@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import VGHead from "~/components/atomic/VGHead";
 
 import VGPageTitle from "~/components/atomic/VGPageTitle";
 import VipSellerTab from "~/components/molecule/VipSellerTab";
@@ -10,6 +11,7 @@ export default function ActiveVIPSeller() {
 
   return (
     <>
+      <VGHead>{t("head")}</VGHead>
       {/* Page Title */}
       <VGPageTitle subTitle={t("subtitle")} title={t("title")} />
 

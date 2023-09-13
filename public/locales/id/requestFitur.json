@@ -1,4 +1,8 @@
 {
+  "head": {
+    "instant": "Instant",
+    "kilat": "Proses Kilat"
+  },
   "title": "Fitur Seller",
   "subtitleInstant": "Instant",
   "subtitleProskil": "Proses Kilat",
@@ -35,72 +39,72 @@
     "header2": "Regular",
     "rowsInstant": {
       "0": {
-          "profit": "Merchant fee 1%",
-          "regular": "true"
-        },
+        "profit": "Merchant fee 1%",
+        "regular": "true"
+      },
       "1": {
-          "profit": "Section khusus pada halaman homepage",
-          "regular": "-"
-        },
+        "profit": "Section khusus pada halaman homepage",
+        "regular": "-"
+      },
       "2": {
-          "profit": "Tidak perlu repot proses, kode voucher otomatis terkirim",
-          "regular": "-"
-        },
+        "profit": "Tidak perlu repot proses, kode voucher otomatis terkirim",
+        "regular": "-"
+      },
       "3": {
-          "profit": "Mendapatkan filter Instan di pencarian produk",
-          "regular": "-"
-        },
+        "profit": "Mendapatkan filter Instan di pencarian produk",
+        "regular": "-"
+      },
       "4": {
-          "profit": "Label Instant setiap halaman produk",
-          "regular": "-"
-        },
+        "profit": "Label Instant setiap halaman produk",
+        "regular": "-"
+      },
       "5": {
-          "profit": "Produk kamu akan tampil di halaman teratas",
-          "regular": "-"
-        },
+        "profit": "Produk kamu akan tampil di halaman teratas",
+        "regular": "-"
+      },
       "6": {
-          "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
-          "regular": "-"
-        }
+        "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
+        "regular": "-"
+      }
     },
     "rowsVip": {
       "0": {
-          "profit": "Ikuti Berbagai Program Menarik",
-          "regular": "-"
-        },
-      "1": {
-          "profit": "Kelola Kode Promo Khusus Tokomu",
-          "regular": "-"
-        },
-      "2": {
-          "profit": "Fitur Integrasi API",
-          "regular": "-"
-        },
-      "3": {
-          "profit": "Mendapat Badge 'VIP Seller' ",
-          "regular": "-"
-        }
+        "profit": "Ikuti Berbagai Program Menarik",
+        "regular": "-"
       },
+      "1": {
+        "profit": "Kelola Kode Promo Khusus Tokomu",
+        "regular": "-"
+      },
+      "2": {
+        "profit": "Fitur Integrasi API",
+        "regular": "-"
+      },
+      "3": {
+        "profit": "Mendapat Badge 'VIP Seller' ",
+        "regular": "-"
+      }
+    },
     "rowsProskil": {
       "0": {
-          "profit": "Merchant fee 1%",
-          "regular": "true"
-        },
+        "profit": "Merchant fee 1%",
+        "regular": "true"
+      },
       "1": {
-          "profit": "Section khusus pada halaman homepage",
-          "regular": "-"
-        },
+        "profit": "Section khusus pada halaman homepage",
+        "regular": "-"
+      },
       "2": {
-          "profit": "Label Instant setiap halaman produk",
-          "regular": "-"
-        },
+        "profit": "Label Instant setiap halaman produk",
+        "regular": "-"
+      },
       "3": {
-          "profit": "Produk kamu akan tampil di halaman teratas",
-          "regular": "-"
-        },
+        "profit": "Produk kamu akan tampil di halaman teratas",
+        "regular": "-"
+      },
       "4": {
-          "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
-          "regular": "-"
+        "profit": "Waktu pesanan selesai otomatis yang lebih cepat",
+        "regular": "-"
       }
     }
   },

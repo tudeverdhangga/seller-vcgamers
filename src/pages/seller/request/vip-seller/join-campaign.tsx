@@ -10,6 +10,7 @@ import VGTabPanel from "~/components/atomic/VGTabPanel";
 import JoinCampaignList from "~/components/organism/JoinCampaignList";
 import JoinCampaignHistoryList from "~/components/organism/JoinCampaignHistoryList";
 import VipSellerTab from "~/components/molecule/VipSellerTab";
+import VGHead from "~/components/atomic/VGHead";
 
 export default function JoinCampaignPage() {
   const [menuPosition, setMenuPosition] = useState(0);
@@ -21,6 +22,7 @@ export default function JoinCampaignPage() {
 
   return (
     <>
+      <VGHead>{t("head")}</VGHead>
       <VGPageTitle
         title={t("title")}
         subTitle={t("subtitle")}
