@@ -22,7 +22,7 @@ export default function JoinCampaignPage() {
 
   return (
     <>
-      <VGHead>{t("head")}</VGHead>
+      <VGHead>{t("joinCampaign:head")}</VGHead>
       <VGPageTitle
         title={t("title")}
         subTitle={t("subtitle")}

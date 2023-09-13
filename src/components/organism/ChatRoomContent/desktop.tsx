@@ -55,7 +55,7 @@ function ChatRoomChatList({ chatId }: { chatId: string }) {
         px: 2,
         position: "relative",
         overflow: "auto",
-        maxHeight: show ? "45vh" : "53vh",
+        height: show ? "45vh" : "53vh",
         "& ul": { padding: 0 },
         "&li": { p: 1 },
       }}

@@ -130,7 +130,7 @@ export default function VIPSellerPage() {
 
   return (
     <>
-      <VGHead>{t("head")}</VGHead>
+      <VGHead>{t("head.vip")}</VGHead>
       {/* Page Title */}
       <VGPageTitle subTitle={t("title")} title={t("subtitleVIP")} />
 

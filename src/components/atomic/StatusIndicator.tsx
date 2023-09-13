@@ -7,7 +7,8 @@ export default function StatusIndicator(props: {
 }) {
   const backgroundColor =
     props.status === "online" ? "common.green.500" : "common.red.500";
-  const text = props.status === "online" ? "Online" : props.time;
+  const text =
+    props.status === "online" ? "Online" : props.time ? props.time : "Offline";
 
   return (
     <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>

@@ -5,30 +5,32 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import ChatConversationListItem from "~/components/atomic/ChatConversationListItem";
 import ChatConversationEmptyState from "~/components/molecule/EmptyState/chatConversation";
 import { useGetChatRoom } from "~/services/chat/hooks";
+import { type DataChatRoom } from "~/services/chat/types";
 
 export default function ChatConversationContent() {
   const { data, hasNextPage, fetchNextPage } = useGetChatRoom();
 
-  if (!!data?.pages.length) return <ChatConversationEmptyState />;
+  const chatRooms = data?.pages.reduce((acc, page) => {
+    return [...acc, ...page.data] as DataChatRoom[];
+  }, [] as DataChatRoom[]);
+
+  if (!chatRooms || chatRooms.length === 0) {
+    return <ChatConversationEmptyState />;
+  }
 
   return (
     <List id="scrollableDiv" disablePadding>
       <InfiniteScroll
-        dataLength={data ? data.pages.length : 0}
+        dataLength={chatRooms ? chatRooms.length : 0}
         hasMore={hasNextPage ?? false}
         next={fetchNextPage}
         loader={<Skeleton variant="rounded" height={50} width="100%" />}
         scrollableTarget="scrollableDiv"
       >
-        {data && data.pages.at(0)?.data.length ? (
-          data.pages
-            .flatMap((page) => page.data)
-            .map((chat) => (
-              <ChatConversationListItem key={chat.id} chat={chat} />
-            ))
-        ) : (
-          <></>
-        )}
+        {chatRooms &&
+          chatRooms.map((chat) => (
+            <ChatConversationListItem key={chat.id} chat={chat} />
+          ))}
       </InfiniteScroll>
     </List>
   );

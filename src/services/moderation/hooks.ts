@@ -8,6 +8,7 @@ import {
   moderationInviteAdmin,
   moderationReadMessage,
   fetchNotificationCount,
+  fetchModerationDetailByTransactionId,
 } from "./api";
 import { apiPaginationNextPageParam } from "../utils";
 import type { BodyModeration, BodySendMessage } from "./types";
@@ -83,5 +84,16 @@ export function useGetNotificationCount() {
   return useQuery({
     queryKey: ["notification-count"],
     queryFn: fetchNotificationCount,
+  });
+}
+
+export function useGetModerationDetailByTransactionId(transactionId?: string) {
+  return useQuery({
+    queryKey: ["moderation-detail-transaction", transactionId],
+    queryFn: () =>
+      fetchModerationDetailByTransactionId({
+        transaction_id: transactionId ?? "",
+      }),
+    enabled: typeof transactionId !== "undefined",
   });
 }

@@ -2,16 +2,17 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import ChatProfilePicture from "../atomic/ChatProfilePicture";
 import Typography from "@mui/material/Typography";
-import { useGetChatRoom } from "~/services/chat/hooks";
+import { useGetChatMessage, useGetChatRoom } from "~/services/chat/hooks";
 import { useChatOnlineIndicator } from "~/utils/firebase";
 import StatusIndicator from "../atomic/StatusIndicator";
 
 export default function ChatMessageToolbar(props: { chatId: string }) {
+  const { senderId } = useGetChatMessage(props.chatId);
   const { data } = useGetChatRoom();
   const chatDetail = data?.pages
     .flatMap((page) => page.data)
     .find((r) => r.id === props.chatId);
-  const { online } = useChatOnlineIndicator(chatDetail?.id);
+  const { online } = useChatOnlineIndicator(senderId);
 
   return (
     <Toolbar disableGutters sx={{ px: 2, backgroundColor: "common.white" }}>

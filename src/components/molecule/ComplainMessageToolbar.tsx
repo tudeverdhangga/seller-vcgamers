@@ -9,7 +9,7 @@ import { useGetModerationDetail } from "~/services/moderation/hooks";
 export default function ComplainMessageToolbar(props: { complainId: string }) {
   const { data } = useGetModerationDetail(props.complainId);
   const buyer = data?.data.participants.find((p) => p.type === "BUYER");
-  const { online } = useChatOnlineIndicator(props.complainId);
+  const { online } = useChatOnlineIndicator(buyer?.id);
 
   return (
     <Toolbar disableGutters sx={{ px: 2, backgroundColor: "common.white" }}>

@@ -21,6 +21,7 @@ import PromoCancelDialog from "../molecule/PromoCancelDialog";
 import EmptyState from "../molecule/EmptyState/promo";
 import CreatePromoForm from "./CreatePromoForm";
 import ReusePromoForm from "./ReusePromoForm";
+import type { Promo } from "~/services/managePromo/types";
 
 const PromoCodeCard = dynamic(() => import("../molecule/PromoCodeCard"), {
   ssr: false,
@@ -35,6 +36,10 @@ export default function ManagePromoList() {
   const [, setManagePromoForm] = useAtom(managePromoFormAtom);
   const { data: tabData } = useGetTabStatus();
   const { data: promoData, hasNextPage, fetchNextPage } = useGetPromoList();
+
+  const promos = promoData?.pages.reduce((acc, page) => {
+    return [...acc, ...page.data.data] as Promo[];
+  }, [] as Promo[]);
 
   return (
     <Box>
@@ -74,17 +79,16 @@ export default function ManagePromoList() {
       <ReusePromoForm />
 
       <VGTabPanel value={tabPosition} index={tabPosition}>
-        {!promoData?.pages.length && <EmptyState />}
+        {promos && promos.length === 0 && <EmptyState />}
         <InfiniteScroll
-          dataLength={promoData?.pages ? promoData.pages.length : 0}
+          dataLength={promos ? promos.length : 0}
           hasMore={hasNextPage ?? false}
           next={fetchNextPage}
           style={{ display: "flex", flexDirection: "column" }}
           loader={<Skeleton variant="rounded" height={100} width="75%" />}
         >
-          {promoData?.pages
-            .flatMap((page) => page.data.data)
-            .map((promo) => (
+          {promos &&
+            promos.map((promo) => (
               <PromoCodeCard key={promo.id} promo={promo} />
             ))}
         </InfiniteScroll>

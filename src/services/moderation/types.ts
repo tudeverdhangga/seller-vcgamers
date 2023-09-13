@@ -40,6 +40,7 @@ export interface DataModerationDetail {
 }
 
 export interface DataModerationDetailParticipant {
+  id: string;
   name: string;
   type: string;
   photo: string;

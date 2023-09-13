@@ -34,7 +34,7 @@ export default function ChatConversationListItem(props: {
             sx={{ display: "flex", gap: "10px", p: "20px" }}
             component="a"
           >
-            <ChatProfilePicture />
+            <ChatProfilePicture src={props.chat.icon} />
             <Box
               sx={{
                 display: "flex",
@@ -76,9 +76,9 @@ export default function ChatConversationListItem(props: {
                 height: 48,
               }}
             >
-              {props.chat.unread_count && (
+              {props.chat.unread_count ? (
                 <BadgeIcon content={props.chat.unread_count} />
-              )}
+              ) : null}
               <Typography
                 sx={{
                   fontSize: 14,

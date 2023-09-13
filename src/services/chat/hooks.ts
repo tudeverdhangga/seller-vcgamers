@@ -8,6 +8,7 @@ import {
 import { apiPaginationNextPageParam } from "../utils";
 import { useMemo } from "react";
 import { mapChatMessageListToChatMessageListProps } from "./mapper";
+import { useGetProfile } from "../api/auth";
 
 export function useGetChatRoom() {
   return useInfiniteQuery({
@@ -22,6 +23,8 @@ export function useGetChatRoom() {
 }
 
 export function useGetChatMessage(id: string) {
+  const { data: profileData } = useGetProfile();
+
   const queryInfo = useInfiniteQuery({
     queryKey: ["chat-messages", id],
     queryFn: ({ pageParam = "1" }) =>
@@ -31,6 +34,13 @@ export function useGetChatMessage(id: string) {
 
   return {
     ...queryInfo,
+    senderId: useMemo(
+      () =>
+        queryInfo.data?.pages
+          .flatMap((p) => p.data)
+          .find((d) => d.sender_id !== profileData?.data.id)?.sender_id,
+      [profileData?.data.id, queryInfo.data?.pages]
+    ),
     data: useMemo(
       () =>
         mapChatMessageListToChatMessageListProps(

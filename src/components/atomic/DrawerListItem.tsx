@@ -62,18 +62,21 @@ export default function DrawerListItem(props: {
       </List>
 
       <List component="div" disablePadding>
-        {props.subList.map(list => {
-          if (isMobile && (list.name === "addProduct" || list.name === "bulkEdit")) {
+        {props.subList.map((list) => {
+          if (
+            isMobile &&
+            (list.name === "addProduct" || list.name === "bulkEdit")
+          ) {
             return null;
           }
           return (
             <DrawerListSubItem
               key={`menu-${list.name}`}
-              name={list.name}
               label={t(list.label as "drawer.myShop.dashboard")}
               href={list.href}
               isActive={list.href === props.activeMenu}
-              hasKilat={props.hasKilat}
+              leading={list.leading}
+              trailing={list.trailing}
             />
           );
         })}
