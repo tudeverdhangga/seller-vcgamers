@@ -36,12 +36,15 @@ spec:
               cpu: 800m
               memory: 800Mi
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /
               port: 3000
             initialDelaySeconds: 20
             periodSeconds: 15
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /
               port: 3000
             initialDelaySeconds: 20
             periodSeconds: 15
+
