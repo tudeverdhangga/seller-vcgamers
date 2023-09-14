@@ -1,7 +1,6 @@
 import { Trans, useTranslation } from "next-i18next";
 import Image from "next/image";
 import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -22,6 +21,7 @@ import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
 import { useGetVariationMaster } from "~/services/api/masterData";
 import { useGetProfile } from "~/services/api/auth";
+import MenuItem from "@mui/material/MenuItem";
 
 interface Dropdown {
   label: string;
@@ -268,23 +268,22 @@ export default function AddVariantDialog({
             />
           ) : !isCustomName
             ? (
-              <Autocomplete
-                value={selectedVariation}
-                disablePortal
-                options={variationOptions}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t("variant.dialog.header.variant")}
-                    size="small"
-                    {...register("name", { required: t("variant.dialog.header.error.required.variant") })}
-                    error={Boolean(errors.name)}
-                    helperText={errors.name?.message}
-                  />
-                )}
-                sx={{ width: "100%" }}
-                onChange={(_, e) => onChangeVariation(e)}
-              />
+              <TextField
+                label={t("variant.dialog.header.variant")}
+                select
+                fullWidth
+                size="small"
+                {...register("name", { required: t("variant.dialog.header.error.required.variant") })}
+                error={Boolean(errors.name)}
+                helperText={errors.name?.message}
+                value={selectedVariation?.value}
+              >
+                {variationOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             ) : (
               <TextField
                 value={name}

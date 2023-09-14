@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -101,11 +102,10 @@ export default function ListProductItem(props: {
         flexDirection: "row"
       }}
     >
-      <Image
+      <img
         src={props.image}
         width={60}
         height={60}
-        loading="lazy"
         alt="Product Picture"
         style={{ objectFit: "cover" }}
       />

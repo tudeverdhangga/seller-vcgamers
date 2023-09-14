@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -21,6 +22,8 @@ import TransactionNotesDialog from "~/components/molecule/TransactionNotesDialog
 import TransactionDetailVoucherDialog from "~/components/molecule/TransactionDetailVoucherDialog";
 import TransactionDetailCancelDialog from "~/components/molecule/TransactionDetailCancelDialog";
 import TransactionDetailAccountDialog from "~/components/molecule/TransactionDetailAccountDialog";
+import { useRouter } from "next/router";
+import { useGetModerationDetailByTransactionId } from "~/services/moderation/hooks";
 
 export default function TransactionDetailItemMobile(props: {
   image: string;
@@ -58,6 +61,8 @@ export default function TransactionDetailItemMobile(props: {
     minutes: string;
     seconds: string;
   } | undefined>(undefined)
+  const router = useRouter()
+  const { data } = useGetModerationDetailByTransactionId(props.id)
 
   useEffect(() => {
     if (props.kilatTime) {
@@ -221,6 +226,7 @@ export default function TransactionDetailItemMobile(props: {
         width: 40,
         minWidth: 40
       }}
+      onClick={() => void router.push(`/seller/obrolan/percakapan/${data?.data?.id as string}`)}
     >
       <ChatIcon
         sx={{
@@ -230,7 +236,7 @@ export default function TransactionDetailItemMobile(props: {
       />
     </VGButton>
   )
-  const longChartContainer = (
+  const longChatContainer = (
     <VGButton
       variant="outlined"
       color="secondary"
@@ -258,7 +264,7 @@ export default function TransactionDetailItemMobile(props: {
           width: 40,
           minWidth: 40
         }}
-        onClick={() => setIsOpenCancelDialog(true)}
+        onClick={() => void router.push(`/seller/obrolan/percakapan/${data?.data?.id as string}`)}
       >
         <CancelIcon
           sx={{
@@ -304,7 +310,7 @@ export default function TransactionDetailItemMobile(props: {
     <Box display="flex">
       {
         !props.isAccount && !props.isVoucher
-          ? (longChartContainer)
+          ? (longChatContainer)
           : (shortChatContainer)
       }
       {
@@ -327,7 +333,7 @@ export default function TransactionDetailItemMobile(props: {
           minWidth: 40
         }}
         fullWidth
-        onClick={() => setIsOpenCancelDialog(true)}
+        onClick={() => void router.push(`/seller/obrolan/komplain/${data?.data?.id as string}`)}
       >
         {t("detail.list.complain.button")}
       </VGButton>
@@ -375,7 +381,7 @@ export default function TransactionDetailItemMobile(props: {
           xs={12}
         >
           <Box display="flex">
-            <Image
+            <img
               src={props.image}
               width={54}
               height={54}

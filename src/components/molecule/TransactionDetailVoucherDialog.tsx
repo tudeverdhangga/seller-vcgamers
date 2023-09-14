@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
@@ -41,7 +42,7 @@ export default function TransactionDetailVoucherDialog(props: {
         p={1}
       >
         <Box display="flex">
-          <Image
+          <img
             src={props.imageUrl}
             width={50}
             height={50}

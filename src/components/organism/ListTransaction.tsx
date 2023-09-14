@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useTranslation } from "next-i18next";
 import Box from "@mui/material/Box"
 import TagIcon from '@mui/icons-material/LocalOffer';
@@ -201,7 +202,7 @@ export default function ListTransaction({
                                 alignItems="center"
                                 width="100%"
                               >
-                                <Image
+                                <img
                                   src={transaction.product_image_url}
                                   width={74}
                                   height={74}

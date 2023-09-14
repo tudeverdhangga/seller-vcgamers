@@ -92,7 +92,7 @@ export function useGetModerationDetailByTransactionId(transactionId?: string) {
     queryKey: ["moderation-detail-transaction", transactionId],
     queryFn: () =>
       fetchModerationDetailByTransactionId({
-        transaction_id: transactionId ?? "",
+        transaction_detail_id: transactionId ?? "",
       }),
     enabled: typeof transactionId !== "undefined",
   });

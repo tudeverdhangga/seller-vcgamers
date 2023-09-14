@@ -54,7 +54,7 @@ export async function fetchNotificationCount() {
 }
 
 export async function fetchModerationDetailByTransactionId(params: {
-  transaction_id: string;
+  transaction_detail_id: string;
 }) {
   const res = await HTTPApi.get("moderation/detail", { params });
 

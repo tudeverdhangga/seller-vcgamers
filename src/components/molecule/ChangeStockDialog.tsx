@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import Image from "next/image";
 import Box from "@mui/material/Box";
@@ -86,7 +87,7 @@ export default function ChangeStockDialog(props: {
             }
           }}
         >
-          <Image
+          <img
             src={props.image}
             width={49}
             height={49}

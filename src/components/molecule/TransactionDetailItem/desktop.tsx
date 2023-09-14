@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -8,6 +9,7 @@ import TimeIcon from '@mui/icons-material/AccessTimeOutlined';
 import CancelIcon from '@mui/icons-material/ClearOutlined';
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 
 import VGChip from "~/components/atomic/VGChip";
 import { priceFormat } from "~/utils/format";
@@ -22,6 +24,7 @@ import TransactionNotesDialog from "~/components/molecule/TransactionNotesDialog
 import TransactionDetailVoucherDialog from "~/components/molecule/TransactionDetailVoucherDialog";
 import TransactionDetailCancelDialog from "~/components/molecule/TransactionDetailCancelDialog";
 import TransactionDetailAccountDialog from "~/components/molecule/TransactionDetailAccountDialog";
+import { useGetModerationDetailByTransactionId } from "~/services/moderation/hooks";
 
 export default function TransactionDetailItemDesktop(props: {
   image: string;
@@ -59,6 +62,8 @@ export default function TransactionDetailItemDesktop(props: {
     minutes: string;
     seconds: string;
   } | undefined>(undefined)
+  const router = useRouter();
+  const { data } = useGetModerationDetailByTransactionId(props.id)
 
   useEffect(() => {
     if (props.kilatTime) {
@@ -223,7 +228,7 @@ export default function TransactionDetailItemDesktop(props: {
         width: 40,
         minWidth: 40
       }}
-      onClick={() => setIsOpenCancelDialog(true)}
+      onClick={() => void router.push(`/seller/obrolan/percakapan/${data?.data?.id as string}`)}
     >
       <ChatIcon
         sx={{
@@ -233,7 +238,7 @@ export default function TransactionDetailItemDesktop(props: {
       />
     </VGButton>
   )
-  const longChartContainer = (
+  const longChatContainer = (
     <VGButton
       variant="outlined"
       color="secondary"
@@ -294,6 +299,7 @@ export default function TransactionDetailItemDesktop(props: {
             fontSize: 12
           }}
           startIcon={<ChatIcon />}
+          onClick={() => void router.push(`/seller/obrolan/percakapan/${data?.data?.id as string}`)}
         >
           {t("detail.list.contactBuyer")}
         </VGButton>
@@ -304,7 +310,7 @@ export default function TransactionDetailItemDesktop(props: {
     <Box display="flex">
       {
         !props.isAccount && !props.isVoucher
-          ? (longChartContainer)
+          ? (longChatContainer)
           : (shortChatContainer)
       }
       {
@@ -327,7 +333,7 @@ export default function TransactionDetailItemDesktop(props: {
           minWidth: 40
         }}
         fullWidth
-        onClick={() => setIsOpenCancelDialog(true)}
+        onClick={() => void router.push(`/seller/obrolan/komplain/${data?.data?.id as string}`)}
       >
         {t("detail.list.complain.button")}
       </VGButton>
@@ -375,7 +381,7 @@ export default function TransactionDetailItemDesktop(props: {
           md={5}
         >
           <Box display="flex">
-            <Image
+            <img
               src={props.image}
               width={60}
               height={60}

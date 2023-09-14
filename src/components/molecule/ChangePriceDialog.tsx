@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import queryString from "query-string";
 import Image from "next/image";
@@ -103,7 +104,7 @@ export default function ChangePriceDialog(props: {
             }
           }}
         >
-          <Image
+          <img
             src={props.image}
             width={49}
             height={49}
