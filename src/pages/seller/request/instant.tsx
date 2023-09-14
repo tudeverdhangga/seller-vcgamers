@@ -64,13 +64,15 @@ export default function InstantPage() {
     getStatusInstant?.data?.data?.total_transaction,
     getStatusInstant?.data?.data?.total_success_transaction,
     getStatusInstant?.data?.data?.total_rate_transaction,
+    getStatusInstant?.data?.data?.request_status,
   ]);
 
   const assignGetStatusInstant = () => {
     if (
       getStatusInstant?.data?.data?.total_transaction !== undefined &&
       getStatusInstant?.data?.data?.total_success_transaction !== undefined &&
-      getStatusInstant?.data?.data?.total_rate_transaction !== undefined
+      getStatusInstant?.data?.data?.total_rate_transaction !== undefined &&
+      getStatusInstant?.data?.data?.request_status !== undefined
     ) {
       setTotalTransaction(getStatusInstant.data?.data.total_transaction);
       setSuccessTransaction(
@@ -243,6 +245,7 @@ export default function InstantPage() {
                 statusInstantData &&
                 (statusInstantData.request_status === SellerStatusApproved ||
                   statusInstantData.request_status === SellerStatusRejected ||
+                  statusInstantData.request_status === SellerStatusPending ||
                   statusInstantData.seller_has_instant === true)
                   ? "none"
                   : "flex",

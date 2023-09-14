@@ -70,13 +70,15 @@ export default function ProsesKilatPage() {
     getStatusKilat?.data?.data?.total_transaction,
     getStatusKilat?.data?.data?.total_success_transaction,
     getStatusKilat?.data?.data?.total_rate_transaction,
+    getStatusKilat?.data?.data?.request_status,
   ]);
 
   const assignGetStatusKilat = () => {
     if (
       getStatusKilat?.data?.data?.total_transaction !== undefined &&
       getStatusKilat?.data?.data?.total_success_transaction !== undefined &&
-      getStatusKilat?.data?.data?.total_rate_transaction !== undefined
+      getStatusKilat?.data?.data?.total_rate_transaction !== undefined &&
+      getStatusKilat?.data?.data?.request_status !== undefined
     ) {
       setTotalTransaction(getStatusKilat.data?.data.total_transaction);
       setSuccessTransaction(
@@ -240,6 +242,7 @@ export default function ProsesKilatPage() {
                 statusKilatData &&
                 (statusKilatData.request_status === SellerStatusApproved ||
                   statusKilatData.request_status === SellerStatusRejected ||
+                  statusKilatData.request_status === SellerStatusPending ||
                   statusKilatData.seller_has_kilat)
                   ? "none"
                   : "flex",
