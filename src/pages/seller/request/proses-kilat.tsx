@@ -240,12 +240,14 @@ export default function ProsesKilatPage() {
               px: 2,
               display:
                 statusKilatData &&
-                (statusKilatData.request_status === SellerStatusApproved ||
-                  statusKilatData.request_status === SellerStatusRejected ||
-                  statusKilatData.request_status === SellerStatusPending ||
-                  statusKilatData.seller_has_kilat)
-                  ? "none"
-                  : "flex",
+                (statusKilatData.total_transaction >=
+                  minimumAllTransaction &&
+                statusKilatData.total_success_transaction >=
+                  minimumSuccessPercentageTransaction &&
+                statusKilatData.seller_has_kilat === false &&
+                statusKilatData.request_status === "")
+                  ? "flex"
+                  : "none",
             }}
           >
             <Grid

@@ -86,7 +86,7 @@ export default function CustomizedFeatureContentCondition(props: {
             <BorderLinearProgress 
               style={{backgroundColor: props.totalAllTransaction >= props.minimumAllTransaction ? '#17e339' : '#ed3e3e'}} 
               variant="determinate" 
-              color="primary" 
+              color="secondary" 
               value={props.totalAllTransaction*2 > 100 ? 100 : props.totalAllTransaction*2} 
             />
 

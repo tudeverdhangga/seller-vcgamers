@@ -243,12 +243,14 @@ export default function InstantPage() {
               px: 2,
               display:
                 statusInstantData &&
-                (statusInstantData.request_status === SellerStatusApproved ||
-                  statusInstantData.request_status === SellerStatusRejected ||
-                  statusInstantData.request_status === SellerStatusPending ||
-                  statusInstantData.seller_has_instant === true)
-                  ? "none"
-                  : "flex",
+                (statusInstantData.total_transaction >=
+                  minimumAllTransaction &&
+                statusInstantData.total_success_transaction >=
+                  minimumSuccessPercentageTransaction &&
+                statusInstantData.seller_has_instant === false &&
+                statusInstantData.request_status === "")
+                  ? "flex"
+                  : "none",
             }}
           >
             <Grid
