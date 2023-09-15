@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import VoucherItem from "~/components/molecule/VoucherItem";
 import { useDebounce } from "~/utils/debounce";
-import { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import Skeleton from "@mui/material/Skeleton";
 
 interface DataVoucher {

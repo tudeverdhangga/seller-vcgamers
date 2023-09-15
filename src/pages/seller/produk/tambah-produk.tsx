@@ -175,10 +175,12 @@ export default function TambahProdukPage() {
 
       if (variation.images_url !== undefined) {
         variation.images_url.forEach((imageUrl, imageIndex) => {
-          formData.append(
-            `variations[${index}][images_url][${imageIndex}]`,
-            imageUrl
-          );
+          if (imageUrl) {
+            formData.append(
+              `variations[${index}][images_url][${imageIndex}]`,
+              imageUrl
+            );
+          }
         });
       }
       if (variation.product_variation_master_id !== undefined) {
@@ -205,9 +207,8 @@ export default function TambahProdukPage() {
       },
       onError: (error) => {
         const err = error as ErrorResponse;
-        const errorMessage = `${t("detail.create.onError")}: ${
-          err?.response?.data?.message
-        }`;
+        const errorMessage = `${t("detail.create.onError")}: ${err?.response?.data?.message
+          }`;
         toast.error(errorMessage, toastOption);
       },
     });

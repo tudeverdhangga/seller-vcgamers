@@ -133,6 +133,36 @@
           "no": "Varian akan menggunakan gambar utama produk."
         }
       },
+      "confirmationDeactive": {
+        "title": "Konfirmasi Penonaktifan",
+        "subTitle": "Kamu yakin ingin menonaktifkan varian produk ini? Varian tidak akan hilang dari data penjual namun tidak akan terlihat lagi oleh pembeli.",
+        "actions": {
+          "cancel": "Batal",
+          "ok": "Nonaktifkan"
+        },
+        "onSuccess": "Penonaktifan produk berhasil",
+        "onError": "Penonaktifan gagal"
+      },
+      "confirmationActive": {
+        "title": "Konfirmasi Pengaktifan",
+        "subTitle": "Kamu yakin ingin mengaktifkan varian produk ini?",
+        "actions": {
+          "cancel": "Kembali",
+          "ok": "Aktifkan"
+        },
+        "onSuccess": "Pengaktifan produk berhasil",
+        "onError": "Pengaktifan gagal"
+      },
+      "confirmationDelete": {
+        "title": "Konfirmasi Penghapusan",
+        "subTitle": "Kamu yakin ingin menghapus varian produk ini? Varian akan hilang dari data penjual dan tidak akan terlihat oleh pembeli.",
+        "actions": {
+          "cancel": "Batal",
+          "ok": "Hapus"
+        },
+        "onSuccess": "Penghapusan produk berhasil",
+        "onError": "Penghapusan gagal"
+      },
       "cancel": "Batal",
       "save": "Simpan Varian",
       "delete": "Hapus Variant"

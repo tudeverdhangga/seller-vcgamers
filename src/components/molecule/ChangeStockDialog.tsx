@@ -116,6 +116,11 @@ export default function ChangeStockDialog(props: {
             min: "0"
           }}
           sx={{ my: 1 }}
+          onKeyDown={(e) => {
+            if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
+              e.preventDefault()
+            }
+          }}
           onChange={(e) => setStock(parseInt(e.target.value))}
         />
         {

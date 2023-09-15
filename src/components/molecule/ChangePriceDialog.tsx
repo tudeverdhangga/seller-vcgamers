@@ -134,6 +134,11 @@ export default function ChangePriceDialog(props: {
           }}
           sx={{ my: 1 }}
           disabled={props.nextUpdatePrice !== null}
+          onKeyDown={(e) => {
+            if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
+              e.preventDefault()
+            }
+          }}
           onChange={(e) => onChangePrice(e)}
         />
         {

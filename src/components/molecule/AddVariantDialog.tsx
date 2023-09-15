@@ -89,12 +89,12 @@ export default function AddVariantDialog({
   useEffect(() => {
     if (typeof variant !== "undefined") {
       if (variant.product_variation_master_id !== undefined) {
-        const value = {
+        onChangeField("product_variation_master_id", variant.product_variation_master_id);
+        setSelectedVariation({
           label: variant.name,
           value: variant.product_variation_master_id,
           price: variant.price,
-        }
-        onChangeVariation(value)
+        })
       } else {
         setIsCustomName(true)
         setName(variant.name)
@@ -183,10 +183,11 @@ export default function AddVariantDialog({
   const onChangeSendFeature = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFeature(parseInt(event.target.value))
   }
-  const onChangeVariation = (value: Dropdown | null) => {
-    if (value) {
-      onChangeField("product_variation_master_id", value?.value);
-      setSelectedVariation(value);
+  const onChangeVariation = (uuid: string) => {
+    const selectedVariant = variationOptions.find((item) => item.value === uuid)
+    if (uuid) {
+      onChangeField("product_variation_master_id", uuid);
+      setSelectedVariation(selectedVariant);
     } else {
       onChangeField("product_variation_master_id", "");
       setSelectedVariation({
@@ -277,6 +278,7 @@ export default function AddVariantDialog({
                 error={Boolean(errors.name)}
                 helperText={errors.name?.message}
                 value={selectedVariation?.value}
+                onChange={(e) => onChangeVariation(e.target.value)}
               >
                 {variationOptions.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -499,6 +501,11 @@ export default function AddVariantDialog({
           type="number"
           disabled={feature === 2}
           size="small"
+          onKeyDown={(e) => {
+            if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
+              e.preventDefault()
+            }
+          }}
           onChange={onInputStock}
         />
       </Grid>
@@ -535,6 +542,11 @@ export default function AddVariantDialog({
           fullWidth
           type="number"
           size="small"
+          onKeyDown={(e) => {
+            if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
+              e.preventDefault()
+            }
+          }}
           onChange={onInputPrice}
         />
       </Grid>

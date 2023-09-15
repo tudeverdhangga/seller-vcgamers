@@ -27,6 +27,9 @@ import VGInputImage from "~/components/atomic/VGInputImage";
 import { toastOption } from "~/utils/toast";
 import CropImageModal from "~/components/molecule/CropImageModal";
 import { dateToTime } from "~/utils/format";
+import ConfirmationDeleteVariantDialog from "~/components/molecule/ConfirmationDeleteVariantDialog";
+import ConfirmationDeactiveVariantDialog from "~/components/molecule/ConfirmationDeactiveVariantDialog";
+import ConfirmationActiveVariantDialog from "~/components/molecule/ConfirmationActiveVariantDialog";
 
 interface Variation {
   name: string
@@ -149,6 +152,9 @@ export default function AddProductVariant({
   const [uploadedImage, setUploadedImage] = useState("");
   const [uploadedImageDataIndex, setUploadedImageDataIndex] = useState(0);
   const [uploadedImageIndex, setUploadedImageIndex] = useState(0);
+  const [isOpenDeactiveProductDialog, setIsOpenDeactiveProductDialog] = useState(false)
+  const [isOpenActiveProductDialog, setIsOpenActiveProductDialog] = useState(false)
+  const [isOpenDeleteProductDialog, setIsOpenDeleteProductDialog] = useState(false)
 
   useEffect(() => {
     if (typeof variantData !== 'undefined' && typeof indexRow !== 'undefined') {
@@ -418,6 +424,11 @@ export default function AddProductVariant({
           min: "0"
         }}
         disabled={!row.is_active || row.delivery_type === 2}
+        onKeyDown={(e) => {
+          if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
+            e.preventDefault()
+          }
+        }}
         onChange={(e) => onChangeStockPrice(e, "stock", index)}
       />
     </TableCell>
@@ -437,6 +448,11 @@ export default function AddProductVariant({
         error={Boolean(multiple100[index])}
         helperText={multiple100[index]}
         disabled={!row.is_active || Boolean(row.next_update_price)}
+        onKeyDown={(e) => {
+          if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
+            e.preventDefault()
+          }
+        }}
         onChange={(e) => onChangeStockPrice(e, "price", index)}
       />
       {
@@ -496,29 +512,67 @@ export default function AddProductVariant({
           <strong>{t("variant.table.td.action.edit")}</strong>
         </Link>
         <Box display="flex" justifyContent="space-between">
-          <Link
-            underline="hover"
-            color={row.is_active ? "error" : "success.main"}
-            sx={{ cursor: "pointer" }}
-            onClick={() => onChangeVariant(!row.is_active, "is_active", index)}
-          >
-            <strong>
-              {row.is_active
-                ? t("variant.table.td.action.nonactive")
-                : t("variant.table.td.action.active")
-              }
-            </strong>
-          </Link>
+          {
+            row.is_active ? (
+              <Link
+                underline="hover"
+                color="error"
+                sx={{ cursor: "pointer" }}
+                onClick={() => setIsOpenDeactiveProductDialog(true)}
+              >
+                <strong>
+                  {t("variant.table.td.action.nonactive")}
+                </strong>
+              </Link>
+            ) : (
+              <Link
+                underline="hover"
+                color="success.main"
+                sx={{ cursor: "pointer" }}
+                onClick={() => setIsOpenActiveProductDialog(true)}
+              >
+                <strong>
+                  {t("variant.table.td.action.active")}
+                </strong>
+              </Link>
+            )
+          }
           <Link
             underline="hover"
             color="error"
             sx={{ cursor: "pointer" }}
-            onClick={() => onDeleteVariant(index)}
+            onClick={() => setIsOpenDeleteProductDialog(true)}
           >
             <strong>{t("variant.table.td.action.delete")}</strong>
           </Link>
         </Box>
       </Box>
+
+
+      <ConfirmationDeactiveVariantDialog
+        id={row.name}
+        name={row.name}
+        image={row.images_url && row.images_url[0]}
+        isOpen={isOpenDeactiveProductDialog}
+        handleClose={() => setIsOpenDeactiveProductDialog(false)}
+        handleDeactive={() => onChangeVariant(!row.is_active, "is_active", index)}
+      />
+      <ConfirmationActiveVariantDialog
+        id={row.name}
+        name={row.name}
+        image={row.images_url && row.images_url[0]}
+        isOpen={isOpenActiveProductDialog}
+        handleClose={() => setIsOpenActiveProductDialog(false)}
+        handleActivate={() => onChangeVariant(!row.is_active, "is_active", index)}
+      />
+      <ConfirmationDeleteVariantDialog
+        id={row.name}
+        name={row.name}
+        image={row.images_url && row.images_url[0]}
+        isOpen={isOpenDeleteProductDialog}
+        handleClose={() => setIsOpenDeleteProductDialog(false)}
+        handleDelete={() => onDeleteVariant(index)}
+      />
     </TableCell>
   )
   const tableContainer = (

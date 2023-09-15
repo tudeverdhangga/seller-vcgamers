@@ -6,7 +6,6 @@ import queryString from "query-string";
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import { useTranslation } from "next-i18next";
-import Skeleton from "@mui/material/Skeleton";
 
 import { getStaticPropsWithTransNamespace } from "~/utils/translation";
 import VGPageTitle from "~/components/atomic/VGPageTitle";
@@ -40,7 +39,7 @@ export default function KelolaVoucherPage() {
   const { t } = useTranslation("voucher");
   const [id, setId] = useState("");
   const router = useRouter();
-  const [withdrawData] = useAtom(withdrawReason);
+  const [withdrawData, setWithdrawData] = useAtom(withdrawReason);
   const [vouchers, setVouchers] = useAtom(voucherCode);
   const [checkVoucherData, setCheckVoucher] = useAtom(checkVoucher);
   const [, setSuccessCreateVoucher] = useAtom(isSuccessCreateVoucher);
@@ -86,12 +85,16 @@ export default function KelolaVoucherPage() {
           onSuccess: () => {
             getVoucher.mutate(queryString.stringify(params));
             toast.success(t("list.alert.onSuccess"), toastOption);
+            setWithdrawData({
+              status: 3,
+              pulled_reason: "Kode terjual diluar VCGamers",
+              voucher_id: ""
+            })
           },
           onError: (error) => {
             const err = error as ErrorResponse;
-            const errorMessage = `${t("list.alert.onError")}: ${
-              err?.response?.data?.message
-            }`;
+            const errorMessage = `${t("list.alert.onError")}: ${err?.response?.data?.message
+              }`;
             toast.error(errorMessage, toastOption);
           },
         }
@@ -122,9 +125,8 @@ export default function KelolaVoucherPage() {
         },
         onError: (error) => {
           const err = error as ErrorResponse;
-          const errorMessage = `${t("input.onError")}: ${
-            err?.response?.data?.message
-          }`;
+          const errorMessage = `${t("input.onError")}: ${err?.response?.data?.message
+            }`;
           toast.error(errorMessage, toastOption);
         },
       }
@@ -152,9 +154,8 @@ export default function KelolaVoucherPage() {
         },
         onError: (error) => {
           const err = error as ErrorResponse;
-          const errorMessage = `${t("input.onError")}: ${
-            err?.response?.data?.message
-          }`;
+          const errorMessage = `${t("input.onError")}: ${err?.response?.data?.message
+            }`;
           toast.error(errorMessage, toastOption);
         },
       }
