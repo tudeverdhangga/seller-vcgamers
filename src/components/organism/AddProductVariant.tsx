@@ -147,6 +147,7 @@ export default function AddProductVariant({
   const [variantImage, setVariantImage] = useState<string[][]>([['']]);
   const [variantData, setVariantData] = useState<Variation>();
   const [indexRow, setIndexRow] = useState<number>();
+  const [nextUpdatePrice, setNextUpdatePrice] = useState<string | undefined>();
   const [multiple100, setMultiple100] = useState<string[]>([]);
   const [isShowCropImage, setIsShowCropImage] = useState(false);
   const [uploadedImage, setUploadedImage] = useState("");
@@ -243,6 +244,7 @@ export default function AddProductVariant({
   const handleEditVariant = (variation: Variation, index: number) => {
     setVariantData(variation);
     setIndexRow(index);
+    setNextUpdatePrice(variation.next_update_price);
   }
   const handleDeleteVariation = (index: number) => {
     setVariantImage([])
@@ -654,6 +656,7 @@ export default function AddProductVariant({
         variant={variantData}
         index={indexRow}
         groupId={groupId}
+        nextUpdatePrice={nextUpdatePrice}
         onEditVariation={onEditVariation}
         onDeleteVariant={handleDeleteVariation}
         onSubmit={onSubmit}

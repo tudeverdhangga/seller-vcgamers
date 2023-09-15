@@ -15,7 +15,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { useForm } from "react-hook-form";
 import Switch from "@mui/material/Switch";
 
-import { priceFormat } from "~/utils/format";
+import { dateToTime, priceFormat } from "~/utils/format";
 import VGDialog from "~/components/atomic/VGDialog";
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
@@ -44,6 +44,7 @@ export default function AddVariantDialog({
   isVoucherInstant,
   variant,
   index,
+  nextUpdatePrice,
   onSubmit,
   onEditVariation,
   onDeleteVariant,
@@ -54,6 +55,7 @@ export default function AddVariantDialog({
   isVoucherInstant: boolean;
   variant?: Variation | undefined;
   index?: number;
+  nextUpdatePrice?: string;
   onSubmit: (variation: Variation) => void;
   onEditVariation: (value: Variation, index: number) => void;
   onDeleteVariant: (index: number) => void;
@@ -64,10 +66,9 @@ export default function AddVariantDialog({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors }
-  } = useForm<Variation>({
-    criteriaMode: "all"
-  });
+  } = useForm<Variation>();
   const getVariation = useGetVariationMaster();
   const getProfile = useGetProfile();
   const [selectedVariation, setSelectedVariation] = useState<Dropdown>();
@@ -98,6 +99,7 @@ export default function AddVariantDialog({
       } else {
         setIsCustomName(true)
         setName(variant.name)
+        setValue('name', variant.name)
       }
       setFeature(variant.delivery_type)
       setStock(variant.stock)
@@ -173,8 +175,8 @@ export default function AddVariantDialog({
   const onInputPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(parseInt(event.target.value))
   }
-  const onInputName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setName(event.target.value)
+  const onInputName = (name: string) => {
+    setName(name)
   }
   const income = () => {
     if (!price) return 0
@@ -296,7 +298,7 @@ export default function AddVariantDialog({
                 {...register("name", { required: t("variant.dialog.header.error.required.variantCustom") })}
                 error={Boolean(errors.name)}
                 helperText={errors.name?.message}
-                onChange={(e) => onInputName(e)}
+                onChange={(event) => onInputName(event.target.value)}
               />
             )
       }
@@ -542,6 +544,7 @@ export default function AddVariantDialog({
           fullWidth
           type="number"
           size="small"
+          disabled={Boolean(nextUpdatePrice)}
           onKeyDown={(e) => {
             if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
               e.preventDefault()
@@ -549,6 +552,18 @@ export default function AddVariantDialog({
           }}
           onChange={onInputPrice}
         />
+        {
+          Boolean(nextUpdatePrice) && (
+            <Typography
+              color="success.dark"
+              fontSize={12}
+              fontWeight={600}
+              mt={1}
+            >
+              {t("variant.error.updatePriceTime", { time: dateToTime(nextUpdatePrice as string) })}
+            </Typography>
+          )
+        }
       </Grid>
     </Grid>
   )
