@@ -157,9 +157,9 @@ export const useGetProduct = (params: string) => {
     },
     getNextPageParam: (currentPage) => {
       const nextCursor = currentPage.data.pagination_data.next_cursor;
-      const prevCursor = currentPage.data.pagination_data.prev_cursor;
+      console.log('🚀 ~ file: product.ts:160 ~ useGetProduct ~ nextCursor:', nextCursor)
 
-      return nextCursor === prevCursor ? undefined : nextCursor || "";
+      return nextCursor === "" ? undefined : nextCursor;
     },
   });
 };

@@ -1,14 +1,23 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   chatReadMessage,
   chatSendMessage,
   fetchChatMessage,
+  fetchChatRoomIdByBuyerId,
   fetchChatRoomList,
 } from "./api";
 import { apiPaginationNextPageParam } from "../utils";
 import { useMemo } from "react";
 import { mapChatMessageListToChatMessageListProps } from "./mapper";
 import { useGetProfile } from "../api/auth";
+
+export function useGetChatRoomIdByBuyerId(buyerId?: string) {
+  return useQuery({
+    queryKey: ["chat-room-by-buyerId", buyerId],
+    queryFn: () => fetchChatRoomIdByBuyerId(buyerId ?? ""),
+    enabled: typeof buyerId !== "undefined",
+  });
+}
 
 export function useGetChatRoom() {
   return useInfiniteQuery({

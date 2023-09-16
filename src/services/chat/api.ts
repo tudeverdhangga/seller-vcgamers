@@ -10,6 +10,12 @@ import type {
   DataChatSendMessage,
 } from "./types";
 
+export async function fetchChatRoomIdByBuyerId(buyerId: string) {
+  const res = await HTTPApi.get("chat/seller/rooms/get-id/" + buyerId);
+
+  return res.data as APIApiResponse<{ id: string } | null>;
+}
+
 export async function fetchChatRoomList(params: ChatListParams) {
   const res = await HTTPApi.get("chat/seller/rooms", { params });
 
