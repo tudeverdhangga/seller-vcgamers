@@ -221,7 +221,11 @@ export default function AddProductVariant({
         onSuccess: (res) => {
           handleChangeVariantField("images_url", [res?.data.object_key], index, indexImage)
           const array = variantImage;
-          (array[index] as string[])[indexImage] = res?.data.object_url;
+          if (!array[index]) {
+            array.push([res?.data.object_url])
+          } else {
+            (array[index] as string[])[indexImage] = res?.data.object_url;
+          }
           setVariantImage(array);
           setIsShowCropImage(false)
         }
