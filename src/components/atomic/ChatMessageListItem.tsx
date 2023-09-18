@@ -17,11 +17,15 @@ import type {
   ProductProps,
   SideProps,
   TextProps,
+  TransactionProps,
 } from "~/services/moderation/types";
 import FailedIcon from "../icons/chat/FailedIcon";
 import RetryIcon from "../icons/chat/RetryIcon";
 import SendingIcon from "../icons/chat/SendingIcon";
 import ShopRatingIcon from "../icons/chat/ShopRatingIcon";
+import { env } from "~/env.mjs";
+import Link from "next/link";
+import VGChip from "./VGChip";
 
 export default function ChatMessageListItem(props: ChatMessageProps) {
   switch (props.type) {
@@ -30,8 +34,10 @@ export default function ChatMessageListItem(props: ChatMessageProps) {
         return ComplainAdminMessageListItem({ ...props, side: "left" });
       }
       return TextChatMessage(props);
-    // case "product":
-    //   return ProductChatMessage(props);
+    case "PRODUCT":
+      return ProductChatMessage(props);
+    case "TRANSACTION":
+      return TransactionChatMessage(props);
     case "VIDEO":
     case "IMAGE":
     case "DOCUMENT":
@@ -100,50 +106,66 @@ function ProductChatMessage(props: ProductProps & SideProps) {
           <RetryIcon />
         </IconButton>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          borderRadius: "5px",
-          backgroundColor,
-          maxWidth: { xs: "75%", sm: "50%" },
-          p: "10px",
-          gap: "10px",
-          alignItems: "flex-end",
-        }}
+      <Link
+        href={`${env.NEXT_PUBLIC_MARKET_URL}/${props.content.slug}`}
+        passHref
+        legacyBehavior
+        style={{ textDecoration: "none" }}
       >
-        <Image
-          src={props.content.image}
-          alt={props.content.name}
-          width={60}
-          height={60}
-        />
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography
-            sx={{
-              color: "common.shade.700",
-              fontSize: 14,
-              fontWeight: 700,
-              mb: "2px",
-            }}
-          >
-            {props.content.name}
-          </Typography>
-          <Typography
-            sx={{
-              color: "primary.main",
-              fontSize: 14,
-              fontWeight: 700,
-            }}
-          >
-            {props.content.price}
-          </Typography>
-          <Stack
-            direction="row"
-            divider={<Divider orientation="vertical" flexItem />}
-            spacing={0.5}
-          >
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 0.5 }}>
-              <ShopRatingIcon sx={{ width: 12, height: 12, mt: "2px" }} />
+        <Box
+          sx={{
+            display: "flex",
+            borderRadius: "5px",
+            backgroundColor,
+            maxWidth: { xs: "75%", sm: "50%" },
+            p: "10px",
+            gap: "10px",
+            alignItems: "flex-end",
+          }}
+        >
+          <Image
+            src={props.content.image}
+            alt={props.content.name}
+            width={60}
+            height={60}
+          />
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography
+              sx={{
+                color: "common.shade.700",
+                fontSize: 14,
+                fontWeight: 700,
+                mb: "2px",
+              }}
+            >
+              {props.content.name}
+            </Typography>
+            <Typography
+              sx={{
+                color: "primary.main",
+                fontSize: 14,
+                fontWeight: 700,
+              }}
+            >
+              {props.content.price}
+            </Typography>
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem />}
+              spacing={0.5}
+            >
+              <Box sx={{ display: "flex", alignItems: "flex-start", gap: 0.5 }}>
+                <ShopRatingIcon sx={{ width: 12, height: 12, mt: "2px" }} />
+                <Typography
+                  sx={{
+                    color: "common.shade.100",
+                    fontSize: 12,
+                    fontWeight: 500,
+                  }}
+                >
+                  {props.content.rating}
+                </Typography>
+              </Box>
               <Typography
                 sx={{
                   color: "common.shade.100",
@@ -151,21 +173,71 @@ function ProductChatMessage(props: ProductProps & SideProps) {
                   fontWeight: 500,
                 }}
               >
-                {props.content.rating}
+                Terjual {props.content.sold}
               </Typography>
-            </Box>
+            </Stack>
+          </Box>
+        </Box>
+      </Link>
+    </ListItem>
+  );
+}
+
+function TransactionChatMessage(props: TransactionProps & SideProps) {
+  const justifyContent = props.side === "left" ? "flex-start" : "flex-end";
+  const backgroundColor =
+    props.side === "left" ? "common.shade.0" : "primary.light";
+
+  const isFailed = props.side === "right" && props.status === "failed";
+
+  return (
+    <ListItem sx={{ justifyContent }} disableGutters>
+      {isFailed && (
+        <IconButton>
+          <RetryIcon />
+        </IconButton>
+      )}
+      <Link
+        href={`/seller/toko/daftar-penjualan/detail?transaction_id=${props.content.code}`}
+        passHref
+        legacyBehavior
+        style={{ textDecoration: "none" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            borderRadius: "5px",
+            backgroundColor,
+            maxWidth: { xs: "75%", sm: "50%" },
+            p: "10px",
+            gap: "10px",
+            alignItems: "flex-end",
+          }}
+        >
+          <Image
+            src={props.content.image}
+            alt={props.content.transaction_code}
+            width={60}
+            height={60}
+          />
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <VGChip
+              label={props.content.status}
+              sx={{ backgroundColor: "#BFE9F6", color: "#024357" }}
+            />
             <Typography
               sx={{
-                color: "common.shade.100",
-                fontSize: 12,
-                fontWeight: 500,
+                color: "common.shade.700",
+                fontSize: { sm: 14, xs: 12 },
+                fontWeight: 700,
+                mt: "10px",
               }}
             >
-              Terjual {props.content.sold}
+              {props.content.transaction_code}
             </Typography>
-          </Stack>
+          </Box>
         </Box>
-      </Box>
+      </Link>
     </ListItem>
   );
 }

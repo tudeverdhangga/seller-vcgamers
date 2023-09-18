@@ -35,7 +35,11 @@ export default function ComplainRoomInput({
         type="moderation"
         onSubmit={(data) => {
           // mutation.reset();
-          mutation.mutate(data);
+          mutation.mutate({
+            id: complainId,
+            message: data.message,
+            attachment: data.attachment,
+          });
           console.log(data);
         }}
       />

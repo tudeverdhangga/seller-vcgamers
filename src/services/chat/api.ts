@@ -7,6 +7,7 @@ import type {
   ChatMessageParam,
   DataChatMessage,
   DataChatRoom,
+  DataChatRoomDetail,
   DataChatSendMessage,
 } from "./types";
 
@@ -38,4 +39,10 @@ export async function chatSendMessage(body: BodyChatSendMessage) {
   const res = await HTTPApi.post("chat/send", body);
 
   return res.data as APIApiResponse<DataChatSendMessage>;
+}
+
+export async function fetchChatRoomDetail(id: string) {
+  const res = await HTTPApi.get("chat/seller/rooms/detail/" + id);
+
+  return res.data as APIApiResponse<DataChatRoomDetail>;
 }

@@ -1,18 +1,17 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 import { useAtom } from "jotai";
-import { messageAttachmentShowAtom } from "~/atom/chat";
+import { messageAttachmentAtom } from "~/atom/chat";
 
 export default function ChatMessageAttachment() {
-  const [show, setShow] = useAtom(messageAttachmentShowAtom);
+  const [attachment, setAttachment] = useAtom(messageAttachmentAtom);
 
-  const hideAttachment = () => setShow(false);
+  const hideAttachment = () => setAttachment({ show: false });
 
   return (
-    show && (
+    attachment.show && (
       <Box
         sx={{
           display: "flex",
@@ -22,12 +21,6 @@ export default function ChatMessageAttachment() {
           borderRadius: "5px",
         }}
       >
-        <Image
-          src="/assets/chat-product-img.png"
-          alt="product image"
-          width={60}
-          height={60}
-        />
         <Box
           sx={{
             display: "flex",
@@ -38,26 +31,12 @@ export default function ChatMessageAttachment() {
             alignSelf: "center",
           }}
         >
-          <Box sx={{ display: "flex" }}>
-            <Box
-              sx={{
-                backgroundColor: "#BFE9F6",
-                px: "5px",
-                borderRadius: "4px",
-              }}
-            >
-              <Typography
-                sx={{ color: "#024357", fontSize: 12, fontWeight: 700 }}
-              >
-                Dikirim
-              </Typography>
-            </Box>
-          </Box>
-          <Typography
-            sx={{ color: "common.shade.700", fontSize: 14, fontWeight: 600 }}
-          >
-            TRXOD-1660273287-32949-38081
-          </Typography>
+          <img
+            src={attachment.url}
+            alt="attachment"
+            height={60}
+            style={{ objectFit: "contain" }}
+          />
         </Box>
         <IconButton sx={{ alignSelf: "flex-start" }} onClick={hideAttachment}>
           <CloseIcon />

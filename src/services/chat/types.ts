@@ -25,7 +25,8 @@ export interface DataChatMessage {
   sent_at: string;
   sender_id: string;
   is_read: boolean;
-  attachment: string;
+  attachment?: string;
+  attachment_url?: string;
   product?: {
     name: string;
     price: number;
@@ -43,10 +44,11 @@ export interface BodyChatReadMessage {
 export interface BodyChatSendMessage {
   type: string;
   attachment?: string;
+  attachment_url?: string;
   message: string;
   room_id: string;
-  receiver?: string;
-  requester?: string;
+  receiver: string;
+  requester: string;
   product_id?: string;
   transaction_id?: string;
 }
@@ -63,4 +65,14 @@ export interface DataChatSendMessageRoom {
 export interface DataChatSendMessageMessage {
   id: string;
   sent_at: string;
+}
+
+export interface DataChatRoomDetail {
+  id: string;
+  name: string;
+  last_message_id: string;
+  icon: string;
+  buyer: {
+    id: string;
+  };
 }

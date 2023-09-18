@@ -1,10 +1,12 @@
 import dayjs from "dayjs";
-import { type ChatMessageProps } from "../moderation/types";
-import type { DataChatMessage } from "./types";
+import type { ChatMessageProps } from "../moderation/types";
+import type { BodyChatSendMessage, DataChatMessage } from "./types";
 import { priceFormat } from "~/utils/format";
+import { uid } from "~/utils/mapper";
 
 export function mapChatMessageListToChatMessageListProps(
-  dataList?: DataChatMessage[]
+  dataList?: DataChatMessage[],
+  senderId?: string
 ) {
   if (!dataList) return new Map<string, ChatMessageProps[]>();
 
@@ -17,7 +19,7 @@ export function mapChatMessageListToChatMessageListProps(
 
     dataRecord.set(date, [
       ...record,
-      mapChatMessageToChatMessageListItemProps(data),
+      mapChatMessageToChatMessageListItemProps(data, senderId),
     ] as ChatMessageProps[]);
   });
 
@@ -25,13 +27,13 @@ export function mapChatMessageListToChatMessageListProps(
 }
 
 export function mapChatMessageToChatMessageListItemProps(
-  data?: DataChatMessage
+  data?: DataChatMessage,
+  senderId?: string
 ) {
   if (!data) return undefined;
 
-  const userId = localStorage.getItem("user_id");
-
-  const side = userId === data.sender_id ? "right" : "left";
+  const side = senderId === data.sender_id ? "left" : "right";
+  const status = data.sender_id === "" ? "sending" : "sent";
 
   switch (data.type) {
     case "TEXT":
@@ -41,17 +43,17 @@ export function mapChatMessageToChatMessageListItemProps(
         content: data.message,
         time: dayjs(data.sent_at).format("HH:MM"),
         side: side,
-        status: "sent",
+        status,
       } satisfies ChatMessageProps;
     case "IMAGE":
     case "VIDEO":
       return {
         id: data.id,
         type: data.type,
-        content: data.attachment,
+        content: data.attachment ?? "",
         time: dayjs(data.sent_at).format("HH:MM"),
         side: side,
-        status: "sent",
+        status,
       } satisfies ChatMessageProps;
     case "PRODUCT":
       if (!data.product) return undefined;
@@ -68,7 +70,7 @@ export function mapChatMessageToChatMessageListItemProps(
           sold: "1",
         },
         side: side,
-        status: "sent",
+        status,
       } satisfies ChatMessageProps;
     case "TRANSACTION":
       if (!data.transaction) return undefined;
@@ -83,7 +85,49 @@ export function mapChatMessageToChatMessageListItemProps(
           image: data.transaction.thumbnail,
         },
         side: side,
-        status: "sent",
+        status,
+      } satisfies ChatMessageProps;
+  }
+}
+
+export function mapOptimisticChatSendMessageToChatMessageListProps(
+  dataMap: Map<string, ChatMessageProps[]>,
+  data: BodyChatSendMessage
+) {
+  const date = dayjs().format("DD MMM YYYY");
+
+  const record: ChatMessageProps[] = dataMap.get(date) ?? [];
+
+  dataMap.set(date, [
+    ...record,
+    mapOptimisticChatSendMessageToChatMessageListItemProps(data),
+  ] as ChatMessageProps[]);
+
+  return dataMap;
+}
+
+export function mapOptimisticChatSendMessageToChatMessageListItemProps(
+  data: BodyChatSendMessage
+) {
+  switch (data.type) {
+    case "TEXT":
+      return {
+        id: uid(),
+        type: data.type,
+        content: data.message,
+        time: dayjs().format("HH:MM"),
+        side: "right",
+        status: "sending",
+      } satisfies ChatMessageProps;
+    case "IMAGE":
+    case "VIDEO":
+      return {
+        id: uid(),
+        type: data.type,
+        content: data.attachment ?? "",
+        time: dayjs().format("HH:MM"),
+        side: "right",
+        status: "sending",
       } satisfies ChatMessageProps;
   }
 }

@@ -1,12 +1,9 @@
-import { useEffect, useRef } from "react";
-
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
-import { messageAttachmentShowAtom } from "~/atom/chat";
+import { messageAttachmentAtom } from "~/atom/chat";
 
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
 import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubheader";
@@ -15,6 +12,7 @@ import ChatMessageToolbar from "~/components/molecule/ChatMessageToolbar";
 import ChatRoomEmptyState from "~/components/molecule/EmptyState/chatRoom";
 import { useGetChatMessage } from "~/services/chat/hooks";
 import ChatRoomInput from "../ChatRoomInput";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function ChatRoomContent() {
   const router = useRouter();
@@ -37,44 +35,40 @@ export default function ChatRoomContent() {
 }
 
 function ChatRoomChatList({ chatId }: { chatId: string }) {
-  const { data } = useGetChatMessage(chatId);
-  const [show] = useAtom(messageAttachmentShowAtom);
-
-  const scrollRef = useRef<HTMLLIElement | null>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [data]);
+  const { data, fetchNextPage, hasNextPage } = useGetChatMessage(chatId);
+  const [attachment] = useAtom(messageAttachmentAtom);
 
   return (
-    <List
+    <Box
+      id="scrollableDiv"
       sx={{
         backgroundImage: `url("/assets/chat-bg.png")`,
         px: 2,
-        position: "relative",
         overflow: "auto",
-        height: show ? "45vh" : "53vh",
-        "& ul": { padding: 0 },
-        "&li": { p: 1 },
+        height: attachment.show ? "45vh" : "53vh",
+        display: "flex",
+        flexDirection: "column-reverse",
       }}
-      subheader={<li />}
     >
-      {[...data].map(([key, value], index) => (
-        <li key={key} {...(index === data.size - 1 && { ref: scrollRef })}>
-          <ul>
+      <InfiniteScroll
+        dataLength={data?.size ?? 0}
+        next={fetchNextPage}
+        style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
+        inverse={true}
+        hasMore={hasNextPage ?? false}
+        loader={<h4>Loading...</h4>}
+        scrollableTarget="scrollableDiv"
+      >
+        {[...data].map(([key, value]) => (
+          <>
+            {value.map((chat) => {
+              if (typeof chat === "undefined") return null;
+              return <ChatMessageListItem key={chat.id} {...chat} />;
+            })}
             <ChatMessageListSubheader content={`${key}`} />
-            {value.map((chat) =>
-              chat.type === "TEXT" ? (
-                <ChatMessageListItem key={chat.type} {...chat} />
-              ) : (
-                <></>
-              )
-            )}
-          </ul>
-        </li>
-      ))}
-    </List>
+          </>
+        ))}
+      </InfiniteScroll>
+    </Box>
   );
 }

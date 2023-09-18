@@ -13,25 +13,29 @@ import { useTranslation } from "next-i18next";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { useForm, type SubmitHandler, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  type BodySendMessage,
-  sendMessageSchema,
-} from "~/services/moderation/types";
 import AttachmentIcon from "../icons/chat/AttachmentIcon";
 import CloseIcon from "../icons/chat/CloseIcon";
 import SendIcon from "../icons/chat/SendIcon";
 import { uploadFile, type BodyUploadFile } from "~/services/upload";
-import { messageTextAtom } from "~/atom/chat";
+import { messageAttachmentAtom, messageTextAtom } from "~/atom/chat";
 import { useAtom } from "jotai";
+import { mimeMapper } from "~/utils/mapper";
+
+export type BodySubmit = {
+  message: string;
+  attachment?: string;
+  attachment_url?: string;
+  type: string;
+};
 
 export default function ChatMessageInput(props: {
   roomId: string;
   type: BodyUploadFile["module"];
-  onSubmit: SubmitHandler<BodySendMessage>;
+  onSubmit: SubmitHandler<BodySubmit>;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [attachment, setAttachment] = useAtom(messageAttachmentAtom);
   const { t } = useTranslation("chat");
   const [messageText] = useAtom(messageTextAtom);
 
@@ -41,19 +45,26 @@ export default function ChatMessageInput(props: {
   });
   const { ref: fileRef, ...fileRest } = uploadForm.register("file");
 
-  const inputForm = useForm<BodySendMessage>({
-    resolver: zodResolver(sendMessageSchema),
-    defaultValues: { id: props.roomId },
+  const inputForm = useForm<BodySubmit>({
+    defaultValues: { type: "TEXT" },
   });
 
   const uploadMutation = useMutation({
     mutationFn: (body: BodyUploadFile) => uploadFile(body),
-    onSuccess: (data) => {
+    onMutate: (variable) => {
+      inputForm.setValue("attachment_url", URL.createObjectURL(variable.file));
+    },
+    onSuccess: (data, variable) => {
+      console.log("uploadMutation: onSuccess: ", data);
       inputForm.setValue("attachment", data.data.key);
+      inputForm.setValue("type", mimeMapper(variable.file.type));
       uploadForm.reset({ module: props.type });
     },
     onError: () => {
       setModalOpen(true);
+    },
+    onSettled: () => {
+      setAttachment({ show: false });
     },
   });
 
@@ -63,16 +74,30 @@ export default function ChatMessageInput(props: {
     }
   }, [messageText, inputForm]);
 
+  useEffect(() => {
+    if (!attachment.url) {
+      uploadForm.resetField("file");
+    }
+  }, [attachment, uploadForm]);
+
   const onClickPickFile = () => {
     fileInputRef.current?.click();
   };
 
   const handleUploadFileSubmit = () => {
-    uploadMutation.mutate(uploadForm.getValues());
+    void uploadForm.handleSubmit((data) => {
+      const file = data.file as unknown as FileList;
+
+      if (file[0]) {
+        uploadMutation.mutate({
+          ...data,
+          file: file[0],
+        });
+      }
+    })();
   };
 
   const retryUpload = () => {
-    uploadMutation.reset();
     handleUploadFileSubmit();
     setModalOpen(false);
   };
@@ -80,11 +105,15 @@ export default function ChatMessageInput(props: {
   const closeModal = () => setModalOpen(false);
 
   const handleSubmit = () => {
+    handleUploadFileSubmit();
+
     void inputForm.handleSubmit((data) => {
       props.onSubmit(data);
-      inputForm.reset({ id: props.roomId, message: "" });
+      inputForm.reset({ message: "", type: "TEXT" });
     })();
   };
+
+  console.log(uploadForm.watch("file"));
 
   return (
     <>
@@ -92,7 +121,7 @@ export default function ChatMessageInput(props: {
         component="form"
         onSubmit={inputForm.handleSubmit((data) => {
           props.onSubmit(data);
-          inputForm.reset({ id: props.roomId, message: "" });
+          inputForm.reset({ message: "", type: "TEXT" });
         })}
         sx={{
           p: "2px 4px",
@@ -112,13 +141,23 @@ export default function ChatMessageInput(props: {
         </IconButton>
         <input
           type="file"
+          accept="image/png, image/jpeg"
           style={{ display: "none" }}
           {...fileRest}
           ref={(e) => {
             fileRef(e);
             fileInputRef.current = e;
           }}
-          onChange={handleUploadFileSubmit}
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              setAttachment({
+                show: true,
+                url: URL.createObjectURL(e.target.files[0]),
+              });
+            }
+
+            void fileRest.onChange(e);
+          }}
         />
         <Controller
           control={inputForm.control}

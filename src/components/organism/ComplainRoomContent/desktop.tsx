@@ -3,7 +3,7 @@ import List from "@mui/material/List";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 
-import { messageAttachmentShowAtom } from "~/atom/chat";
+import { messageAttachmentAtom } from "~/atom/chat";
 
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
 import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubheader";
@@ -54,7 +54,7 @@ export default function ComplainRoomContent() {
 function ComplainRoomChatList({ complainId }: { complainId: string }) {
   const { data } = useGetModerationDetail(complainId);
   const { data: moderationList } = useGetModerationMessage(complainId);
-  const [show] = useAtom(messageAttachmentShowAtom);
+  const [show] = useAtom(messageAttachmentAtom);
   const scrollRef = useRef<HTMLLIElement | null>(null);
 
   const completed = data?.data.status !== "ON_GOING";

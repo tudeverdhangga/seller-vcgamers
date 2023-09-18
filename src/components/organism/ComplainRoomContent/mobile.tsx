@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import MuiDrawer from "@mui/material/Drawer";
 import { useRouter } from "next/router";
 
-import { messageAttachmentShowAtom } from "~/atom/chat";
+import { messageAttachmentAtom } from "~/atom/chat";
 import { mobileAppBarAtom } from "~/atom/layout";
 
 import ChatMessageListItem from "~/components/atomic/ChatMessageListItem";
@@ -95,7 +95,7 @@ function ComplainRoomSidebarDrawer({ complainId }: { complainId: string }) {
 function ComplainRoomChatList({ complainId }: { complainId: string }) {
   const { data } = useGetModerationDetail(complainId);
   const { data: moderationList } = useGetModerationMessage(complainId);
-  const [show] = useAtom(messageAttachmentShowAtom);
+  const [show] = useAtom(messageAttachmentAtom);
   const scrollRef = useRef<HTMLLIElement | null>(null);
 
   const completed = data?.data.status !== "ON_GOING";
