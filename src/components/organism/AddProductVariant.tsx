@@ -105,6 +105,7 @@ interface VariationProductDetail {
   delivery_type: number
   created_at: string
   updated_at: string
+  next_activate_kilat: string
 }
 interface ProductVariationMaster {
   value: string
@@ -148,6 +149,7 @@ export default function AddProductVariant({
   const [variantData, setVariantData] = useState<Variation>();
   const [indexRow, setIndexRow] = useState<number>();
   const [nextUpdatePrice, setNextUpdatePrice] = useState<string | undefined>();
+  const [nextUpdateKilat, setNextUpdateKilat] = useState<string | undefined>();
   const [multiple100, setMultiple100] = useState<string[]>([]);
   const [isShowCropImage, setIsShowCropImage] = useState(false);
   const [uploadedImage, setUploadedImage] = useState("");
@@ -245,6 +247,7 @@ export default function AddProductVariant({
     setVariantData(variation);
     setIndexRow(index);
     setNextUpdatePrice(variation.next_update_price);
+    setNextUpdateKilat(variation.next_activate_kilat);
   }
   const handleDeleteVariation = (index: number) => {
     setVariantImage([])
@@ -362,7 +365,7 @@ export default function AddProductVariant({
       }
     </TableCell>
   )
-  const nameContainer = (row: Variation) => (
+  const nameContainer = (row: Variation, index: number) => (
     <TableCell sx={{ borderRight: "1px solid #DEDEDE" }}>
       <Typography
         sx={{
@@ -384,7 +387,10 @@ export default function AddProductVariant({
                   width={53}
                   height={11}
                 />
-                <Switch defaultChecked disabled={!row.is_active || row.next_activate_kilat !== ''} />
+                <Switch
+                  defaultChecked={productDetail?.variations[index]?.is_kilat}
+                  disabled={!row.is_active || row.next_activate_kilat !== null}
+                />
               </Box>
               {
                 Boolean(row.next_activate_kilat) && (
@@ -615,7 +621,7 @@ export default function AddProductVariant({
                       {index + 1}
                     </TableCell>
                     {imageContainer(row, index)}
-                    {nameContainer(row)}
+                    {nameContainer(row, index)}
                     {stockContainer(row, index)}
                     {priceContainer(row, index)}
                     {statisticContainer(index)}
@@ -657,6 +663,7 @@ export default function AddProductVariant({
         index={indexRow}
         groupId={groupId}
         nextUpdatePrice={nextUpdatePrice}
+        nextUpdateKilat={nextUpdateKilat}
         onEditVariation={onEditVariation}
         onDeleteVariant={handleDeleteVariation}
         onSubmit={onSubmit}

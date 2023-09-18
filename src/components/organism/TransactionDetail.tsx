@@ -35,10 +35,12 @@ interface ListItem {
 
 export default function TransactionDetail({
   list,
+  memberId,
   isLoading,
   refetch
 }: {
   list: ListItem[];
+  memberId: string;
   isLoading: boolean;
   refetch: () => void;
 }) {
@@ -71,6 +73,7 @@ export default function TransactionDetail({
                       <Divider sx={{ mt: 3 }} />
                       <TransactionDetailItemMobile
                         id={item.id}
+                        memberId={memberId}
                         image={item.image_url}
                         code={item.code}
                         status={item.status}
@@ -100,6 +103,7 @@ export default function TransactionDetail({
                       <Divider sx={{ mt: 3 }} />
                       <TransactionDetailItemDesktop
                         id={item.id}
+                        memberId={memberId}
                         image={item.image_url}
                         code={item.code}
                         status={item.status}

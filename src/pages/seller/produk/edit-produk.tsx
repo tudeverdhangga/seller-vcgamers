@@ -212,9 +212,8 @@ export default function TambahProdukPage() {
         },
         onError: (error) => {
           const err = error as ErrorResponse;
-          const errorMessage = `${t("detail.edit.onError")}: ${
-            err?.response?.data?.message
-          }`;
+          const errorMessage = `${t("detail.edit.onError")}: ${err?.response?.data?.message
+            }`;
           toast.error(errorMessage, toastOption);
         },
       });
@@ -235,9 +234,8 @@ export default function TambahProdukPage() {
         },
         onError: (error) => {
           const err = error as ErrorResponse;
-          const errorMessage = `${t("detail.create.onError")}: ${
-            err?.response?.data?.message
-          }`;
+          const errorMessage = `${t("detail.create.onError")}: ${err?.response?.data?.message
+            }`;
           toast.error(errorMessage, toastOption);
         },
       });

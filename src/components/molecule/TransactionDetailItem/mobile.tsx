@@ -24,10 +24,12 @@ import TransactionDetailCancelDialog from "~/components/molecule/TransactionDeta
 import TransactionDetailAccountDialog from "~/components/molecule/TransactionDetailAccountDialog";
 import { useRouter } from "next/router";
 import { useGetModerationDetailByTransactionId } from "~/services/moderation/hooks";
+import { useGetChatRoomIdByBuyerId } from "~/services/chat/hooks";
 
 export default function TransactionDetailItemMobile(props: {
   image: string;
   id: string;
+  memberId: string;
   code: string;
   status: number;
   statusName: string;
@@ -62,7 +64,8 @@ export default function TransactionDetailItemMobile(props: {
     seconds: string;
   } | undefined>(undefined)
   const router = useRouter()
-  const { data } = useGetModerationDetailByTransactionId(props.id)
+  const moderation = useGetModerationDetailByTransactionId(props.id)
+  const chat = useGetChatRoomIdByBuyerId(props.memberId)
 
   useEffect(() => {
     if (props.kilatTime) {
@@ -226,7 +229,7 @@ export default function TransactionDetailItemMobile(props: {
         width: 40,
         minWidth: 40
       }}
-      onClick={() => void router.push(`/seller/obrolan/percakapan/${data?.data?.id as string}`)}
+      onClick={() => void router.push(`/seller/obrolan/percakapan/${chat?.data?.data?.id as string}`)}
     >
       <ChatIcon
         sx={{
@@ -247,6 +250,7 @@ export default function TransactionDetailItemMobile(props: {
         fontSize: 12
       }}
       startIcon={<ChatIcon />}
+      onClick={() => void router.push(`/seller/obrolan/percakapan/${chat?.data?.data?.id as string}`)}
     >
       {t("detail.list.contactBuyer")}
     </VGButton>
@@ -264,7 +268,7 @@ export default function TransactionDetailItemMobile(props: {
           width: 40,
           minWidth: 40
         }}
-        onClick={() => void router.push(`/seller/obrolan/percakapan/${data?.data?.id as string}`)}
+        onClick={() => void router.push(`/seller/obrolan/percakapan/${chat?.data?.data?.id as string}`)}
       >
         <CancelIcon
           sx={{
@@ -333,7 +337,7 @@ export default function TransactionDetailItemMobile(props: {
           minWidth: 40
         }}
         fullWidth
-        onClick={() => void router.push(`/seller/obrolan/komplain/${data?.data?.id as string}`)}
+        onClick={() => void router.push(`/seller/obrolan/komplain/${moderation?.data?.data?.id as string}`)}
       >
         {t("detail.list.complain.button")}
       </VGButton>

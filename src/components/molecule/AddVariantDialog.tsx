@@ -45,6 +45,7 @@ export default function AddVariantDialog({
   variant,
   index,
   nextUpdatePrice,
+  nextUpdateKilat,
   onSubmit,
   onEditVariation,
   onDeleteVariant,
@@ -56,6 +57,7 @@ export default function AddVariantDialog({
   variant?: Variation | undefined;
   index?: number;
   nextUpdatePrice?: string;
+  nextUpdateKilat?: string;
   onSubmit: (variation: Variation) => void;
   onEditVariation: (value: Variation, index: number) => void;
   onDeleteVariant: (index: number) => void;
@@ -203,7 +205,7 @@ export default function AddVariantDialog({
     setImage(checked);
     onChangeField("is_custom_image", checked);
   }
-  const onChangeField = (key: keyof Variation, value: string | boolean | number) => {
+  const onChangeField = (key: keyof Variation, value: string | boolean | number | undefined) => {
     setVariationData({
       ...variationData,
       [key]: value
@@ -234,6 +236,12 @@ export default function AddVariantDialog({
     onCloseDialog()
     if (typeof index !== "undefined") {
       onDeleteVariant(index)
+    }
+  }
+  const onChangeCustomName = (checked: boolean) => {
+    setIsCustomName(checked)
+    if (checked) {
+      onChangeField("product_variation_master_id", undefined)
     }
   }
 
@@ -306,7 +314,7 @@ export default function AddVariantDialog({
         control={
           <Checkbox
             defaultChecked={isCustomName}
-            onChange={(_, checked) => setIsCustomName(checked)}
+            onChange={(_, checked) => onChangeCustomName(checked)}
           />
         }
         label={t("variant.dialog.header.customName")}
@@ -343,7 +351,7 @@ export default function AddVariantDialog({
         <Box>
           <FormControlLabel
             value={1}
-            disabled={!getProfile?.data?.data?.seller_has_kilat}
+            disabled={!getProfile?.data?.data?.seller_has_kilat || nextUpdateKilat !== null}
             control={<Radio />}
             label={
               <Image

@@ -99,6 +99,7 @@ export default function DetailPenjualanPage() {
       )}
       <TransactionDetail
         list={transaction.data?.data.items as []}
+        memberId={transaction.data?.data.member.id as string}
         isLoading={transaction.isLoading}
         refetch={refetchTransactionDetail}
       />

@@ -157,7 +157,6 @@ export const useGetProduct = (params: string) => {
     },
     getNextPageParam: (currentPage) => {
       const nextCursor = currentPage.data.pagination_data.next_cursor;
-      console.log('🚀 ~ file: product.ts:160 ~ useGetProduct ~ nextCursor:', nextCursor)
 
       return nextCursor === "" ? undefined : nextCursor;
     },
