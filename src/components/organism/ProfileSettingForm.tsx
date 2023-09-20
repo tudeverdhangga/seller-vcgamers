@@ -50,7 +50,7 @@ export default function ProfileSettingForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty }
+    formState: { errors }
   } = useForm<ProfileForm>({
     criteriaMode: "all"
   });
@@ -64,19 +64,35 @@ export default function ProfileSettingForm() {
   const checkName = useCheckNameAvailability();
   const [profileImage, setProfileImage] = useState<SellerPhoto | undefined>();
   const [bannerImage, setBannerImage] = useState<SellerPhoto | undefined>();
+  const [shopName, setShopName] = useState<string | undefined>("");
+  const [shopDesc, setShopDesc] = useState<string | undefined>("");
   const [shopUrl, setShopUrl] = useState<string | undefined>("");
   const [urlMessage, setUrlMessage] = useState<string | undefined>("");
   const [nameMessage, setNameMessage] = useState<string | undefined>("");
   const [phone, setPhone] = useState<string | undefined>("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
+    setShopName(getProfile?.data?.data?.seller_name)
+    setShopDesc(getProfile?.data?.data?.seller_description)
     setProfileImage(getProfile?.data?.data?.seller_photo)
     setBannerImage(getProfile?.data?.data?.seller_cover_photo)
     setShopUrl(getProfile?.data?.data?.seller_url)
     setPhone(getProfile?.data?.data?.phone)
   }, [getProfile?.data])
+  useEffect(() => {
+    if (
+      shopName !== getProfile?.data?.data?.seller_name ||
+      shopUrl !== getProfile?.data?.data?.seller_url ||
+      shopDesc !== getProfile?.data?.data?.seller_description
+    ) {
+      setIsDirty(true)
+    } else {
+      setIsDirty(false)
+    }
+  }, [shopName, shopUrl, shopDesc])
 
   // Style
   const fieldStyle = {
@@ -167,6 +183,8 @@ export default function ProfileSettingForm() {
     setShopUrl(url)
   };
   const handleCheckUrl = useDebounce((url: string) => {
+    setShopUrl(url)
+
     if (url) {
       checkUrl.mutate(url, {
         onSuccess: (res) => {
@@ -182,6 +200,8 @@ export default function ProfileSettingForm() {
     }
   }, 1000)
   const onChangeName = useDebounce((name: string) => {
+    setShopName(name)
+
     if (name) {
       checkName.mutate(name, {
         onSuccess: (res) => {
@@ -254,7 +274,7 @@ export default function ProfileSettingForm() {
         }
         error={Boolean(errors.seller_url) || Boolean(urlMessage)}
         helperText={errors.seller_url?.message || urlMessage}
-        defaultValue={getProfile?.data?.data?.seller_url}
+        value={shopUrl}
         onChange={(e) => onChangeUrl(e.target.value)}
       />
       <VGAlert sx={{ py: 0 }}>
@@ -289,6 +309,7 @@ export default function ProfileSettingForm() {
       error={Boolean(errors.seller_description)}
       defaultValue={getProfile?.data?.data?.seller_description}
       helperText={errors.seller_description?.message}
+      onChange={(e) => setShopDesc(e.target.value)}
     />
   );
   const shopPhoneContainer = (

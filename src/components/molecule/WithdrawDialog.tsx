@@ -103,7 +103,8 @@ export default function WithdrawDialog(props: {
             labelPlacement="start"
             sx={{
               width: "100%",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
+              m: 0
             }}
           />
           <Divider />
@@ -114,7 +115,8 @@ export default function WithdrawDialog(props: {
             labelPlacement="start"
             sx={{
               width: "100%",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
+              m: 0
             }}
           />
           <Divider />
@@ -125,7 +127,8 @@ export default function WithdrawDialog(props: {
             labelPlacement="start"
             sx={{
               width: "100%",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
+              m: 0
             }}
           />
           <Divider />
@@ -136,7 +139,8 @@ export default function WithdrawDialog(props: {
             labelPlacement="start"
             sx={{
               width: "100%",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
+              m: 0
             }}
           />
           <Divider />

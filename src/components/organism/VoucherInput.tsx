@@ -40,6 +40,13 @@ export default function VoucherInput({
   useEffect(() => {
     setOpen(checkVoucherData.isDuplicate || isSuccessCreate)
   }, [checkVoucherData.isDuplicate, isSuccessCreate])
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        setOpen(false)
+      }, 2000);
+    }
+  }, [open])
 
   const onEdit = () => {
     setLoading(true)
@@ -156,11 +163,11 @@ export default function VoucherInput({
         </ul>
         <Collapse in={open}>
           <VGAlert
-            color={isSuccessCreate ? "success" : "error"}
+            color={!checkVoucherData.isDuplicate ? "success" : "error"}
             sx={{ mb: 2 }}
             onClose={() => setOpen(false)}
           >
-            {isSuccessCreate ? t("input.onSuccess", { total: checkVoucherData.total }) : t("input.alert")}
+            {!checkVoucherData.isDuplicate ? t("input.onSuccess", { total: checkVoucherData.total }) : t("input.alert")}
           </VGAlert>
         </Collapse>
         <Box position="relative">

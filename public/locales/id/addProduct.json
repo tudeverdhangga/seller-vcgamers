@@ -109,10 +109,16 @@
       "setting": {
         "title": "Pengaturan Varian",
         "alert": "Setiap transaksi VCGamers menerapkan potongan <strong>2%</strong> sesuai syarat dan ketentuan yang berlaku. Pendapatan dari hasil penjualan produk ini sebesar <strong>{{income}}</strong>",
-        "stock": "Stok",
+        "stock": {
+          "label": "Stok",
+          "placeholder": "Contoh: 10",
+          "note": "Stok produk Instant diatur dari halaman: Kelola produk > Atur Voucher<br/>(Wajib menyimpan produk terlebih dulu)"
+        },
         "price": {
           "label": "Harga",
-          "subLabel": "Harap isi nominal dengan kelipatan 100"
+          "subLabel": "Harap isi nominal dengan kelipatan 100",
+          "placeholder": "Minimal: 100",
+          "note": "Catatan: Harap isi nominal dengan kelipatan 100"
         },
         "error": {
           "required": {
@@ -170,6 +176,9 @@
     "error": {
       "updatePriceTime": "Kamu dapat merubah harga lagi di jam {{time}}",
       "updateKilatTime": "Fitur ini bisa diaktifkan kembali pada {{time}} WIB"
+    },
+    "note": {
+      "instant": "Stok produk Instant diatur dari halaman:<br/>Kelola produk > Atur Voucher"
     }
   },
   "cancel": "Batal",

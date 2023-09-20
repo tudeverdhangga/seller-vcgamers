@@ -22,6 +22,7 @@ import VGButton from "~/components/atomic/VGButton";
 import { useGetVariationMaster } from "~/services/api/masterData";
 import { useGetProfile } from "~/services/api/auth";
 import MenuItem from "@mui/material/MenuItem";
+import ConfirmationDeleteVariantDialog from "~/components/molecule/ConfirmationDeleteVariantDialog";
 
 interface Dropdown {
   label: string;
@@ -46,6 +47,7 @@ export default function AddVariantDialog({
   index,
   nextUpdatePrice,
   nextUpdateKilat,
+  dataAction,
   onSubmit,
   onEditVariation,
   onDeleteVariant,
@@ -58,6 +60,12 @@ export default function AddVariantDialog({
   index?: number;
   nextUpdatePrice?: string;
   nextUpdateKilat?: string;
+  dataAction: {
+    name: string;
+    index: number;
+    images_url?: string;
+    is_active: boolean;
+  };
   onSubmit: (variation: Variation) => void;
   onEditVariation: (value: Variation, index: number) => void;
   onDeleteVariant: (index: number) => void;
@@ -82,6 +90,7 @@ export default function AddVariantDialog({
   const [image, setImage] = useState(false);
   const [variationOptions, setVariationOptions] = useState<Dropdown[]>([]);
   const [variationData, setVariationData] = useState<Variation>();
+  const [isOpenDeleteProductDialog, setIsOpenDeleteProductDialog] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -283,6 +292,7 @@ export default function AddVariantDialog({
                 label={t("variant.dialog.header.variant")}
                 select
                 fullWidth
+                autoComplete="off"
                 size="small"
                 {...register("name", { required: t("variant.dialog.header.error.required.variant") })}
                 error={Boolean(errors.name)}
@@ -303,6 +313,7 @@ export default function AddVariantDialog({
                 variant="outlined"
                 size="small"
                 fullWidth
+                autoComplete="off"
                 {...register("name", { required: t("variant.dialog.header.error.required.variantCustom") })}
                 error={Boolean(errors.name)}
                 helperText={errors.name?.message}
@@ -351,7 +362,10 @@ export default function AddVariantDialog({
         <Box>
           <FormControlLabel
             value={1}
-            disabled={!getProfile?.data?.data?.seller_has_kilat || nextUpdateKilat !== null}
+            disabled={
+              !getProfile?.data?.data?.seller_has_kilat ||
+              typeof nextUpdateKilat === 'string'
+            }
             control={<Radio />}
             label={
               <Image
@@ -367,7 +381,7 @@ export default function AddVariantDialog({
           </Typography>
           {
             !getProfile?.data?.data?.seller_has_kilat && (
-              <Typography component="p">
+              <Box>
                 <Typography
                   component="span"
                   sx={errorLabelStyle}
@@ -379,10 +393,12 @@ export default function AddVariantDialog({
                   fontSize={12}
                   fontWeight={700}
                   color="primary"
+                  href="/seller/request/proses-kilat"
+                  target="_blank"
                 >
                   {t("variant.dialog.delivery.kilat.alert.subTitle")}
                 </Typography>
-              </Typography>
+              </Box>
             )
           }
         </Box>
@@ -406,7 +422,7 @@ export default function AddVariantDialog({
           {
             !getProfile?.data?.data?.seller_has_instant
               ? (
-                <Typography component="p">
+                <Box>
                   <Typography
                     component="span"
                     sx={errorLabelStyle}
@@ -418,10 +434,12 @@ export default function AddVariantDialog({
                     fontSize={12}
                     fontWeight={700}
                     color="primary"
+                    href="/seller/request/instant"
+                    target="_blank"
                   >
                     {t("variant.dialog.delivery.kilat.alert.subTitle")}
                   </Typography>
-                </Typography>
+                </Box>
               ) : !isVoucherInstant
                 ? (
                   <Typography sx={{
@@ -442,12 +460,13 @@ export default function AddVariantDialog({
     <Grid
       container
       spacing={2}
+      mt={0}
     >
       <Grid
         item
         xs={12}
       >
-        <Typography sx={{ ...titleMediumStyle, mt: 2 }}>
+        <Typography sx={{ ...titleMediumStyle }}>
           {t("variant.dialog.setting.title")}
         </Typography>
         <VGAlert
@@ -488,7 +507,8 @@ export default function AddVariantDialog({
         <TextField
           value={stock !== undefined ? stock : ""}
           variant="outlined"
-          label={t("variant.dialog.setting.stock")}
+          label={t("variant.dialog.setting.stock.label")}
+          placeholder={t("variant.dialog.setting.stock.placeholder")}
           {...register("stock", {
             value: stock,
             required: t("variant.dialog.setting.error.required.stock"),
@@ -518,6 +538,21 @@ export default function AddVariantDialog({
           }}
           onChange={onInputStock}
         />
+        {
+          feature === 2 && (
+            <Typography
+              color="common.shade.200"
+              fontSize={12}
+              fontWeight={600}
+              mt={1}
+            >
+              <Trans
+                ns="addProduct"
+                i18nKey={"variant.dialog.setting.stock.note"}
+              />
+            </Typography>
+          )
+        }
       </Grid>
       <Grid
         item
@@ -528,6 +563,7 @@ export default function AddVariantDialog({
           value={price !== undefined ? price : ""}
           variant="outlined"
           label={t("variant.dialog.setting.price.label")}
+          placeholder={t("variant.dialog.setting.price.placeholder")}
           {...register("price", {
             value: price,
             required: t("variant.dialog.setting.error.required.price"),
@@ -561,16 +597,26 @@ export default function AddVariantDialog({
           onChange={onInputPrice}
         />
         {
-          Boolean(nextUpdatePrice) && (
-            <Typography
-              color="success.dark"
-              fontSize={12}
-              fontWeight={600}
-              mt={1}
-            >
-              {t("variant.error.updatePriceTime", { time: dateToTime(nextUpdatePrice as string) })}
-            </Typography>
-          )
+          Boolean(nextUpdatePrice)
+            ? (
+              <Typography
+                color="success.dark"
+                fontSize={12}
+                fontWeight={600}
+                mt={1}
+              >
+                {t("variant.error.updatePriceTime", { time: dateToTime(nextUpdatePrice as string) })}
+              </Typography>
+            ) : (
+              <Typography
+                color="common.shade.200"
+                fontSize={12}
+                fontWeight={600}
+                mt={1}
+              >
+                {t("variant.dialog.setting.price.note")}
+              </Typography>
+            )
         }
       </Grid>
     </Grid>
@@ -618,7 +664,7 @@ export default function AddVariantDialog({
             <VGButton
               variant="outlined"
               color="error"
-              onClick={onDelete}
+              onClick={() => setIsOpenDeleteProductDialog(true)}
             >
               {t("variant.dialog.delete")}
             </VGButton>
@@ -646,27 +692,38 @@ export default function AddVariantDialog({
   )
 
   return (
-    <VGDialog
-      isOpen={isOpen}
-      onClose={onCloseDialog}
-    >
-      <Box p={2}>
-        <Typography sx={{ ...titleLargeStyle, mb: 2 }}>
-          {
-            typeof variant !== "undefined"
-              ? t("variant.dialog.title.edit")
-              : t("variant.dialog.title.add")
-          }
-        </Typography>
-        <form onSubmit={handleSubmit(
-          typeof variant !== "undefined" ? onSaveEdit : onSaveCreate
-        )}>
-          {headingContiner}
-          {deliveryContainer}
-          {settingContainer}
-          {footerContainer}
-        </form>
-      </Box>
-    </VGDialog>
+    <>
+      <VGDialog
+        isOpen={isOpen}
+        onClose={onCloseDialog}
+      >
+        <Box p={2}>
+          <Typography sx={{ ...titleLargeStyle, mb: 2 }}>
+            {
+              typeof variant !== "undefined"
+                ? t("variant.dialog.title.edit")
+                : t("variant.dialog.title.add")
+            }
+          </Typography>
+          <form onSubmit={handleSubmit(
+            typeof variant !== "undefined" ? onSaveEdit : onSaveCreate
+          )}>
+            {headingContiner}
+            {deliveryContainer}
+            {settingContainer}
+            {footerContainer}
+          </form>
+        </Box>
+      </VGDialog>
+
+      <ConfirmationDeleteVariantDialog
+        id={dataAction.name}
+        name={dataAction.name}
+        image={dataAction.images_url}
+        isOpen={isOpenDeleteProductDialog}
+        handleClose={() => setIsOpenDeleteProductDialog(false)}
+        handleDelete={onDelete}
+      />
+    </>
   )
 }

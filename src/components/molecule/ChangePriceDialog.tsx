@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import queryString from "query-string";
-import Image from "next/image";
 import { Box, TextField, Typography } from "@mui/material";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { Trans, useTranslation } from "next-i18next";
@@ -41,10 +40,16 @@ export default function ChangePriceDialog(props: {
   useEffect(() => {
     setIncome(98 * price / 100)
   }, [price])
+  useEffect(() => {
+    if (props.isOpen) {
+      setPrice(props.price)
+    }
+  }, [props.isOpen])
 
   const onUpdatePrice = () => {
     updatePrice.mutate(price, {
       onSuccess: () => {
+        setPrice(0)
         props.handleClose()
         toast.success(t("table.dialog.changePrice.onSuccess"), toastOption);
         props.refetchProduct()
@@ -57,7 +62,7 @@ export default function ChangePriceDialog(props: {
     })
   }
   const onClose = () => {
-    setPrice(props.price)
+    setPrice(0)
     props.handleClose()
   }
   const onChangePrice = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

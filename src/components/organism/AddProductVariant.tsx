@@ -5,7 +5,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 import AddIcon from "@mui/icons-material/Add";
 import Switch from "@mui/material/Switch";
 import Box from "@mui/material/Box";
@@ -158,12 +158,28 @@ export default function AddProductVariant({
   const [isOpenDeactiveProductDialog, setIsOpenDeactiveProductDialog] = useState(false)
   const [isOpenActiveProductDialog, setIsOpenActiveProductDialog] = useState(false)
   const [isOpenDeleteProductDialog, setIsOpenDeleteProductDialog] = useState(false)
+  const [dataAction, setDataAction] = useState<{
+    name: string;
+    index: number;
+    images_url?: string;
+    is_active: boolean;
+  }>({
+    name: '',
+    index: 0,
+    images_url: '',
+    is_active: false
+  })
 
   useEffect(() => {
     if (typeof variantData !== 'undefined' && typeof indexRow !== 'undefined') {
       onClickAddVariant(true);
     }
   }, [variantData, indexRow])
+  useEffect(() => {
+    if (variant.length === 0) {
+      setVariantImage([])
+    }
+  }, [variant.length])
   useEffect(() => {
     if (productDetail) {
       const imageUrl: string[][] = []
@@ -263,6 +279,8 @@ export default function AddProductVariant({
   const handleCloseModal = () => {
     setVariantData(undefined);
     setIndexRow(undefined);
+    setNextUpdatePrice(undefined);
+    setNextUpdateKilat(undefined);
     setIsShowAddVariantDialog(false);
   }
   const getImageUrl = (index: number, indexImg: number) => {
@@ -411,13 +429,24 @@ export default function AddProductVariant({
             </>
           ) : row.delivery_type === 2
             ? (
-              <Box display="flex">
+              <Box display="flex" flexDirection="column">
                 <Image
                   src="/assets/badge-instant.svg"
                   alt="Badge Instant"
                   width={53}
                   height={11}
                 />
+                <Typography
+                  color="common.shade.200"
+                  fontSize={12}
+                  fontWeight={600}
+                  mt={2}
+                >
+                  <Trans
+                    ns="addProduct"
+                    i18nKey={"variant.note.instant"}
+                  />
+                </Typography>
               </Box>
             ) : ""
       }
@@ -519,7 +548,15 @@ export default function AddProductVariant({
           underline="hover"
           color="primary"
           sx={{ cursor: "pointer" }}
-          onClick={() => handleEditVariant(row, index)}
+          onClick={() => {
+            setDataAction({
+              name: row.name,
+              index,
+              images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+              is_active: row.is_active
+            })
+            handleEditVariant(row, index)
+          }}
         >
           <strong>{t("variant.table.td.action.edit")}</strong>
         </Link>
@@ -530,7 +567,15 @@ export default function AddProductVariant({
                 underline="hover"
                 color="error"
                 sx={{ cursor: "pointer" }}
-                onClick={() => setIsOpenDeactiveProductDialog(true)}
+                onClick={() => {
+                  setDataAction({
+                    name: row.name,
+                    index,
+                    images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+                    is_active: row.is_active
+                  })
+                  setIsOpenDeactiveProductDialog(true)
+                }}
               >
                 <strong>
                   {t("variant.table.td.action.nonactive")}
@@ -541,7 +586,15 @@ export default function AddProductVariant({
                 underline="hover"
                 color="success.main"
                 sx={{ cursor: "pointer" }}
-                onClick={() => setIsOpenActiveProductDialog(true)}
+                onClick={() => {
+                  setDataAction({
+                    name: row.name,
+                    index,
+                    images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+                    is_active: row.is_active
+                  })
+                  setIsOpenActiveProductDialog(true)
+                }}
               >
                 <strong>
                   {t("variant.table.td.action.active")}
@@ -553,38 +606,21 @@ export default function AddProductVariant({
             underline="hover"
             color="error"
             sx={{ cursor: "pointer" }}
-            onClick={() => setIsOpenDeleteProductDialog(true)}
+            onClick={() => {
+              setDataAction({
+                name: row.name,
+                index,
+                images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+                is_active: row.is_active
+              })
+
+              setIsOpenDeleteProductDialog(true)
+            }}
           >
             <strong>{t("variant.table.td.action.delete")}</strong>
           </Link>
         </Box>
       </Box>
-
-
-      <ConfirmationDeactiveVariantDialog
-        id={row.name}
-        name={row.name}
-        image={row.images_url && row.images_url[0]}
-        isOpen={isOpenDeactiveProductDialog}
-        handleClose={() => setIsOpenDeactiveProductDialog(false)}
-        handleDeactive={() => onChangeVariant(!row.is_active, "is_active", index)}
-      />
-      <ConfirmationActiveVariantDialog
-        id={row.name}
-        name={row.name}
-        image={row.images_url && row.images_url[0]}
-        isOpen={isOpenActiveProductDialog}
-        handleClose={() => setIsOpenActiveProductDialog(false)}
-        handleActivate={() => onChangeVariant(!row.is_active, "is_active", index)}
-      />
-      <ConfirmationDeleteVariantDialog
-        id={row.name}
-        name={row.name}
-        image={row.images_url && row.images_url[0]}
-        isOpen={isOpenDeleteProductDialog}
-        handleClose={() => setIsOpenDeleteProductDialog(false)}
-        handleDelete={() => onDeleteVariant(index)}
-      />
     </TableCell>
   )
   const tableContainer = (
@@ -664,6 +700,7 @@ export default function AddProductVariant({
         isOpen={isShowAddVariantDialog}
         isVoucherInstant={isVoucherInstant}
         variant={variantData}
+        dataAction={dataAction}
         index={indexRow}
         groupId={groupId}
         nextUpdatePrice={nextUpdatePrice}
@@ -683,6 +720,30 @@ export default function AddProductVariant({
           setIsShowCropImage(false)
         }}
         onSave={(file) => handleFileChange(file, uploadedImageDataIndex, uploadedImageIndex)}
+      />
+      <ConfirmationDeactiveVariantDialog
+        id={dataAction.name}
+        name={dataAction.name}
+        image={dataAction.images_url}
+        isOpen={isOpenDeactiveProductDialog}
+        handleClose={() => setIsOpenDeactiveProductDialog(false)}
+        handleDeactive={() => onChangeVariant(!dataAction.is_active, "is_active", dataAction.index)}
+      />
+      <ConfirmationActiveVariantDialog
+        id={dataAction.name}
+        name={dataAction.name}
+        image={dataAction.images_url}
+        isOpen={isOpenActiveProductDialog}
+        handleClose={() => setIsOpenActiveProductDialog(false)}
+        handleActivate={() => onChangeVariant(!dataAction.is_active, "is_active", dataAction.index)}
+      />
+      <ConfirmationDeleteVariantDialog
+        id={dataAction.name}
+        name={dataAction.name}
+        image={dataAction.images_url}
+        isOpen={isOpenDeleteProductDialog}
+        handleClose={() => setIsOpenDeleteProductDialog(false)}
+        handleDelete={() => onDeleteVariant(dataAction.index)}
       />
     </VGCard>
   )

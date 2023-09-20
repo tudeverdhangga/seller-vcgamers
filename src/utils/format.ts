@@ -1,9 +1,11 @@
 export function priceFormat(value: number, currency = "IDR", lng = "id-ID") {
-  return Intl.NumberFormat(lng, {
+  const formattedValue =  Intl.NumberFormat(lng, {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
   }).format(value);
+
+  return formattedValue.replace(/\s/g, "");
 }
 
 export function capitalizeFirstLetter(value: string) {

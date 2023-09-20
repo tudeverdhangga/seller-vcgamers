@@ -110,18 +110,14 @@ export default function KelolaVoucherPage() {
       },
       {
         onSuccess: (res) => {
-          if (res.data.total !== 0) {
-            setCheckVoucher({
-              isDisable: true,
-              isValidate: true,
-              isDuplicate: res.data.is_duplicate,
-              vouchers: res.data.vouchers,
-              total: res.data.total,
-            });
-            setVouchers(res.data.vouchers);
-          } else {
-            setSuccessCreateVoucher(false);
-          }
+          setCheckVoucher({
+            isDisable: true,
+            isValidate: true,
+            isDuplicate: res.data.is_duplicate,
+            vouchers: res.data.vouchers,
+            total: res.data.total,
+          });
+          setVouchers(res.data.vouchers);
         },
         onError: (error) => {
           const err = error as ErrorResponse;
