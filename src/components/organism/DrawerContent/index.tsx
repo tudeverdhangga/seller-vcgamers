@@ -15,7 +15,6 @@ import SellerToolbar from "~/components/molecule/SellerToolbar";
 import { useGetProfile } from "~/services/api/auth";
 import { menus } from "./menus";
 import { checkVoucher, isSuccessCreateVoucher, voucherCode } from "~/atom/voucher";
-import { useAtom } from "jotai";
 
 export default function DrawerContent() {
   const router = useRouter();
