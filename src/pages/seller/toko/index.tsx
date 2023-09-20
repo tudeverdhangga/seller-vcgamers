@@ -50,8 +50,8 @@ export default function DashboardSellerPage() {
         sx={{
           display: "grid",
           gridTemplateColumns: { sm: "repeat(3, 1fr)", xs: "repeat(2, 1fr)" },
-          gap: "20px",
-          mb: "20px",
+          gap: { sm: "20px", xs: "10px" },
+          mb: { sm: "20px", xs: "10px" },
           gridTemplateRows: "auto",
           gridTemplateAreas: {
             sm: `"graph graph performance"
@@ -75,7 +75,7 @@ export default function DashboardSellerPage() {
               p: "20px",
               overflowX: "auto",
               display: "flex",
-              gap: "20px",
+              gap: { sm: "20px", xs: "10px" },
               "&::-webkit-scrollbar": {
                 display: "none",
                 width: "0 !important",
@@ -134,7 +134,7 @@ export default function DashboardSellerPage() {
       <Divider
         sx={{
           borderStyle: "dashed",
-          my: "20px",
+          my: { sm: "20px", xs: "10px" },
           backgroundColor: "common.shade.75",
         }}
       />
@@ -143,8 +143,8 @@ export default function DashboardSellerPage() {
         sx={{
           display: "grid",
           gridTemplateColumns: { sm: "1fr 1fr", xs: "1fr" },
-          gap: "20px",
-          mb: "20px",
+          gap: { sm: "20px", xs: "10px" },
+          mb: { sm: "20px", xs: "10px" },
           gridTemplateRows: "auto",
           gridTemplateAreas: {
             sm: `"transaction carousel"

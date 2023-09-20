@@ -39,7 +39,7 @@ export default function HelpCenterMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <Typography variant="h6" component="div" sx={{ mr: 2 }}>
+        <Typography variant="h6" component="div" sx={{ mr: 2, fontSize: 14 }}>
           {t("helpCenter")}
         </Typography>
       </HelpCenterButton>

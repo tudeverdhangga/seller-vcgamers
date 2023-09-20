@@ -49,6 +49,13 @@ export default function BalancePinDialog() {
       onClose={() => setModalOpen(false)}
       fullWidth
       maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
     >
       <DialogTitle
         sx={{

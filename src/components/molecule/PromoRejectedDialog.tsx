@@ -22,7 +22,19 @@ export default function PromoRejectedDialog() {
   const handleClose = () => setModal({ isOpen: false });
 
   return (
-    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
+    <Dialog
+      open={modal.isOpen}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           fontSize: 16,

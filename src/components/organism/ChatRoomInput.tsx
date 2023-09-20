@@ -35,9 +35,8 @@ export default function ChatRoomInput({ chatId }: { chatId: string }) {
             attachment: data.attachment,
             attachment_url: data.attachment_url,
             requester: "SELLER", // Will always be seller if from seller
-            receiver: chatRoom?.data.buyer.id ?? "",
+            receiver: chatRoom?.data?.buyer?.id ?? "",
           });
-          console.log(data);
         }}
       />
     </Box>

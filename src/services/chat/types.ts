@@ -68,11 +68,11 @@ export interface DataChatSendMessageMessage {
 }
 
 export interface DataChatRoomDetail {
-  id: string;
-  name: string;
-  last_message_id: string;
-  icon: string;
-  buyer: {
-    id: string;
+  id?: string;
+  name?: string;
+  last_message_id?: string;
+  icon?: string;
+  buyer?: {
+    id?: string;
   };
 }

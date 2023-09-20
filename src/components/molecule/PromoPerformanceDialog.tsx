@@ -67,7 +67,19 @@ export default function PromoPerformanceDialog() {
   const handleClose = () => setModal({ isOpen: false });
 
   return (
-    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="md">
+    <Dialog
+      open={modal.isOpen}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="md"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           fontSize: 16,

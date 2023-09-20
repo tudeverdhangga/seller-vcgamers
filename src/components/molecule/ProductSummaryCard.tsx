@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useGetDashboardProductStat } from "~/services/dashboard/hooks";
 import DashboardCard from "../atomic/DashboardCard";
 import CubeIcon from "../icons/svg/cube.svg";
+import Link from "next/link";
 
 export default function ProductSummaryCard() {
   const { t } = useTranslation("dashboard");
@@ -78,50 +79,67 @@ function ActiveProductSummaryCard(props: {
         flex: "1 0 0",
       }}
     >
-      <Box sx={{ display: "flex", flexDirection: "column", flex: "1 0 0" }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Link
+        href="/seller/produk/kelola-produk"
+        style={{ textDecoration: "none" }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", flex: "1 0 0" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              sx={{
+                color: "common.shade.700",
+                fontSize: { sm: 14, xs: 12 },
+                fontWeight: 600,
+              }}
+            >
+              {props.active.title}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
+            <CubeIcon />
+            <Typography
+              sx={{
+                color: "primary.main",
+                fontWeight: 700,
+                fontSize: { sm: 18, xs: 16 },
+              }}
+            >
+              {props.active.value}
+            </Typography>
+          </Box>
+        </Box>
+      </Link>
+
+      <Link
+        href="/seller/produk/kelola-produk"
+        style={{ textDecoration: "none" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            borderLeft: "1px solid",
+            borderColor: "common.shade.50",
+            pl: "10px",
+            flex: "1 0 0",
+          }}
+        >
           <Typography
             sx={{
-              fontSize: { sm: 14, xs: 12 },
+              color: "common.shade.700",
+              fontSize: 14,
               fontWeight: 600,
             }}
           >
-            {props.active.title}
+            {props.nonactive.title}
           </Typography>
-        </Box>
-        <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
-          <CubeIcon />
           <Typography
-            sx={{
-              color: "primary.main",
-              fontWeight: 700,
-              fontSize: { sm: 18, xs: 16 },
-            }}
+            sx={{ color: "common.red.500", fontWeight: 700, fontSize: 18 }}
           >
-            {props.active.value}
+            {props.nonactive.value}
           </Typography>
         </Box>
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          borderLeft: "1px solid",
-          borderColor: "common.shade.50",
-          pl: "10px",
-          flex: "1 0 0",
-        }}
-      >
-        <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
-          {props.nonactive.title}
-        </Typography>
-        <Typography
-          sx={{ color: "common.red.500", fontWeight: 700, fontSize: 18 }}
-        >
-          {props.nonactive.value}
-        </Typography>
-      </Box>
+      </Link>
     </Box>
   );
 }
@@ -133,33 +151,44 @@ function SummaryCard(props: {
   color: string;
 }) {
   return (
-    <Box
-      sx={{
-        borderRadius: "10px",
-        border: "1px solid",
-        borderColor: "primary.light",
-        flex: "1 0 0",
-        p: "10px",
-      }}
+    <Link
+      href="/seller/produk/kelola-produk"
+      style={{ textDecoration: "none" }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography sx={{ fontSize: { sm: 14, xs: 12 }, fontWeight: 600 }}>
-          {props.title}
-        </Typography>
-        {props.titleTrailing}
+      <Box
+        sx={{
+          borderRadius: "10px",
+          border: "1px solid",
+          borderColor: "primary.light",
+          flex: "1 0 0",
+          p: "10px",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography
+            sx={{
+              color: "common.shade.700",
+              fontSize: { sm: 14, xs: 12 },
+              fontWeight: 600,
+            }}
+          >
+            {props.title}
+          </Typography>
+          {props.titleTrailing}
+        </Box>
+        <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
+          <CubeIcon />
+          <Typography
+            sx={{
+              color: props.color,
+              fontWeight: 700,
+              fontSize: { sm: 18, xs: 16 },
+            }}
+          >
+            {props.subtitle}
+          </Typography>
+        </Box>
       </Box>
-      <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
-        <CubeIcon />
-        <Typography
-          sx={{
-            color: props.color,
-            fontWeight: 700,
-            fontSize: { sm: 18, xs: 16 },
-          }}
-        >
-          {props.subtitle}
-        </Typography>
-      </Box>
-    </Box>
+    </Link>
   );
 }

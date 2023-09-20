@@ -258,6 +258,7 @@ export default function ManagePromoForm({
                       maxLength: 20,
                     }}
                     InputProps={{
+                      sx: { borderRadius: "5px" },
                       endAdornment: (
                         <InputAdornment position="end">
                           {value?.length ?? 0}/20

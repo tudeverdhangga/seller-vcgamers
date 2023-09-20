@@ -25,6 +25,13 @@ export default function JoinCampaignRejectedDialog() {
       onClose={() => setModalOpen((data) => ({ ...data, isOpen: false }))}
       fullWidth
       maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
     >
       <DialogTitle
         sx={{

@@ -28,7 +28,19 @@ export default function PromoDeleteDialog() {
   const handleClose = () => setModal({ isOpen: false });
 
   return (
-    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
+    <Dialog
+      open={modal.isOpen}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           fontSize: 16,
@@ -115,6 +127,10 @@ export default function PromoDeleteDialog() {
               });
           }}
           color="primary"
+          sx={{
+            borderColor: "common.shade.100",
+            color: "common.shade.100",
+          }}
         >
           {t("btn.delete")}
         </VGButton>

@@ -39,9 +39,7 @@ export function useGetChatRoom() {
   });
 }
 
-export function useGetChatMessage(id: string) {
-  const { data: chatRoom } = useGetChatRoomDetail(id);
-
+export function useGetChatMessage(id: string, buyerId: string | undefined) {
   const queryInfo = useInfiniteQuery({
     queryKey: ["chat-messages", id],
     queryFn: ({ pageParam = "1" }) =>
@@ -51,10 +49,9 @@ export function useGetChatMessage(id: string) {
 
   return {
     ...queryInfo,
-    senderId: chatRoom?.data.buyer.id,
     data: mapChatMessageListToChatMessageListProps(
       queryInfo.data?.pages.flatMap((page) => page.data),
-      chatRoom?.data.buyer.id
+      buyerId
     ),
   };
 }

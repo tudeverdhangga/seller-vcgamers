@@ -171,8 +171,8 @@ export default function BalanceInformationCard() {
         <InfoOutlinedIcon fontSize="small" sx={{ color: "common.shade.200" }} />
         {data ? (
           <Typography color="common.shade.200" fontSize={14} fontWeight={500}>
-            Limit tarik saldo: Rp20.000 - Rp10.000.000. Penarikan akan dikenakan
-            biaya sesuai dengan{" "}
+            Minimal tarik saldo: Rp. 20.000. Penarikan akan dikenakan biaya
+            sesuai dengan{" "}
             <Link
               href="https://www.vcgamers.com/news/help/faq-sell-digital-goods/"
               component={NextLink}

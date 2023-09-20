@@ -31,7 +31,19 @@ export default function PromoCancelDialog() {
     dayjs() < dayjs(data?.data.request_date).add(3 * 24, "hours");
 
   return (
-    <Dialog open={modal.isOpen} onClose={handleClose} fullWidth maxWidth="xs">
+    <Dialog
+      open={modal.isOpen}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           fontSize: 16,

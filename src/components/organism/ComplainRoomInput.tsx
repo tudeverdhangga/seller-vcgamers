@@ -40,7 +40,6 @@ export default function ComplainRoomInput({
             message: data.message,
             attachment: data.attachment,
           });
-          console.log(data);
         }}
       />
     </Box>

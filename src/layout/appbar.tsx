@@ -38,8 +38,9 @@ export function AppBar() {
         width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
         ml: { sm: `${DRAWER_WIDTH}px` },
       }}
+      elevation={0}
     >
-      <Toolbar>
+      <Toolbar variant="dense">
         {isDesktop && <DesktopAppBar />}
         {isMobile && <MobileAppBar />}
       </Toolbar>
@@ -87,7 +88,7 @@ function MobileAppBar() {
       <Typography
         variant="h6"
         component="div"
-        sx={{ flexGrow: 1, display: { sm: "none" } }}
+        sx={{ flexGrow: 1, display: { sm: "none" }, fontSize: 16 }}
       >
         {appBar.content}
       </Typography>

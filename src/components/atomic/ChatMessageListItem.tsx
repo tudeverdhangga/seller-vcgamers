@@ -78,7 +78,13 @@ function TextChatMessage(props: TextProps & SideProps) {
           alignItems: "flex-end",
         }}
       >
-        <Typography sx={{ color: fontColor, fontSize: 14, fontWeight: 500 }}>
+        <Typography
+          sx={{
+            color: fontColor,
+            fontSize: { sm: 14, xs: 12 },
+            fontWeight: 500,
+          }}
+        >
           {props.content}
         </Typography>
         {statusIcon}
@@ -271,7 +277,11 @@ function AttachmentChatMessage(props: AttachmentProps & SideProps) {
           alignItems: "flex-end",
         }}
       >
-        <img src={props.content} alt="Attachment" />
+        <img
+          src={props.content}
+          alt="Attachment"
+          style={{ maxHeight: "300px", maxWidth: "300px" }}
+        />
         <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
           {statusIcon}
           <Typography

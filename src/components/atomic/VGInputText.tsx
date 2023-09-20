@@ -39,6 +39,7 @@ export default function VGInputText<
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={value}
           inputRef={ref}
+          InputProps={{ sx: { borderRadius: "5px" } }}
           {...TextFieldProps}
         >
           {children}

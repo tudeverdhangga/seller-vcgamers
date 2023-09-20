@@ -55,7 +55,6 @@ export default function ChatMessageInput(props: {
       inputForm.setValue("attachment_url", URL.createObjectURL(variable.file));
     },
     onSuccess: (data, variable) => {
-      console.log("uploadMutation: onSuccess: ", data);
       inputForm.setValue("attachment", data.data.key);
       inputForm.setValue("type", mimeMapper(variable.file.type));
       uploadForm.reset({ module: props.type });
@@ -112,8 +111,6 @@ export default function ChatMessageInput(props: {
       inputForm.reset({ message: "", type: "TEXT" });
     })();
   };
-
-  console.log(uploadForm.watch("file"));
 
   return (
     <>

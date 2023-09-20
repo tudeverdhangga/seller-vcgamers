@@ -3,6 +3,9 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
+import { useAtom } from "jotai";
+
+import { drawerOpenAtom } from "~/atom";
 
 import DrawerListItem from "~/components/atomic/DrawerListItem";
 import DrawerListSubItem from "~/components/molecule/DrawerListSubItem";
@@ -18,6 +21,7 @@ export default function DrawerContent() {
   const router = useRouter();
   const { data } = useGetProfile();
   const [activeMenu, setActiveMenu] = useState(router.asPath);
+  const [, setDrawerOpen] = useAtom(drawerOpenAtom);
   const { t } = useTranslation("layout");
   const [, setVouchers] = useAtom(voucherCode);
   const [, setCheckVoucher] = useAtom(checkVoucher);
@@ -44,6 +48,7 @@ export default function DrawerContent() {
     // Handle the route change here
     const handleRouteChange = (activeMenu: string) => {
       setActiveMenu(activeMenu);
+      setDrawerOpen(false);
     };
 
     // Subscribe to router events

@@ -3,7 +3,7 @@ import type { CampaignHistory, Campaign } from "~/services/joinCampaign/types";
 
 export const confirmationDialogOpenAtom = atom(false);
 
-export const cancelDialogOpenAtom = atom<{
+export const cancelDialogAtom = atom<{
   isOpen: boolean;
   campaign?: CampaignHistory;
 }>({ isOpen: false });

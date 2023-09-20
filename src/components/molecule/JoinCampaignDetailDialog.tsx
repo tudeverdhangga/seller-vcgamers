@@ -35,6 +35,13 @@ export default function JoinCampaignDetailDialog() {
       onClose={handleClose}
       fullWidth
       maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
     >
       <DialogTitle
         sx={{

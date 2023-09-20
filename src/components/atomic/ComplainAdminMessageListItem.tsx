@@ -33,7 +33,13 @@ export default function AdminTextMessage({
           alignItems: "flex-start",
         }}
       >
-        <Typography sx={{ color: fontColor, fontSize: 14, fontWeight: 500 }}>
+        <Typography
+          sx={{
+            color: fontColor,
+            fontSize: { sm: 14, xs: 12 },
+            fontWeight: 500,
+          }}
+        >
           {content}
         </Typography>
         <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>

@@ -3,10 +3,7 @@ import Typography from "@mui/material/Typography";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 
-import {
-  cancelDialogOpenAtom,
-  rejectedDialogOpenAtom,
-} from "~/atom/joinCampaign";
+import { cancelDialogAtom, rejectedDialogOpenAtom } from "~/atom/joinCampaign";
 import VGButton from "../atomic/VGButton";
 import VGCard from "../atomic/VGCard";
 import VGChip from "../atomic/VGChip";
@@ -27,7 +24,8 @@ export default function JoinCampaignHistoryCard(props: {
   return (
     <VGCard
       sx={{
-        display: "flex",
+        display: "grid",
+        gridTemplateColumns: "2fr 1fr 1fr 1fr",
         width: "100%",
         my: 0,
         gap: "20px",
@@ -157,7 +155,7 @@ function LabelChip(props: { type: CampaignHistoryType }) {
 
 function CampaignMoreButtonPopover(props: { campaign: CampaignHistory }) {
   const { t } = useTranslation("joinCampaign");
-  const [, setDialogOpen] = useAtom(cancelDialogOpenAtom);
+  const [, setDialogOpen] = useAtom(cancelDialogAtom);
 
   return (
     <MoreButtonPopover

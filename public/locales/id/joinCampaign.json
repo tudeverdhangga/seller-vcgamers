@@ -48,7 +48,8 @@
     },
     "abort": {
       "title": "Konfirmasi Pembatalan",
-      "subtitle": "Kamu ingin menonaktifkan kode promo ini. Lanjutkan?",
+      "content": "Nama program disini",
+      "subtitle": "Kamu ingin menonaktifkan program ini. Lanjutkan?",
       "error": "Minimum penonaktifan: 3x24 jam setelah approval admin.",
       "errorHint": "Program ini bisa bisa dinonaktifkan mulai pada {{date}}"
     },

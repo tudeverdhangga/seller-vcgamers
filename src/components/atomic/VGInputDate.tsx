@@ -40,6 +40,7 @@ export default function VGInputDate<
               textField: {
                 error: !!error,
                 helperText: error ? error.message : null,
+                InputProps: { sx: { borderRadius: "5px" } },
                 ...TextFieldProps,
               },
             }}

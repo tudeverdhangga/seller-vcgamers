@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import { useGetDashboardTransactionSummary } from "~/services/dashboard/hooks";
 import DashboardCard from "../atomic/DashboardCard";
+import Link from "next/link";
 
 export default function TransactionSummaryCard() {
   const { t } = useTranslation("dashboard");
@@ -52,14 +53,16 @@ function TransactionSummaryItem(props: {
   subtitle: string;
 }) {
   return (
-    <Box
-      sx={{
+    <Link
+      style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         flex: "1 0 0",
         alignSelf: "stretch",
+        textDecoration: "none",
       }}
+      href="/seller/toko/daftar-penjualan"
     >
       <Typography
         sx={{
@@ -80,6 +83,6 @@ function TransactionSummaryItem(props: {
       >
         {props.subtitle}
       </Typography>
-    </Box>
+    </Link>
   );
 }

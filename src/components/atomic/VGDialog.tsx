@@ -1,7 +1,7 @@
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { type ReactNode } from "react";
 
 export default function VGDialog(props: {
@@ -32,7 +32,7 @@ export default function VGDialog(props: {
           sx={{
             position: "absolute",
             right: 8,
-            top: 8
+            top: 8,
           }}
         >
           <CloseIcon />
@@ -40,5 +40,5 @@ export default function VGDialog(props: {
         {props.children}
       </DialogTitle>
     </Dialog>
-  )
+  );
 }

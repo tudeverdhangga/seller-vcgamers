@@ -10,7 +10,7 @@ import ChatMessageListSubheader from "~/components/atomic/ChatMessageListSubhead
 import ChatMessageInfoBanner from "~/components/molecule/ChatMessageInfoBanner";
 import ChatMessageToolbar from "~/components/molecule/ChatMessageToolbar";
 import ChatRoomEmptyState from "~/components/molecule/EmptyState/chatRoom";
-import { useGetChatMessage } from "~/services/chat/hooks";
+import { useGetChatMessage, useGetChatRoomDetail } from "~/services/chat/hooks";
 import ChatRoomInput from "../ChatRoomInput";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -35,7 +35,11 @@ export default function ChatRoomContent() {
 }
 
 function ChatRoomChatList({ chatId }: { chatId: string }) {
-  const { data, fetchNextPage, hasNextPage } = useGetChatMessage(chatId);
+  const { data: chatRoom } = useGetChatRoomDetail(chatId);
+  const { data, fetchNextPage, hasNextPage } = useGetChatMessage(
+    chatId,
+    chatRoom?.data?.buyer?.id
+  );
   const [attachment] = useAtom(messageAttachmentAtom);
 
   return (

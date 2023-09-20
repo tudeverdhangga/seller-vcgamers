@@ -18,7 +18,7 @@ export default function DashboardCard(props: {
         gap: "20px",
         borderRadius: "10px",
         backgroundColor: "background.paper",
-        p: "20px",
+        p: { sm: "20px", xs: "16px" },
         ...props.sx,
       }}
     >

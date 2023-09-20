@@ -41,7 +41,7 @@ export default function HelpContactCard() {
   };
 
   return (
-    <Grid container spacing="20px">
+    <Grid container spacing={{ sm: "20px", xs: "10px" }}>
       <Grid xs={12} sm={8}>
         <DashboardCard
           title={t("card.helpContact.title")}

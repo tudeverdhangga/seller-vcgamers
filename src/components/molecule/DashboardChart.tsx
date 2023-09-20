@@ -12,7 +12,7 @@ import {
   type ChartArea,
   type ChartData,
 } from "chart.js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 import type { DataGraphSuccess } from "~/services/dashboard/types";
@@ -41,17 +41,20 @@ export default function DashboardChart({
 
   const dataSets = isMobile ? graphData.data.slice(-3) : graphData.data;
 
-  const data = {
-    labels,
-    datasets: [
-      {
-        fill: true,
-        data: dataSets,
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
+  const data = useMemo(
+    () => ({
+      labels,
+      datasets: [
+        {
+          fill: true,
+          data: dataSets,
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+      ],
+    }),
+    [labels, dataSets]
+  );
 
   const [chartData, setChartData] = useState<ChartData<"line">>(data);
 
@@ -72,8 +75,7 @@ export default function DashboardChart({
     };
 
     setChartData(chartData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data, setChartData]);
 
   return (
     <Box

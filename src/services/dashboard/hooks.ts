@@ -9,10 +9,14 @@ import {
   sendFeedback,
 } from "./api";
 import type { GraphSuccessUrl } from "./types";
-import { useQueryState } from "next-usequerystate";
+import { queryTypes, useQueryState } from "next-usequerystate";
+import dayjs from "dayjs";
 
 export function useGetDashboardProductStat() {
-  const [periode_filter] = useQueryState("periode_filter");
+  const [periode_filter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return useQuery({
     queryKey: ["dashboard-product-stat", periode_filter],
@@ -21,7 +25,10 @@ export function useGetDashboardProductStat() {
 }
 
 export function useGetDashboardTransactionSummary() {
-  const [periode_filter] = useQueryState("periode_filter");
+  const [periode_filter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return useQuery({
     queryKey: ["dashboard-transaction-summary", periode_filter],
@@ -30,7 +37,10 @@ export function useGetDashboardTransactionSummary() {
 }
 
 export function useGetDashboardTotalSuccessQty() {
-  const [periode_filter] = useQueryState("periode_filter");
+  const [periode_filter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return useQuery({
     queryKey: ["dashboard-total-success-qty", periode_filter],
@@ -39,7 +49,10 @@ export function useGetDashboardTotalSuccessQty() {
 }
 
 export function useGetDashboardTotalSuccessAmount() {
-  const [periode_filter] = useQueryState("periode_filter");
+  const [periode_filter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return useQuery({
     queryKey: ["dashboard-total-success-amount", periode_filter],
@@ -48,7 +61,10 @@ export function useGetDashboardTotalSuccessAmount() {
 }
 
 export function useGetDashboardSellerPerformance() {
-  const [periode_filter] = useQueryState("periode_filter");
+  const [periode_filter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return useQuery({
     queryKey: ["dashboard-seller-performance", periode_filter],
@@ -57,7 +73,10 @@ export function useGetDashboardSellerPerformance() {
 }
 
 export function useGetDashboardGraphSuccess(url: GraphSuccessUrl) {
-  const [periode_filter] = useQueryState("periode_filter");
+  const [periode_filter] = useQueryState(
+    "periode_filter",
+    queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
+  );
 
   return useQuery({
     queryKey: [`dashboard-graph-success-${url}`, periode_filter],

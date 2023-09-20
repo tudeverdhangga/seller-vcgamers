@@ -9,18 +9,83 @@ import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
 
-import { cancelDialogOpenAtom } from "~/atom/joinCampaign";
+import { cancelDialogAtom } from "~/atom/joinCampaign";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 import { useRequestCancelCampaign } from "~/services/joinCampaign/hooks";
 import dayjs from "dayjs";
+import DialogWithWarningIcon from "./DialogWithWarningIcon";
 
 export default function JoinCampaignCancelDialog() {
   const { t } = useTranslation("joinCampaign");
-  const [modal, setModal] = useAtom(cancelDialogOpenAtom);
+  const [modal, setModal] = useAtom(cancelDialogAtom);
   const mutation = useRequestCancelCampaign();
 
   const enabled = modal.campaign?.can_request_cancel;
+
+  return (
+    <DialogWithWarningIcon
+      open={modal.isOpen}
+      handleClose={() => setModal({ isOpen: false })}
+      title={t("dialog.abort.title")}
+      contentTitle={t("dialog.abort.content")}
+      contentSubtitle={modal.campaign?.name}
+      backBtnTitle={t("btn.back")}
+      okBtnTitle={t("btn.requestAbort")}
+      okBtnProps={{
+        sx: {
+          color: "common.shade.100",
+          borderColor: "common.shade.100",
+        },
+      }}
+      okBtnClick={() =>
+        modal.campaign?.id &&
+        mutation.mutate(modal.campaign.id, {
+          onSuccess: () => {
+            setModal({ isOpen: false });
+          },
+        })
+      }
+      description={
+        enabled ? (
+          <Typography
+            sx={{
+              mt: "10px",
+              color: "common.shade.200",
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            {t("dialog.abort.subtitle")}
+          </Typography>
+        ) : (
+          <Box>
+            <Typography
+              sx={{
+                mt: "10px",
+                color: "common.red.500",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              {t("dialog.abort.error")}
+            </Typography>
+            <Typography
+              sx={{
+                color: "common.shade.200",
+                fontSize: 14,
+                fontWeight: 500,
+              }}
+            >
+              {t("dialog.abort.errorHint", {
+                date: dayjs(modal.campaign?.can_request_cancel_date),
+              })}
+            </Typography>
+          </Box>
+        )
+      }
+    />
+  );
 
   return (
     <Dialog

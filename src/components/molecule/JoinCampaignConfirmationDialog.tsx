@@ -30,6 +30,13 @@ export default function JoinCampaignConfirmationDialog() {
       onClose={() => setModalOpen(false)}
       fullWidth
       maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
     >
       <DialogTitle
         sx={{
@@ -88,7 +95,7 @@ export default function JoinCampaignConfirmationDialog() {
           size="large"
           fullWidth
           onClick={() => setModalOpen(false)}
-          color="primary"
+          sx={{ color: "common.shade.100", borderColor: "common.shade.100" }}
         >
           {t("btn.back")}
         </VGButton>

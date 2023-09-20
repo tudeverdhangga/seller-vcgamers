@@ -36,7 +36,19 @@ export default function SuggestionBoxDialog() {
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <Dialog
+        open={open}
+        onClose={onClose}
+        fullWidth
+        maxWidth="xs"
+        sx={{
+          "& .MuiDialog-container": {
+            "& .MuiDialog-paper": {
+              borderRadius: "10px",
+            },
+          },
+        }}
+      >
         <form
           onSubmit={handleSubmit((data) =>
             sendFeedback(data, {
@@ -143,7 +155,18 @@ function SuccessDialog() {
   const [open, setConfirmationOpen] = useAtom(confirmationOpenAtom);
 
   return (
-    <Dialog open={open} fullWidth maxWidth="xs">
+    <Dialog
+      open={open}
+      fullWidth
+      maxWidth="xs"
+      sx={{
+        "& .MuiDialog-container": {
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           fontSize: 16,

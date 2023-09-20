@@ -7,9 +7,11 @@ import dayjs, { type Dayjs } from "dayjs";
 
 import { useTranslation } from "next-i18next";
 import { queryTypes, useQueryState } from "next-usequerystate";
+import { useGetProfile } from "~/services/api/auth";
 
 export default function DashboardTitle() {
   const { t } = useTranslation("dashboard");
+  const { data } = useGetProfile();
   const [periodFilter, setPeriodFilter] = useQueryState(
     "periode_filter",
     queryTypes.string.withDefault(dayjs().format("YYYY-MM"))
@@ -56,6 +58,8 @@ export default function DashboardTitle() {
           label="Pilih Periode"
           format="MMM-YYYY"
           views={["month", "year"]}
+          minDate={dayjs(data?.data.seller_join_date)}
+          maxDate={dayjs()}
           value={dayjs(periodFilter)}
           onChange={(e: Dayjs | null) => {
             void setPeriodFilter((e ?? dayjs()).format("YYYY-MM"));
