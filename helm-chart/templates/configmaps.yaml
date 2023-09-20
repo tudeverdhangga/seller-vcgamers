@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: seller-config
-  namespace: staging
+  namespace: default
 data:
   NEXT_PUBLIC_SUPPORT_EMAIL: "support@vcgamers.com"
   NEXT_PUBLIC_SUPPORT_WHATSAPP: "081511111659"

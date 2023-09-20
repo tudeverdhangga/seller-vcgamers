@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: seller
-  namespace: staging
+  namespace: default
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
@@ -18,7 +18,6 @@ spec:
       labels:
         app: seller
     spec:
-      serviceAccountName: seller-rewrite
       containers:
         - name: {{ .Chart.Name }}-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
