@@ -106,7 +106,7 @@ export default function AddProductDetail({
   handleVoucherInstant: (isVoucher: boolean) => void;
   handleChangeFilter: (
     key: string,
-    value: string | number | boolean,
+    value: string | number | boolean | undefined,
     index?: number
   ) => void;
   productDetail?: ProductDetail;
@@ -219,6 +219,12 @@ export default function AddProductDetail({
         }
       });
     }
+  };
+  const handleDeleteFile = (index: number) => {
+    const array = productImage
+    array.splice(index, 1)
+    setProductImage(array)
+    handleChangeFilter("images_url", undefined, index)
   };
   const onInputImage = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files
@@ -491,7 +497,9 @@ export default function AddProductDetail({
                           productImage && productImage[0]
                           && `url(${productImage[0].object_url})`
                         }
+                        deletable={true}
                         onChange={(e) => onInputImage(e, 0)}
+                        onDelete={() => handleDeleteFile(0)}
                       />
                     )
                 }
@@ -515,7 +523,9 @@ export default function AddProductDetail({
                           productImage && productImage[1]
                           && `url(${productImage[1].object_url})`
                         }
+                        deletable={true}
                         onChange={(e) => onInputImage(e, 1)}
+                        onDelete={() => handleDeleteFile(1)}
                       />
                     )
                 }
@@ -539,7 +549,9 @@ export default function AddProductDetail({
                           productImage && productImage[2]
                           && `url(${productImage[2].object_url})`
                         }
+                        deletable={true}
                         onChange={(e) => onInputImage(e, 2)}
+                        onDelete={() => handleDeleteFile(2)}
                       />
                     )
                 }

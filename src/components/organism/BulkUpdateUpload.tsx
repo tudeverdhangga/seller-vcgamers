@@ -28,7 +28,7 @@ export default function BulkUpdateUpload() {
     setFileObjects(newFileObjects);
     if (newFileObjects.length > 0) {
       const formData = new FormData();
-      formData.append('file', newFileObjects[0] as File)
+      formData.append('file', newFileObjects[newFileObjects.length - 1] as File)
       uploadFile.mutate(formData, {
         onSuccess: () => {
           toast.success(t("upload.onSuccess"), toastOption)

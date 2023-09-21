@@ -121,7 +121,7 @@ export default function TambahProdukPage() {
 
   const handleFilter = (
     key: string,
-    value: string | number | boolean | Variation,
+    value: string | number | boolean | Variation | undefined,
     index?: number
   ) => {
     if (key === "variations") {
@@ -168,6 +168,8 @@ export default function TambahProdukPage() {
       }
       if (typeof value === "object") {
         updatedVariation.images_url[indexImage] = value[0] as string;
+      } else if (typeof value === "undefined") {
+        updatedVariation.images_url.splice(indexImage, 1);
       }
     }
 

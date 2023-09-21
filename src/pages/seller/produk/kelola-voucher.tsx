@@ -22,7 +22,7 @@ import {
   checkVoucher,
   voucherCode,
   withdrawReason,
-  isSuccessCreateVoucher,
+  isOpenAlert
 } from "~/atom/voucher";
 import { toastOption } from "~/utils/toast";
 import VGHead from "~/components/atomic/VGHead";
@@ -42,7 +42,7 @@ export default function KelolaVoucherPage() {
   const [withdrawData, setWithdrawData] = useAtom(withdrawReason);
   const [vouchers, setVouchers] = useAtom(voucherCode);
   const [checkVoucherData, setCheckVoucher] = useAtom(checkVoucher);
-  const [, setSuccessCreateVoucher] = useAtom(isSuccessCreateVoucher);
+  const [isOpenMessage, setIsOpenMessage] = useAtom(isOpenAlert);
   const getVoucher = useGetVoucher();
   const updateVoucher = useUpdateVoucher(
     queryString.stringify({ voucher_id: withdrawData.voucher_id })
@@ -118,6 +118,7 @@ export default function KelolaVoucherPage() {
             total: res.data.total,
           });
           setVouchers(res.data.vouchers);
+          setIsOpenMessage(res.data.is_duplicate);
         },
         onError: (error) => {
           const err = error as ErrorResponse;
@@ -145,7 +146,7 @@ export default function KelolaVoucherPage() {
             vouchers: "",
           });
           setVouchers("");
-          setSuccessCreateVoucher(true);
+          setIsOpenMessage(true);
           getVoucher.mutate(queryString.stringify(params));
         },
         onError: (error) => {
@@ -185,6 +186,7 @@ export default function KelolaVoucherPage() {
         name={productDetail?.data?.data?.name || ""}
         available={getVoucher?.data?.data?.available || 0}
         isLoading={validateVoucher.isLoading || createVoucher.isLoading}
+        isOpenMessage={isOpenMessage}
         handleCheckTotalCode={handleCheckTotalCode}
         handleSubmitCode={handleSubmitCode}
       />

@@ -143,13 +143,13 @@ export default function OperationalSettingCard(props: {
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.fullHour")}
           </Typography>
-          <Radio value="fullDay" />
+          <Radio value="fullDay" disabled={!props.isOpen} />
         </Box>
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.customHour")}
           </Typography>
-          <Radio value="custom" />
+          <Radio value="custom" disabled={!props.isOpen} />
         </Box>
       </RadioGroup>
       <LocalizationProvider dateAdapter={AdapterDayjs}>

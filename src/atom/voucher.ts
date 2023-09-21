@@ -29,3 +29,5 @@ export const checkVoucher = atom<{
 })
 
 export const isSuccessCreateVoucher = atom(false)
+
+export const isOpenAlert = atom(false)

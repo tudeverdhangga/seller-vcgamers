@@ -67,7 +67,7 @@ export default function TambahProdukPage() {
 
   const handleFilter = (
     key: string,
-    value: string | number | boolean | Variation,
+    value: string | number | boolean | Variation | undefined,
     index?: number
   ) => {
     if (key === "variations") {
@@ -84,6 +84,8 @@ export default function TambahProdukPage() {
       const updatedArray = params.images_url;
       if (typeof value === "string" && typeof index === "number") {
         updatedArray[index] = value;
+      } else if (typeof value === "undefined" && typeof index === "number") {
+        updatedArray.splice(index, 1);
       }
 
       setParams({

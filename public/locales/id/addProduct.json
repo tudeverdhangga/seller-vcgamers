@@ -11,6 +11,12 @@
     "cancel": "Batalkan",
     "save": "Simpan Gambar"
   },
+  "deleteImage": {
+    "title": "Konfirmasi",
+    "subTitle": "Kamu ingin menghapus gambar utama ini. Lanjutkan?",
+    "cancel": "Batal",
+    "delete": "Hapus"
+  },
   "detail": {
     "title": "Masukkan Detail Produk",
     "category": "Kategori",

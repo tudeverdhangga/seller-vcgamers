@@ -14,7 +14,7 @@ import SellerToolbar from "~/components/molecule/SellerToolbar";
 
 import { useGetProfile } from "~/services/api/auth";
 import { menus } from "./menus";
-import { checkVoucher, isSuccessCreateVoucher, voucherCode } from "~/atom/voucher";
+import { checkVoucher, isOpenAlert, voucherCode } from "~/atom/voucher";
 
 export default function DrawerContent() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function DrawerContent() {
   const { t } = useTranslation("layout");
   const [, setVouchers] = useAtom(voucherCode);
   const [, setCheckVoucher] = useAtom(checkVoucher);
-  const [, setSuccessCreateVoucher] = useAtom(isSuccessCreateVoucher);
+  const [, setIsOpenMessage] = useAtom(isOpenAlert);
 
   useEffect(() => {
     // Check if user want to access voucher from direct url
@@ -65,7 +65,7 @@ export default function DrawerContent() {
     const mainUrl = matches && matches[2];
 
     if (mainUrl !== "/kelola-voucher") {
-      setSuccessCreateVoucher(false);
+      setIsOpenMessage(false);
       setCheckVoucher({
         isDisable: false,
         isValidate: false,

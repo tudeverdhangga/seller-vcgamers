@@ -11,35 +11,36 @@ import Collapse from "@mui/material/Collapse";
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
 import VGRichEditor from "~/components/atomic/VGRichEditor/index";
-import { checkVoucher, isSuccessCreateVoucher, voucherCode } from "~/atom/voucher";
+import { checkVoucher, isOpenAlert, voucherCode } from "~/atom/voucher";
 import VGAlert from "~/components/atomic/VGAlert";
 
 export default function VoucherInput({
   name,
   available,
   isLoading,
+  isOpenMessage,
   handleCheckTotalCode,
   handleSubmitCode
 }: {
   name: string
   available: number,
   isLoading: boolean,
+  isOpenMessage: boolean,
   handleCheckTotalCode: () => void
   handleSubmitCode: () => void
 }) {
   const { t } = useTranslation("voucher");
   const [, setVoucher] = useAtom(voucherCode)
-  const [isSuccessCreate] = useAtom(isSuccessCreateVoucher);
   const [checkVoucherData, setCheckVoucherData] = useAtom(checkVoucher);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useAtom(isOpenAlert);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(isLoading)
   }, [isLoading])
   useEffect(() => {
-    setOpen(checkVoucherData.isDuplicate || isSuccessCreate)
-  }, [checkVoucherData.isDuplicate, isSuccessCreate])
+    setOpen(isOpenMessage)
+  }, [isOpenMessage])
   useEffect(() => {
     if (open) {
       setTimeout(() => {

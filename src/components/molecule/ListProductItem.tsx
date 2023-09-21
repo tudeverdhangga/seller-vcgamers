@@ -327,7 +327,7 @@ export default function ListProductItem(props: {
 
   return (
     <>
-      <VGCard>
+      <VGCard sx={{ margin: 0 }}>
         <Grid container spacing={2}>
           <Grid
             item

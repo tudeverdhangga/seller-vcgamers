@@ -135,7 +135,7 @@ export default function AddProductVariant({
   ) => void;
   handleChangeFilter: (
     key: string,
-    value: string | number | boolean | Variation,
+    value: string | number | boolean | Variation | undefined,
     index?: number
   ) => void;
   onEditVariation: (value: Variation, index: number) => void;
@@ -290,6 +290,12 @@ export default function AddProductVariant({
       return undefined
     }
   }
+  const handleDeleteFile = (index: number, indexImg: number) => {
+    const array = variantImage;
+    array[index]?.splice(indexImg, 1)
+    setVariantImage(array);
+    handleChangeVariantField("images_url", undefined, index, indexImg)
+  };
 
   const thStyle = {
     color: "#7750F8",
@@ -375,7 +381,9 @@ export default function AddProductVariant({
                           height="47px"
                           imageUrl={getImageUrl(index, indexImg)}
                           disabled={!row.is_active}
+                          deletable={true}
                           onChange={(e) => onInputImage(e, index, indexImg)}
+                          onDelete={() => handleDeleteFile(index, indexImg)}
                         />
                       )
                   }
@@ -411,7 +419,7 @@ export default function AddProductVariant({
                 />
                 <Switch
                   defaultChecked={productDetail?.variations[index]?.is_kilat}
-                  disabled={!row.is_active || row.next_activate_kilat !== null}
+                  disabled={!row.is_active || (row.next_activate_kilat !== null && Boolean(row.next_activate_kilat))}
                 />
               </Box>
               {
