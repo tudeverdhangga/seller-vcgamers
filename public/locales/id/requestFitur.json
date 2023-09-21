@@ -15,22 +15,22 @@
   },
   "featureRequests": {
     "0": {
-      "imageSrc": "fitur1",
+      "imageSrc": "daya_tarik",
       "title": "Menjadi Daya Tarik",
       "subtitle": "Produk akan tampil dengan tanda yang berbeda dibanding produk pada umumnya"
     },
     "1": {
-      "imageSrc": "fitur2",
+      "imageSrc": "menarik_minat",
       "title": "Menarik Minat Buyer",
       "subtitle": "Jaminan pelayanan yang cepat menjadi pemikat luar biasa bagi buyer untuk berbelanja"
     },
     "2": {
-      "imageSrc": "fitur3",
+      "imageSrc": "kilat_lebih_laku",
       "title": "Praktis Bagi Seller",
       "subtitle": "Setiap pesanan yang masuk akan otomatis diproses oleh sistem VCGamers"
     },
     "3": {
-      "imageSrc": "fitur4",
+      "imageSrc": "semakin_dipercaya",
       "title": "Hemat Waktu",
       "subtitle": "Seller bisa banyak menghemat waktu dengan input banyak stok kode voucher ke sistem"
     }
@@ -96,11 +96,11 @@
         "regular": "-"
       },
       "2": {
-        "profit": "Label Instant setiap halaman produk",
+        "profit": "Produk kamu akan tampil di halaman teratas",
         "regular": "-"
       },
       "3": {
-        "profit": "Produk kamu akan tampil di halaman teratas",
+        "profit": "Label Proses Kilat setiap halaman produk",
         "regular": "-"
       },
       "4": {

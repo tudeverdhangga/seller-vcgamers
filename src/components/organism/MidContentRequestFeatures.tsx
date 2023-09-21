@@ -17,7 +17,7 @@ export default function CustomizedMidContent(props: {
 
   const subTitleStyle = {
     color: "common.shade.500",
-    fontSize: {xs: "14px", md: "16px"}, 
+    fontSize: {xs: "14px"}, 
     fontWeight: 600
   }
   const subContentStyle = {

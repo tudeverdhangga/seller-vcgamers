@@ -52,11 +52,7 @@ export default function VIPSellerPage() {
       setStatusVIPData(getStatusVIP.data.data);
       // setFeatureChecksVIPData(getStatusVIP?.data?.data?.requirement_text)
 
-      if (
-        handleEligibleToRegisterVip(tempFeatureChecksVIPData) ==
-          minimumTrueCounter &&
-        getStatusVIP.data.data?.seller_has_vip === true
-      ) {
+      if (getStatusVIP.data.data?.seller_has_vip === true) {
         void router.push(`/seller/request/vip-seller/join-campaign`);
       }
     }
