@@ -86,27 +86,27 @@ export default function TambahProdukPage() {
         {
           onSuccess: (res) => {
             setParams({
-              product_category_id: res.data.product_category.value,
-              product_brand_id: res.data.product_brand.value,
-              product_group_id: res.data.product_group.value,
-              name: res.data.name,
-              description: res.data.description,
-              images_url: res.data.images_url.map((image) => image.object_key),
-              variations: res.data.variations.map((item) => {
+              product_category_id: res?.data?.product_category.value,
+              product_brand_id: res?.data?.product_brand.value,
+              product_group_id: res?.data?.product_group.value,
+              name: res?.data?.name,
+              description: res?.data?.description,
+              images_url: res?.data?.images_url?.map((image) => image.object_key),
+              variations: res?.data?.variations?.map((item) => {
                 return {
-                  id: item.id,
-                  name: item.name,
-                  product_variation_master_id: item.product_variation_master
-                    ? item.product_variation_master.value
+                  id: item?.id,
+                  name: item?.name,
+                  product_variation_master_id: item?.product_variation_master
+                    ? item?.product_variation_master?.value
                     : undefined,
-                  delivery_type: item.delivery_type,
-                  stock: item.stock,
-                  price: item.price,
-                  is_active: item.is_active,
-                  is_custom_image: item.is_custom_image,
-                  images_url: item.images_url.map((image) => image.object_key),
-                  next_update_price: item.next_update_price,
-                  next_activate_kilat: item.next_activate_kilat,
+                  delivery_type: item?.delivery_type,
+                  stock: item?.stock,
+                  price: item?.price,
+                  is_active: item?.is_active,
+                  is_custom_image: item?.is_custom_image,
+                  images_url: item?.images_url?.map((image) => image?.object_key),
+                  next_update_price: item?.next_update_price,
+                  next_activate_kilat: item?.next_activate_kilat,
                 };
               }),
             });
