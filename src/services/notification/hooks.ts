@@ -33,7 +33,7 @@ export function useGetNotificationDetail(notification_id: string) {
 
 export function useGetNotificationCount() {
   return useQuery({
-    queryKey: ["notification-count"],
+    queryKey: ["notification-tab-count"],
     queryFn: fetchNotificationCount,
   });
 }

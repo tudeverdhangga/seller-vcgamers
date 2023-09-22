@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import List from "@mui/material/List";
 import Skeleton from "@mui/material/Skeleton";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -24,21 +25,23 @@ export default function NotificationSalesContent() {
         borderRadius: "10px",
       }}
     >
-      <InfiniteScroll
-        dataLength={notifications ? notifications.length : 0}
-        hasMore={hasNextPage ?? false}
-        next={fetchNextPage}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-        loader={<Skeleton variant="rounded" height={100} width="100%" />}
-      >
-        {notifications &&
-          notifications.map((notification) => (
-            <NotificationCard
-              key={notification.id}
-              notification={notification}
-            />
-          ))}
-      </InfiniteScroll>
+      <List sx={{ width: "100%" }}>
+        <InfiniteScroll
+          dataLength={notifications ? notifications.length : 0}
+          hasMore={hasNextPage ?? false}
+          next={fetchNextPage}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          loader={<Skeleton variant="rounded" height={100} width="100%" />}
+        >
+          {notifications &&
+            notifications.map((notification) => (
+              <NotificationCard
+                key={notification.id}
+                notification={notification}
+              />
+            ))}
+        </InfiniteScroll>
+      </List>
       <NotificationDetailDialog />
     </Box>
   );

@@ -1,29 +1,30 @@
 import { useMutation } from "@tanstack/react-query";
-import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { doc, getFirestore, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { HTTPApi, queryClient } from "~/services/http";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { initializeApp } from "firebase/app";
+import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { useEffect, useState } from "react";
+
+import { env } from "~/env.mjs";
+import { HTTPApi, queryClient } from "~/services/http";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_5C4O8Y8mce2YI7RjDVUcsWKi3zm8JRQ",
-  authDomain: "vc-gamers.firebaseapp.com",
-  projectId: "vc-gamers",
-  storageBucket: "vc-gamers.appspot.com",
-  messagingSenderId: "327843531831",
-  appId: "1:327843531831:web:ecbabf499b1934de8c43b2",
-  measurementId: "G-XBZLDKLH97",
+  apiKey: env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
 const db = typeof window !== "undefined" ? getFirestore(app) : null;
 
-const VAPID_KEY =
-  "BPMeVbGVjZuUXOZPGxikleNhiz7IPmNuGaT85uQAr8VYDM2GZQ2Z0RzpqKr9ijR7HGoPoJp5zQG7aPf9e4HrijI";
+const VAPID_KEY = env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
 
 export function useFCMToken() {
   const { mutate } = useMutation({
