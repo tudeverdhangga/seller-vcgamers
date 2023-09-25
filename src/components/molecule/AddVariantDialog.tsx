@@ -532,6 +532,7 @@ export default function AddVariantDialog({
           disabled={feature === 2}
           size="small"
           onKeyDown={(e) => {
+            console.log('🚀 ~ file: AddVariantDialog.tsx:535 ~ e:', e)
             if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
               e.preventDefault()
             }

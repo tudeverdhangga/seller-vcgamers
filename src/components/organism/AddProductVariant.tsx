@@ -560,7 +560,7 @@ export default function AddProductVariant({
             setDataAction({
               name: row.name,
               index,
-              images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+              images_url: productDetail?.variations[index]?.images_url && productDetail?.variations[index]?.images_url[0]?.object_url,
               is_active: row.is_active
             })
             handleEditVariant(row, index)
@@ -579,7 +579,7 @@ export default function AddProductVariant({
                   setDataAction({
                     name: row.name,
                     index,
-                    images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+                    images_url: productDetail?.variations[index]?.images_url && productDetail?.variations[index]?.images_url[0]?.object_url,
                     is_active: row.is_active
                   })
                   setIsOpenDeactiveProductDialog(true)
@@ -598,7 +598,7 @@ export default function AddProductVariant({
                   setDataAction({
                     name: row.name,
                     index,
-                    images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+                    images_url: productDetail?.variations[index]?.images_url && productDetail?.variations[index]?.images_url[0]?.object_url,
                     is_active: row.is_active
                   })
                   setIsOpenActiveProductDialog(true)
@@ -618,7 +618,7 @@ export default function AddProductVariant({
               setDataAction({
                 name: row.name,
                 index,
-                images_url: productDetail?.variations[index]?.images_url[0]?.object_url,
+                images_url: productDetail?.variations[index]?.images_url && productDetail?.variations[index]?.images_url[0]?.object_url,
                 is_active: row.is_active
               })
 

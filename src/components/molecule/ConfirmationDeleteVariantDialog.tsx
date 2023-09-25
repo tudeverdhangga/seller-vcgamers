@@ -49,12 +49,16 @@ export default function ConfirmationDeleteVariantDialog(props: {
             }
           }}
         >
-          <img
-            src={props.image}
-            width={49}
-            height={49}
-            alt="Badge Kilat"
-          />
+          {
+            props.image && (
+              <img
+                src={props.image}
+                width={49}
+                height={49}
+                alt="Product Image"
+              />
+            )
+          }
           <Typography
             sx={{
               fontWeight: 700,
