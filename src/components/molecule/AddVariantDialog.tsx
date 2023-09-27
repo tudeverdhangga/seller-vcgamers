@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import RadioGroup from "@mui/material/RadioGroup";
-import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { useEffect, useState } from "react";
@@ -19,6 +18,7 @@ import { dateToTime, priceFormat } from "~/utils/format";
 import VGDialog from "~/components/atomic/VGDialog";
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
+import VGRadio from "~/components/atomic/VGRadio";
 import { useGetVariationMaster } from "~/services/api/masterData";
 import { useGetProfile } from "~/services/api/auth";
 import MenuItem from "@mui/material/MenuItem";
@@ -275,6 +275,18 @@ export default function AddVariantDialog({
     color: "error.main",
     ml: 3
   }
+  const hiddenArrow = {
+    // Chrome, Safari, Edge, Opera
+    '& input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button': {
+      WebkitAppearance: "none",
+      margin: 0,
+    },
+
+    // Firefox
+    '& input[type="number"]': {
+      MozAppearance: "textfield",
+    },
+  }
 
   const headingContiner = (
     <Box>
@@ -352,7 +364,7 @@ export default function AddVariantDialog({
         <Box>
           <FormControlLabel
             value={0}
-            control={<Radio />}
+            control={<VGRadio />}
             label={t("variant.dialog.delivery.regular.label")}
           />
           <Typography sx={deliverySublabelStyle}>
@@ -366,7 +378,7 @@ export default function AddVariantDialog({
               !getProfile?.data?.data?.seller_has_kilat ||
               typeof nextUpdateKilat === 'string'
             }
-            control={<Radio />}
+            control={<VGRadio />}
             label={
               <Image
                 src="/assets/badge-kilat.svg"
@@ -406,7 +418,7 @@ export default function AddVariantDialog({
           <FormControlLabel
             value={2}
             disabled={!getProfile?.data?.data?.seller_has_instant || !isVoucherInstant}
-            control={<Radio />}
+            control={<VGRadio />}
             label={
               <Image
                 src="/assets/badge-instant.svg"
@@ -532,7 +544,6 @@ export default function AddVariantDialog({
           disabled={feature === 2}
           size="small"
           onKeyDown={(e) => {
-            console.log('🚀 ~ file: AddVariantDialog.tsx:535 ~ e:', e)
             if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
               e.preventDefault()
             }
@@ -596,6 +607,7 @@ export default function AddVariantDialog({
             }
           }}
           onChange={onInputPrice}
+          sx={hiddenArrow}
         />
         {
           Boolean(nextUpdatePrice)

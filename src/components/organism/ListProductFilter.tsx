@@ -6,6 +6,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { Box, Skeleton, Typography } from '@mui/material';
 import { useTranslation } from 'next-i18next';
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
@@ -23,12 +24,17 @@ interface Dropdown {
 }
 
 export default function ListProductFilter({
-  handleChangeFilter
+  handleChangeFilter,
+  refetchProduct
 }: {
   handleChangeFilter: (key: string, param: string | number) => void
+  refetchProduct: () => void
 }) {
   const { t } = useTranslation("listProduct");
-  const [selectedStatus, setSelectedStatus] = useState("")
+  const [selectedStatus, setSelectedStatus] = useQueryState(
+    "status",
+    queryTypes.string.withDefault("")
+  );
   const getCategory = useGetCategory();
   const getBrand = useGetBrand();
   const getFeature = useGetFeature();
@@ -88,8 +94,12 @@ export default function ListProductFilter({
   }, [getProductStatus?.data?.data])
 
   const handleFilterStatus = (status: string) => {
-    setSelectedStatus(status)
-    handleChangeFilter('product_status', status)
+    void setSelectedStatus(status, {
+      scroll: false,
+      shallow: true,
+    }).then(() => {
+      refetchProduct()
+    })
   }
   const onChangeFilter = (value: Dropdown | null, filterBy: string) => {
     if (value?.value) {

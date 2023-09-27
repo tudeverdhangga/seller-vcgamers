@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Box from "@mui/material/Box";
 import dayjs, { type Dayjs } from 'dayjs';
 import Skeleton from '@mui/material/Skeleton';
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 import VGCard from "~/components/atomic/VGCard";
 import VGButton from "~/components/atomic/VGButton";
@@ -28,8 +29,9 @@ interface Dropdown {
   value: string;
 }
 
-export default function ListTransactionFilter({ handleFilter }: {
+export default function ListTransactionFilter({ handleFilter, refetchTransaction }: {
   handleFilter: (key: string, param: string | number) => void
+  refetchTransaction: () => void
 }) {
   const { t } = useTranslation("transaction");
   const [feature, setFeature] = useState<Dropdown[]>([])
@@ -37,7 +39,10 @@ export default function ListTransactionFilter({ handleFilter }: {
     label: "Semua Layanan",
     value: ""
   })
-  const [selectedStatus, setSelectedStatus] = useState("2")
+  const [selectedStatus, setSelectedStatus] = useQueryState(
+    "status",
+    queryTypes.string.withDefault("2")
+  );
   const [transactionStatus, setTransactionStatus] = useState<TabsStatus[]>([])
   const getTransactionStatus = useGetTransactionStatus()
   const getFeature = useGetFeature()
@@ -73,8 +78,12 @@ export default function ListTransactionFilter({ handleFilter }: {
   }, [getFeature?.data?.data])
 
   const handleFilterTabs = (status: string) => {
-    setSelectedStatus(status);
-    handleFilter('status', status);
+    void setSelectedStatus(status, {
+      scroll: false,
+      shallow: true,
+    }).then(() => {
+      refetchTransaction()
+    })
   }
   const handleFilterFeature = (event: Dropdown) => {
     setSelectedFeature(event);

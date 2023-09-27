@@ -15,6 +15,7 @@ import VGAlert from "~/components/atomic/VGAlert"
 import { fullDateFormat, priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useState } from "react";
 
 export interface ResponseTransaction {
   code: number
@@ -48,11 +49,9 @@ export interface PaginationData {
 }
 
 export default function ListTransaction({
-  transactions,
-  status
+  transactions
 }: {
   transactions: UseInfiniteQueryResult<ResponseTransaction, string>
-  status: string
 }) {
   const { t } = useTranslation("transaction");
   const { isMobile } = useResponsive();
@@ -60,6 +59,7 @@ export default function ListTransaction({
   const transactionList = transactions?.data?.pages.reduce((acc, page) => {
     return [...acc, ...page.data.data] as Transactions[];
   }, [] as Transactions[]);
+  const [status] = useState(router.query.status && "2")
 
   const moveToDetail = (id: string) => {
     void router.push(`/seller/toko/daftar-penjualan/detail?transaction_id=${id}`)

@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { HTTP, HTTPUpload, HTTPXlsx, queryClient } from "../http";
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 interface ResponseProduct {
   code: number;
@@ -144,6 +145,8 @@ interface ResponseBulkKilatValue {
 }
 
 export const useGetProduct = (params: string) => {
+  const [status] = useQueryState("status", queryTypes.string.withDefault(""));
+
   return useInfiniteQuery<ResponseProduct, string>({
     queryKey: ["product-list", params],
     queryFn: async ({ pageParam }) => {
@@ -151,7 +154,7 @@ export const useGetProduct = (params: string) => {
       if (typeof pageParam !== "undefined") {
         nextCursor = "&next_cursor=" + (pageParam as string);
       }
-      const url = `/product/product/all?${params}${nextCursor}`;
+      const url = `/product/product/all?${params}&product_status=${status}${nextCursor}`;
       const res = await HTTP.get(url);
       return res.data as ResponseProduct;
     },

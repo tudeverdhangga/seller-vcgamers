@@ -24,7 +24,6 @@ interface Params {
   search: string;
   date_start: string;
   date_end: string;
-  status: string;
 }
 
 export default function DaftarPenjualanPage() {
@@ -34,8 +33,7 @@ export default function DaftarPenjualanPage() {
     limit: 10,
     search: "",
     date_start: "2022-07-30",
-    date_end: "2023-10-30",
-    status: "2",
+    date_end: "2023-10-30"
   });
   const transactions = useGetTransaction(queryString.stringify(params));
   const download = useDownloadReport();
@@ -63,6 +61,9 @@ export default function DaftarPenjualanPage() {
       },
     });
   };
+  const refetchTransaction = () => {
+    void transactions.refetch()
+  }
 
   return (
     <>
@@ -121,8 +122,8 @@ export default function DaftarPenjualanPage() {
           </VGButton>
         </Box>
       </VGPageTitle>
-      <ListTransactionFilter handleFilter={handleFilter} />
-      <ListTransaction transactions={transactions} status={params.status} />
+      <ListTransactionFilter handleFilter={handleFilter} refetchTransaction={refetchTransaction} />
+      <ListTransaction transactions={transactions} />
     </>
   );
 }

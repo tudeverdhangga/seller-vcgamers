@@ -39,6 +39,7 @@ interface Variation {
   price: number
   is_custom_image: boolean
   is_active: boolean
+  is_kilat?: boolean
   images_url?: string[]
   next_update_price?: string
   next_activate_kilat?: string
@@ -303,6 +304,18 @@ export default function AddProductVariant({
     fontSize: "14px",
     borderRight: "1px solid #DEDEDE",
   }
+  const hiddenArrow = {
+    // Chrome, Safari, Edge, Opera
+    '& input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button': {
+      WebkitAppearance: "none",
+      margin: 0,
+    },
+
+    // Firefox
+    '& input[type="number"]': {
+      MozAppearance: "textfield",
+    },
+  }
 
   const thContainer = (
     <TableRow>
@@ -420,6 +433,7 @@ export default function AddProductVariant({
                 <Switch
                   defaultChecked={productDetail?.variations[index]?.is_kilat}
                   disabled={!row.is_active || (row.next_activate_kilat !== null && Boolean(row.next_activate_kilat))}
+                  onChange={(_, checked) => onChangeVariant(checked, 'is_kilat', index)}
                 />
               </Box>
               {
@@ -503,6 +517,7 @@ export default function AddProductVariant({
           }
         }}
         onChange={(e) => onChangeStockPrice(e, "price", index)}
+        sx={hiddenArrow}
       />
       {
         Boolean(row.next_update_price) && (

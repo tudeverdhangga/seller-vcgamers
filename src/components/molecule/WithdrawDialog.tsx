@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
 import Divider from "@mui/material/Divider";
 import { useAtom } from "jotai";
 import { withdrawReason } from "~/atom/voucher";
@@ -12,6 +11,7 @@ import { useEffect, type ChangeEvent } from "react";
 import VGDialog from "~/components/atomic/VGDialog";
 import VGAlert from "~/components/atomic/VGAlert";
 import VGButton from "~/components/atomic/VGButton";
+import VGRadio from "~/components/atomic/VGRadio";
 
 export default function WithdrawDialog(props: {
   id: string;
@@ -98,7 +98,7 @@ export default function WithdrawDialog(props: {
         >
           <FormControlLabel
             value="Kode terjual diluar VCGamers"
-            control={<Radio />}
+            control={<VGRadio />}
             label={t("list.reason.soldOutside")}
             labelPlacement="start"
             sx={{
@@ -110,7 +110,7 @@ export default function WithdrawDialog(props: {
           <Divider />
           <FormControlLabel
             value="Salah input kode"
-            control={<Radio />}
+            control={<VGRadio />}
             label={t("list.reason.wrong")}
             labelPlacement="start"
             sx={{
@@ -122,7 +122,7 @@ export default function WithdrawDialog(props: {
           <Divider />
           <FormControlLabel
             value="Kode expired"
-            control={<Radio />}
+            control={<VGRadio />}
             label={t("list.reason.expired")}
             labelPlacement="start"
             sx={{
@@ -134,7 +134,7 @@ export default function WithdrawDialog(props: {
           <Divider />
           <FormControlLabel
             value="Lainnya"
-            control={<Radio />}
+            control={<VGRadio />}
             label={t("list.reason.another")}
             labelPlacement="start"
             sx={{

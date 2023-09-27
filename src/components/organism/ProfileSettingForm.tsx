@@ -234,6 +234,7 @@ export default function ProfileSettingForm() {
         error={Boolean(errors.seller_name) || Boolean(nameMessage)}
         helperText={errors.seller_name?.message || nameMessage}
         defaultValue={getProfile?.data?.data?.seller_name}
+        disabled={!getProfile?.data?.data?.seller_can_change_name}
         onChange={(e) => onChangeName(e.target.value)}
       />
       <Typography

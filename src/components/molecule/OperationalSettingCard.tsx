@@ -4,7 +4,6 @@ import {
   Divider,
   FormControlLabel,
   Paper,
-  Radio,
   RadioGroup,
   Switch,
   Typography
@@ -16,6 +15,7 @@ import dayjs, { type Dayjs } from "dayjs";
 
 import { useDebounce } from "~/utils/debounce";
 import VGChip from "~/components/atomic/VGChip";
+import VGRadio from "~/components/atomic/VGRadio";
 
 interface OperationalHour {
   weekday: number
@@ -143,13 +143,13 @@ export default function OperationalSettingCard(props: {
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.fullHour")}
           </Typography>
-          <Radio value="fullDay" disabled={!props.isOpen} />
+          <VGRadio value="fullDay" disabled={!props.isOpen} />
         </Box>
         <Box sx={fieldStyle}>
           <Typography component="span" sx={labelStyle}>
             {t("tab.operational.form.customHour")}
           </Typography>
-          <Radio value="custom" disabled={!props.isOpen} />
+          <VGRadio value="custom" disabled={!props.isOpen} />
         </Box>
       </RadioGroup>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -165,6 +165,7 @@ export default function OperationalSettingCard(props: {
             py: 1
           }}
           onAccept={(event) => handleChangeTime(event, 'open')}
+          onChange={(event) => handleChangeTime(event, 'open')}
         />
         <TimePicker
           label={t("tab.operational.form.closeHour")}
@@ -178,6 +179,7 @@ export default function OperationalSettingCard(props: {
             py: 1
           }}
           onAccept={(event) => handleChangeTime(event, 'close')}
+          onChange={(event) => handleChangeTime(event, 'open')}
         />
       </LocalizationProvider>
     </>

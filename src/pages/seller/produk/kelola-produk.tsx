@@ -34,7 +34,6 @@ export default function KelolaProdukPage() {
     category_id: "",
     feature: "",
     limit: 10,
-    product_status: "",
     search: "",
   });
   const [accessOnPc, setAccessOnPc] = useState(false);
@@ -103,7 +102,7 @@ export default function KelolaProdukPage() {
           </VGButton>
         </Box>
       </VGPageTitle>
-      <ListProductFilter handleChangeFilter={handleFilter} />
+      <ListProductFilter handleChangeFilter={handleFilter} refetchProduct={refetchProduct} />
       {products.isLoading ? (
         [0, 1, 2, 3].map((index) => (
           <Skeleton

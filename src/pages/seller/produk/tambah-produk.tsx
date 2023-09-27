@@ -34,6 +34,7 @@ interface Variation {
   price: number;
   is_custom_image: boolean;
   is_active: boolean;
+  is_kilat?: boolean
   images_url?: string[];
   visit?: number;
   favorite?: number;

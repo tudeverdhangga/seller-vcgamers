@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { HTTP, HTTPCsv } from "../http"
+import { queryTypes, useQueryState } from "next-usequerystate";
 
 interface ResponseTransaction {
   code: number
@@ -104,6 +105,8 @@ interface ResponseUpdateTransaction {
 }
 
 export const useGetTransaction = (params: string) => {
+  const [status] = useQueryState("status", queryTypes.string.withDefault("2"));
+
   return useInfiniteQuery<ResponseTransaction, string>({
     queryKey: ["transaction-list", params],
     queryFn: async ({ pageParam }) => {
@@ -111,7 +114,7 @@ export const useGetTransaction = (params: string) => {
       if (typeof pageParam !== "undefined") {
         nextCursor = "&next_cursor=" + (pageParam as string);
       }
-      const url = `/transaction/transaction?${params}${nextCursor}`;
+      const url = `/transaction/transaction?${params}&status=${status}${nextCursor}`;
       const res = await HTTP.get(url);
       return res.data as ResponseTransaction;
     },

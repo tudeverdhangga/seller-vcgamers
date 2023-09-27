@@ -41,6 +41,7 @@ interface Variation {
   price: number;
   is_custom_image: boolean;
   is_active: boolean;
+  is_kilat?: boolean
   images_url?: string[];
   visit?: number;
   favorite?: number;
@@ -138,6 +139,8 @@ export default function TambahProdukPage() {
       const updatedArray = params.images_url;
       if (typeof value === "string" && typeof index === "number") {
         updatedArray[index] = value;
+      } else if (typeof value === "undefined" && typeof index === "number") {
+        updatedArray.splice(index, 1);
       }
 
       setParams({

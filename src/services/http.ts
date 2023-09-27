@@ -19,7 +19,7 @@ function errorHandler(
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (error.response && error.response.status === 401) {
-    window.location.href = env.NEXT_PUBLIC_AUTH_URL;
+    // window.location.href = env.NEXT_PUBLIC_AUTH_URL;
   }
 
   return Promise.reject(error);

@@ -76,6 +76,19 @@ export default function ChangePriceDialog(props: {
     }
   }
 
+  const hiddenArrow = {
+    // Chrome, Safari, Edge, Opera
+    '& input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button': {
+      WebkitAppearance: "none",
+      margin: 0,
+    },
+
+    // Firefox
+    '& input[type="number"]': {
+      MozAppearance: "textfield",
+    },
+  }
+
   return (
     <VGDialog
       isOpen={props.isOpen}
@@ -137,7 +150,7 @@ export default function ChangePriceDialog(props: {
             pattern: "[0-9]*",
             min: "100"
           }}
-          sx={{ my: 1 }}
+          sx={{ my: 1, ...hiddenArrow }}
           disabled={props.nextUpdatePrice !== null}
           onKeyDown={(e) => {
             if (e.key === "e" || e.key === "E" || e.key === "-" || e.key === "+" || e.key === "-") {
