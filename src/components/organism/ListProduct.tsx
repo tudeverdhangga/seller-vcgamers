@@ -33,6 +33,7 @@ interface Item {
   next_update_price: string
   next_activate_kilat: string
   name: string
+  slug: string
   stock: number
 }
 interface PaginationData {
@@ -165,6 +166,7 @@ export default function ListProduct({ products, refetchProduct }: {
               productId={product.product_id}
               image={product.image_url}
               name={product.name}
+              slug={product.slug}
               active={product.is_active}
               price={product.final_price}
               stock={product.stock}

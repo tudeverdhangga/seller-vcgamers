@@ -413,6 +413,18 @@ export default function AddVariantDialog({
               </Box>
             )
           }
+          {
+            typeof nextUpdateKilat === 'string' && (
+              <Typography sx={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: "error.main",
+                ml: 3
+              }}>
+                {t("variant.dialog.delivery.kilat.alert.updateKilatTime", { time: dateToTime(nextUpdateKilat) })}
+              </Typography>
+            )
+          }
         </Box>
         <Box>
           <FormControlLabel

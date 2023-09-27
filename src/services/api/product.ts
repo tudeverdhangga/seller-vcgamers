@@ -24,6 +24,7 @@ interface Item {
   next_update_price: string;
   next_activate_kilat: string;
   name: string;
+  slug: string;
   stock: number;
 }
 interface PaginationData {

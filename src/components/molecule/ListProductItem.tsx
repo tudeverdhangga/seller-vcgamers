@@ -34,6 +34,7 @@ import NoAccessMobileModal from "~/components/atomic/NoAccessMobileModal";
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
   name: string;
+  slug: string;
   active: boolean;
   price: number;
   feature: string;
@@ -73,7 +74,7 @@ export default function ListProductItem(props: {
       : setIsOpenDeactiveKilatDialog(true)
   };
   const moveToDetail = () => {
-    window.open(`${env.NEXT_PUBLIC_MARKET_URL}/dagangan/product-${props.productId}`);
+    window.open(`${env.NEXT_PUBLIC_MARKET_URL}/dagangan/${props.slug}`);
     handleCloseOptions()
   }
   const moveToEdit = () => {

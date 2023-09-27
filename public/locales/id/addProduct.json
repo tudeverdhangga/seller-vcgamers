@@ -95,14 +95,15 @@
         "kilat": {
           "label": "Jaminan bagi buyer bahwa tokomu berkomitmen memproses pengiriman pesanan dalam 10 menit",
           "alert": {
-            "title": "Tokomu belum memiliki fitur ini. ",
-            "subTitle": "Request Fitur Sekarang"
+            "title": "Tokomu belum memiliki fitur ini.",
+            "subTitle": "Request Fitur Sekarang",
+            "updateKilatTime": "Fitur ini bisa diaktifkan kembali pada {{time}} WIB"
           }
         },
         "instant": {
           "label": "Jaminan bagi buyer bahwa pesanannya akan diterima langsung tanpa menunggu (jika pembayaran sudah dilunasi)",
           "alert": {
-            "title": "Tokomu belum memiliki fitur ini. ",
+            "title": "Tokomu belum memiliki fitur ini.",
             "subTitle": "Request Fitur Sekarang",
             "noVoucher": "Fitur ini hanya untuk kategori produk voucher"
           }
