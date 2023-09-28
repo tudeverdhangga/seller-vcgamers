@@ -47,13 +47,20 @@ interface ErrorResponse {
 
 export default function ProfileSettingForm() {
   const defaultBanner = "/assets/default-user-banner.png";
+  const [defaultData, setDefaultData] = useState<{
+    seller_name: string,
+    seller_url: string,
+    seller_description: string
+  }>()
   const {
     register,
     handleSubmit,
+    reset,
+    setValue,
     formState: { errors }
   } = useForm<ProfileForm>({
-    criteriaMode: "all"
-  });
+    defaultValues: defaultData
+  })
   const { t } = useTranslation("setting");
   const whatsappLink = env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK;
   const emailLink = env.NEXT_PUBLIC_SUPPORT_EMAIL_LINK;
@@ -64,35 +71,26 @@ export default function ProfileSettingForm() {
   const checkName = useCheckNameAvailability();
   const [profileImage, setProfileImage] = useState<SellerPhoto | undefined>();
   const [bannerImage, setBannerImage] = useState<SellerPhoto | undefined>();
-  const [shopName, setShopName] = useState<string | undefined>("");
-  const [shopDesc, setShopDesc] = useState<string | undefined>("");
   const [shopUrl, setShopUrl] = useState<string | undefined>("");
   const [urlMessage, setUrlMessage] = useState<string | undefined>("");
   const [nameMessage, setNameMessage] = useState<string | undefined>("");
   const [phone, setPhone] = useState<string | undefined>("");
   const [isSaveLoading, setIsSaveLoading] = useState(false);
-  const [isChangeImage, setIsChangeImage] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
-    setShopName(getProfile?.data?.data?.seller_name)
-    setShopDesc(getProfile?.data?.data?.seller_description)
+    setValue("seller_name", getProfile?.data?.data?.seller_name ?? "")
+    setValue("seller_url", getProfile?.data?.data?.seller_url ?? "")
+    setValue("seller_description", getProfile?.data?.data?.seller_description ?? "")
     setProfileImage(getProfile?.data?.data?.seller_photo)
     setBannerImage(getProfile?.data?.data?.seller_cover_photo)
     setShopUrl(getProfile?.data?.data?.seller_url)
     setPhone(getProfile?.data?.data?.phone)
+    setDefaultData({
+      seller_name: getProfile?.data?.data?.seller_name || '',
+      seller_url: getProfile?.data?.data?.seller_url || '',
+      seller_description: getProfile?.data?.data?.seller_name || ''
+    })
   }, [getProfile?.data])
-  useEffect(() => {
-    if (
-      shopName !== getProfile?.data?.data?.seller_name ||
-      shopUrl !== getProfile?.data?.data?.seller_url ||
-      shopDesc !== getProfile?.data?.data?.seller_description
-    ) {
-      setIsDirty(true)
-    } else {
-      setIsDirty(false)
-    }
-  }, [shopName, shopUrl, shopDesc])
 
   // Style
   const fieldStyle = {
@@ -123,7 +121,6 @@ export default function ProfileSettingForm() {
         mediaUpload.mutate(formData, {
           onSuccess: (res) => {
             setProfileImage(res.data)
-            setIsChangeImage(true)
           }
         });
       }
@@ -141,7 +138,6 @@ export default function ProfileSettingForm() {
         mediaUpload.mutate(formData, {
           onSuccess: (res) => {
             setBannerImage(res.data)
-            setIsChangeImage(true)
           }
         });
       }
@@ -169,6 +165,7 @@ export default function ProfileSettingForm() {
         void getProfile.refetch()
         setIsSaveLoading(false)
         toast.success(t("tab.profile.toast.updateSuccess"), toastOption)
+        reset()
       },
       onError: (error) => {
         const err = error as ErrorResponse
@@ -179,12 +176,11 @@ export default function ProfileSettingForm() {
     })
   };
   const onChangeUrl = (url: string) => {
+    setValue("seller_url", url)
     handleCheckUrl(url)
     setShopUrl(url)
   };
   const handleCheckUrl = useDebounce((url: string) => {
-    setShopUrl(url)
-
     if (url) {
       checkUrl.mutate(url, {
         onSuccess: (res) => {
@@ -200,9 +196,8 @@ export default function ProfileSettingForm() {
     }
   }, 1000)
   const onChangeName = useDebounce((name: string) => {
-    setShopName(name)
-
     if (name) {
+      setValue("seller_name", name)
       checkName.mutate(name, {
         onSuccess: (res) => {
           const isAvailable = res?.data?.available
@@ -228,9 +223,11 @@ export default function ProfileSettingForm() {
         {
         ...register("seller_name", {
           required: t("tab.profile.form.error.required.name"),
+          maxLength: 20,
           validate: () => !nameMessage
         })
         }
+        inputProps={{ maxLength: 20 }}
         error={Boolean(errors.seller_name) || Boolean(nameMessage)}
         helperText={errors.seller_name?.message || nameMessage}
         defaultValue={getProfile?.data?.data?.seller_name}
@@ -275,7 +272,7 @@ export default function ProfileSettingForm() {
         }
         error={Boolean(errors.seller_url) || Boolean(urlMessage)}
         helperText={errors.seller_url?.message || urlMessage}
-        value={shopUrl}
+        defaultValue={getProfile?.data?.data?.seller_url}
         onChange={(e) => onChangeUrl(e.target.value)}
       />
       <VGAlert sx={{ py: 0 }}>
@@ -309,8 +306,6 @@ export default function ProfileSettingForm() {
       }
       error={Boolean(errors.seller_description)}
       defaultValue={getProfile?.data?.data?.seller_description}
-      helperText={errors.seller_description?.message}
-      onChange={(e) => setShopDesc(e.target.value)}
     />
   );
   const shopPhoneContainer = (
@@ -582,12 +577,11 @@ export default function ProfileSettingForm() {
             color="primary"
             type="submit"
             size="large"
-            disabled={(!isDirty && !isChangeImage) || getProfile?.isLoading}
+            disabled={getProfile?.isLoading}
             loading={isSaveLoading}
           >
             {t("tab.profile.form.submit")}
           </VGButton>
-
         </Grid>
       </form>
     </>

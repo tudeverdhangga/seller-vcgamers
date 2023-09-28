@@ -30,6 +30,7 @@ import { dateToTime } from "~/utils/format";
 import ConfirmationDeleteVariantDialog from "~/components/molecule/ConfirmationDeleteVariantDialog";
 import ConfirmationDeactiveVariantDialog from "~/components/molecule/ConfirmationDeactiveVariantDialog";
 import ConfirmationActiveVariantDialog from "~/components/molecule/ConfirmationActiveVariantDialog";
+import { useGetProfile } from "~/services/api/auth";
 
 interface Variation {
   name: string
@@ -145,6 +146,7 @@ export default function AddProductVariant({
 }) {
   const { t } = useTranslation("addProduct");
   const mediaUpload = useMediaUpload();
+  const getProfile = useGetProfile();
   const [isShowAddVariantDialog, setIsShowAddVariantDialog] = useState(false);
   const [variantImage, setVariantImage] = useState<string[][]>([['']]);
   const [variantData, setVariantData] = useState<Variation>();
@@ -420,7 +422,7 @@ export default function AddProductVariant({
         {row.name}
       </Typography>
       {
-        row.delivery_type === 1
+        row.delivery_type !== 2 && getProfile?.data?.data?.seller_has_kilat
           ? (
             <>
               <Box display="flex" alignItems="center">
@@ -431,9 +433,9 @@ export default function AddProductVariant({
                   height={11}
                 />
                 <Switch
-                  defaultChecked={productDetail?.variations[index]?.is_kilat}
+                  checked={row.delivery_type === 1}
                   disabled={!row.is_active || (row.next_activate_kilat !== null && Boolean(row.next_activate_kilat))}
-                  onChange={(_, checked) => onChangeVariant(checked, 'is_kilat', index)}
+                  onChange={(_, checked) => onChangeVariant(checked ? 1 : 0, 'delivery_type', index)}
                 />
               </Box>
               {
