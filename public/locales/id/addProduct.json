@@ -29,12 +29,12 @@
       "add": "Tambah Gambar"
     },
     "create": {
-      "onSuccess": "Tambah product berhasil",
-      "onError": "Tambah product gagal"
+      "onSuccess": "Tambah produk berhasil",
+      "onError": "Tambah produk gagal"
     },
     "edit": {
-      "onSuccess": "Edit product berhasil",
-      "onError": "Edit product gagal"
+      "onSuccess": "Edit produk berhasil",
+      "onError": "Edit produk gagal"
     }
   },
   "variant": {
