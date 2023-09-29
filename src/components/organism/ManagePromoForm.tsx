@@ -439,6 +439,15 @@ export default function ManagePromoForm({
                           backgroundColor: "rgba(0, 0, 0, 0.12)",
                         },
                       },
+                      inputProps: {
+                        isAllowed: (values: { floatValue?: number }) => {
+                          const { floatValue } = values;
+                          return (
+                            floatValue === undefined ||
+                            (floatValue >= 1 && floatValue <= 100)
+                          );
+                        },
+                      },
                     }}
                   />
                 </Grid>
@@ -528,11 +537,18 @@ export default function ManagePromoForm({
                       form.resetField(`items.${index}.brand_id` as const)
                     }
                   >
-                    {categoriesData?.data.map((category) => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
+                    {categoriesData?.data
+                      .filter(
+                        (d) =>
+                          !productForm.fields
+                            .map((f) => f.category_id)
+                            .includes(d.id) || field.category_id === d.id
+                      )
+                      .map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
                   </VGInputText>
                 </Grid>
                 <Grid xs={8}>
@@ -692,7 +708,18 @@ function BrandInputText({
                     brandsData?.data.find((brand) => brand.id === value)?.name
                   }
                   color="primary"
-                  sx={{ color: "primary.main" }}
+                  sx={{
+                    color: "primary.main",
+                    "& .MuiChip-deleteIcon": {
+                      color: "common.purple.500",
+                      padding: "2px",
+                    },
+                    "& .MuiChip-deleteIcon:hover": {
+                      color: "common.purple.700",
+                      borderRadius: "50%",
+                      backgroundColor: "common.purple.0",
+                    },
+                  }}
                   onMouseDown={(event) => {
                     event.stopPropagation();
                   }}

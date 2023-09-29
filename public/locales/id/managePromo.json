@@ -87,7 +87,7 @@
     "cancel": {
       "title": "Konfirmasi Pembatalan Pengajuan Promo",
       "subtitle": "Admin akan memproses pembatalan maksimal 3x24 jam. Kamu yakin ingin membatalkan promo ini?",
-      "error": "Minimum pembatalan: 3x24 jam setelah melakukan request.",
+      "error": "Minimum pembatalan: 3x24 jam setelah approval admin.",
       "errorHint": "Promo ini bisa dibatalkan mulai pada {{date}}"
     },
     "disabled": {
@@ -147,7 +147,7 @@
         },
         "discountPercentage": {
           "label": "Persentase Promo (%)",
-          "placeholder": "Contoh: 20%"
+          "placeholder": "Contoh: 20"
         },
         "discountMinimumTransaction": {
           "label": "Minimum Transaksi (Rp)",
@@ -156,10 +156,6 @@
         },
         "discountMaximumTransaction": {
           "label": "Maksimum Potongan (Rp)",
-          "placeholder": "Contoh: 20.000"
-        },
-        "discountPercentage": {
-          "label": "Persentase Promo (%)",
           "placeholder": "Contoh: 20.000"
         },
         "product": {

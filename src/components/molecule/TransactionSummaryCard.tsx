@@ -25,21 +25,25 @@ export default function TransactionSummaryCard() {
         <TransactionSummaryItem
           title={data?.data.total_pending}
           color="#FBC122"
+          status="2"
           subtitle={t("card.transactionSummary.body.pending")}
         />
         <TransactionSummaryItem
           title={data?.data.total_sent}
           color="#54A6E8"
+          status="3"
           subtitle={t("card.transactionSummary.body.sent")}
         />
         <TransactionSummaryItem
           title={data?.data.total_success}
           color="#399A4A"
+          status="4"
           subtitle={t("card.transactionSummary.body.success")}
         />
         <TransactionSummaryItem
           title={data?.data.total_moderation}
           color="#FB3336"
+          status="6"
           subtitle={t("card.transactionSummary.body.moderation")}
         />
       </Box>
@@ -50,6 +54,7 @@ export default function TransactionSummaryCard() {
 function TransactionSummaryItem(props: {
   title?: string | number;
   color: string;
+  status: string;
   subtitle: string;
 }) {
   return (
@@ -62,7 +67,10 @@ function TransactionSummaryItem(props: {
         alignSelf: "stretch",
         textDecoration: "none",
       }}
-      href="/seller/toko/daftar-penjualan"
+      href={{
+        pathname: "/seller/toko/daftar-penjualan",
+        query: { status: props.status },
+      }}
     >
       <Typography
         sx={{

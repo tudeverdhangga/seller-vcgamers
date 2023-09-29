@@ -1,5 +1,11 @@
-import type { ChatMessageProps, DataModerationMessage } from "./types";
+import { type InfiniteData } from "@tanstack/react-query";
+import type {
+  ChatMessageProps,
+  DataModerationList,
+  DataModerationMessage,
+} from "./types";
 import dayjs from "dayjs";
+import { type APIApiResponsePagination } from "../types";
 
 export function mapModerationMessageListToChatMessageListProps(
   dataList?: DataModerationMessage[]
@@ -58,4 +64,20 @@ export function mapModerationMessageToChatMessageListItemProps(
         status: "sent",
       } satisfies ChatMessageProps;
   }
+}
+
+export function readTrue(old: unknown, id: string) {
+  const oldRecord = old as
+    | InfiniteData<APIApiResponsePagination<DataModerationList[]>>
+    | undefined;
+
+  oldRecord?.pages.forEach((p) =>
+    p.data.forEach((d) => {
+      if (d.id === id) {
+        d.is_read = true;
+      }
+    })
+  );
+
+  return oldRecord;
 }

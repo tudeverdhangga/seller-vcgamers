@@ -13,7 +13,10 @@ import {
 import { apiPaginationNextPageParam } from "../utils";
 import type { BodyModeration, BodySendMessage } from "./types";
 import { queryClient } from "../http";
-import { mapModerationMessageListToChatMessageListProps } from "./mapper";
+import {
+  mapModerationMessageListToChatMessageListProps,
+  readTrue,
+} from "./mapper";
 
 export function useGetModerationList(status: "1" | "2") {
   return useInfiniteQuery({
@@ -77,6 +80,43 @@ export function usePostModerationInviteAdmin() {
 export function usePostModerationReadMessage() {
   return useMutation({
     mutationFn: (body: BodyModeration) => moderationReadMessage(body),
+    async onMutate(variables) {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({
+        queryKey: ["moderation-list", "1"],
+      });
+      await queryClient.cancelQueries({
+        queryKey: ["moderation-list", "2"],
+      });
+
+      // Snapshot the previous value
+      const previousRoom1 = queryClient.getQueryData(["moderation-list", "1"]);
+      const previousRoom2 = queryClient.getQueryData(["moderation-list", "2"]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["moderation-list", "1"], (old: unknown) =>
+        readTrue(old, variables.moderation_id)
+      );
+      queryClient.setQueryData(["moderation-list", "2"], (old: unknown) =>
+        readTrue(old, variables.moderation_id)
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousRoom1, previousRoom2 };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (_, __, context) => {
+      queryClient.setQueryData(
+        ["moderation-list", "1"],
+        context?.previousRoom1
+      );
+      queryClient.setQueryData(
+        ["moderation-list", "2"],
+        context?.previousRoom2
+      );
+    },
   });
 }
 

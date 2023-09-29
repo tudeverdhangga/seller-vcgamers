@@ -42,6 +42,7 @@ export default function ProductSummaryCard() {
             }
             subtitle={data?.data.total_stock_run_out}
             color="common.red.500"
+            status="3"
           />
         </Grid>
         <Grid xs={6} sm={3}>
@@ -49,6 +50,7 @@ export default function ProductSummaryCard() {
             title={t("card.myProduct.body.review")}
             subtitle={data?.data.total_review}
             color="primary.main"
+            status=""
           />
         </Grid>
       </Grid>
@@ -80,7 +82,10 @@ function ActiveProductSummaryCard(props: {
       }}
     >
       <Link
-        href="/seller/produk/kelola-produk"
+        href={{
+          pathname: "/seller/produk/kelola-produk",
+          query: { status: "1" },
+        }}
         style={{ textDecoration: "none" }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", flex: "1 0 0" }}>
@@ -111,7 +116,10 @@ function ActiveProductSummaryCard(props: {
       </Link>
 
       <Link
-        href="/seller/produk/kelola-produk"
+        href={{
+          pathname: "/seller/produk/kelola-produk",
+          query: { status: "2" },
+        }}
         style={{ textDecoration: "none" }}
       >
         <Box
@@ -149,10 +157,14 @@ function SummaryCard(props: {
   titleTrailing?: JSX.Element;
   subtitle?: string | number;
   color: string;
+  status: string;
 }) {
   return (
     <Link
-      href="/seller/produk/kelola-produk"
+      href={{
+        pathname: "/seller/produk/kelola-produk",
+        query: { status: props.status },
+      }}
       style={{ textDecoration: "none" }}
     >
       <Box

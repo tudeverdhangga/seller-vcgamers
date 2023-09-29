@@ -2,13 +2,18 @@
 import { styled } from "@mui/material/styles";
 import FiberManualRecord from "@mui/icons-material/FiberManualRecord";
 import Carousel from "react-material-ui-carousel";
+import Link from "next/link";
 
 const StyledFiberManualRecordIcon = styled(FiberManualRecord)({
   fontSize: "10px",
 });
 
 export default function DashboardCarousel() {
-  const items = [1, 2, 3].map((i) => `/assets/banner${i}.png`);
+  const items = [
+    ["/assets/banner1.png", "/seller/request/vip-seller"],
+    ["/assets/banner2.png", "/seller/request/instant"],
+    ["/assets/banner3.png", "/seller/request/proses-kilat"],
+  ];
 
   return (
     <Carousel
@@ -37,13 +42,15 @@ export default function DashboardCarousel() {
       }}
     >
       {items.map((item, i) => (
-        <div key={i} style={{ display: "flex", justifyContent: "center" }}>
-          <img
-            src={item}
-            alt={item}
-            style={{ minWidth: "100%", minHeight: "100%" }}
-          />
-        </div>
+        <Link key={i} href={item[1] as string}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <img
+              src={item[0]}
+              alt={item[0]}
+              style={{ minWidth: "100%", minHeight: "100%" }}
+            />
+          </div>
+        </Link>
       ))}
     </Carousel>
   );

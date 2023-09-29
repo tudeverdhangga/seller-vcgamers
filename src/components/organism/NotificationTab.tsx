@@ -4,7 +4,10 @@ import { queryTypes, useQueryState } from "next-usequerystate";
 
 import VGTabChip from "~/components/atomic/VGTabChip";
 import BadgeIcon from "~/components/icons/BadgeIcon";
-import { useGetNotificationCount } from "~/services/notification/hooks";
+import {
+  useGetNotificationCount,
+  useReadNotification,
+} from "~/services/notification/hooks";
 import VGTabPanel from "../atomic/VGTabPanel";
 import VGTabsChip from "../atomic/VGTabsChip";
 import NotificationSalesContent from "./NotificationSalesContent";
@@ -18,6 +21,7 @@ export default function NotificationTab() {
     queryTypes.string.withDefault("store")
   );
   const { data } = useGetNotificationCount();
+  const readMutation = useReadNotification();
 
   return (
     <div style={{ width: "100%" }}>
@@ -44,7 +48,12 @@ export default function NotificationTab() {
             return null;
           })}
         </VGTabsChip>
-        <Button sx={{ textTransform: "none", fontWeight: 600 }}>
+        <Button
+          sx={{ textTransform: "none", fontWeight: 600 }}
+          onClick={() =>
+            readMutation.mutate({ flag: type, notification_id: "" })
+          }
+        >
           {t("readAll")}
         </Button>
       </div>

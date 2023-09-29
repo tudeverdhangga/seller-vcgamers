@@ -12,7 +12,7 @@ export function mapToCampaign(data: DataCampaign): Campaign {
   const date_start = dayjs(data.date_start).format("DD MMM YYYY");
   const date_end = dayjs(data.date_end).format("DD MMM YYYY");
   const join_before_date = dayjs(data.join_before_date).format("DD MMM YYYY");
-  const is_expired = dayjs() > dayjs(data.date_end);
+  const is_expired = dayjs() > dayjs(data.join_before_date);
 
   return {
     ...data,

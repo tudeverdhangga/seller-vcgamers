@@ -16,7 +16,7 @@ import { apiPaginationNextPageParam } from "../utils";
 import { mapChatMessageListToChatMessageListProps } from "./mapper";
 import { queryClient } from "../http";
 import type { APIApiResponsePagination } from "../types";
-import type { DataChatMessage } from "./types";
+import type { DataChatMessage, DataChatRoom } from "./types";
 import dayjs from "dayjs";
 
 export function useGetChatRoomIdByBuyerId(buyerId?: string) {
@@ -143,6 +143,41 @@ export function useChatSendMessage() {
 export function useChatReadMessage() {
   return useMutation({
     mutationFn: chatReadMessage,
+    async onMutate(variables) {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({
+        queryKey: ["chat-room"],
+      });
+
+      // Snapshot the previous value
+      const previousRooms = queryClient.getQueryData(["chat-room"]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["chat-room"], (old: unknown) => {
+        const oldRecord = old as
+          | InfiniteData<APIApiResponsePagination<DataChatRoom[]>>
+          | undefined;
+
+        oldRecord?.pages.forEach((p) =>
+          p.data.forEach((d) => {
+            if (d.id === variables.room_id) {
+              d.unread_count = 0;
+            }
+          })
+        );
+
+        return oldRecord;
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousRooms };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (_, __, context) => {
+      queryClient.setQueryData(["chat-room"], context?.previousRooms);
+    },
   });
 }
 

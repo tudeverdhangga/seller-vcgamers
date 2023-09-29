@@ -37,9 +37,15 @@ export default function DashboardChart({
   const chartRef = useRef<ChartJS<"line">>(null);
   const { isMobile } = useResponsive();
 
-  const labels = isMobile ? graphData.label.slice(-3) : graphData.label;
+  const labels = useMemo(
+    () => (isMobile ? graphData.label.slice(-3) : graphData.label),
+    [isMobile, graphData]
+  );
 
-  const dataSets = isMobile ? graphData.data.slice(-3) : graphData.data;
+  const dataSets = useMemo(
+    () => (isMobile ? graphData.data.slice(-3) : graphData.data),
+    [isMobile, graphData]
+  );
 
   const data = useMemo(
     () => ({

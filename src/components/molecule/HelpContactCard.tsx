@@ -75,7 +75,12 @@ export default function HelpContactCard() {
                   >
                     <CopyIcon />
                   </IconButton>
-                  <Link href={whatsappLink} passHref>
+                  <Link
+                    href={whatsappLink}
+                    passHref
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <IconButton aria-label="whatsapp">
                       <WhatsappIcon />
                     </IconButton>
@@ -102,7 +107,12 @@ export default function HelpContactCard() {
                   >
                     <CopyIcon />
                   </IconButton>
-                  <Link href={emailLink} passHref>
+                  <Link
+                    href={emailLink}
+                    passHref
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <IconButton aria-label="mail">
                       <MailIcon />
                     </IconButton>

@@ -17,6 +17,12 @@ export async function fetchAllCampaign(params: CampaignListParam) {
 
   const data = resData.data.data.map(mapToCampaign);
 
+  if (params.only_active === "true") {
+    const filteredData = data.filter((d) => !d.is_expired);
+
+    return { ...resData, data: { ...resData.data, data: filteredData } };
+  }
+
   return { ...resData, data: { ...resData.data, data } };
 }
 
