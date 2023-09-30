@@ -12,13 +12,12 @@ export function mapToCampaign(data: DataCampaign): Campaign {
   const date_start = dayjs(data.date_start).format("DD MMM YYYY");
   const date_end = dayjs(data.date_end).format("DD MMM YYYY");
   const join_before_date = dayjs(data.join_before_date).format("DD MMM YYYY");
-  const is_expired = dayjs() > dayjs(data.join_before_date);
 
   return {
     ...data,
     date_start,
     date_end,
-    is_expired,
+    is_expired: data.status === 3,
     deadline: `Gabung sebelum ${join_before_date}`,
     status: data.status as CampaignType,
     period: `${date_start} - ${date_end}`,

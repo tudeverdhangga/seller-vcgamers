@@ -1,7 +1,5 @@
 import { useTranslation } from "next-i18next";
 
-import Toolbar from "@mui/material/Toolbar";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 
 import EmptyStateIcon from "~/components/icons/EmptyStateIcon/campaign";
@@ -12,13 +10,10 @@ export default function EmptyState() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-      <Toolbar />
-      <Divider />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#F5F5F5",
           justifyContent: "center",
           flexGrow: 1,
         }}

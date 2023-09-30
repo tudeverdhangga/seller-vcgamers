@@ -34,40 +34,38 @@ export default function JoinCampaignList() {
     <VGCard
       sx={{ my: 0, display: "flex", flexDirection: "column", gap: "20px" }}
     >
-      {campaigns && campaigns.length === 0 && <EmptyState />}
-      {campaigns && campaigns.length !== 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <Typography
+          component="span"
+          color="primary.main"
+          fontSize={16}
+          fontWeight={700}
         >
-          <Typography
-            component="span"
-            color="primary.main"
-            fontSize={16}
-            fontWeight={700}
-          >
-            {t("list.title")}
-          </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox size="small" checked={active} onChange={handleChange} />
-            }
-            label={t("list.activeOnly")}
-            labelPlacement="start"
-            sx={{
-              "& .MuiFormControlLabel-label": {
-                color: "common.shade.200",
-                fontSize: 14,
-                fontWeight: 600,
-              },
-            }}
-          />
-        </Box>
-      )}
+          {t("list.title")}
+        </Typography>
+        <FormControlLabel
+          control={
+            <Checkbox size="small" checked={active} onChange={handleChange} />
+          }
+          label={t("list.activeOnly")}
+          labelPlacement="start"
+          sx={{
+            "& .MuiFormControlLabel-label": {
+              color: "common.shade.200",
+              fontSize: 14,
+              fontWeight: 600,
+            },
+          }}
+        />
+      </Box>
+      {campaigns && campaigns.length === 0 && <EmptyState />}
 
       <JoinCampaignDetailDialog />
       <JoinCampaignConfirmationDialog />
