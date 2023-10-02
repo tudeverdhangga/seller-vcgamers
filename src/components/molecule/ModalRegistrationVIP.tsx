@@ -15,11 +15,6 @@ import { useFileUpload, useMediaUpload } from "~/services/api/media";
 import { BodyPayloadRegisterVIP, CustomErrorResponse, ErrorResponse, MediaUploaded, PrintErrorMessages, SeverityType, useRequestVIP } from "~/services/api/request-fitur";
 import VGInputImage from "~/components/atomic/VGInputImage";
 
-interface ResponsePhoto {
-  object_url: string
-  object_key: string
-}
-
 export default function RegistrationVIPModal(props: {
   name?: string;
   isOpen: boolean;
@@ -127,7 +122,6 @@ export default function RegistrationVIPModal(props: {
         },
         onError: (error) => {
           const err = error as CustomErrorResponse
-          console.log("Err: ", err.response.data)
           const msg = `${err.response.data.code} ${err.response.data.status}: ` + PrintErrorMessages(err.response.data.validation_fields)
           setAlertMessage(msg)
           setSeverityAlert("error");

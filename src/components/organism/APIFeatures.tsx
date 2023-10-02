@@ -12,6 +12,7 @@ import ConfirmationGenerateWithIconDialog from "../molecule/ConfirmationGenerate
 import queryString from "query-string";
 import APIFeatureSidebarMenu from "../molecule/APIFeatureSidebarMenu";
 import VGTabPanel from "../atomic/VGTabPanel";
+import Link from "next/link";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -292,9 +293,15 @@ export default function APIFeaturePage() {
   };
 
   const APIWhitelistTitleContentStyle = {
-    fontSize: "16px",
+    fontSize: {xs: "14px", xl: "16px"},
     fontWeight: 600,
     color: "common.shade.400",
+  }
+  const APIContentHyperlinkStyle = {
+    fontSize: {xs: "14px", xl: "16px"},
+    fontWeight: 600,
+    color: "#7750F8",
+    textAlign: "right"
   }
   const APIWhitelistSubTitleContentStyle = {
     fontSize: "12px",
@@ -359,7 +366,7 @@ export default function APIFeaturePage() {
                           minRows={3}
                           fullWidth
                           InputProps={{
-                            readOnly: disableAPIWhitelistForm,
+                            disabled: disableAPIWhitelistForm,
                           }}
                           value={apiWhitelist}
                           onChange={handleAPIWhitelist}
@@ -402,12 +409,28 @@ export default function APIFeaturePage() {
               {/* Content API Access Key */}
                 <VGTabPanel value={menuPosition} index={1} sx={{ ml: 2, width: "99%" }}>
                   <VGCard>
-                    <Typography
-                      component="div"
-                      sx={APIWhitelistTitleContentStyle}
-                    >
-                      {t("contentApi.accessKey.title")}
-                    </Typography>
+                    <Grid container spacing={1} rowSpacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
+                      <Grid item xs={6}>
+                        <Typography
+                          component="div"
+                          sx={APIWhitelistTitleContentStyle}
+                        >
+                          {t("contentApi.accessKey.title")}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <div>
+                          <Link href="#" target="_blank" style={{ textDecoration: "none" }}>
+                            <Typography
+                              component="div"
+                              sx={APIContentHyperlinkStyle}
+                            >
+                              {t("contentApi.accessKey.hyperlink")}
+                            </Typography>
+                          </Link>
+                        </div>
+                      </Grid>
+                    </Grid>
                     <Grid container spacing={1} rowSpacing={1} justifyContent={'space-between'} alignItems={'center'} sx={{mt: 0}}>
                       <Grid item xs={9} sm={10}>
                         <TextField

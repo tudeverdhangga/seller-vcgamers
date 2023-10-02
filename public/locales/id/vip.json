@@ -17,6 +17,7 @@
     "accessKey": {
       "tab": "API Access Key",
       "title": "Secret Key",
+      "hyperlink": "Lihat Dokumentasi API",
       "copy": "Salin",
       "generateTokenBtn": "Generate Access Token Baru",
       "deleteBtn": "Hapus",
