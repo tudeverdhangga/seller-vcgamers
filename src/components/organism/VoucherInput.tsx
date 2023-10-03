@@ -45,7 +45,7 @@ export default function VoucherInput({
     if (open) {
       setTimeout(() => {
         setOpen(false)
-      }, 2000);
+      }, 5000);
     }
   }, [open])
 

@@ -111,11 +111,15 @@ export default function TambahProdukPage() {
 
     if (typeof indexImage === "undefined") {
       updatedVariation[key] = value;
-    } else if (typeof value === "object") {
+    } else {
       if (typeof updatedVariation.images_url === "undefined") {
         updatedVariation.images_url = [];
       }
-      updatedVariation.images_url[indexImage] = value[0] as string;
+      if (typeof value === "object") {
+        updatedVariation.images_url[indexImage] = value[0] as string;
+      } else if (typeof value === "undefined") {
+        updatedVariation.images_url.splice(indexImage, 1);
+      }
     }
 
     updatedArray[index] = updatedVariation;

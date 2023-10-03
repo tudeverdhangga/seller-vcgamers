@@ -13,7 +13,7 @@
     },
     "alert": "Terdapat kode yang sama. Kode yang sama sudah dihapus",
     "placeholder": "Contoh memasukkan 4 voucher:\nkode1\nkode2",
-    "check": "Perika Jumlah Kode",
+    "check": "Periksa Jumlah Kode",
     "save": "Masukkan {{total}} data",
     "edit": "Edit Data",
     "onSuccess": "{{total}} Kode Baru berhasil ditambahkan",
