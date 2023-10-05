@@ -179,7 +179,7 @@ export default function OperationalSettingCard(props: {
             py: 1
           }}
           onAccept={(event) => handleChangeTime(event, 'close')}
-          onChange={(event) => handleChangeTime(event, 'open')}
+          onChange={(event) => handleChangeTime(event, 'close')}
         />
       </LocalizationProvider>
     </>
