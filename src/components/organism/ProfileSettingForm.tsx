@@ -168,6 +168,7 @@ export default function ProfileSettingForm() {
         reset()
       },
       onError: (error) => {
+        setIsSaveLoading(false)
         const err = error as ErrorResponse
         const errorMessage = `${t("tab.profile.toast.updateFail")}: ${err?.response?.data?.message}`
 
