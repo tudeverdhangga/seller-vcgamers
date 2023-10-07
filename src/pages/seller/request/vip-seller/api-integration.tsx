@@ -13,7 +13,7 @@ export default function ActiveVIPSeller() {
     <>
       <VGHead>{t("head")}</VGHead>
       {/* Page Title */}
-      <VGPageTitle subTitle={t("subtitle")} title={t("title")} />
+      <VGPageTitle subTitle={t("title")} title={t("subtitle")} />
 
       {/* Tabs */}
       <VipSellerTab />

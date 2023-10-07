@@ -13,7 +13,7 @@
     "descInstant": "Label layanan Instant adalah tanda yang disematkan pada variasi produk seller. Tanda ini memberi jaminan kepada buyer bahwa pesanan akan diproses dengan sangat cepat. Ketika buyer menyelesaikan proses pembayaran maka secara otomatis buyer akan menerima kode voucher sesuai dengan produk yang dipesan.",
     "descProskil": "Layanan ‘Proses Kilat’ adalah label yang bisa disematkan pada variasi produk seller. Tanda ini menjadi bukti jaminan kepada buyer kalau seller berkomitmen akan memproses pesanan buyer hingga selesai hanya dalam maksimal waktu 10 Menit."
   },
-  "featureRequests": {
+  "featureRequestsKilat": {
     "0": {
       "imageSrc": "daya_tarik",
       "title": "Menjadi Daya Tarik",
@@ -26,11 +26,33 @@
     },
     "2": {
       "imageSrc": "kilat_lebih_laku",
+      "title": "Jualan Lebih Laku",
+      "subtitle": "Pelayanan yang cepat pasti bikin buyer ketagihan untuk belanja lagi di toko mu"
+    },
+    "3": {
+      "imageSrc": "semakin_dipercaya",
+      "title": "Semakin Dipercaya",
+      "subtitle": "Label Proses Kilat akan meningkatkan reputasi baik berkat jaminan pelayanan cepat dari toko mu"
+    }
+  },
+  "featureRequestsInstant": {
+    "0": {
+      "imageSrc": "daya_tarik",
+      "title": "Menjadi Daya Tarik",
+      "subtitle": "Produk akan tampil dengan tanda yang berbeda dibanding produk pada umumnya"
+    },
+    "1": {
+      "imageSrc": "menarik_minat",
+      "title": "Menarik Minat Buyer",
+      "subtitle": "Jaminan pelayanan yang cepat menjadi pemikat luar biasa bagi buyer untuk berbelanja"
+    },
+    "2": {
+      "imageSrc": "instant_praktis",
       "title": "Praktis Bagi Seller",
       "subtitle": "Setiap pesanan yang masuk akan otomatis diproses oleh sistem VCGamers"
     },
     "3": {
-      "imageSrc": "semakin_dipercaya",
+      "imageSrc": "hemat_waktu",
       "title": "Hemat Waktu",
       "subtitle": "Seller bisa banyak menghemat waktu dengan input banyak stok kode voucher ke sistem"
     }

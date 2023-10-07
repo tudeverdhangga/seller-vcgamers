@@ -4,7 +4,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NextPage } from "next";
 import { appWithTranslation } from "next-i18next";
 import type { AppProps } from "next/app";
-import type { ReactElement, ReactNode } from "react";
+import Head from "next/head";
+import { useState, type ReactElement, type ReactNode } from "react";
 
 import nextI18NextConfig from "../../next-i18next.config.mjs";
 
@@ -15,6 +16,7 @@ import { commonColors } from "~/utils/colors";
 import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 import "~/components/atomic/VGRichEditor/index.css";
 import { queryClient } from "~/services/http";
+import Script from "next/script";
 
 //TODO: Fix issue loading using next/font
 // const rajdhani = Rajdhani({
@@ -67,9 +69,29 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
+  const [shopUrl, setShopUrl] = useState<string | undefined>("");
 
   return (
     <>
+      <Head>
+      {/* //TODO: Fix issue inline script */}
+      {/* <Script
+        src="//cdnt.netcoresmartech.com/smartechclient.js"
+      />
+      <Script id="smartech-loader">
+        {
+        `smartech('create', "${env.NEXT_PUBLIC_SMARTECH_CREATE}");
+        smartech('register', "${env.NEXT_PUBLIC_SMARTECH_REGISTER}");
+        smartech('identify', "${env.NEXT_PUBLIC_SMARTECH_IDENTITY}");`
+        }
+      </Script> */}
+        <script src='//cdnt.netcoresmartech.com/smartechclient.js'></script>
+        <script>
+        smartech('create', "{env.NEXT_PUBLIC_SMARTECH_CREATE}");
+        smartech('register', "{env.NEXT_PUBLIC_SMARTECH_REGISTER}");
+        smartech('identify', "{env.NEXT_PUBLIC_SMARTECH_IDENTITY}");
+        </script>
+      </Head>
       <StyledToastContainer />
 
       <ThemeProvider theme={theme}>

@@ -164,24 +164,24 @@ export default function ProsesKilatPage() {
 
   const featureRequests = [
     {
-      imageSrc: t("featureRequests.0.imageSrc"),
-      title: t("featureRequests.0.title"),
-      subtitle: t("featureRequests.0.subtitle"),
+      imageSrc: t("featureRequestsKilat.0.imageSrc"),
+      title: t("featureRequestsKilat.0.title"),
+      subtitle: t("featureRequestsKilat.0.subtitle"),
     },
     {
-      imageSrc: t("featureRequests.1.imageSrc"),
-      title: t("featureRequests.1.title"),
-      subtitle: t("featureRequests.1.subtitle"),
+      imageSrc: t("featureRequestsKilat.1.imageSrc"),
+      title: t("featureRequestsKilat.1.title"),
+      subtitle: t("featureRequestsKilat.1.subtitle"),
     },
     {
-      imageSrc: t("featureRequests.2.imageSrc"),
-      title: t("featureRequests.2.title"),
-      subtitle: t("featureRequests.2.subtitle"),
+      imageSrc: t("featureRequestsKilat.2.imageSrc"),
+      title: t("featureRequestsKilat.2.title"),
+      subtitle: t("featureRequestsKilat.2.subtitle"),
     },
     {
-      imageSrc: t("featureRequests.3.imageSrc"),
-      title: t("featureRequests.3.title"),
-      subtitle: t("featureRequests.3.subtitle"),
+      imageSrc: t("featureRequestsKilat.3.imageSrc"),
+      title: t("featureRequestsKilat.3.title"),
+      subtitle: t("featureRequestsKilat.3.subtitle"),
     },
   ];
 

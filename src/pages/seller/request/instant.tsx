@@ -167,24 +167,24 @@ export default function InstantPage() {
 
   const featureRequests = [
     {
-      imageSrc: t("featureRequests.0.imageSrc"),
-      title: t("featureRequests.0.title"),
-      subtitle: t("featureRequests.0.subtitle"),
+      imageSrc: t("featureRequestsInstant.0.imageSrc"),
+      title: t("featureRequestsInstant.0.title"),
+      subtitle: t("featureRequestsInstant.0.subtitle"),
     },
     {
-      imageSrc: t("featureRequests.1.imageSrc"),
-      title: t("featureRequests.1.title"),
-      subtitle: t("featureRequests.1.subtitle"),
+      imageSrc: t("featureRequestsInstant.1.imageSrc"),
+      title: t("featureRequestsInstant.1.title"),
+      subtitle: t("featureRequestsInstant.1.subtitle"),
     },
     {
-      imageSrc: t("featureRequests.2.imageSrc"),
-      title: t("featureRequests.2.title"),
-      subtitle: t("featureRequests.2.subtitle"),
+      imageSrc: t("featureRequestsInstant.2.imageSrc"),
+      title: t("featureRequestsInstant.2.title"),
+      subtitle: t("featureRequestsInstant.2.subtitle"),
     },
     {
-      imageSrc: t("featureRequests.3.imageSrc"),
-      title: t("featureRequests.3.title"),
-      subtitle: t("featureRequests.3.subtitle"),
+      imageSrc: t("featureRequestsInstant.3.imageSrc"),
+      title: t("featureRequestsInstant.3.title"),
+      subtitle: t("featureRequestsInstant.3.subtitle"),
     },
   ];
 
