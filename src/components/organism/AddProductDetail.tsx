@@ -160,7 +160,7 @@ export default function AddProductDetail({
         }
       })
 
-      if (selectedCategory.isVoucher) {
+      if (typeof selectedCategory.isVoucher !== 'undefined') {
         handleVoucherInstant(selectedCategory.isVoucher)
       }
 
