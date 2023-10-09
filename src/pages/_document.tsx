@@ -1,4 +1,6 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
+import Script from "next/script";
+import { env } from "process";
 
 class MyDocument extends Document {
   render() {
@@ -15,6 +17,20 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <Script id="netcore" strategy="afterInteractive">{`
+            let initiated = false;
+            while(!initiated) {
+              if (window.smartech && window.smartech != undefined) {
+                smartech("create", "${env.NEXT_PUBLIC_CREATE_NETCORE}");
+                smartech("register", "${env.NEXT_PUBLIC_REGISTER_NETCORE}");
+                smartech("identify", "");
+                smartech("dispatch", "page browse", { pageurl: window.location.href });
+
+                initiated = true;
+              }
+            }
+          `}
+          </Script>
         </body>
       </Html>
     );

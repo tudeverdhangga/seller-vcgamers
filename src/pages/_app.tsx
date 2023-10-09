@@ -73,25 +73,6 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
 
   return (
     <>
-      <Head>
-      {/* //TODO: Fix issue inline script */}
-      {/* <Script
-        src="//cdnt.netcoresmartech.com/smartechclient.js"
-      />
-      <Script id="smartech-loader">
-        {
-        `smartech('create', "${env.NEXT_PUBLIC_SMARTECH_CREATE}");
-        smartech('register', "${env.NEXT_PUBLIC_SMARTECH_REGISTER}");
-        smartech('identify', "${env.NEXT_PUBLIC_SMARTECH_IDENTITY}");`
-        }
-      </Script> */}
-        <script src='//cdnt.netcoresmartech.com/smartechclient.js'></script>
-        <script>
-        smartech('create', "{env.NEXT_PUBLIC_SMARTECH_CREATE}");
-        smartech('register', "{env.NEXT_PUBLIC_SMARTECH_REGISTER}");
-        smartech('identify', "{env.NEXT_PUBLIC_SMARTECH_IDENTITY}");
-        </script>
-      </Head>
       <StyledToastContainer />
 
       <ThemeProvider theme={theme}>
