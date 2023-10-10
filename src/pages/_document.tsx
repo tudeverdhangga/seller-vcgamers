@@ -17,6 +17,9 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <script src='//cdnt.netcoresmartech.com/smartechclient.js'></script>
+          <Script src="//cdnt.netcoresmartech.com/smartechclient.js" strategy="beforeInteractive">
+          </Script>
           <Script id="netcore" strategy="afterInteractive">{`
             let initiated = false;
             while(!initiated) {

@@ -4,7 +4,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NextPage } from "next";
 import { appWithTranslation } from "next-i18next";
 import type { AppProps } from "next/app";
-import Head from "next/head";
 import { useState, type ReactElement, type ReactNode } from "react";
 
 import nextI18NextConfig from "../../next-i18next.config.mjs";
@@ -16,7 +15,6 @@ import { commonColors } from "~/utils/colors";
 import StyledToastContainer from "~/components/atomic/StyledToastContainer";
 import "~/components/atomic/VGRichEditor/index.css";
 import { queryClient } from "~/services/http";
-import Script from "next/script";
 
 //TODO: Fix issue loading using next/font
 // const rajdhani = Rajdhani({
