@@ -17,23 +17,25 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src='//cdnt.netcoresmartech.com/smartechclient.js'></script>
-          <Script src="//cdnt.netcoresmartech.com/smartechclient.js" strategy="beforeInteractive">
+          <Script id="smartech" src="//cdnt.netcoresmartech.com/smartechclient.js" strategy="beforeInteractive">
           </Script>
-          <Script id="netcore" strategy="afterInteractive">{`
-            let initiated = false;
-            while(!initiated) {
-              if (window.smartech && window.smartech != undefined) {
-                smartech("create", "${env.NEXT_PUBLIC_CREATE_NETCORE}");
-                smartech("register", "${env.NEXT_PUBLIC_REGISTER_NETCORE}");
-                smartech("identify", "");
-                smartech("dispatch", "page browse", { pageurl: window.location.href });
+          {
+            (env.NEXT_PUBLIC_CREATE_NETCORE && env.NEXT_PUBLIC_REGISTER_NETCORE) &&
+            <Script id="netcore" strategy="afterInteractive">{`
+              let initiated = false;
+              while(!initiated) {
+                if (window.smartech && window.smartech != undefined) {
+                  smartech("create", "${env.NEXT_PUBLIC_CREATE_NETCORE}");
+                  smartech("register", "${env.NEXT_PUBLIC_REGISTER_NETCORE}");
+                  smartech("identify", "");
+                  smartech("dispatch", "page browse", { pageurl: window.location.href });
 
-                initiated = true;
+                  initiated = true;
+                }
               }
-            }
-          `}
-          </Script>
+            `}
+            </Script>
+          }
         </body>
       </Html>
     );
