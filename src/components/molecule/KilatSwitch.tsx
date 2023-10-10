@@ -17,7 +17,11 @@ export default function KilatSwitch() {
     <Switch
       checked={kilatData?.data.toggle_value ?? false}
       disabled={!hasKilat}
-      onChange={handleChangeKilat}
+      onChange={(event) => {
+        event.stopPropagation()
+        event.preventDefault()
+        handleChangeKilat
+      }}
     />
   );
 }
