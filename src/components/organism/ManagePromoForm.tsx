@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
@@ -48,20 +48,7 @@ import {
   type useGetPromoDetailMapped,
   useUpdatePromo,
 } from "~/services/managePromo/hooks";
-import { toast } from "react-toastify";
-import { toastOption } from "~/utils/toast";
 import dayjs from "dayjs";
-
-function handleError(error: any) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-  const message = error.response.data.message as string;
-
-  if (message === "Validation Error") {
-    toast.error("Terdapat kesalahan dalam penginputan data.", toastOption);
-  } else {
-    toast.error(message, toastOption);
-  }
-}
 
 export default function ManagePromoForm({
   form,
@@ -92,6 +79,14 @@ export default function ManagePromoForm({
     setManagePromoForm({ isOpen: false });
   };
 
+  useEffect(() => {
+    if (promoDetailData?.data.is_percent !== undefined) {
+      setDiscountType(
+        promoDetailData?.data.is_percent ? "percentage" : "price"
+      );
+    }
+  }, [promoDetailData?.data.is_percent]);
+
   return (
     <Dialog
       open={managePromoForm.isOpen}
@@ -107,9 +102,6 @@ export default function ManagePromoForm({
               onSuccess: () => {
                 handleClose();
               },
-              onError(error) {
-                handleError(error);
-              },
             });
           }
           if (managePromoForm.type === "edit" && managePromoForm.promoId) {
@@ -118,9 +110,6 @@ export default function ManagePromoForm({
               {
                 onSuccess: () => {
                   handleClose();
-                },
-                onError(error) {
-                  handleError(error);
                 },
               }
             );
@@ -265,6 +254,7 @@ export default function ManagePromoForm({
                         </InputAdornment>
                       ),
                     }}
+                    InputLabelProps={{ shrink: true }}
                   />
                 )}
               />
@@ -581,14 +571,18 @@ export default function ManagePromoForm({
         </DialogContent>
         {isDisabled && (
           <DialogActions sx={{ justifyContent: "space-between", px: 3, pb: 3 }}>
-            <VGButton
-              variant="outlined"
-              size="large"
-              onClick={() => setDisableOpen(true)}
-              color="error"
-            >
-              {t("btn.disablePromo")}
-            </VGButton>
+            {managePromoForm.promo.can_deactivate ? (
+              <VGButton
+                variant="outlined"
+                size="large"
+                onClick={() => setDisableOpen(true)}
+                color="error"
+              >
+                {t("btn.disablePromo")}
+              </VGButton>
+            ) : (
+              <div></div>
+            )}
             <Box sx={{ display: "flex", gap: "20px" }}>
               <VGButton
                 variant="outlined"

@@ -8,6 +8,8 @@ export interface DataCampaign {
   status_name: string;
   join_before_date: string;
   has_joined: boolean;
+  has_performance_link: boolean;
+  performance_link: string;
 }
 
 export interface DataCampaignDetail {
@@ -20,6 +22,7 @@ export interface DataCampaignDetail {
   status: number;
   status_name: string;
   performance_link: string;
+  can_join: boolean;
 }
 
 export interface Campaign extends DataCampaign {

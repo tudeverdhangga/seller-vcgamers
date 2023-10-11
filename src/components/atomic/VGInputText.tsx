@@ -40,6 +40,7 @@ export default function VGInputText<
           value={value}
           inputRef={ref}
           InputProps={{ sx: { borderRadius: "5px" } }}
+          InputLabelProps={{ shrink: true }}
           {...TextFieldProps}
         >
           {children}

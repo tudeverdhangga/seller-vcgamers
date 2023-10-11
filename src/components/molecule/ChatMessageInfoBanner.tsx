@@ -29,7 +29,12 @@ export default function ChatMessageInfoBanner() {
         </Typography>
       </Grid>
       <Grid xs={12} sm={6}>
-        <Link href="" style={{ textDecoration: "none" }}>
+        <Link
+          href="https://www.vcgamers.com/news/hati-hati-penipuan/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "none" }}
+        >
           <Typography
             sx={{
               fontSize: 12,

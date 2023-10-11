@@ -129,18 +129,12 @@ export interface DataPromo {
   status: number;
   status_name: string;
   stock: number;
+  can_request_cancel: boolean;
+  can_deactivate: boolean;
 }
 
-export interface Promo {
-  id: string;
-  name: string;
-  promo_code: string;
-  periode: string;
-  transaction_rule: string;
-  discount_rule: string;
-  status: number;
+export interface Promo extends DataPromo {
   status_name: PromoType;
-  stock: number;
 }
 
 export type PromoType =

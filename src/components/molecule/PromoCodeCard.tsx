@@ -38,7 +38,12 @@ export default function PromoCodeCard(props: { promo: Promo }) {
         break;
     }
 
-    setManagePromoForm({ isOpen: true, type: formType, promoId: promo.id });
+    setManagePromoForm({
+      isOpen: true,
+      type: formType,
+      promoId: promo.id,
+      promo: promo,
+    });
   };
 
   return (
@@ -155,11 +160,16 @@ function ActionButton(props: { promo: Promo }) {
 
   switch (props.promo.status_name) {
     case "waiting-approval":
+    case "accepted":
       return (
         <VGButton
           variant="contained"
           color="error"
           fullWidth
+          disabled={!props.promo.can_request_cancel}
+          sx={{
+            "&.Mui-disabled": { backgroundColor: "#9aa4bf", color: "white" },
+          }}
           onClick={() => setCancel({ isOpen: true, promoId: props.promo.id })}
         >
           {t("btn.cancel")}
@@ -198,7 +208,7 @@ function ActionButton(props: { promo: Promo }) {
           >
             {t("btn.promoPerformance")}
           </VGButton>
-          <PromoMoreButtonPopover promoId={props.promo.id} />
+          <PromoMoreButtonPopover promo={props.promo} />
         </>
       );
     case "completed":

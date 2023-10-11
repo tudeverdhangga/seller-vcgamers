@@ -1,4 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { toastOption } from "~/utils/toast";
 import { paginationNextPageParam } from "../utils";
 import {
   fetchTabStatus,
@@ -14,6 +16,8 @@ import {
 } from "./api";
 import { queryTypes, useQueryState } from "next-usequerystate";
 import { queryClient } from "../http";
+import { axiosErrorMapper } from "~/utils/mapper";
+import { handleError } from "./mapper";
 
 export function useGetTabStatus() {
   return useQuery({
@@ -78,6 +82,10 @@ export function useDeactivatePromo() {
 
   return useMutation({
     mutationFn: deactivatePromo,
+    onError(error) {
+      const message = axiosErrorMapper(error);
+      toast.error(message, toastOption);
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["manage-promo-tab"] });
 
@@ -94,6 +102,10 @@ export function useDeletePromo() {
 
   return useMutation({
     mutationFn: deletePromo,
+    onError(error) {
+      const message = axiosErrorMapper(error);
+      toast.error(message, toastOption);
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["manage-promo-tab"] });
 
@@ -121,6 +133,9 @@ export function useCreatePromo() {
         queryKey: ["manage-promo-list", status, search],
       });
     },
+    onError(error) {
+      handleError(error);
+    },
   });
 }
 
@@ -134,6 +149,9 @@ export function useUpdatePromo() {
       void queryClient.invalidateQueries({
         queryKey: ["manage-promo-list", status, search],
       });
+    },
+    onError(error) {
+      handleError(error);
     },
   });
 }

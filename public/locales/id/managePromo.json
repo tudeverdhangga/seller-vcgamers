@@ -147,7 +147,7 @@
         },
         "discountPercentage": {
           "label": "Persentase Promo (%)",
-          "placeholder": "Contoh: 20"
+          "placeholder": "Contoh: 1-100"
         },
         "discountMinimumTransaction": {
           "label": "Minimum Transaksi (Rp)",

@@ -4,10 +4,14 @@ import MoreButtonPopover from "../atomic/MoreButtonPopover";
 import VGButton from "../atomic/VGButton";
 import { disableDialogAtom } from "~/atom/managePromo";
 import PromoDisableDialog from "./PromoDisableDialog";
+import type { Promo } from "~/services/managePromo/types";
 
-export default function PromoMoreButtonPopover(props: { promoId: string }) {
+export default function PromoMoreButtonPopover(props: { promo: Promo }) {
   const { t } = useTranslation("managePromo");
   const [, setDisableDialog] = useAtom(disableDialogAtom);
+
+  // TODO: In future work, if the option is not only deactivate promo, place the logic only on the promo
+  if (!props.promo.can_deactivate) return <></>;
 
   return (
     <MoreButtonPopover
@@ -23,7 +27,7 @@ export default function PromoMoreButtonPopover(props: { promoId: string }) {
           {t("btn.disablePromo")}
         </VGButton>
       }
-      dialog={<PromoDisableDialog promoId={props.promoId} />}
+      dialog={<PromoDisableDialog promoId={props.promo.id} />}
     />
   );
 }
