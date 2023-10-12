@@ -17,6 +17,7 @@ import {
 } from "~/services/api/transaction";
 import { getCurrentTimestamp } from "~/utils/format";
 import VGHead from "~/components/atomic/VGHead";
+import { env } from "~/env.mjs";
 
 interface Params {
   feature?: number;
@@ -28,6 +29,7 @@ interface Params {
 
 export default function DaftarPenjualanPage() {
   const { t } = useTranslation("transaction");
+  const whatsappLink = env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK;
   const { isMobile } = useResponsive();
   const [params, setParams] = useState<Params>({
     limit: 10,
@@ -96,18 +98,24 @@ export default function DaftarPenjualanPage() {
                 components={{
                   br: <br />,
                   strong: (
-                    <Typography
-                      component="span"
-                      fontSize={12}
-                      fontWeight={600}
-                      color="common.shade.700"
-                    />
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      style={{ color: "#7750F8", textDecoration: "none" }}
+                    >
+                      <Typography
+                        component="span"
+                        fontSize={12}
+                        fontWeight={600}
+                        color="common.shade.700"
+                      />
+                    </a>
                   ),
                 }}
               >
                 Data yang di download mengikuti filter rentang waktu dibawah.
                 <br />
-                Laporan lebih dari 3 bulan silahkan <strong>kontak CS</strong>
+                Laporan lebih dari 3 bulan silahkan <strong>kontak Tim Support</strong>
               </Trans>
             </Typography>
           )}
