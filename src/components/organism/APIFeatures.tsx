@@ -13,6 +13,7 @@ import queryString from "query-string";
 import APIFeatureSidebarMenu from "../molecule/APIFeatureSidebarMenu";
 import VGTabPanel from "../atomic/VGTabPanel";
 import Link from "next/link";
+import { env } from "~/env.mjs";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -420,14 +421,17 @@ export default function APIFeaturePage() {
                       </Grid>
                       <Grid item xs={6}>
                         <div>
-                          <Link href="#" target="_blank" style={{ textDecoration: "none" }}>
-                            <Typography
-                              component="div"
-                              sx={APIContentHyperlinkStyle}
-                            >
-                              {t("contentApi.accessKey.hyperlink")}
-                            </Typography>
-                          </Link>
+                          {
+                            env.NEXT_PUBLIC_API_DOCS_URL && 
+                            <Link href={env.NEXT_PUBLIC_API_DOCS_URL} target="_blank" style={{ textDecoration: "none" }}>
+                              <Typography
+                                component="div"
+                                sx={APIContentHyperlinkStyle}
+                              >
+                                {t("contentApi.accessKey.hyperlink")}
+                              </Typography>
+                            </Link>
+                          }
                         </div>
                       </Grid>
                     </Grid>

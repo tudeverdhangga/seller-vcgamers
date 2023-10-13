@@ -29,6 +29,7 @@ export const env = createEnv({
     NEXT_PUBLIC_WS_URL: z.string().min(1),
     NEXT_PUBLIC_CREATE_NETCORE: z.string().min(1),
     NEXT_PUBLIC_REGISTER_NETCORE: z.string().min(1),
+    NEXT_PUBLIC_API_DOCS_URL: z.string().min(1),
     NEXT_PUBLIC_FIREBASE_API_KEY: z.string().min(1),
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: z.string().min(1),
     NEXT_PUBLIC_FIREBASE_PROJECT_ID: z.string().min(1),
@@ -59,6 +60,7 @@ export const env = createEnv({
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
     NEXT_PUBLIC_CREATE_NETCORE: process.env.NEXT_PUBLIC_CREATE_NETCORE,
     NEXT_PUBLIC_REGISTER_NETCORE: process.env.NEXT_PUBLIC_REGISTER_NETCORE,
+    NEXT_PUBLIC_API_DOCS_URL: process.env.NEXT_PUBLIC_API_DOCS_URL,
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
       process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
