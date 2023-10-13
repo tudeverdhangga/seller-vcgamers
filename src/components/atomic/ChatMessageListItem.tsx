@@ -26,8 +26,13 @@ import ShopRatingIcon from "../icons/chat/ShopRatingIcon";
 import { env } from "~/env.mjs";
 import Link from "next/link";
 import VGChip from "./VGChip";
+import ComplainAdminJoinListSubheader from "../molecule/ComplainAdminJoinListSubheader";
 
 export default function ChatMessageListItem(props: ChatMessageProps) {
+  if (props.content === "SELLER_INVITE_ADMIN") {
+    return <ComplainAdminJoinListSubheader />;
+  }
+
   switch (props.type) {
     case "TEXT":
       if (props.side === "admin") {
@@ -104,6 +109,10 @@ function ProductChatMessage(props: ProductProps & SideProps) {
     props.side === "left" ? "common.shade.0" : "primary.light";
 
   const isFailed = props.side === "right" && props.status === "failed";
+  const productUrl = new URL(
+    `/dagangan/${props.content.slug}`,
+    env.NEXT_PUBLIC_MARKET_URL
+  );
 
   return (
     <ListItem sx={{ justifyContent }} disableGutters>
@@ -112,66 +121,56 @@ function ProductChatMessage(props: ProductProps & SideProps) {
           <RetryIcon />
         </IconButton>
       )}
-      <Link
-        href={`${env.NEXT_PUBLIC_MARKET_URL}/${props.content.slug}`}
-        passHref
-        legacyBehavior
-        style={{ textDecoration: "none" }}
+      <Box
+        component={Link}
+        sx={{
+          display: "flex",
+          borderRadius: "5px",
+          backgroundColor,
+          maxWidth: { xs: "75%", sm: "50%" },
+          p: "10px",
+          gap: "10px",
+          alignItems: "flex-end",
+          cursor: "pointer",
+          textDecoration: "none",
+        }}
+        href={productUrl}
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        <Box
-          sx={{
-            display: "flex",
-            borderRadius: "5px",
-            backgroundColor,
-            maxWidth: { xs: "75%", sm: "50%" },
-            p: "10px",
-            gap: "10px",
-            alignItems: "flex-end",
-          }}
-        >
-          <Image
-            src={props.content.image}
-            alt={props.content.name}
-            width={60}
-            height={60}
-          />
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography
-              sx={{
-                color: "common.shade.700",
-                fontSize: 14,
-                fontWeight: 700,
-                mb: "2px",
-              }}
-            >
-              {props.content.name}
-            </Typography>
-            <Typography
-              sx={{
-                color: "primary.main",
-                fontSize: 14,
-                fontWeight: 700,
-              }}
-            >
-              {props.content.price}
-            </Typography>
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem />}
-              spacing={0.5}
-            >
-              <Box sx={{ display: "flex", alignItems: "flex-start", gap: 0.5 }}>
-                <ShopRatingIcon sx={{ width: 12, height: 12, mt: "2px" }} />
-                <Typography
-                  sx={{
-                    color: "common.shade.100",
-                    fontSize: 12,
-                    fontWeight: 500,
-                  }}
-                >
-                  {props.content.rating}
-                </Typography>
-              </Box>
+        <Image
+          src={props.content.image}
+          alt={props.content.name}
+          width={60}
+          height={60}
+        />
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography
+            sx={{
+              color: "common.shade.700",
+              fontSize: 14,
+              fontWeight: 700,
+              mb: "2px",
+            }}
+          >
+            {props.content.name}
+          </Typography>
+          <Typography
+            sx={{
+              color: "primary.main",
+              fontSize: 14,
+              fontWeight: 700,
+            }}
+          >
+            {props.content.price}
+          </Typography>
+          <Stack
+            direction="row"
+            divider={<Divider orientation="vertical" flexItem />}
+            spacing={0.5}
+          >
+            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 0.5 }}>
+              <ShopRatingIcon sx={{ width: 12, height: 12, mt: "2px" }} />
               <Typography
                 sx={{
                   color: "common.shade.100",
@@ -179,12 +178,21 @@ function ProductChatMessage(props: ProductProps & SideProps) {
                   fontWeight: 500,
                 }}
               >
-                Terjual {props.content.sold}
+                {props.content.rating}
               </Typography>
-            </Stack>
-          </Box>
+            </Box>
+            <Typography
+              sx={{
+                color: "common.shade.100",
+                fontSize: 12,
+                fontWeight: 500,
+              }}
+            >
+              Terjual {props.content.sold}
+            </Typography>
+          </Stack>
         </Box>
-      </Link>
+      </Box>
     </ListItem>
   );
 }

@@ -72,7 +72,7 @@ function ComplainRoomChatList({ complainId }: { complainId: string }) {
         px: 2,
         position: "relative",
         overflow: "auto",
-        height: completed ? "60vh" : show ? "48vh" : "57vh",
+        height: completed ? "60vh" : show.show ? "48vh" : "57vh",
         "& ul": { padding: 0 },
         "&li": { p: 1 },
       }}

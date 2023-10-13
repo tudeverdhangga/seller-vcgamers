@@ -236,6 +236,7 @@ function ActionButton(props: { promo: Promo }) {
                 isOpen: true,
                 type: "reuse",
                 promoId: props.promo.id,
+                promo: props.promo,
               })
             }
           >

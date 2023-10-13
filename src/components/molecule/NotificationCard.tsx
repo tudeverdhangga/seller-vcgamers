@@ -42,11 +42,7 @@ export default function NotificationCard(props: {
           flex: "1 0 0",
         }}
       >
-        {props.notification.flag === "update" ? (
-          <NotificationUpdateIcon />
-        ) : (
-          <></>
-        )}
+        <NotificationIcon notification={props.notification} />
         <Box
           sx={{
             display: "flex",
@@ -84,7 +80,7 @@ export default function NotificationCard(props: {
               {props.notification.description}
             </Typography>
           </div>
-          {props.notification.is_clickable && (
+          {props.notification.flag === "update" && (
             <Button
               sx={{
                 color: "primary.main",
@@ -124,4 +120,17 @@ export default function NotificationCard(props: {
       )}
     </Box>
   );
+}
+
+function NotificationIcon(props: { notification: DataNotification }) {
+  if (props.notification.flag === "update") {
+    return <NotificationUpdateIcon />;
+  }
+
+  if (props.notification.flag === "marketplace") {
+    switch (props.notification.clickable_type) {
+      case "Moderation":
+        return <div></div>;
+    }
+  }
 }

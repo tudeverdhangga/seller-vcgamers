@@ -8,13 +8,14 @@ import { useAtom } from "jotai";
 import { drawerOpenAtom } from "~/atom";
 
 import DrawerListItem from "~/components/atomic/DrawerListItem";
-import DrawerListSubItem from "~/components/molecule/DrawerListSubItem";
 import ProfileCard from "~/components/molecule/ProfileCard";
 import SellerToolbar from "~/components/molecule/SellerToolbar";
 
 import { useGetProfile } from "~/services/api/auth";
 import { menus } from "./menus";
 import { checkVoucher, isOpenAlert, voucherCode } from "~/atom/voucher";
+import HelpCenterMenu from "~/components/molecule/HelpCenterMenu/mobile";
+import LanguageSelect from "~/components/molecule/LanguageSelect/mobile";
 
 export default function DrawerContent() {
   const router = useRouter();
@@ -71,11 +72,11 @@ export default function DrawerContent() {
         isValidate: false,
         isDuplicate: false,
         vouchers: "",
-        total: 0
-      })
-      setVouchers("")
+        total: 0,
+      });
+      setVouchers("");
     }
-  }, [router.asPath])
+  }, [router.asPath]);
 
   return (
     <>
@@ -100,8 +101,8 @@ export default function DrawerContent() {
           />
         ))}
         <List component="div" disablePadding sx={{ display: { sm: "none" } }}>
-          <DrawerListSubItem label={t("drawer.other.helpCenter")} />
-          <DrawerListSubItem label={t("drawer.other.language")} />
+          <HelpCenterMenu />
+          <LanguageSelect />
         </List>
       </List>
     </>

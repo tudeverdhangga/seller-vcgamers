@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
-import { useQueryState } from "next-usequerystate";
+import { queryTypes, useQueryState } from "next-usequerystate";
 import { apiPaginationNextPageParam } from "../utils";
 import {
   fetchNotificationCount,
@@ -9,17 +9,22 @@ import {
 } from "./api";
 
 export function useGetNotificationList() {
-  const [type] = useQueryState("type");
+  const [flag] = useQueryState(
+    "flag",
+    queryTypes.string.withDefault("marketplace")
+  );
+  const type = flag === "marketplace" ? "store" : "";
 
   return useInfiniteQuery({
-    queryKey: ["notification-list", type],
+    queryKey: ["notification-list", flag],
     queryFn: ({ pageParam = "1" }) =>
       fetchNotificationList({
-        flag: type as string,
+        flag,
+        type,
         page: pageParam as string,
         limit: 64,
       }),
-    enabled: type !== null,
+    enabled: flag !== null,
     getNextPageParam: apiPaginationNextPageParam,
   });
 }

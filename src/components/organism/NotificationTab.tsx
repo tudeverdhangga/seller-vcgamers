@@ -12,13 +12,14 @@ import VGTabPanel from "../atomic/VGTabPanel";
 import VGTabsChip from "../atomic/VGTabsChip";
 import NotificationSalesContent from "./NotificationSalesContent";
 import NotificationUpdateContent from "./NotificationUpdateContent";
+import NotificationDetailDialog from "../molecule/NotificationDetailDialog";
 
 export default function NotificationTab() {
   const { t } = useTranslation("notification");
 
-  const [type, setType] = useQueryState(
-    "type",
-    queryTypes.string.withDefault("store")
+  const [flag, setFlag] = useQueryState(
+    "flag",
+    queryTypes.string.withDefault("marketplace")
   );
   const { data } = useGetNotificationCount();
   const readMutation = useReadNotification();
@@ -27,13 +28,13 @@ export default function NotificationTab() {
     <div style={{ width: "100%" }}>
       <div style={{ display: "flex", marginBottom: "10px" }}>
         <VGTabsChip
-          value={type}
-          onChange={(_, value) => setType(value as string)}
+          value={flag}
+          onChange={(_, value) => setFlag(value as string)}
         >
           {data?.data.map((tab) => {
-            if (tab.flag === "store" || tab.flag === "update") {
+            if (tab.flag === "marketplace" || tab.flag === "update") {
               const label =
-                tab.flag === "store" ? t("salesTab") : t("updateTab");
+                tab.flag === "marketplace" ? t("salesTab") : t("updateTab");
 
               return (
                 <VGTabChip
@@ -51,18 +52,19 @@ export default function NotificationTab() {
         <Button
           sx={{ textTransform: "none", fontWeight: 600 }}
           onClick={() =>
-            readMutation.mutate({ flag: type, notification_id: "" })
+            readMutation.mutate({ flag: flag, notification_id: "" })
           }
         >
           {t("readAll")}
         </Button>
       </div>
-      <VGTabPanel value={type} index="store">
+      <VGTabPanel value={flag} index="marketplace">
         <NotificationSalesContent />
       </VGTabPanel>
-      <VGTabPanel value={type} index="update">
+      <VGTabPanel value={flag} index="update">
         <NotificationUpdateContent />
       </VGTabPanel>
+      <NotificationDetailDialog />
     </div>
   );
 }

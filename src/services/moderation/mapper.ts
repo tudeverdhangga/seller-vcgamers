@@ -34,9 +34,10 @@ export function mapModerationMessageToChatMessageListItemProps(
   if (!data) return undefined;
 
   const userId = localStorage.getItem("user_id");
+  console.log(userId);
 
   const side =
-    userId === data.sender_id
+    data.sender_type === "SELLER"
       ? "right"
       : data.sender_type === "BUYER"
       ? "left"
@@ -48,7 +49,7 @@ export function mapModerationMessageToChatMessageListItemProps(
         id: data.id,
         type: data.type,
         content: data.message,
-        time: dayjs(data.sent_at).format("HH:MM"),
+        time: dayjs(data.sent_at).format("HH:mm"),
         side: side,
         status: "sent",
       } satisfies ChatMessageProps;
@@ -59,7 +60,7 @@ export function mapModerationMessageToChatMessageListItemProps(
         id: data.id,
         type: data.type,
         content: data.attachment ?? "",
-        time: dayjs(data.sent_at).format("HH:MM"),
+        time: dayjs(data.sent_at).format("HH:mm"),
         side: side,
         status: "sent",
       } satisfies ChatMessageProps;

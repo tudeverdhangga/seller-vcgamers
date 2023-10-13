@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import Link from "next/link";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -11,8 +12,10 @@ import { useTranslation } from "next-i18next";
 
 import EmailIcon from "../../icons/svg/helpCenter/emailIcon.svg";
 import FAQIcon from "../../icons/svg/helpCenter/helpCircleIcon.svg";
-import WhatsAppIcon from "../../icons/svg/helpCenter/whatsAppIcon.svg";
+import WhatsAppIcon from "../../icons/svg/helpCenter/whatsappIcon.svg";
 import DrawerListSubItem from "../DrawerListSubItem";
+
+import { env } from "~/env.mjs";
 
 export default function HelpCenterMenu() {
   const { t } = useTranslation("layout");
@@ -39,24 +42,45 @@ function SimpleDialog(props: { open: boolean; onClose: () => void }) {
     onClose();
   };
 
+  const faqLink = env.NEXT_PUBLIC_SUPPORT_FAQ_LINK;
+  const whatsappLink = env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK;
+  const emailLink = env.NEXT_PUBLIC_SUPPORT_EMAIL_LINK;
+
   const menus = [
-    { label: "helpCenterMenu.faq" as const, icon: <FAQIcon /> },
-    { label: "helpCenterMenu.email" as const, icon: <WhatsAppIcon /> },
-    { label: "helpCenterMenu.whatsapp" as const, icon: <EmailIcon /> },
+    { label: "helpCenterMenu.faq" as const, icon: <FAQIcon />, link: faqLink },
+    {
+      label: "helpCenterMenu.email" as const,
+      icon: <WhatsAppIcon />,
+      link: emailLink,
+    },
+    {
+      label: "helpCenterMenu.whatsapp" as const,
+      icon: <EmailIcon />,
+      link: whatsappLink,
+    },
   ];
 
   return (
     <Dialog onClose={handleClose} open={open} fullWidth>
       <List sx={{ pt: 0 }}>
         {menus.map((menu) => (
-          <ListItem key={menu.label} disableGutters>
-            <ListItemButton key={menu.label} onClick={handleClose}>
-              <ListItemIcon style={{ minWidth: "30px" }}>
-                {menu.icon}
-              </ListItemIcon>
-              <ListItemText primary={t(menu.label)} />
-            </ListItemButton>
-          </ListItem>
+          <Link
+            key={menu.label}
+            href={menu.link}
+            passHref
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <ListItem disableGutters>
+              <ListItemButton key={menu.label} onClick={handleClose}>
+                <ListItemIcon style={{ minWidth: "30px" }}>
+                  {menu.icon}
+                </ListItemIcon>
+                <ListItemText primary={t(menu.label)} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
     </Dialog>

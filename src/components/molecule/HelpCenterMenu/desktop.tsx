@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import Link from "next/link";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,6 +13,8 @@ import FAQIcon from "../../icons/svg/helpCenter/helpCircleIcon.svg";
 import WhatsAppIcon from "../../icons/svg/helpCenter/whatsappIcon.svg";
 import EmailIcon from "../../icons/svg/helpCenter/emailIcon.svg";
 
+import { env } from "~/env.mjs";
+
 export default function HelpCenterMenu() {
   const { t } = useTranslation("layout");
 
@@ -23,11 +26,22 @@ export default function HelpCenterMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const faqLink = env.NEXT_PUBLIC_SUPPORT_FAQ_LINK;
+  const whatsappLink = env.NEXT_PUBLIC_SUPPORT_WHATSAPP_LINK;
+  const emailLink = env.NEXT_PUBLIC_SUPPORT_EMAIL_LINK;
 
   const menus = [
-    { label: "helpCenterMenu.faq" as const, icon: <FAQIcon /> },
-    { label: "helpCenterMenu.email" as const, icon: <WhatsAppIcon /> },
-    { label: "helpCenterMenu.whatsapp" as const, icon: <EmailIcon /> },
+    { label: "helpCenterMenu.faq" as const, icon: <FAQIcon />, link: faqLink },
+    {
+      label: "helpCenterMenu.email" as const,
+      icon: <WhatsAppIcon />,
+      link: emailLink,
+    },
+    {
+      label: "helpCenterMenu.whatsapp" as const,
+      icon: <EmailIcon />,
+      link: whatsappLink,
+    },
   ];
 
   return (
@@ -53,14 +67,22 @@ export default function HelpCenterMenu() {
         }}
       >
         {menus.map((menu) => (
-          <MenuItem
+          <Link
             key={menu.label}
-            onClick={handleClose}
-            sx={{ display: "flex", gap: "6px", width: "180px" }}
+            href={menu.link}
+            passHref
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
           >
-            {menu.icon}
-            {t(menu.label)}
-          </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              sx={{ display: "flex", gap: "6px", width: "180px" }}
+            >
+              {menu.icon}
+              {t(menu.label)}
+            </MenuItem>
+          </Link>
         ))}
       </Menu>
     </div>

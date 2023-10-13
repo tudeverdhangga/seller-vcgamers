@@ -41,7 +41,7 @@ export function mapChatMessageToChatMessageListItemProps(
         id: data.id,
         type: data.type,
         content: data.message,
-        time: dayjs(data.sent_at).format("HH:MM"),
+        time: dayjs(data.sent_at).format("HH:mm"),
         side: side,
         status,
       } satisfies ChatMessageProps;
@@ -51,7 +51,7 @@ export function mapChatMessageToChatMessageListItemProps(
         id: data.id,
         type: data.type,
         content: data.attachment ?? "",
-        time: dayjs(data.sent_at).format("HH:MM"),
+        time: dayjs(data.sent_at).format("HH:mm"),
         side: side,
         status,
       } satisfies ChatMessageProps;
@@ -115,7 +115,7 @@ export function mapOptimisticChatSendMessageToChatMessageListItemProps(
         id: uid(),
         type: data.type,
         content: data.message,
-        time: dayjs().format("HH:MM"),
+        time: dayjs().format("HH:mm"),
         side: "right",
         status: "sending",
       } satisfies ChatMessageProps;
@@ -125,7 +125,7 @@ export function mapOptimisticChatSendMessageToChatMessageListItemProps(
         id: uid(),
         type: data.type,
         content: data.attachment ?? "",
-        time: dayjs().format("HH:MM"),
+        time: dayjs().format("HH:mm"),
         side: "right",
         status: "sending",
       } satisfies ChatMessageProps;

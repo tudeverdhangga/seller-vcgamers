@@ -2,7 +2,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 
-export function ComplainAdminJoinListSubheader() {
+export default function ComplainAdminJoinListSubheader() {
   const { t } = useTranslation("complain");
 
   return (

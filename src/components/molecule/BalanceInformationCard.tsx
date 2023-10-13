@@ -17,6 +17,7 @@ import WalletOnHoldIcon from "../icons/WalletOnHoldIcon";
 import BalancePinDialog from "../organism/BalancePinDialog";
 import BalanceConfirmationDialog from "./BalanceConfirmationDialog";
 import { priceFormat } from "~/utils/format";
+import { env } from "~/env.mjs";
 
 export default function BalanceInformationCard() {
   const { t } = useTranslation("balance");
@@ -25,6 +26,7 @@ export default function BalanceInformationCard() {
 
   const { isMobile } = useResponsive();
   const deviceType = isMobile ? "mobile" : "desktop";
+  const faqLink = env.NEXT_PUBLIC_SUPPORT_FAQ_LINK;
 
   return (
     <VGCard sx={{ p: 0 }}>
@@ -174,7 +176,7 @@ export default function BalanceInformationCard() {
             Minimal tarik saldo: Rp. 20.000. Penarikan akan dikenakan biaya
             sesuai dengan{" "}
             <Link
-              href="https://www.vcgamers.com/news/help/faq-sell-digital-goods/"
+              href={faqLink}
               component={NextLink}
               underline="hover"
               color="primary.main"

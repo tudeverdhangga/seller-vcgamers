@@ -38,7 +38,9 @@ export default function ComplainRoomInput({
           mutation.mutate({
             id: complainId,
             message: data.message,
+            type: data.type,
             attachment: data.attachment,
+            attachment_url: data.attachment_url,
           });
         }}
       />

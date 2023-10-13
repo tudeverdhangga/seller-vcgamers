@@ -62,6 +62,8 @@ export interface DataModerationMessage {
 export const sendMessageSchema = z.object({
   id: z.string().min(1),
   attachment: z.string().optional(),
+  attachment_url: z.string().optional(),
+  type: z.string().min(1),
   message: z.string().min(1),
 });
 
