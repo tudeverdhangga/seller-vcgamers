@@ -12,6 +12,29 @@ export interface DataBalanceInfo {
   bank_info: string;
 }
 
+export interface DataWithdrawalSummary {
+  bank: {
+    bank_name: string;
+    bank_account_number: string;
+    bank_account_name: string;
+  };
+  summary: {
+    name: string;
+    value: number;
+  }[];
+}
+
+export interface Bank {
+  bank_name: string;
+  bank_account_number: string;
+  bank_account_name: string;
+}
+
+export interface Summary {
+  name: string;
+  value: number;
+}
+
 export interface BalanceHistory {
   id: string;
   status: BalanceType;

@@ -14,14 +14,18 @@ import { useTranslation } from "next-i18next";
 import { confirmationDialogOpenAtom, pinDialogOpenAtom } from "~/atom/balance";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
-import { useGetBalanceInfo } from "~/services/balance/hooks";
+import {
+  useGetBalanceInfo,
+  useGetWithdrawalSummary,
+} from "~/services/balance/hooks";
 import { priceFormat } from "~/utils/format";
 
 export default function BalanceConfirmationDialog() {
   const { t } = useTranslation("balance");
   const [modalOpen, setModalOpen] = useAtom(confirmationDialogOpenAtom);
   const [, setPinModalOpen] = useAtom(pinDialogOpenAtom);
-  const { data } = useGetBalanceInfo();
+  // const { data } = useGetBalanceInfo();
+  const { data } = useGetWithdrawalSummary(modalOpen);
 
   return (
     <Dialog
@@ -83,22 +87,15 @@ export default function BalanceConfirmationDialog() {
           </Box>
           <Divider />
           <Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <BodyTitle>
-                {t("dialog.confirmation.body.withdrawAmount")}
-              </BodyTitle>
-              <BodyPrice>{priceFormat(data?.data.balance ?? 0)}</BodyPrice>
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <BodyTitle>{t("dialog.confirmation.body.withdrawFee")}</BodyTitle>
-              <BodyPrice>Rp0</BodyPrice>
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <BodyTitle>
-                {t("dialog.confirmation.body.withdrawTotal")}
-              </BodyTitle>
-              <BodyPrice>{priceFormat(data?.data.balance ?? 0)}</BodyPrice>
-            </Box>
+            {data?.data.summary.map((summary, index) => (
+              <Box
+                key={index}
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <BodyTitle>{summary.name}</BodyTitle>
+                <BodyPrice>{priceFormat(summary.value ?? 0)}</BodyPrice>
+              </Box>
+            ))}
           </Box>
         </Box>
       </DialogContent>

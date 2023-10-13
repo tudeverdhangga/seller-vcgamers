@@ -5,6 +5,7 @@ import {
   fetchBalanceHistories,
   fetchBalanceHistoryStatus,
   fetchBalanceInfo,
+  fetchWithdrawalSummary,
 } from "./api";
 import { paginationNextPageParam } from "../utils";
 
@@ -12,6 +13,14 @@ export function useGetBalanceInfo() {
   return useQuery({
     queryKey: ["balance-info"],
     queryFn: () => fetchBalanceInfo(),
+  });
+}
+
+export function useGetWithdrawalSummary(enabled: boolean) {
+  return useQuery({
+    queryKey: ["balance-withdrawal-summary"],
+    queryFn: () => fetchWithdrawalSummary(),
+    enabled,
   });
 }
 

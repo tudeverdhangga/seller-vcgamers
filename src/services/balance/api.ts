@@ -7,6 +7,7 @@ import type {
   BalanceHistoryStatus,
   DataBalanceHistory,
   DataBalanceInfo,
+  DataWithdrawalSummary,
 } from "./types";
 
 export async function fetchBalanceInfo() {
@@ -16,6 +17,12 @@ export async function fetchBalanceInfo() {
   response.data = mapBalanceInfo(response.data);
 
   return response;
+}
+
+export async function fetchWithdrawalSummary() {
+  const res = await HTTP.get("balance/request-withdrawal-summary");
+
+  return res.data as APIResponse<DataWithdrawalSummary>;
 }
 
 export async function fetchBalanceHistories(params: {
