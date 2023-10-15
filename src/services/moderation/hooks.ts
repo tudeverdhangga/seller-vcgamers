@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  type InfiniteData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
 import { useMemo } from "react";
 import {
   fetchModerationMessage,
@@ -11,12 +16,18 @@ import {
   fetchModerationDetailByTransactionId,
 } from "./api";
 import { apiPaginationNextPageParam } from "../utils";
-import type { BodyModeration, BodySendMessage } from "./types";
+import type {
+  BodyModeration,
+  BodySendMessage,
+  DataModerationMessage,
+} from "./types";
 import { queryClient } from "../http";
 import {
   mapModerationMessageListToChatMessageListProps,
   readTrue,
 } from "./mapper";
+import type { APIApiResponsePagination } from "../types";
+import dayjs from "dayjs";
 
 export function useGetModerationList(status: "1" | "2") {
   return useInfiniteQuery({
@@ -59,10 +70,72 @@ export function useGetModerationMessage(id: string) {
   };
 }
 
-// TODO: Optimistic update messages
 export function usePostModerationSendMessage() {
   return useMutation({
     mutationFn: (body: BodySendMessage) => moderationSendMessage(body),
+    async onMutate(message) {
+      await queryClient.cancelQueries({
+        queryKey: ["moderation-messages", message.id],
+      });
+
+      const previousMessages = queryClient.getQueryData([
+        "moderation-messages",
+        message.id,
+      ]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(
+        ["moderation-messages", message.id],
+        (old: unknown) => {
+          const oldRecord = old as
+            | InfiniteData<APIApiResponsePagination<DataModerationMessage[]>>
+            | undefined;
+
+          const lastPage:
+            | APIApiResponsePagination<DataModerationMessage[]>
+            | undefined = !oldRecord?.pages.length
+            ? undefined
+            : oldRecord.pages.length === 1
+            ? oldRecord.pages.at(0)
+            : oldRecord.pages.at(-1);
+
+          const pages: APIApiResponsePagination<DataModerationMessage[]>[] =
+            !lastPage
+              ? []
+              : [
+                  {
+                    ...lastPage,
+                    data: [
+                      ...lastPage?.data,
+                      {
+                        id: "",
+                        message: message.message,
+                        type: message.type as
+                          | "TEXT"
+                          | "VIDEO"
+                          | "IMAGE"
+                          | "DOCUMENT",
+                        sent_at: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+                        sender_id: "",
+                        is_read: false,
+                        is_important: false,
+                        is_admin: false,
+                        attachment: message.attachment_url,
+                        sender_type: "SELLER",
+                      },
+                    ],
+                  },
+                ];
+
+          return {
+            ...oldRecord,
+            pages,
+          };
+        }
+      );
+
+      return { previousMessages };
+    },
     onSuccess: (_, variable) => {
       void queryClient.invalidateQueries({
         queryKey: ["moderation-detail", variable.id],
@@ -74,6 +147,14 @@ export function usePostModerationSendMessage() {
 export function usePostModerationInviteAdmin() {
   return useMutation({
     mutationFn: (body: BodyModeration) => moderationInviteAdmin(body),
+    onSuccess: async (_, variable) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["moderation-detail", variable.moderation_id],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["moderation-messages", variable.moderation_id],
+      });
+    },
   });
 }
 

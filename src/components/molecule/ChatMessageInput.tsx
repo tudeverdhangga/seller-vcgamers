@@ -87,7 +87,7 @@ export default function ChatMessageInput(props: {
     void uploadForm.handleSubmit((data) => {
       const file = data.file as unknown as FileList;
 
-      if (file[0]) {
+      if (typeof file !== "undefined" && file[0]) {
         uploadMutation.mutate({
           ...data,
           file: file[0],

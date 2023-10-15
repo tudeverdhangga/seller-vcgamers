@@ -33,9 +33,6 @@ export function mapModerationMessageToChatMessageListItemProps(
 ) {
   if (!data) return undefined;
 
-  const userId = localStorage.getItem("user_id");
-  console.log(userId);
-
   const side =
     data.sender_type === "SELLER"
       ? "right"
@@ -81,4 +78,15 @@ export function readTrue(old: unknown, id: string) {
   );
 
   return oldRecord;
+}
+
+// trimming transaction code
+export function trimCode(code: string) {
+  if (code.length <= 16) {
+    return code; // Return input as is if it's 16 characters or shorter
+  }
+
+  const firstPart = code.substring(0, 8);
+  const lastPart = code.substring(code.length - 8);
+  return `${firstPart}...${lastPart}`;
 }

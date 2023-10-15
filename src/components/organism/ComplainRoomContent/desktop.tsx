@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import { messageAttachmentAtom } from "~/atom/chat";
 
@@ -16,7 +16,6 @@ import {
   useGetModerationDetail,
   useGetModerationMessage,
 } from "~/services/moderation/hooks";
-import { useEffect, useRef } from "react";
 import ComplainRoomInput from "../ComplainRoomInput";
 import ComplainMessageToolbar from "~/components/molecule/ComplainMessageToolbar";
 
@@ -52,45 +51,46 @@ export default function ComplainRoomContent() {
 }
 
 function ComplainRoomChatList({ complainId }: { complainId: string }) {
-  const { data } = useGetModerationDetail(complainId);
-  const { data: moderationList } = useGetModerationMessage(complainId);
+  const { data: moderationDetail } = useGetModerationDetail(complainId);
+  const { data, fetchNextPage, hasNextPage } =
+    useGetModerationMessage(complainId);
   const [show] = useAtom(messageAttachmentAtom);
-  const scrollRef = useRef<HTMLLIElement | null>(null);
 
-  const completed = data?.data.status !== "ON_GOING";
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [moderationList]);
+  const completed = moderationDetail?.data.status === "COMPLETED";
 
   return (
-    <List
+    <Box
+      id="scrollableDiv"
       sx={{
         backgroundImage: `url("/assets/chat-bg.png")`,
         px: 2,
-        position: "relative",
         overflow: "auto",
         height: completed ? "60vh" : show.show ? "48vh" : "57vh",
-        "& ul": { padding: 0 },
-        "&li": { p: 1 },
+        display: "flex",
+        flexDirection: "column-reverse",
       }}
-      subheader={<li />}
     >
-      {[...moderationList].map(([key, value], index) => (
-        <li
-          key={key}
-          {...(index === moderationList.size - 1 && { ref: scrollRef })}
-        >
-          <ul>
+      <InfiniteScroll
+        dataLength={data?.size ?? 0}
+        next={fetchNextPage}
+        style={{ display: "flex", flexDirection: "column" }}
+        hasMore={hasNextPage ?? false}
+        loader={<h4>Loading...</h4>}
+        scrollableTarget="scrollableDiv"
+      >
+        {[...data].map(([key, value]) => (
+          <>
             <ChatMessageListSubheader content={`${key}`} />
-            {value.map((moderation) => (
-              <ChatMessageListItem key={moderation.id} {...moderation} />
-            ))}
-          </ul>
-        </li>
-      ))}
-    </List>
+            {value.map((moderation) => {
+              if (typeof moderation === "undefined") return null;
+
+              return (
+                <ChatMessageListItem key={moderation.id} {...moderation} />
+              );
+            })}
+          </>
+        ))}
+      </InfiniteScroll>
+    </Box>
   );
 }

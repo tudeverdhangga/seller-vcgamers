@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import { useAtom } from "jotai";
 import MuiDrawer from "@mui/material/Drawer";
 import { useRouter } from "next/router";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import { messageAttachmentAtom } from "~/atom/chat";
 import { mobileAppBarAtom } from "~/atom/layout";
@@ -22,6 +23,7 @@ import {
   useGetModerationMessage,
 } from "~/services/moderation/hooks";
 import EmptyState from "~/components/molecule/EmptyState/complainRoom";
+import { trimCode } from "~/services/moderation/mapper";
 
 export default function ComplainRoomContent() {
   const router = useRouter();
@@ -62,12 +64,12 @@ function ComplainRoomSidebarDrawer({ complainId }: { complainId: string }) {
   useEffect(() => {
     setMobileAppBar({
       showPrev: true,
-      content: `Komplain #${data?.data.name ?? ""}`,
+      content: `Komplain ${trimCode(data?.data.transaction.code ?? "")}`,
       showMenu: true,
       menuIcon: "dots",
       onClick: () => setMobileInfoSidebar(true),
     });
-  }, [setMobileAppBar, setMobileInfoSidebar, data?.data.name]);
+  }, [setMobileAppBar, setMobileInfoSidebar, data?.data.transaction.code]);
 
   return (
     <MuiDrawer
@@ -93,19 +95,52 @@ function ComplainRoomSidebarDrawer({ complainId }: { complainId: string }) {
 }
 
 function ComplainRoomChatList({ complainId }: { complainId: string }) {
-  const { data } = useGetModerationDetail(complainId);
-  const { data: moderationList } = useGetModerationMessage(complainId);
+  const { data: moderationDetail } = useGetModerationDetail(complainId);
+  const { data, fetchNextPage, hasNextPage } =
+    useGetModerationMessage(complainId);
   const [show] = useAtom(messageAttachmentAtom);
-  const scrollRef = useRef<HTMLLIElement | null>(null);
 
-  const completed = data?.data.status !== "ON_GOING";
+  const completed = moderationDetail?.data.status === "COMPLETED";
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [moderationList]);
+  return (
+    <Box
+      id="scrollableDiv"
+      sx={{
+        backgroundImage: `url("/assets/chat-bg.png")`,
+        px: 2,
+        overflow: "auto",
+        height: completed
+          ? "calc(100vh - 200px)"
+          : show.show
+          ? "calc(100vh - 280px)"
+          : "calc(100vh - 190px)",
+        display: "flex",
+        flexDirection: "column-reverse",
+      }}
+    >
+      <InfiniteScroll
+        dataLength={data?.size ?? 0}
+        next={fetchNextPage}
+        style={{ display: "flex", flexDirection: "column" }}
+        hasMore={hasNextPage ?? false}
+        loader={<h4>Loading...</h4>}
+        scrollableTarget="scrollableDiv"
+      >
+        {[...data].map(([key, value]) => (
+          <>
+            <ChatMessageListSubheader content={`${key}`} />
+            {value.map((moderation) => {
+              if (typeof moderation === "undefined") return null;
 
+              return (
+                <ChatMessageListItem key={moderation.id} {...moderation} />
+              );
+            })}
+          </>
+        ))}
+      </InfiniteScroll>
+    </Box>
+  );
   return (
     <List
       sx={{

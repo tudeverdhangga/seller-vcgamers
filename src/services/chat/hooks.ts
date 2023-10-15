@@ -173,6 +173,9 @@ export function useChatReadMessage() {
       // Return a context object with the snapshotted value
       return { previousRooms };
     },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["notification-count"]);
+    },
     // If the mutation fails,
     // use the context returned from onMutate to roll back
     onError: (_, __, context) => {

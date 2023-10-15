@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { queryTypes, useQueryState } from "next-usequerystate";
 
 import {
@@ -6,20 +6,22 @@ import {
   fetchBalanceHistoryStatus,
   fetchBalanceInfo,
   fetchWithdrawalSummary,
+  postRequestWithdrawal,
 } from "./api";
 import { paginationNextPageParam } from "../utils";
+import { queryClient } from "../http";
 
 export function useGetBalanceInfo() {
   return useQuery({
-    queryKey: ["balance-info"],
-    queryFn: () => fetchBalanceInfo(),
+    queryKey: ["balance", "info"],
+    queryFn: fetchBalanceInfo,
   });
 }
 
 export function useGetWithdrawalSummary(enabled: boolean) {
   return useQuery({
-    queryKey: ["balance-withdrawal-summary"],
-    queryFn: () => fetchWithdrawalSummary(),
+    queryKey: ["balance", "withdrawal-summary"],
+    queryFn: fetchWithdrawalSummary,
     enabled,
   });
 }
@@ -36,7 +38,7 @@ export function useGetBalanceHistories() {
   );
 
   return useInfiniteQuery({
-    queryKey: ["balance-histories", status, dateStart, dateEnd],
+    queryKey: ["balance", "history", status, dateStart, dateEnd],
     queryFn: ({ pageParam }) =>
       fetchBalanceHistories({
         status,
@@ -50,7 +52,16 @@ export function useGetBalanceHistories() {
 
 export function useGetBalanceHistoryStatus() {
   return useQuery({
-    queryKey: ["balance-history-status"],
-    queryFn: () => fetchBalanceHistoryStatus(),
+    queryKey: ["balance", "history", "status"],
+    queryFn: fetchBalanceHistoryStatus,
+  });
+}
+
+export function useRequestWithdrawal() {
+  return useMutation({
+    mutationFn: postRequestWithdrawal,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["balance"] });
+    },
   });
 }
