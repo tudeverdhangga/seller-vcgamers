@@ -43,11 +43,20 @@ export default function DashboardCarousel() {
     >
       {items.map((item, i) => (
         <Link key={i} href={item[1] as string}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <img
               src={item[0]}
               alt={item[0]}
-              style={{ minWidth: "100%", minHeight: "100%" }}
+              style={{
+                minWidth: "100%",
+                minHeight: "100%",
+                borderRadius: "10px",
+              }}
             />
           </div>
         </Link>
