@@ -141,36 +141,4 @@ function ComplainRoomChatList({ complainId }: { complainId: string }) {
       </InfiniteScroll>
     </Box>
   );
-  return (
-    <List
-      sx={{
-        backgroundImage: `url("/assets/chat-bg.png")`,
-        px: 2,
-        position: "relative",
-        overflow: "auto",
-        height: completed
-          ? "calc(100vh - 200px)"
-          : show
-          ? "calc(100vh - 280px)"
-          : "calc(100vh - 190px)",
-        "& ul": { padding: 0 },
-        "&li": { p: 1 },
-      }}
-      subheader={<li />}
-    >
-      {[...moderationList].map(([key, value], index) => (
-        <li
-          key={key}
-          {...(index === moderationList.size - 1 && { ref: scrollRef })}
-        >
-          <ul>
-            <ChatMessageListSubheader content={`${key}`} />
-            {value.map((moderation) => (
-              <ChatMessageListItem key={moderation.id} {...moderation} />
-            ))}
-          </ul>
-        </li>
-      ))}
-    </List>
-  );
 }
