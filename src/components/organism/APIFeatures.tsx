@@ -369,6 +369,7 @@ export default function APIFeaturePage() {
                           InputProps={{
                             disabled: disableAPIWhitelistForm,
                           }}
+                          variant={disableAPIWhitelistForm ? "filled" : "outlined"}
                           value={apiWhitelist}
                           onChange={handleAPIWhitelist}
                         />
