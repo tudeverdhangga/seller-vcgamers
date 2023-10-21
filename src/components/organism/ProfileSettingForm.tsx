@@ -289,7 +289,7 @@ export default function ProfileSettingForm() {
           color="primary.main"
           sx={{ fontSize: "12px" }}
         >
-          vcgamers.com/store/{shopUrl}
+          vcgamers.com/s/{shopUrl}
         </Typography>
       </VGAlert>
     </>
