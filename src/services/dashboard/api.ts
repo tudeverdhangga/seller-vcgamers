@@ -43,7 +43,7 @@ export async function fetchDashboardTotalSuccessAmount(
 
   const data = res.data as APIResponse<DataTotalSuccess>;
 
-  return { ...data, data: mapTotalSuccess(data.data) };
+  return { ...data, data: mapTotalSuccess(data.data, true) };
 }
 
 export async function fetchDashboardSellerPerformance(

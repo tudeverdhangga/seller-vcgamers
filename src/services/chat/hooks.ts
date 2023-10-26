@@ -174,7 +174,7 @@ export function useChatReadMessage() {
       return { previousRooms };
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["notification-count"]);
+      await queryClient.invalidateQueries({ queryKey: ["notification-count"] });
     },
     // If the mutation fails,
     // use the context returned from onMutate to roll back

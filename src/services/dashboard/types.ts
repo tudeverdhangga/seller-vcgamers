@@ -42,9 +42,9 @@ export interface DataSellerPerformance {
 export interface SellerPerformance {
   rating: number;
   rating_diff: ValueDiff;
-  transaction_success_rate: number;
+  transaction_success_rate: string;
   transaction_success_rate_diff: ValueDiff;
-  average_sla: number;
+  average_sla: string;
   average_sla_diff: ValueDiff;
   total_visitor: number;
   total_visitor_diff: ValueDiff;

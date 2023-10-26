@@ -7,6 +7,7 @@ import {
   fetchNotificationList,
   readNotification,
 } from "./api";
+import { queryClient } from "../http";
 
 export function useGetNotificationList() {
   const [flag] = useQueryState(
@@ -16,7 +17,7 @@ export function useGetNotificationList() {
   const type = flag === "marketplace" ? "store" : "";
 
   return useInfiniteQuery({
-    queryKey: ["notification-list", flag],
+    queryKey: ["notification", "list", flag],
     queryFn: ({ pageParam = "1" }) =>
       fetchNotificationList({
         flag,
@@ -38,7 +39,7 @@ export function useGetNotificationDetail(notification_id: string) {
 
 export function useGetNotificationCount() {
   return useQuery({
-    queryKey: ["notification-tab-count"],
+    queryKey: ["notification", "tab-count"],
     queryFn: fetchNotificationCount,
   });
 }
@@ -46,5 +47,8 @@ export function useGetNotificationCount() {
 export function useReadNotification() {
   return useMutation({
     mutationFn: readNotification,
+    onSettled() {
+      void queryClient.invalidateQueries({ queryKey: ["notification"] });
+    },
   });
 }

@@ -53,6 +53,7 @@ export default function BalanceSearchBar() {
             },
           }}
           value={dayjs(dateStart)}
+          maxDate={dayjs(dateEnd)}
           onChange={(value) =>
             setDateStart(value ?? dayjs().subtract(3, "month"))
           }
@@ -69,6 +70,8 @@ export default function BalanceSearchBar() {
             },
           }}
           value={dayjs(dateEnd)}
+          minDate={dayjs(dateStart)}
+          disableFuture
           onChange={(value) => setDateEnd(value ?? dayjs())}
         />
       </LocalizationProvider>
