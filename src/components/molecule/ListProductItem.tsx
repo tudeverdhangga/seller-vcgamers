@@ -30,6 +30,7 @@ import { priceFormat } from "~/utils/format";
 import { useResponsive } from "~/utils/mediaQuery";
 import PinVoucherDialog from "~/components/molecule/PinVoucherDialog";
 import NoAccessMobileModal from "~/components/atomic/NoAccessMobileModal";
+import { useHasPin } from "~/services/pin/hooks";
 
 export default function ListProductItem(props: {
   image: string | "/assets/product-image.png";
@@ -51,6 +52,7 @@ export default function ListProductItem(props: {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpenMenu = Boolean(anchorEl);
   const router = useRouter()
+  const checkPin = useHasPin()
   const [isOpenDeactiveKilatDialog, setIsOpenDeactiveKilatDialog] = useState(false)
   const [isOpenActiveKilatDialog, setIsOpenActiveKilatDialog] = useState(false)
   const [isOpenChangePriceDialog, setIsOpenChangePriceDialog] = useState(false)
@@ -85,6 +87,17 @@ export default function ListProductItem(props: {
       setAccessOnPcTitle(t("noAccessMobile.edit"))
       setAccessOnPc(true)
     }
+  }
+  const checkUserHasPin = () => {
+    checkPin.mutate(undefined, {
+      onSuccess: (res) => {
+        if (res?.data?.is_activation_pin) {
+          setIsOpenPinVoucherDialog(true);
+        } else {
+          window.open(`${env.NEXT_PUBLIC_MARKET_URL}/profile/settings/security`);
+        }
+      }
+    })
   }
 
   const middleStyle = {
@@ -258,7 +271,7 @@ export default function ListProductItem(props: {
               variant="contained"
               color="primary"
               sx={{ m: 1 }}
-              onClick={() => setIsOpenPinVoucherDialog(true)}
+              onClick={checkUserHasPin}
             >
               {t("table.tBody.setVoucher")}
             </VGButton>

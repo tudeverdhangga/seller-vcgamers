@@ -39,6 +39,8 @@ export default function ListTransactionFilter({ handleFilter, refetchTransaction
     label: "Semua Layanan",
     value: ""
   })
+  const [dateStart, setDateStart] = useState<Dayjs>();
+  const [dateEnd, setDateEnd] = useState<Dayjs>();
   const [selectedStatus, setSelectedStatus] = useQueryState(
     "status",
     queryTypes.string.withDefault("2")
@@ -95,6 +97,12 @@ export default function ListTransactionFilter({ handleFilter, refetchTransaction
   const onChangeDate = (value: Dayjs | null, key: string) => {
     const date = dayjs(value).format("YYYY-MM-DD");
     handleFilter(key, date)
+
+    if (key === 'date_start') {
+      setDateStart(value ?? dayjs().subtract(3, "month"))
+    } else {
+      setDateEnd(value ?? dayjs())
+    }
   }
 
   return (
@@ -156,32 +164,32 @@ export default function ListTransactionFilter({ handleFilter, refetchTransaction
                 )
             }
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md
-          >
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Grid
+              item
+              xs={12}
+              md
+            >
               <DatePicker
                 label={t("filter.startDate")}
+                maxDate={dayjs(dateEnd)}
                 sx={{ width: "100%" }}
                 onChange={(e) => onChangeDate(e as Dayjs, 'date_start')}
               />
-            </LocalizationProvider>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md
-          >
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md
+            >
               <DatePicker
                 label={t("filter.endDate")}
+                minDate={dayjs(dateStart)}
                 sx={{ width: "100%" }}
                 onChange={(e) => onChangeDate(e as Dayjs, 'date_end')}
               />
-            </LocalizationProvider>
-          </Grid>
+            </Grid>
+          </LocalizationProvider>
         </Grid>
       </VGCard>
       <Box

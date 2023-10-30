@@ -67,6 +67,24 @@ export function diffDateInTime(dateString: string) {
   const timeDifference = targetDate.getTime() - currentDate.getTime();
   const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
 
+  if (hoursDifference > 24) {
+    const days = hoursDifference / 24
+    const hours = hoursDifference % 24
+
+    if (hours > 0) {
+      return(`${days} Hari ${hours} jam`);
+    }
+    return(`${days} Hari`);
+  }
+  return(`${hoursDifference} Jam`);
+}
+
+export function diffDateInDays(dateString: string) {
+  const currentDate = new Date();
+  const targetDate = new Date(dateString);
+  const timeDifference = targetDate.getTime() - currentDate.getTime();
+  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+
   return(`${hoursDifference} hours`);
 }
 

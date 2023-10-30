@@ -32,7 +32,7 @@ export default function KelolaProdukPage() {
   const [params, setParams] = useState<ListProductParams>({
     brand_id: "",
     category_id: "",
-    feature: "",
+    feature: "2",
     limit: 10,
     search: "",
   });

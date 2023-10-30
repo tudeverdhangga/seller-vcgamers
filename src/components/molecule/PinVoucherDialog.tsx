@@ -9,6 +9,7 @@ import PinNumberInput, { pinErrorAtom } from "~/components/atomic/PinNumberInput
 import { usePostValidatePin } from "~/services/pin/hooks";
 import VGButton from "~/components/atomic/VGButton";
 import { pinRateLimitAtom } from "~/atom/voucher";
+import { env } from "~/env.mjs";
 
 export default function PinVoucherDialog(props: {
   isOpen: boolean;
@@ -39,6 +40,10 @@ export default function PinVoucherDialog(props: {
       }
     }
   );
+  const forgetPin = () => {
+    onCloseModal()
+    window.open(`${env.NEXT_PUBLIC_MARKET_URL}/profile/settings/security`);
+  }
 
   return (
     <VGDialog
@@ -95,7 +100,7 @@ export default function PinVoucherDialog(props: {
         }
         <VGButton
           size="large"
-          onClick={onCloseModal}
+          onClick={forgetPin}
           color="primary"
         >
           {t("table.dialog.changeVoucher.forget")}

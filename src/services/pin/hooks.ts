@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 
 import { pinErrorAtom } from "~/components/atomic/PinNumberInput";
-import { postValidatePin } from "./api";
+import { postValidatePin, preValidatePin } from "./api";
 import { type BodyValidatePin } from "./types";
 
 export function usePostValidatePin(
@@ -23,3 +23,11 @@ export function usePostValidatePin(
     },
   });
 }
+
+export function useHasPin() {
+  return useMutation({
+    mutationKey: ["get-profile-buyer"],
+    mutationFn: () => preValidatePin(),
+  });
+}
+
