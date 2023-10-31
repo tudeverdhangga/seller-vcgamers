@@ -3,7 +3,10 @@
   "title": "Komplain",
   "subtitle": "Daftar",
   "message": "Pesan",
-  "adminJoinMessage": "Toko mengundang Admin VCG. Mohon menunggu, Admin VCG akan merespon dalam 1x24 jam setelah melakukan peninjauan.",
+  "adminJoinMessage": {
+    "seller": "Toko mengundang Admin VCG. Mohon menunggu, Admin VCG akan merespon dalam 1x24 jam setelah melakukan peninjauan.",
+    "buyer": "Pembeli mengundang Admin VCG. Mohon menunggu, Admin VCG akan merespon dalam 1x24 jam setelah melakukan peninjauan."
+  },
   "completeMessage": "Komplain sudah diselesaikan. Ruang obrolan ini tidak bisa digunakan",
   "complainInfo": {
     "title": "Informasi Komplain",

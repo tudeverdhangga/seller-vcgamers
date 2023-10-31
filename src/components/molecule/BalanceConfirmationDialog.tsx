@@ -14,18 +14,31 @@ import { useTranslation } from "next-i18next";
 import { confirmationDialogOpenAtom, pinDialogOpenAtom } from "~/atom/balance";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
-import {
-  useGetBalanceInfo,
-  useGetWithdrawalSummary,
-} from "~/services/balance/hooks";
+import { useGetWithdrawalSummary } from "~/services/balance/hooks";
+import { useHasPin } from "~/services/pin/hooks";
 import { priceFormat } from "~/utils/format";
+import { env } from "~/env.mjs";
 
 export default function BalanceConfirmationDialog() {
   const { t } = useTranslation("balance");
   const [modalOpen, setModalOpen] = useAtom(confirmationDialogOpenAtom);
   const [, setPinModalOpen] = useAtom(pinDialogOpenAtom);
-  // const { data } = useGetBalanceInfo();
   const { data } = useGetWithdrawalSummary(modalOpen);
+  const checkPin = useHasPin();
+  const checkUserHasPin = () => {
+    checkPin.mutate(undefined, {
+      onSuccess: (res) => {
+        if (res?.data?.is_activation_pin) {
+          setModalOpen(false);
+          setPinModalOpen(true);
+        } else {
+          window.open(
+            `${env.NEXT_PUBLIC_MARKET_URL}/profile/settings/security`
+          );
+        }
+      },
+    });
+  };
 
   return (
     <Dialog
@@ -113,10 +126,7 @@ export default function BalanceConfirmationDialog() {
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => {
-            setModalOpen(false);
-            setPinModalOpen(true);
-          }}
+          onClick={checkUserHasPin}
           color="success"
         >
           {t("btn.withdraw")}

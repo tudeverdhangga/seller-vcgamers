@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import RedTypography from "../atomic/RedTypography";
 import GreenTypography from "../atomic/GreenTypography";
 import ChatProfilePicture from "../atomic/ChatProfilePicture";
+import Link from "next/link";
 
 export default function ProfileCard(props: {
   name: string;
@@ -17,12 +18,7 @@ export default function ProfileCard(props: {
 }) {
   const { t } = useTranslation("layout");
 
-  const handleRedirectMarketplace = () => {
-    window.open(env.NEXT_PUBLIC_MARKET_URL, "_blank");
-  };
-  const handleRedirectStore = () => {
-    window.open(env.NEXT_PUBLIC_VCG_STORE_URL + props.slug, "_blank");
-  };
+  const storeUrl = env.NEXT_PUBLIC_VCG_STORE_URL + props.slug;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
@@ -62,25 +58,38 @@ export default function ProfileCard(props: {
           </Box>
         </Box>
       </Box>
-      <Button
-        onClick={handleRedirectStore}
-        variant="contained"
-        sx={{
-          mb: "10px",
-          textTransform: "none",
-          fontSize: { xs: 12 },
-          fontWeight: 600,
-        }}
+      <Link href={storeUrl} passHref target="_blank" rel="noopener noreferrer">
+        <Button
+          variant="contained"
+          sx={{
+            mb: "10px",
+            textTransform: "none",
+            fontSize: { xs: 12 },
+            fontWeight: 600,
+            width: "100%",
+          }}
+        >
+          {t("profileCard.visitShop")}
+        </Button>
+      </Link>
+      <Link
+        href={env.NEXT_PUBLIC_MARKET_URL}
+        passHref
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        {t("profileCard.visitShop")}
-      </Button>
-      <Button
-        onClick={handleRedirectMarketplace}
-        variant="outlined"
-        sx={{ textTransform: "none", fontSize: { xs: 12 }, fontWeight: 600 }}
-      >
-        {t("profileCard.visitMarketplace")}
-      </Button>
+        <Button
+          variant="outlined"
+          sx={{
+            textTransform: "none",
+            fontSize: { xs: 12 },
+            fontWeight: 600,
+            width: "100%",
+          }}
+        >
+          {t("profileCard.visitMarketplace")}
+        </Button>
+      </Link>
     </Box>
   );
 }

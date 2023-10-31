@@ -2,7 +2,11 @@ import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 
-export default function ComplainAdminJoinListSubheader() {
+export default function ComplainAdminJoinListSubheader({
+  type,
+}: {
+  type: "seller" | "buyer";
+}) {
   const { t } = useTranslation("complain");
 
   return (
@@ -15,7 +19,7 @@ export default function ComplainAdminJoinListSubheader() {
           textAlign: "center",
         }}
       >
-        {t("adminJoinMessage")}
+        {t(`adminJoinMessage.${type}`)}
       </Typography>
     </ListSubheader>
   );

@@ -101,7 +101,7 @@ export default function ComplainConversationListItem(props: {
                     color: "common.shade.200",
                   }}
                 >
-                  {dayjs(props.complain.date).format("DD MMM YYYY HH:MM")}
+                  {dayjs(props.complain.date).format("DD MMM YYYY HH:mm")}
                 </Typography>
               </Box>
             </Box>

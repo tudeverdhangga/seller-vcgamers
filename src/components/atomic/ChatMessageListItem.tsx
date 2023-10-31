@@ -30,7 +30,11 @@ import ComplainAdminJoinListSubheader from "../molecule/ComplainAdminJoinListSub
 
 export default function ChatMessageListItem(props: ChatMessageProps) {
   if (props.content === "SELLER_INVITE_ADMIN") {
-    return <ComplainAdminJoinListSubheader />;
+    return <ComplainAdminJoinListSubheader type="seller" />;
+  }
+
+  if (props.content === "BUYER_INVITE_ADMIN") {
+    return <ComplainAdminJoinListSubheader type="buyer" />;
   }
 
   switch (props.type) {

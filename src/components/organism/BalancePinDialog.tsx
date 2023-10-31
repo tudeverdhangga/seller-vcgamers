@@ -16,6 +16,7 @@ import PinNumberInput, { pinErrorAtom } from "../atomic/PinNumberInput";
 import VGButton from "../atomic/VGButton";
 import CloseIcon from "../icons/chat/CloseIcon";
 import { useRequestWithdrawal } from "~/services/balance/hooks";
+import { env } from "~/env.mjs";
 
 export default function BalancePinDialog() {
   const { t } = useTranslation("balance");
@@ -118,7 +119,12 @@ export default function BalancePinDialog() {
       <DialogActions sx={{ justifyContent: "center", px: 3, pb: 3 }}>
         <VGButton
           size="large"
-          onClick={() => setModalOpen(false)}
+          onClick={() => {
+            setModalOpen(false);
+            window.open(
+              `${env.NEXT_PUBLIC_MARKET_URL}/profile/settings/security`
+            );
+          }}
           color="primary"
         >
           {t("btn.forgetPin")}
