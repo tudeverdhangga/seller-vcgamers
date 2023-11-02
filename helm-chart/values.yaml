@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 056976893298.dkr.ecr.ap-southeast-1.amazonaws.com/vcgamers-fe
+  repository: asia-southeast1-docker.pkg.dev/vcgamersio/vcgamers-docker-stg
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
