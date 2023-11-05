@@ -29,6 +29,7 @@ export default function TransactionProcessVoucherDialog(props: {
   const { t } = useTranslation("transaction");
   const processTransaction = useProcessTransaction(queryString.stringify({ transaction_detail_id: props.id }));
   const [voucherValues, setVoucherValues] = useState<string[]>(Array(props.qty).fill(''));
+  const [isEmptyField, setIsEmptyField] = useState(true)
 
   const onProcess = () => {
     processTransaction.mutate(
@@ -51,6 +52,7 @@ export default function TransactionProcessVoucherDialog(props: {
     const newVoucherValues = voucherValues;
     newVoucherValues[index] = value;
     setVoucherValues(newVoucherValues);
+    setIsEmptyField(voucherValues.every((str) => str.trim() === ""))
   };
 
   const textFields = [];
@@ -100,6 +102,7 @@ export default function TransactionProcessVoucherDialog(props: {
           size="large"
           fullWidth
           sx={{ mt: 1 }}
+          disabled={isEmptyField}
           onClick={onProcess}
         >
           {t("detail.list.voucher.submit")}

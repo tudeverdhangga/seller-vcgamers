@@ -6,7 +6,7 @@ import TransactionDetailItemDesktop from "~/components/molecule/TransactionDetai
 import TransactionDetailItemMobile from "~/components/molecule/TransactionDetailItem/mobile";
 import VGCard from "~/components/atomic/VGCard";
 import Divider from "@mui/material/Divider";
-import { diffDateInTime, diffDateInDays } from "~/utils/format";
+import { diffDateInDays } from "~/utils/format";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 
@@ -82,7 +82,7 @@ export default function TransactionDetail({
                         brandName={item.brand_name}
                         deliveryData={item.delivery_data}
                         cancelTime={diffDateInDays(item.transaction_expired_time)}
-                        finishTime={diffDateInTime(item.auto_finish_time)}
+                        finishTime={diffDateInDays(item.auto_finish_time)}
                         kilatTime={item.kilat_expired_time}
                         price={item.price}
                         qty={item.qty}
@@ -112,7 +112,7 @@ export default function TransactionDetail({
                         brandName={item.brand_name}
                         deliveryData={item.delivery_data}
                         cancelTime={diffDateInDays(item.transaction_expired_time)}
-                        finishTime={diffDateInTime(item.auto_finish_time)}
+                        finishTime={diffDateInDays(item.auto_finish_time)}
                         kilatTime={item.kilat_expired_time}
                         price={item.price}
                         qty={item.qty}

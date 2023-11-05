@@ -120,19 +120,24 @@ export default function AddVariantDialog({
     }
   }, [variant])
   useEffect(() => {
-    const variationOption: Dropdown[] = [];
-    getVariation?.data?.data?.map((item) => {
-      if (item) {
-        variationOption?.push({
-          label: item.name,
-          value: item.id,
-          price: item.price
-        })
+    if (!getVariation.isLoading) {
+      const variationOption: Dropdown[] = [];
+      getVariation?.data?.data?.map((item) => {
+        if (item) {
+          variationOption?.push({
+            label: item.name,
+            value: item.id,
+            price: item.price
+          })
+        }
+      })
+      setVariationOptions(variationOption)
+      if (typeof variant === "undefined") {
+        onChangeImage(false);
       }
-    })
-    setVariationOptions(variationOption)
-    if (typeof variant === "undefined") {
-      onChangeImage(false);
+      if (getVariation?.data?.data?.length === 0) {
+        onChangeCustomName(true)
+      }
     }
   }, [getVariation?.data?.data, variant])
   useEffect(() => {
@@ -336,7 +341,7 @@ export default function AddVariantDialog({
       <FormControlLabel
         control={
           <Checkbox
-            defaultChecked={isCustomName}
+            checked={isCustomName}
             onChange={(_, checked) => onChangeCustomName(checked)}
           />
         }

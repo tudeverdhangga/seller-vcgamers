@@ -61,7 +61,7 @@ export function fullDateFormat(dateString: string) {
   return formattedDate
 }
 
-export function diffDateInTime(dateString: string) {
+export function diffDateInDays(dateString: string) {
   const currentDate = new Date();
   const targetDate = new Date(dateString);
   const timeDifference = targetDate.getTime() - currentDate.getTime();
@@ -77,15 +77,6 @@ export function diffDateInTime(dateString: string) {
     return(`${days} Hari`);
   }
   return(`${hoursDifference} Jam`);
-}
-
-export function diffDateInDays(dateString: string) {
-  const currentDate = new Date();
-  const targetDate = new Date(dateString);
-  const timeDifference = targetDate.getTime() - currentDate.getTime();
-  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
-
-  return(`${hoursDifference} hours`);
 }
 
 export function getCurrentTimestamp() {

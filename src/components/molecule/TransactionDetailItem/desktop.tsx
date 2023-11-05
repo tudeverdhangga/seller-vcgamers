@@ -65,7 +65,7 @@ export default function TransactionDetailItemDesktop(props: {
     seconds: string;
   } | undefined>(undefined)
   const router = useRouter();
-  const moderation = useGetModerationDetailByTransactionId(props.id)
+  const moderation = useGetModerationDetailByTransactionId(props.status === 6 ? props.id : undefined)
   const chat = useGetChatRoomIdByBuyerId(props.memberId)
 
   useEffect(() => {
