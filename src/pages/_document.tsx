@@ -17,16 +17,23 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <Script id="smartech" src="//cdnt.netcoresmartech.com/smartechclient.js" strategy="beforeInteractive">
-          </Script>
+          <Script
+            src="//cdnt.netcoresmartech.com/smartechclient.js"
+            strategy="beforeInteractive"
+          ></Script>
           {
             (env.NEXT_PUBLIC_CREATE_NETCORE && env.NEXT_PUBLIC_REGISTER_NETCORE) &&
-            <Script id="netcore" strategy="afterInteractive">{`
+            <Script id="netcore" strategy="afterInteractive">
+            {`
               let initiated = false;
               while(!initiated) {
                 if (window.smartech && window.smartech != undefined) {
-                  smartech("create", "${env.NEXT_PUBLIC_CREATE_NETCORE}");
-                  smartech("register", "${env.NEXT_PUBLIC_REGISTER_NETCORE}");
+                  smartech("create", "${
+                    process.env.NEXT_PUBLIC_CREATE_NETCORE as string
+                  }");
+                  smartech("register", "${
+                    process.env.NEXT_PUBLIC_REGISTER_NETCORE as string
+                  }");
                   smartech("identify", "");
                   smartech("dispatch", "page browse", { pageurl: window.location.href });
 
@@ -34,7 +41,7 @@ class MyDocument extends Document {
                 }
               }
             `}
-            </Script>
+          </Script>
           }
         </body>
       </Html>
