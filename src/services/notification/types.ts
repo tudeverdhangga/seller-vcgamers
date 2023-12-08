@@ -5,6 +5,7 @@ export interface DataNotification {
   author: string;
   clickable_id: string;
   clickable_type: string;
+  icon: string;
   is_clickable: boolean;
   date: string;
   desc_date: string;

@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { queryTypes, useQueryState } from "next-usequerystate";
-import { apiPaginationNextPageParam } from "../utils";
+import { totalApiPaginationNextPageParam } from "../utils";
 import {
   fetchNotificationCount,
   fetchNotificationDetail,
@@ -26,7 +26,7 @@ export function useGetNotificationList() {
         limit: 64,
       }),
     enabled: flag !== null,
-    getNextPageParam: apiPaginationNextPageParam,
+    getNextPageParam: totalApiPaginationNextPageParam,
   });
 }
 

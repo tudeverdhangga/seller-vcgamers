@@ -1,8 +1,11 @@
+import dayjs from "dayjs";
 import { useAtom } from "jotai";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 
 import { notificationDetailAtom } from "~/atom/notificationDetail";
@@ -10,6 +13,12 @@ import { useReadNotification } from "~/services/notification/hooks";
 import type { DataNotification } from "~/services/notification/types";
 import NotificationUpdateIcon from "../icons/NotificationUpdateIcon";
 import TimeIcon from "../icons/svg/notification/time.svg";
+import WalletIcon from "../icons/svg/notification/wallet.svg";
+import BlueCartIcon from "../icons/svg/notification/blueCart.svg";
+import TagIcon from "../icons/svg/notification/tag.svg";
+import TickIcon from "../icons/svg/notification/tick.svg";
+import AlertIcon from "../icons/svg/notification/alert.svg";
+import InstantIcon from "../icons/svg/notification/instant.svg";
 
 export default function NotificationCard(props: {
   notification: DataNotification;
@@ -17,6 +26,7 @@ export default function NotificationCard(props: {
   const { t } = useTranslation("notification");
   const [, setNotificationDetail] = useAtom(notificationDetailAtom);
   const { mutate } = useReadNotification();
+  const router = useRouter();
 
   const handleClick = () => {
     mutate(
@@ -32,8 +42,46 @@ export default function NotificationCard(props: {
     );
   };
 
+  const handleClickable = () => {
+    mutate(
+      { notification_id: props.notification.id, flag: props.notification.flag },
+      {
+        onSettled: () => {
+          switch (props.notification.clickable_type) {
+            case "Moderation":
+              return void router.push(
+                "/seller/obrolan/komplain/" + props.notification.clickable_id
+              );
+            case "Chat":
+              return void router.push(
+                "/seller/obrolan/percakapan/" + props.notification.clickable_id
+              );
+            case "Withdraw":
+              return void router.push("/seller/toko/saldo-toko");
+            case "Instant_kilat":
+              return void router.push("/seller/request/instant");
+            default:
+              return;
+          }
+        },
+      }
+    );
+  };
+
+  const date = dayjs(props.notification.date);
+  const dateFormat =
+    Math.abs(date.diff(dayjs(), "s")) < 1
+      ? "Baru saja"
+      : date.format("DD MMM YYYY, HH:mm");
+
   return (
-    <Box sx={{ display: "flex", alignItems: "center", p: 2, width: "100%" }}>
+    <Box
+      sx={{ display: "flex", alignItems: "center", p: 2, width: "100%" }}
+      {...(props.notification.is_clickable && {
+        onClick: handleClickable,
+        style: { cursor: "pointer" },
+      })}
+    >
       <Box
         sx={{
           display: "flex",
@@ -103,7 +151,7 @@ export default function NotificationCard(props: {
                 fontWeight: 500,
               }}
             >
-              {props.notification.desc_date}
+              {dateFormat}
             </Typography>
           </Box>
         </Box>
@@ -128,9 +176,45 @@ function NotificationIcon(props: { notification: DataNotification }) {
   }
 
   if (props.notification.flag === "marketplace") {
-    switch (props.notification.clickable_type) {
-      case "Moderation":
-        return <div></div>;
+    switch (props.notification.icon) {
+      case "withdraw":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <WalletIcon />
+          </SvgIcon>
+        );
+      case "transaction payment":
+      case "transaction order":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <TagIcon />
+          </SvgIcon>
+        );
+      case "transaction order finish":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <BlueCartIcon />
+          </SvgIcon>
+        );
+      case "transaction order issue":
+      case "complain submission":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <AlertIcon />
+          </SvgIcon>
+        );
+      case "instant":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <InstantIcon />
+          </SvgIcon>
+        );
+      case "complain finish":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <TickIcon />
+          </SvgIcon>
+        );
     }
   }
 }
