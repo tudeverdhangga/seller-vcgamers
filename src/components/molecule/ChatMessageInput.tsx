@@ -87,6 +87,14 @@ export default function ChatMessageInput(props: {
     void uploadForm.handleSubmit((data) => {
       const file = data.file as unknown as FileList;
 
+      if (
+        typeof file !== "undefined" &&
+        file[0] &&
+        file[0].size > 30 * 1024 * 1024
+      ) {
+        alert("File cannot be more than 30MB.");
+      }
+
       if (typeof file !== "undefined" && file[0]) {
         uploadMutation.mutate({
           ...data,
@@ -138,7 +146,7 @@ export default function ChatMessageInput(props: {
         </IconButton>
         <input
           type="file"
-          accept="image/png, image/jpeg"
+          accept="image/png, image/jpeg, video/mp4"
           style={{ display: "none" }}
           {...fileRest}
           ref={(e) => {

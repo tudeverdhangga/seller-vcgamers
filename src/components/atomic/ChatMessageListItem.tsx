@@ -18,6 +18,7 @@ import type {
   SideProps,
   TextProps,
   TransactionProps,
+  VideoProps,
 } from "~/services/moderation/types";
 import FailedIcon from "../icons/chat/FailedIcon";
 import RetryIcon from "../icons/chat/RetryIcon";
@@ -48,6 +49,7 @@ export default function ChatMessageListItem(props: ChatMessageProps) {
     case "TRANSACTION":
       return TransactionChatMessage(props);
     case "VIDEO":
+      return VideoChatMessage(props);
     case "IMAGE":
     case "DOCUMENT":
       return AttachmentChatMessage(props);
@@ -293,6 +295,53 @@ function AttachmentChatMessage(props: AttachmentProps & SideProps) {
           src={props.content}
           alt="Attachment"
           style={{ maxHeight: "300px", maxWidth: "300px" }}
+        />
+        <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
+          {statusIcon}
+          <Typography
+            sx={{ color: "common.shade.100", fontSize: 12, fontWeight: 500 }}
+          >
+            {props.time}
+          </Typography>
+        </Box>
+      </Box>
+    </ListItem>
+  );
+}
+
+function VideoChatMessage(props: VideoProps & SideProps) {
+  const justifyContent = props.side === "left" ? "flex-start" : "flex-end";
+  const backgroundColor =
+    props.side === "left" ? "common.shade.0" : "primary.light";
+  const borderRadius =
+    props.side === "left" ? "0px 10px 10px 10px" : "10px 0px 10px 10px";
+
+  const statusIcon = props.side === "right" && statusMap[props.status];
+  const isFailed = props.side === "right" && props.status === "failed";
+
+  return (
+    <ListItem sx={{ justifyContent }} disableGutters>
+      {isFailed && (
+        <IconButton>
+          <RetryIcon />
+        </IconButton>
+      )}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          borderRadius,
+          backgroundColor,
+          maxWidth: { xs: "100%", sm: "50%" },
+          p: "10px",
+          gap: "5px",
+          alignItems: "flex-end",
+        }}
+      >
+        <video
+          src={props.content}
+          style={{ maxHeight: "300px", maxWidth: "300px" }}
+          controls
         />
         <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
           {statusIcon}

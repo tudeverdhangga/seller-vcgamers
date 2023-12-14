@@ -115,7 +115,14 @@ export type TransactionProps = {
 
 export type AttachmentProps = {
   id: string;
-  type: "IMAGE" | "VIDEO" | "DOCUMENT";
+  type: "IMAGE" | "DOCUMENT";
+  content: string;
+  time: string;
+};
+
+export type VideoProps = {
+  id: string;
+  type: "VIDEO";
   content: string;
   time: string;
 };
