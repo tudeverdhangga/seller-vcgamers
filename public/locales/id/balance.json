@@ -85,5 +85,8 @@
   },
   "toast": {
     "withdrawSuccess": "Pengajuan penarikan berhasil terkirim ke admin"
+  },
+  "moderationInfo": {
+    "message": "Toko kamu sedang dalam pengawasan"
   }
 }

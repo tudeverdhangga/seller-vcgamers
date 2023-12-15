@@ -9,6 +9,7 @@ import { drawerOpenAtom } from "~/atom";
 
 import DrawerListItem from "~/components/atomic/DrawerListItem";
 import ProfileCard from "~/components/molecule/ProfileCard";
+import ModerationInfo from "~/components/molecule/ModerationInfo";
 import SellerToolbar from "~/components/molecule/SellerToolbar";
 
 import { useGetProfile } from "~/services/api/auth";
@@ -82,6 +83,7 @@ export default function DrawerContent() {
     <>
       <SellerToolbar />
       <Divider />
+      {data?.data.is_moderation && <ModerationInfo />}
       <ProfileCard
         name={data?.data?.seller_name ?? "Nama Toko"}
         slug={data?.data?.seller_url ?? "seller"}

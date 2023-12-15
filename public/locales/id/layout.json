@@ -5,6 +5,11 @@
     "email": "Email",
     "whatsapp": "WhatsApp"
   },
+  "moderationInfo": {
+    "messageSecondary": "Toko kamu sedang dalam pengawasan",
+    "message": "Tokomu dalam pengawasan",
+    "learnMore": "Pelajari Di Sini"
+  },
   "profileCard": {
     "todaySchedule": "Jadwal Hari ini",
     "close": "Tutup",

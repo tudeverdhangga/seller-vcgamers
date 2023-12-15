@@ -18,11 +18,15 @@ import BalancePinDialog from "../organism/BalancePinDialog";
 import BalanceConfirmationDialog from "./BalanceConfirmationDialog";
 import { priceFormat } from "~/utils/format";
 import { env } from "~/env.mjs";
+import { useGetProfile } from "~/services/api/auth";
+import { Stack } from "@mui/material";
+import SmileySad from "~/components/icons/SmileySad";
 
 export default function BalanceInformationCard() {
   const { t } = useTranslation("balance");
   const [, setConfirmationDialog] = useAtom(confirmationDialogOpenAtom);
   const { data } = useGetBalanceInfo();
+  const { data: dProfile } = useGetProfile();
 
   const { isMobile } = useResponsive();
   const deviceType = isMobile ? "mobile" : "desktop";
@@ -144,19 +148,38 @@ export default function BalanceInformationCard() {
               {t(`card.information.error.${data.data.withdrawal_status_text}`)}
             </Typography>
           ) : null}
-          <VGButton
-            variant="contained"
-            fullWidth={isMobile}
-            // Hardcode
-            disabled={
-              data?.data.withdrawal_status_error ||
-              (data?.data.balance ?? 0) < 20_000
-            }
-            sx={{ borderColor: "primary.main" }}
-            onClick={() => setConfirmationDialog(true)}
-          >
-            {t("btn.withdrawBalance")}
-          </VGButton>
+          <Stack direction="row" spacing={"20px"} sx={{ alignItems: "center" }}>
+            {dProfile?.data.is_moderation && (
+              <Stack
+                direction="row"
+                spacing="5px"
+                sx={{ alignItems: "center" }}
+              >
+                <Typography
+                  color="common.red.500"
+                  fontSize="12px"
+                  fontWeight="600"
+                >
+                  {t("moderationInfo.message")}
+                </Typography>
+                <SmileySad sx={{ fontSize: "18px" }} />
+              </Stack>
+            )}
+            <VGButton
+              variant="contained"
+              fullWidth={isMobile}
+              // Hardcode
+              disabled={
+                data?.data.withdrawal_status_error ||
+                (data?.data.balance ?? 0) < 20_000 ||
+                dProfile?.data.is_moderation
+              }
+              sx={{ borderColor: "primary.main" }}
+              onClick={() => setConfirmationDialog(true)}
+            >
+              {t("btn.withdrawBalance")}
+            </VGButton>
+          </Stack>
           <BalanceConfirmationDialog />
           <BalancePinDialog />
         </Box>

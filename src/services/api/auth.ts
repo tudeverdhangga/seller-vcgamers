@@ -31,6 +31,7 @@ interface Data {
   status: number;
   seller_bank: SellerBank;
   is_closed: boolean;
+  is_moderation: boolean;
   seller_can_change_name: boolean;
   operational_hours: OperationalHour[];
 }
