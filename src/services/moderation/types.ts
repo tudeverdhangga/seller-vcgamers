@@ -135,5 +135,11 @@ export type InfoProps = {
 
 export type ChatMessageProps =
   | InfoProps
-  | ((TextProps | AttachmentProps | ProductProps | TransactionProps) &
+  | ((
+      | TextProps
+      | AttachmentProps
+      | ProductProps
+      | TransactionProps
+      | VideoProps
+    ) &
       SideProps);
