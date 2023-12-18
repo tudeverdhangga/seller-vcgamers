@@ -1,13 +1,10 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import VGDialog from "~/components/atomic/VGDialog";
 import CircleInfoIcon from "~/components/icons/CircleInfoIcon";
-import VGButton from "../atomic/VGButton";
 
-type Props = {};
-
-const ModerationInfo = (props: Props) => {
+const ModerationInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { t } = useTranslation("layout");
