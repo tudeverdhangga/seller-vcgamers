@@ -10,6 +10,7 @@ metadata:
     #nginx.ingress.kubernetes.io/whitelist-source-range: "52.220.15.238,18.143.208.40,202.152.22.118,182.23.62.3,36.78.14.13,202.159.9.178"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
       add_header X-Frame-Options "sameorigin";
       add_header X-Content-Type-Options nosniff;
       more_set_headers "X-Forwarded-For $http_x_forwarded_for";
@@ -18,11 +19,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - seller.vcgamers.io
-    secretName: seller.vcgamers.io-tls
+    - seller.vcg.my.id
+    secretName: seller.vcg.my.id-tls
   ingressClassName: "nginx"
   rules:
-  - host: seller.vcgamers.io
+  - host: seller.vcg.my.id
     http:
       paths:
       - path: /
