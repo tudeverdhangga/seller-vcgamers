@@ -89,6 +89,7 @@ export default function DrawerContent() {
         slug={data?.data?.seller_url ?? "seller"}
         profile_src={data?.data?.seller_photo.object_url ?? ""}
         is_closed={data?.data?.is_closed ?? true}
+        store_status={data?.data?.status ?? 1}
       />
       <Divider />
       <List sx={{ bgcolor: "background.paper" }}>

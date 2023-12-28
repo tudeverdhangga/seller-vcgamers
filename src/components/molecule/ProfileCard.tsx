@@ -15,6 +15,7 @@ export default function ProfileCard(props: {
   slug: string;
   profile_src: string;
   is_closed: boolean;
+  store_status: number;
 }) {
   const { t } = useTranslation("layout");
 
@@ -36,7 +37,7 @@ export default function ProfileCard(props: {
             >
               {t("profileCard.todaySchedule")}
             </Typography>
-            {props.is_closed ? (
+            {props.is_closed || props.store_status === 1 ? (
               <RedTypography
                 sx={{
                   fontWeight: "600",
