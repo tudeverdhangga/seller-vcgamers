@@ -25,18 +25,27 @@ export default function ChatMessageAttachment() {
           sx={{
             display: "flex",
             flexDirection: "column",
+            alignItems: "center",
             gap: "12px",
             borderRadius: "5px",
             flexGrow: 1,
             alignSelf: "center",
           }}
         >
-          <img
-            src={attachment.url}
-            alt="attachment"
-            height={60}
-            style={{ objectFit: "contain" }}
-          />
+          {attachment.type === "VIDEO" ? (
+            <video
+              src={attachment.url}
+              style={{ maxHeight: "300px", maxWidth: "300px" }}
+              controls
+            />
+          ) : (
+            <img
+              src={attachment.url}
+              alt="attachment"
+              height={60}
+              style={{ objectFit: "contain" }}
+            />
+          )}
         </Box>
         <IconButton sx={{ alignSelf: "flex-start" }} onClick={hideAttachment}>
           <CloseIcon />

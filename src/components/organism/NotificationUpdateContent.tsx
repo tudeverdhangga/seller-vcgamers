@@ -9,7 +9,7 @@ import NotificationCard from "../molecule/NotificationCard";
 import NotificationDetailDialog from "../molecule/NotificationDetailDialog";
 import NotificationEmptyState from "../molecule/NotificationEmptyState";
 
-export default function NotificationSalesContent() {
+export default function NotificationUpdateContent() {
   const { data, hasNextPage, fetchNextPage } = useGetNotificationList();
 
   if (!data?.pages.length) return <NotificationEmptyState />;

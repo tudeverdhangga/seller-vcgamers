@@ -29,17 +29,15 @@ export default function NotificationCard(props: {
   const router = useRouter();
 
   const handleClick = () => {
-    mutate(
-      { notification_id: props.notification.id, flag: props.notification.flag },
-      {
-        onSettled: () => {
-          setNotificationDetail({
-            isOpen: true,
-            notification: props.notification,
-          });
-        },
-      }
-    );
+    mutate({
+      notification_id: props.notification.id,
+      flag: props.notification.flag,
+    });
+
+    setNotificationDetail({
+      isOpen: true,
+      notification: props.notification,
+    });
   };
 
   const handleClickable = () => {
@@ -191,6 +189,7 @@ function NotificationIcon(props: { notification: DataNotification }) {
           </SvgIcon>
         );
       case "transaction order finish":
+      case "review":
         return (
           <SvgIcon viewBox="0 0 24 24">
             <BlueCartIcon />

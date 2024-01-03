@@ -9,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
@@ -83,8 +84,8 @@ export default function ChatMessageInput(props: {
     fileInputRef.current?.click();
   };
 
-  const handleUploadFileSubmit = () => {
-    void uploadForm.handleSubmit((data) => {
+  const handleUploadFileSubmit = async () => {
+    await uploadForm.handleSubmit(async (data) => {
       const file = data.file as unknown as FileList;
 
       if (
@@ -96,7 +97,7 @@ export default function ChatMessageInput(props: {
       }
 
       if (typeof file !== "undefined" && file[0]) {
-        uploadMutation.mutate({
+        await uploadMutation.mutateAsync({
           ...data,
           file: file[0],
         });
@@ -104,18 +105,18 @@ export default function ChatMessageInput(props: {
     })();
   };
 
-  const retryUpload = () => {
-    handleUploadFileSubmit();
+  const retryUpload = async () => {
+    await handleUploadFileSubmit();
     setModalOpen(false);
   };
 
   const closeModal = () => setModalOpen(false);
 
-  const handleSubmit = () => {
-    handleUploadFileSubmit();
+  const handleSubmit = async () => {
+    await handleUploadFileSubmit();
 
-    void inputForm.handleSubmit((data) => {
-      props.onSubmit(data);
+    await inputForm.handleSubmit(async (data) => {
+      await props.onSubmit(data);
       inputForm.reset({ message: "", type: "TEXT" });
     })();
   };
@@ -155,9 +156,11 @@ export default function ChatMessageInput(props: {
           }}
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
+              console.log(mimeMapper(e.target.files[0].type));
               setAttachment({
                 show: true,
                 url: URL.createObjectURL(e.target.files[0]),
+                type: mimeMapper(e.target.files[0].type),
               });
             }
 
@@ -190,8 +193,13 @@ export default function ChatMessageInput(props: {
           sx={{ p: "10px" }}
           aria-label="send"
           onClick={handleSubmit}
+          disabled={uploadMutation.isLoading}
         >
-          <SendIcon />
+          {uploadMutation.isLoading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <SendIcon />
+          )}
         </IconButton>
       </Box>
       <Dialog open={modalOpen} onClose={closeModal} fullWidth maxWidth="xs">

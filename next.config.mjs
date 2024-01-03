@@ -9,7 +9,12 @@ import i18nConfig from "./next-i18next.config.mjs";
 const config = {
   reactStrictMode: true,
   images: {
-    domains: ['cdn.vcgamers.io'],
+    domains: [
+      "cdn.vcgamers.io",
+      "cdn.vcg.my.id",
+      "cdn.vcg.asia",
+      "cdn.vcgamers.com",
+    ],
   },
 
   webpack(config) {
@@ -53,11 +58,11 @@ const config = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/seller/toko',
+        source: "/",
+        destination: "/seller/toko",
         permanent: true,
       },
-    ]
+    ];
   },
 };
 
