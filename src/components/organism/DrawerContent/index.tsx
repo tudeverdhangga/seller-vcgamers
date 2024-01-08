@@ -105,7 +105,7 @@ export default function DrawerContent() {
         ))}
         <List component="div" disablePadding sx={{ display: { sm: "none" } }}>
           <HelpCenterMenu />
-          <LanguageSelect />
+          {/* <LanguageSelect /> */}
         </List>
       </List>
     </>

@@ -52,7 +52,7 @@ function DesktopAppBar() {
   return (
     <>
       <HelpCenterMenu />
-      <LanguageSelect />
+      {/* <LanguageSelect /> */}
       <Box component="div" sx={{ flexGrow: 1 }} />
       <NotificationIcon />
     </>
