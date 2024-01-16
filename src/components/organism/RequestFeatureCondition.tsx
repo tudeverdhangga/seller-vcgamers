@@ -25,6 +25,7 @@ const BorderLinearProgress = styled(({ style, ...props }: LinearProgressProps) =
 }));
 
 export default function CustomizedFeatureContentCondition(props: {
+  featureName: string;
   totalAllTransaction: number;
   totalSuccessTransaction: number;
   minimumAllTransaction: number;
@@ -175,7 +176,7 @@ export default function CustomizedFeatureContentCondition(props: {
             component="span"
             sx={errorRequestMessageStyle}
           >
-            &nbsp; {t("alert.notPermitted.sub", { featurename: "Instant" })}
+            &nbsp; {t("alert.notPermitted.sub", { featurename: props.featureName })}
           </Typography> 
         </Alert>
       }

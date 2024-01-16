@@ -220,6 +220,7 @@ export default function InstantPage() {
 
       {/* Request Fitur */}
       <RequestFeatureCondition
+        featureName="Instant"
         totalAllTransaction={totalTransaction}
         totalSuccessTransaction={successTransaction}
         minimumAllTransaction={minimumAllTransaction}
@@ -227,8 +228,8 @@ export default function InstantPage() {
           minimumSuccessPercentageTransaction
         }
         successPercentageTransaction={
-          getStatusInstant.data?.data?.total_success_transaction
-            ? getStatusInstant.data?.data.total_success_transaction
+          getStatusInstant.data?.data?.total_rate_transaction
+            ? getStatusInstant.data?.data.total_rate_transaction
             : successPercentageTransaction
         }
       />

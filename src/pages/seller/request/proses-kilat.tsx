@@ -217,6 +217,7 @@ export default function ProsesKilatPage() {
 
       {/* Request Fitur */}
       <RequestFeatureCondition
+        featureName="Proses Kilat"
         totalAllTransaction={totalTransaction}
         totalSuccessTransaction={successTransaction}
         minimumAllTransaction={minimumAllTransaction}
@@ -224,8 +225,8 @@ export default function ProsesKilatPage() {
           minimumSuccessPercentageTransaction
         }
         successPercentageTransaction={
-          getStatusKilat.data?.data?.total_success_transaction
-            ? getStatusKilat.data?.data.total_success_transaction
+          getStatusKilat.data?.data?.total_rate_transaction
+            ? getStatusKilat.data?.data.total_rate_transaction
             : successPercentageTransaction
         }
       />
