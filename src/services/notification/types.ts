@@ -4,7 +4,16 @@ export interface DataNotification {
   description: string;
   author: string;
   clickable_id: string;
-  clickable_type: string;
+  transaction_id: string;
+  clickable_type:
+    | "Chat"
+    | "Transaction"
+    | "Instant_kilat"
+    | "Moderation"
+    | "Topup"
+    | "Withdraw"
+    | "Update"
+    | "Review";
   icon: string;
   is_clickable: boolean;
   date: string;

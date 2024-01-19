@@ -19,6 +19,8 @@ import TagIcon from "../icons/svg/notification/tag.svg";
 import TickIcon from "../icons/svg/notification/tick.svg";
 import AlertIcon from "../icons/svg/notification/alert.svg";
 import InstantIcon from "../icons/svg/notification/instant.svg";
+import ProsesKilatIcon from "../icons/svg/notification/prosesKilat.svg";
+import VipIcon from "../icons/svg/notification/vip.svg";
 
 export default function NotificationCard(props: {
   notification: DataNotification;
@@ -58,6 +60,10 @@ export default function NotificationCard(props: {
               return void router.push("/seller/toko/saldo-toko");
             case "Instant_kilat":
               return void router.push("/seller/request/instant");
+            case "Transaction":
+              return void router.push(
+                `/seller/toko/daftar-penjualan/detail?transaction_id=${props.notification.transaction_id}`
+              );
             default:
               return;
           }
@@ -206,6 +212,18 @@ function NotificationIcon(props: { notification: DataNotification }) {
         return (
           <SvgIcon viewBox="0 0 24 24">
             <InstantIcon />
+          </SvgIcon>
+        );
+      case "kilat":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <ProsesKilatIcon />
+          </SvgIcon>
+        );
+      case "vip":
+        return (
+          <SvgIcon viewBox="0 0 24 24">
+            <VipIcon />
           </SvgIcon>
         );
       case "complain finish":
