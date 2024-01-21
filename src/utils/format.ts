@@ -68,7 +68,7 @@ export function diffDateInDays(dateString: string) {
   const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
 
   if (hoursDifference > 24) {
-    const days = hoursDifference / 24
+    const days = Math.floor(hoursDifference / 24)
     const hours = hoursDifference % 24
 
     if (hours > 0) {

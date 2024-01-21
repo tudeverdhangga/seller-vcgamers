@@ -18,9 +18,9 @@ function errorHandler(
   // Do something with response error
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (error.response && error.response.status === 401) {
-    window.location.href = env.NEXT_PUBLIC_AUTH_URL;
-  }
+  // if (error.response && error.response.status === 401) {
+  //   window.location.href = env.NEXT_PUBLIC_AUTH_URL;
+  // }
 
   return Promise.reject(error);
 }
@@ -31,6 +31,7 @@ export const HTTP = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzcxNzE0MjcsImlhdCI6MTcwNTU0OTAyNywiaWQiOiI2YWZiZWM3MC1kNmQ1LTQ2ZWMtYWE5NS1jZTc0MGYwNzJhZWUifQ.XRpdfRkG6jv--1ZPuakrtr9wduc6gFRuoEjx60ySqDw"
   },
   withCredentials: true,
 });
